@@ -28,7 +28,7 @@ Ce document est le **protocole pre-enregistre** du guide. Chaque etape est mecan
 ## 1. Vue d'ensemble
 
 ```
-SCOPE (ISO 25010 x SWEBOK) → QUESTION (PICO) → DECOUVERTE (bases exhaustives)
+SCOPE (ISO 25010 + 25019 x SWEBOK) → QUESTION (PICO) → DECOUVERTE (bases exhaustives)
 → COLLECTE (pyramide des preuves) → EVALUATION (GRADE) → RECOMMANDATION (4 niveaux)
 → PROFILS DE STACK (interdependances) → VERIFICATION (double extraction) → MAINTENANCE (annuelle)
 ```
@@ -42,8 +42,41 @@ SCOPE (ISO 25010 x SWEBOK) → QUESTION (PICO) → DECOUVERTE (bases exhaustives
 ### Objectif
 Identifier de maniere exhaustive tous les sujets que le guide doit couvrir.
 
-### Methode
-Croiser les sous-caracteristiques ISO/IEC 25010:2023 avec les knowledge areas SWEBOK v4.
+### Fondations — 3 niveaux
+
+Le scope repose sur des standards complementaires a 3 niveaux :
+
+**Niveau 1 — SCOPE (quels sujets couvrir)**
+
+| Standard | Role | Couverture |
+|----------|------|------------|
+| **ISO/IEC 25010:2023** | Qualite du PRODUIT | 9 caracteristiques, ~40 sous-caracteristiques |
+| **ISO/IEC 25019:2023** | Qualite d'USAGE (perspective utilisateur) | Effectiveness, Efficiency, Satisfaction, Freedom from risk, Context coverage |
+| **SWEBOK v4 (2024)** | Domaines de PRATIQUE | 18 knowledge areas |
+
+Pourquoi 25010 + 25019 : ISO 25010 dit "le produit est fiable". ISO 25019 dit "l'utilisateur percoit le produit comme fiable". Les deux perspectives sont necessaires.
+
+**Niveau 2 — MESURE (comment savoir si c'est atteint)**
+
+| Standard | Role |
+|----------|------|
+| **ISO/IEC 25023** | Metriques concretes pour chaque caracteristique de 25010 (ex: temps de reponse en ms pour "time behaviour") |
+
+**Niveau 3 — OPERATIONNALISATION (standards specialises par domaine)**
+
+| Standard | Operationnalise quelle caracteristique ISO |
+|----------|-------------------------------------------|
+| **OWASP ASVS** | Security → regles testables (~300) |
+| **WCAG 2.2** | Inclusivity → criteres mesurables (~86) |
+| **ISO 9241-110:2020** | Interaction Capability → 7 principes d'interaction |
+| **Twelve-Factor App** | Flexibility + Reliability → 12 pratiques cloud-native |
+| **Nielsen 10 Heuristics** | Interaction Capability → 10 principes UX pratiques |
+| **Material Design 3 + Apple HIG** | User engagement → tendances visuelles actuelles (date) |
+
+Ces standards de niveau 3 sont decouverts par recherche systematique (etape 3), pas fixes d'avance. La liste ci-dessus est le resultat de la recherche initiale et peut s'etendre.
+
+### Methode de croisement
+Croiser les sous-caracteristiques ISO/IEC 25010:2023 + 25019:2023 avec les knowledge areas SWEBOK v4.
 
 ### ISO/IEC 25010:2023 — 9 caracteristiques, ~40 sous-caracteristiques
 
@@ -407,7 +440,7 @@ Controler que la lecture des sources n'a pas introduit d'erreurs.
 
 | Limite | Explication |
 |--------|-------------|
-| **Couverture** | Le scope est base sur ISO/IEC 25010:2023 et SWEBOK v4 (2024). Si un domaine n'apparait dans aucun des deux, il n'est pas couvert. |
+| **Couverture** | Le scope est base sur ISO/IEC 25010:2023, ISO/IEC 25019:2023 et SWEBOK v4 (2024). Si un domaine n'apparait dans aucun des trois, il n'est pas couvert. |
 | **Decouverte** | Un outil absent de toutes les bases de recherche definies (npm, Maven, GitHub, enquetes) ne sera pas evalue. |
 | **Qualite des preuves** | La plupart des preuves en genie logiciel sont de niveau 3-5 (docs, enquetes, experts). Les niveaux 1-2 (standards, consortiums) sont rares pour les choix d'outils. |
 | **Contexte** | Les recommandations sont formulees pour des contextes definis (P du PICO). Un contexte tres different peut invalider une recommandation. |
@@ -426,9 +459,32 @@ Controler que la lecture des sources n'a pas introduit d'erreurs.
 - Moher, D. et al. (2009). *PRISMA Statement*. BMJ.
 - Cochrane Handbook for Systematic Reviews of Interventions. https://training.cochrane.org/handbook
 
-### Standards de scope
+### Standards de scope (niveau 1)
 - ISO/IEC 25010:2023. *Systems and software engineering — Product quality model*.
+- ISO/IEC 25019:2023. *Systems and software engineering — Quality-in-use model*.
 - IEEE Computer Society (2024). *SWEBOK v4 — Guide to the Software Engineering Body of Knowledge*.
+
+### Standards de mesure (niveau 2)
+- ISO/IEC 25023. *Measurement of system and software product quality*.
+
+### Standards d'operationnalisation (niveau 3)
+- OWASP ASVS. *Application Security Verification Standard*. https://owasp.org/www-project-application-security-verification-standard/
+- OWASP Top 10. https://owasp.org/www-project-top-ten/
+- W3C WCAG 2.2. *Web Content Accessibility Guidelines*. https://www.w3.org/TR/WCAG22/
+- ISO 9241-110:2020. *Ergonomics of human-system interaction — Interaction principles*.
+- Nielsen Norman Group. *10 Usability Heuristics*. https://www.nngroup.com/articles/ten-usability-heuristics/
+- Wiggins, A. *The Twelve-Factor App*. https://12factor.net/
+- Google. *Material Design 3*. https://m3.material.io/
+- Apple. *Human Interface Guidelines*. https://developer.apple.com/design/human-interface-guidelines/
+
+### Standards evalues mais non retenus
+Les standards suivants ont ete evalues et ne sont pas retenus comme fondations car leur scope est couvert par les standards ci-dessus ou n'est pas pertinent pour le guide :
+- PMBOK, BABOK, DSDM, SEBoK (gestion de projet / analyse metier / systemes — hors scope)
+- CMMI, TOGAF, ITIL, COBIT, SAFe (gouvernance / maturite organisationnelle — hors scope pour petites equipes)
+- NIST CSF, NIST 800-53, CIS Controls (securite infrastructure — couvert par OWASP au niveau applicatif)
+- ISO/IEC 27001 (management securite — utile en reference mais OWASP ASVS est plus concret pour le code)
+- ISO/IEC 12207 (processus lifecycle — couvert par SWEBOK)
+- DAMA-DMBOK (gestion de donnees — pertinent uniquement si le guide couvre la qualite des donnees)
 
 ### Sources de donnees
 - Stack Overflow Developer Survey. https://survey.stackoverflow.co/
