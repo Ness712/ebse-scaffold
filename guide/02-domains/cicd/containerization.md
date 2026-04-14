@@ -29,7 +29,7 @@ Sources : SWEBOK v4 s6.1 "container technologies to standardize deployment" (niv
 
 ## Dockerfile — best practices
 
-**[RECOMMANDE]** Multi-stage builds + layered JARs + non-root | Score GRADE : 4/7
+**[RECOMMANDE]** Multi-stage builds + layered JARs + non-root | Score GRADE : 5/7
 
 ### Spring Boot (backend)
 

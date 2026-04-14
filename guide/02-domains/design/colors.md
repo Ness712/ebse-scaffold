@@ -1,6 +1,6 @@
 # Palette de couleurs et contraste
 
-**[STANDARD]** 2-3 teintes + neutres, contraste WCAG AA 4.5:1 minimum | Score GRADE : 6/7
+**[STANDARD]** 2-3 teintes + neutres, contraste WCAG AA 4.5:1 minimum | Score GRADE : 5/7
 
 ## Palette
 

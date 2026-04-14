@@ -1,6 +1,6 @@
 # Tests E2E
 
-**[RECOMMANDE]** **Playwright** | Score GRADE : 4/7
+**[RECOMMANDE]** **Playwright** | Score GRADE : 5/7
 
 ## Pourquoi Playwright
 

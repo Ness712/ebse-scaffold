@@ -1,6 +1,6 @@
 # Gestion des secrets
 
-**[STANDARD]** Env vars + CI secrets + .gitignore strict + pre-commit scan | Score GRADE : 6/7
+**[STANDARD]** Env vars + CI secrets + .gitignore strict + pre-commit scan | Score GRADE : 5/7
 
 ## Config externalisee (Twelve-Factor III)
 

@@ -1,6 +1,6 @@
 # Animations
 
-**[STANDARD]** Duree 200-300ms, ease-out (entree) / ease-in (sortie), respecter prefers-reduced-motion | Score GRADE : 5/7
+**[STANDARD]** Duree 200-300ms, ease-out (entree) / ease-in (sortie), respecter prefers-reduced-motion | Score GRADE : 4/7
 
 Les animations trop longues (>500ms) frustrent, trop courtes (<100ms) sont imperceptibles. Toujours offrir une alternative sans animation.
 

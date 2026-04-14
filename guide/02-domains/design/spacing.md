@@ -1,6 +1,6 @@
 # Systeme d'espacement
 
-**[STANDARD]** Grille de base **8px**, sous-unite 4px | Score GRADE : 5/7
+**[STANDARD]** Grille de base **8px**, sous-unite 4px | Score GRADE : 4/7
 
 Tous les espacements, marges et paddings doivent etre des multiples de 4px, privilegiant les multiples de 8px.
 

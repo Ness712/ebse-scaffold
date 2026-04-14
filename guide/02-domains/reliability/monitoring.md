@@ -14,7 +14,7 @@
 
 ## Quel stack
 
-**[RECOMMANDE]** Prometheus + Grafana + Sentry | Score GRADE : 3/7
+**[RECOMMANDE]** Prometheus + Grafana + Sentry | Score GRADE : 4/7
 
 | Besoin | Outil | Pourquoi |
 |--------|-------|---------|
