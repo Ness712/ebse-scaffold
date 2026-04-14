@@ -1,0 +1,76 @@
+{
+  "id": "guide-application-docs",
+  "domain": "project",
+  "question": "Comment un projet doit-il documenter son application d'un guide de standards ?",
+  "depends_on": ["documentation-organization"],
+  "tags": [
+    "documentation",
+    "standards",
+    "tailoring",
+    "ADR",
+    "single-source-of-truth"
+  ],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "Option C unanime (12 sources, 0 dissidente) : les docs projet contiennent les choix concrets d'implementation (outils, versions, config, structure) et pointent vers le guide pour le pourquoi. Ne jamais dupliquer le guide dans les docs projet (drift garanti). Ne jamais omettre les docs projet (le guide ne peut pas contenir les valeurs specifiques au projet). Pattern : Guide = 'quoi faire et pourquoi' (principes, evidence). Docs projet = 'ce qu'on a fait et ou' (instantiation, config, pointeurs vers le guide). Modele SWEBOK : tailoring = documenter comment le projet instancie le standard organisationnel.",
+        "grade": 5,
+        "level": "STANDARD",
+        "sources": [
+          {
+            "name": "Google SWE Book Ch.10 — Documentation",
+            "pyramid": 2,
+            "year": 2020,
+            "quote": "Avoid duplicating information that lives elsewhere — it's nearly impossible to keep in sync"
+          },
+          {
+            "name": "SWEBOK v4 — Process Tailoring",
+            "pyramid": 1,
+            "year": 2024,
+            "quote": "Projects should tailor organizational standards, documenting instantiations and deviations"
+          },
+          {
+            "name": "Diataxis Framework — Reference vs Explanation",
+            "pyramid": 3,
+            "year": 2024,
+            "quote": "Reference (what) and explanation (why) are different document types for different audiences"
+          },
+          {
+            "name": "NASA Software Engineering Handbook (NASA-HDBK-2203)",
+            "pyramid": 1,
+            "year": 2020,
+            "quote": "Project plans document how this project implements each requirement, with traceability back to agency standard"
+          },
+          {
+            "name": "Nygard — Architecture Decision Records",
+            "pyramid": 3,
+            "year": 2011,
+            "quote": "ADRs capture the project-specific decision and reference the standard for rationale"
+          },
+          {
+            "name": "ISO/IEC 26511:2018 — Information for users",
+            "pyramid": 1,
+            "year": 2018,
+            "quote": "Information is not unnecessarily repeated across products. Single source of truth."
+          },
+          {
+            "name": "InnerSource Commons — Standard Base Documentation",
+            "pyramid": 3,
+            "year": 2024,
+            "quote": "Do not copy organizational coding standards into the repo — link to them"
+          },
+          {
+            "name": "Fowler — Pattern language vs pattern application",
+            "pyramid": 2,
+            "year": 2002,
+            "quote": "Don't document what the code says; document what the code doesn't say"
+          }
+        ],
+        "v3_review": "2026-04-15",
+        "robustness": "ROBUSTE"
+      }
+    ]
+  },
+  "variants": {}
+}
