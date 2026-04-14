@@ -1,116 +1,154 @@
-# Plan de construction du guide EBSE
+# Plan — EBSE Guide Tool
 
-## Historique
+## Vision
 
-- v0.1 (2026-04-14) : 94 pages, methode EBSE complete, profil Java/React uniquement
-- **Probleme identifie** : le guide presuppose Spring Boot + React au lieu de guider le choix.
-  Les agents independants recommandent NestJS ou Django, pas Spring Boot, pour petites equipes.
-- **v1.0 (en cours)** : restructuration en configurateur adaptatif multi-stack
+Un outil (web app + API) qui :
+1. Pose des questions sur ton projet (taille equipe, langage, budget, type d'app...)
+2. Determine la stack optimale selon les sources EBSE
+3. Genere un guide personnalise avec TOUTES les recommandations adaptees a TA stack
+4. Chaque recommandation est sourcee, avec GRADE, verifiable
+5. Utilisable par humain (web UI) ET par IA/machine (API JSON)
 
----
-
-## Nouvelle architecture du guide
+## Architecture
 
 ```
-ENTREE : "Je veux creer une web app"
-    │
-    ▼
-ETAPE 1 — Choix d'approche
-    ├── "Je veux le MIEUX, je m'adapte" → chemin OPTIMAL
-    │     Le guide determine LA meilleure stack selon les sources pures
-    │     L'utilisateur adapte son equipe, ses competences, son budget
-    │
-    └── "J'ai des CONTRAINTES" → chemin CONTEXTUEL
-          Questions : langage maitrise ? taille equipe ? budget ? type d'app ?
-          Le guide s'adapte au contexte
-    │
-    ▼
-ETAPE 2 — Arbres de decision (framework)
-    Le guide recommande : backend + frontend + BDD + CSS
-    Chaque choix est source (EBSE, double extraction)
-    │
-    ▼
-ETAPE 3 — Recommandations universelles
-    Pages valables QUELLE QUE SOIT la stack :
-    Design, accessibilite, git, Docker, monitoring principes, securite principes
-    │
-    ▼
-ETAPE 4 — Recommandations adaptees a la stack
-    Chaque page montre les outils POUR TA STACK :
-    "Tu as choisi Spring Boot → JUnit 5, Logback, @ControllerAdvice"
-    "Tu as choisi NestJS → Jest/Vitest, Pino, ExceptionFilter"
-    "Tu as choisi Django → pytest, structlog, middleware"
+ebse-data/                    ← Base de donnees de recommandations
+  decisions/                  ← Chaque decision = 1 fichier JSON
+    backend-framework.json
+    frontend-framework.json
+    database.json
+    unit-testing.json
+    logging.json
+    ...
+  decision-tree.json          ← Arbre de decision (questions → branches)
+  stacks.json                 ← Profils de stack pre-calcules
+
+ebse-app/                     ← Application web (React + Vite)
+  src/
+    configurator/             ← Questionnaire interactif
+    guide/                    ← Affichage du guide personnalise
+    api/                      ← Export JSON pour machines
+
+ebse-docs/                    ← Methodologie + verification (ce qui existe deja)
+  methodology.md
+  matrix.md
+  verification/
 ```
 
----
+## Format des donnees (chaque decision)
 
-## Phases de travail
-
-### Phase A — Trier les 94 pages existantes (universel vs stack-specific)
-
-Pour chaque page : est-elle valable pour toute stack, ou specifique a Java/React ?
-
-Livrable : liste "universel" vs "stack-specific" pour les 94 pages.
-
-### Phase B — Chemin OPTIMAL (sans contrainte)
-
-PICO : P=web app, aucune contrainte, I=meilleure stack, C=toutes, O=qualite maximale
-Double extraction reelle (2 agents separes) pour determiner :
-- Meilleur framework backend (sans contrainte de langage)
-- Meilleur framework frontend
-- Meilleure BDD
-- Meilleur CSS framework
-- Meilleur bundler
-- etc.
-
-Livrable : profil OPTIMAL source et verifie.
-
-### Phase C — Chemin CONTEXTUEL (avec contraintes)
-
-Arbres de decision avec questions :
-1. Langage maitrise par l'equipe ?
-2. Taille d'equipe ?
-3. Budget (SaaS autorise ou self-hosted only) ?
-4. Type d'app (SPA, SSR, mobile, API only) ?
-
-Chaque branche mene a un profil de stack recommande.
-
-Livrable : arbres de decision sources.
-
-### Phase D — Pages multi-stack
-
-Pour chaque page stack-specific, ajouter les variantes :
-```
-## Si backend Java (Spring Boot)
-  JUnit 5, @ControllerAdvice, HikariCP, Logback...
-
-## Si backend TypeScript (NestJS)
-  Vitest/Jest, ExceptionFilter, Pino, pg pool...
-
-## Si backend Python (Django)
-  pytest, middleware, structlog, psycopg2...
+```json
+{
+  "id": "unit-testing",
+  "domain": "testing",
+  "question": "Quel framework de test unitaire ?",
+  "universal_principles": [
+    {
+      "principle": "Suivre la pyramide de tests 70/20/10",
+      "grade": 5,
+      "level": "STANDARD",
+      "sources": [
+        {"name": "SWEBOK v4", "level": 1, "quote": "..."},
+        {"name": "Google Testing Blog", "level": 5, "quote": "70/20/10"}
+      ]
+    }
+  ],
+  "stack_specific": {
+    "java-spring-boot": {
+      "recommendation": "JUnit 5 + AssertJ + Mockito",
+      "grade": 5,
+      "level": "RECOMMANDE",
+      "config": "Inclus dans spring-boot-starter-test",
+      "sources": [...]
+    },
+    "typescript-nestjs": {
+      "recommendation": "Jest ou Vitest + supertest",
+      "grade": 4,
+      "level": "RECOMMANDE",
+      "sources": [...]
+    },
+    "python-django": {
+      "recommendation": "pytest + pytest-django + factory-boy",
+      "grade": 4,
+      "level": "RECOMMANDE",
+      "sources": [...]
+    }
+  },
+  "depends_on": ["backend-framework"],
+  "tags": ["testing", "quality", "ci"]
+}
 ```
 
-Livrable : pages adaptatives couvrant les 3-4 stacks principales.
+## Format arbre de decision
 
-### Phase E — Verification (meme methode que v0.1)
+```json
+{
+  "entry": {
+    "question": "Quelle approche ?",
+    "options": [
+      {
+        "label": "Je veux le MIEUX, je m'adapte",
+        "sets": { "approach": "optimal" },
+        "next": "optimal-stack"
+      },
+      {
+        "label": "J'ai des contraintes",
+        "next": "team-size"
+      }
+    ]
+  },
+  "team-size": {
+    "question": "Taille de ton equipe ?",
+    "options": [
+      { "label": "1-5 devs", "sets": { "team": "small" }, "next": "language" },
+      { "label": "5-20 devs", "sets": { "team": "medium" }, "next": "language" },
+      { "label": "20+ devs", "sets": { "team": "large" }, "next": "language" }
+    ]
+  },
+  "language": {
+    "question": "Quel langage maitrise ton equipe ?",
+    "options": [
+      { "label": "Java", "sets": { "backend": "spring-boot" }, "next": "frontend" },
+      { "label": "TypeScript/JavaScript", "sets": { "backend": "nestjs" }, "next": "frontend" },
+      { "label": "Python", "sets": { "backend": "django" }, "next": "frontend" },
+      { "label": "C#", "sets": { "backend": "aspnet" }, "next": "frontend" },
+      { "label": "Aucun / je veux le mieux", "sets": { "approach": "optimal" }, "next": "optimal-stack" }
+    ]
+  }
+}
+```
 
-- Double extraction 2 vrais agents separes sur chaque nouvelle page
-- Formulaires d'extraction standardises
-- Traces avec identifiants agents
-- Kappa calcule
-- Audit matrice → guide (couverture complete)
+## Phases de construction
 
-### Phase F — Format final
+### Phase 1 — Data (convertir les 94 pages en JSON structure)
+- Trier chaque page : universel vs stack-specific vs mixte
+- Convertir en format JSON avec metadonnees (GRADE, sources, conditions)
+- Ajouter les variantes multi-stack pour chaque page stack-specific
+- Double extraction sur les nouvelles variantes (NestJS, Django, ASP.NET)
 
-Decider si le guide reste un document markdown (option A) ou devient un outil interactif (option B — site web/CLI qui pose les questions et genere un guide personnalise).
+### Phase 2 — Arbres de decision
+- Construire decision-tree.json avec toutes les questions
+- Chemin "optimal" : double extraction pour determiner LA meilleure stack sans contrainte
+- Chemin "contextuel" : branches selon equipe/langage/budget/type
+- Chaque branche source (EBSE)
 
----
+### Phase 3 — Application web
+- React + Vite + TypeScript + Tailwind (on applique notre propre guide)
+- Configurateur : questionnaire step-by-step
+- Guide : affichage des recommandations filtrees par les choix
+- Mode humain (pages lisibles) + mode machine (JSON export)
 
-## Ce qui est deja fait (reutilisable)
+### Phase 4 — API
+- Endpoint : POST /api/guide { choices: { backend: "spring-boot", frontend: "react", ... } }
+- Reponse : JSON avec toutes les recommandations adaptees
+- Utilisable par IA comme contexte/instructions
 
-- Methodologie EBSE complete (methodology.md) — parfaite, ne change pas
-- Matrice ISO 25010 x SWEBOK (matrix.md) — valide, ne change pas
-- ~40-50 pages universelles — a identifier et garder telles quelles
-- Infrastructure de verification (traces, formulaires, kappa) — reutilisable
-- 15 exemples de calibration GRADE — valides
+### Phase 5 — Verification
+- Double extraction sur TOUTES les nouvelles recommandations (variantes multi-stack)
+- Kappa sur les variantes
+- Audit couverture matrice
+
+### Phase 6 — Deploiement
+- Repo public quand pret
+- Deploiement web (Vercel ou self-hosted)
+- Documentation API
