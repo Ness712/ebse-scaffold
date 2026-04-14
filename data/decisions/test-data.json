@@ -1,0 +1,56 @@
+{
+  "id": "test-data",
+  "domain": "testing",
+  "question": "Comment gerer les donnees de test (factories, faker, isolation) ?",
+  "depends_on": ["backend-framework", "frontend-framework"],
+  "tags": ["testing", "test-data", "factory", "faker", "isolation"],
+  "classification": "mixed",
+  "universal": {
+    "principles": [
+      "Chaque test cree ses propres donnees via des factories — pas de couplage, pas de flaky",
+      "Factory avec defaults + overrides — DRY, lisible, flexible",
+      "Faker pour donnees realistes — detecte les bugs de format/encoding",
+      "Jamais d'etat mutable partage entre tests — independance, parallelisable"
+    ]
+  },
+  "variants": {
+    "java-spring-boot": {
+      "recommendation": "Builder pattern pour les donnees de test (UserFactory avec builder + defaults + overrides). Pas de partage d'etat mutable entre tests.",
+      "grade": 3,
+      "level": "BONNE PRATIQUE",
+      "sources": [
+        "Kent Beck — tests independants, etat isole (niv. 5)",
+        "Fowler — Object Mother / Test Data Builder (niv. 5)"
+      ]
+    },
+    "typescript-nestjs": {
+      "recommendation": "@faker-js/faker + fishery pour les factories de donnees de test. Factory functions avec defaults + overrides.",
+      "grade": 5,
+      "level": "BONNE PRATIQUE",
+      "sources": [
+        "faker-js docs — 47M/mois npm (niv. 4)",
+        "Double extraction batch 9 — accord 100% (niv. 5)"
+      ]
+    },
+    "python-django": {
+      "recommendation": "factory_boy + Faker pour les factories de donnees de test. factory_boy est le standard Python pour les test factories, integre avec Django ORM.",
+      "grade": 6,
+      "level": "BONNE PRATIQUE",
+      "sources": [
+        "factory_boy docs (niv. 3)",
+        "Faker docs (niv. 3)",
+        "Double extraction batch 9 — accord 100% (niv. 5)"
+      ]
+    },
+    "typescript-react-vite": {
+      "recommendation": "Factory function + @faker-js/faker/locale/fr pour donnees realistes. Chaque test cree ses propres donnees avec overrides.",
+      "grade": 3,
+      "level": "BONNE PRATIQUE",
+      "sources": [
+        "faker-js docs — 47M/mois npm (niv. 4)",
+        "Kent Beck — tests independants, etat isole (niv. 5)",
+        "Fowler — Object Mother / Test Data Builder (niv. 5)"
+      ]
+    }
+  }
+}

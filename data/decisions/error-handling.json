@@ -1,0 +1,67 @@
+{
+  "id": "error-handling",
+  "domain": "reliability",
+  "question": "Comment centraliser et securiser le traitement des erreurs ?",
+  "depends_on": ["backend-framework", "frontend-framework"],
+  "tags": ["reliability", "error-handling", "rfc-9457", "security", "error-boundary"],
+  "classification": "mixed",
+  "universal": {
+    "principles": [
+      "Centraliser le traitement des erreurs comme concern architectural",
+      "JAMAIS de stack trace dans les reponses HTTP (OWASP, CWE-209 exploit likelihood HIGH)",
+      "JAMAIS d'exception avalee silencieusement",
+      "Log complet cote serveur avec correlation ID",
+      "Toute erreur API suit RFC 9457 Problem Details (contrat front-back)",
+      "4xx = erreur client (message explicatif), 5xx = erreur serveur (message generique)",
+      "Status codes semantiques : 400 validation, 401 non authentifie, 403 non autorise, 404 introuvable, 409 conflit, 422 regle metier, 500 erreur interne"
+    ]
+  },
+  "variants": {
+    "java-spring-boot": {
+      "recommendation": "RFC 9457 ProblemDetail via @RestControllerAdvice. Activer spring.mvc.problemdetails.enabled=true. Handler global avec @ExceptionHandler pour ResourceNotFoundException (404), MethodArgumentNotValidException (400), et Exception catch-all (500 sans detail).",
+      "grade": 5,
+      "level": "STANDARD",
+      "sources": [
+        "RFC 9457 — Problem Details for HTTP APIs (niv. 1)",
+        "RFC 9110 — HTTP Semantics, Section 15 (niv. 1)",
+        "SWEBOK v4 — error handling as architectural concern (niv. 1)",
+        "OWASP Error Handling Cheat Sheet (niv. 2)",
+        "OWASP Top 10 A05 — Security Misconfiguration (niv. 2)",
+        "CWE-209 — error messages with sensitive info (niv. 2)",
+        "Spring Boot docs — RFC 9457 natif depuis Spring 6.0 (niv. 3)",
+        "Nygard Release It! — unhandled exceptions = #1 cause of cascading failures (niv. 5)"
+      ]
+    },
+    "typescript-nestjs": {
+      "recommendation": "ExceptionFilter global pour centraliser le traitement des erreurs. Format RFC 9457 Problem Details dans les reponses. Jamais de stack trace exposee.",
+      "grade": 5,
+      "level": "STANDARD",
+      "sources": [
+        "NestJS docs — Exception filters (niv. 3)",
+        "RFC 9457 (niv. 1)",
+        "OWASP Error Handling Cheat Sheet (niv. 2)",
+        "Double extraction batch 10 — accord 96% (niv. 5)"
+      ]
+    },
+    "python-django": {
+      "recommendation": "DRF exception handler personnalise pour centraliser le traitement des erreurs. Format RFC 9457 Problem Details dans les reponses. Jamais de stack trace exposee (DEBUG=False en prod).",
+      "grade": 5,
+      "level": "STANDARD",
+      "sources": [
+        "DRF docs — custom exception handling (niv. 3)",
+        "RFC 9457 (niv. 1)",
+        "OWASP Error Handling Cheat Sheet (niv. 2)",
+        "Double extraction batch 10 — accord 96% (niv. 5)"
+      ]
+    },
+    "typescript-react-vite": {
+      "recommendation": "Error Boundaries par section fonctionnelle (sidebar, main, bottom panel) + catch global async. Fallback contextuel avec bouton Reessayer. Typage des erreurs API avec interface ProblemDetail (RFC 9457). Toast pour erreurs async, affichage par champ pour violations 4xx, message generique pour 5xx.",
+      "grade": 4,
+      "level": "RECOMMANDE",
+      "sources": [
+        "React docs — Error Boundaries, fallback UI (niv. 3)",
+        "OWASP — ne jamais afficher de detail technique (niv. 2)"
+      ]
+    }
+  }
+}

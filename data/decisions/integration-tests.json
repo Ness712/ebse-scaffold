@@ -1,0 +1,46 @@
+{
+  "id": "integration-tests",
+  "domain": "testing",
+  "question": "Comment structurer les tests d'integration avec une vraie base de donnees ?",
+  "depends_on": ["backend-framework", "database"],
+  "tags": ["testing", "integration-tests", "testcontainers", "database"],
+  "classification": "mixed",
+  "universal": {
+    "principles": [
+      "Tester avec une vraie base de donnees, pas un substitut en memoire (H2 masque les differences de dialecte SQL)",
+      "Utiliser Testcontainers pour lancer les services reels dans Docker pendant les tests",
+      "Les tests d'integration representent ~20% de la pyramide de tests"
+    ]
+  },
+  "variants": {
+    "java-spring-boot": {
+      "recommendation": "Testcontainers + @SpringBootTest avec @ServiceConnection (depuis Spring Boot 3.1). Lancer un vrai PostgreSQL et Redis dans Docker. Jamais H2 qui masque les bugs de dialecte SQL (jsonb, ON CONFLICT, window functions).",
+      "grade": 5,
+      "level": "STANDARD",
+      "sources": [
+        "Spring Boot docs — @ServiceConnection depuis 3.1 (niv. 3)",
+        "Testcontainers docs (niv. 3)",
+        "Fowler 'Integration Testing' (niv. 5)",
+        "SWEBOK v4 Ch.5 (niv. 1)"
+      ]
+    },
+    "typescript-nestjs": {
+      "recommendation": "Testcontainers-node pour lancer PostgreSQL/Redis reels dans Docker pendant les tests d'integration NestJS.",
+      "grade": 5,
+      "level": "STANDARD",
+      "sources": [
+        "Testcontainers-node docs (niv. 3)",
+        "Double extraction batch 9 — accord 100% (niv. 5)"
+      ]
+    },
+    "python-django": {
+      "recommendation": "Testcontainers-python pour lancer PostgreSQL/Redis reels dans Docker pendant les tests d'integration Django.",
+      "grade": 5,
+      "level": "STANDARD",
+      "sources": [
+        "Testcontainers-python docs (niv. 3)",
+        "Double extraction batch 9 — accord 100% (niv. 5)"
+      ]
+    }
+  }
+}

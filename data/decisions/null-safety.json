@@ -1,0 +1,40 @@
+{
+  "id": "null-safety",
+  "domain": "code-quality",
+  "question": "Comment eliminer les null non controles (Optional en Java, strictNullChecks en TS) ?",
+  "depends_on": ["backend-framework", "frontend-framework", "typescript-strict"],
+  "tags": ["code-quality", "null-safety", "optional", "nullish-coalescing", "npe"],
+  "classification": "mixed",
+  "universal": {
+    "principles": [
+      {
+        "text": "NullPointerException est la premiere cause de bugs en Java. TypeError: Cannot read properties of undefined est l'erreur #1 en JavaScript. Rendre l'absence explicite.",
+        "grade": 5,
+        "level": "RECOMMANDE",
+        "sources": [
+          {"name": "Effective Java (Bloch) Item 55", "pyramid": 5, "year": 2018, "quote": "Return Optional instead of null"},
+          {"name": "TypeScript docs — strictNullChecks", "pyramid": 3, "year": 2024}
+        ]
+      }
+    ]
+  },
+  "variants": {
+    "java-spring-boot": {
+      "recommendation": "Retourner Optional pour les valeurs potentiellement absentes. Ne jamais passer Optional en parametre (anti-pattern Java docs). Ne jamais appeler .get() sans .isPresent(). Utiliser .orElseThrow() pour les cas obligatoires.",
+      "grade": 5,
+      "level": "RECOMMANDE",
+      "sources": [
+        {"name": "Java 17+ docs — Optional API", "pyramid": 3, "year": 2024, "quote": "Primarily intended for method return types"},
+        {"name": "Effective Java (Bloch) Item 55", "pyramid": 5, "year": 2018}
+      ]
+    },
+    "typescript-react-vite": {
+      "recommendation": "strictNullChecks: true (inclus dans strict: true). Nullish coalescing (??) au lieu de || (qui traite 0 et '' comme falsy). Optional chaining (?.) pour l'acces securise.",
+      "grade": 5,
+      "level": "RECOMMANDE",
+      "sources": [
+        {"name": "TypeScript docs — strictNullChecks, nullish coalescing operator", "pyramid": 3, "year": 2024}
+      ]
+    }
+  }
+}

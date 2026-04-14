@@ -1,0 +1,59 @@
+{
+  "id": "http-headers",
+  "domain": "security",
+  "question": "Quels headers HTTP de securite configurer et comment ?",
+  "depends_on": ["backend-framework"],
+  "tags": ["security", "http-headers", "hsts", "csp", "x-frame-options"],
+  "classification": "mixed",
+  "universal": {
+    "principles": [
+      {
+        "text": "Suite complete de headers de securite obligatoire : HSTS (includeSubDomains, 1 an, preload), X-Content-Type-Options: nosniff, X-Frame-Options: DENY, Referrer-Policy: strict-origin-when-cross-origin, Permissions-Policy (camera/microphone/geolocation desactives), CSP restrictive.",
+        "grade": 6,
+        "level": "STANDARD",
+        "sources": [
+          {"name": "OWASP Secure Headers Project", "pyramid": 2, "year": 2024},
+          {"name": "OWASP ASVS V14.4", "pyramid": 2, "year": 2021}
+        ]
+      },
+      {
+        "text": "Valider avec securityheaders.com et Mozilla Observatory — cible A+.",
+        "grade": 6,
+        "level": "STANDARD",
+        "sources": [
+          {"name": "Mozilla Observatory", "pyramid": 5, "year": 2024}
+        ]
+      }
+    ]
+  },
+  "variants": {
+    "java-spring-boot": {
+      "recommendation": "Spring Security http.headers() pour configurer tous les headers de securite en un bloc",
+      "grade": 6,
+      "level": "STANDARD",
+      "implementation": "Configurer via http.headers() : httpStrictTransportSecurity, contentTypeOptions, frameOptions(deny), referrerPolicy, permissionsPolicy, contentSecurityPolicy.",
+      "sources": [
+        {"name": "Spring Security docs", "pyramid": 3, "year": 2024}
+      ]
+    },
+    "typescript-nestjs": {
+      "recommendation": "helmet middleware pour les headers de securite HTTP",
+      "grade": 5,
+      "level": "RECOMMANDE",
+      "implementation": "Installer helmet, l'appliquer comme middleware global dans main.ts : app.use(helmet()). Configurer CSP et autres headers via les options helmet.",
+      "sources": [
+        {"name": "helmet docs", "pyramid": 3, "year": 2024},
+        {"name": "NestJS Security docs", "pyramid": 3, "year": 2024}
+      ]
+    },
+    "python-django": {
+      "recommendation": "SecurityMiddleware (built-in) pour les headers de securite",
+      "grade": 6,
+      "level": "STANDARD",
+      "implementation": "Activer SecurityMiddleware dans MIDDLEWARE, configurer SECURE_HSTS_SECONDS, SECURE_HSTS_INCLUDE_SUBDOMAINS, SECURE_CONTENT_TYPE_NOSNIFF, X_FRAME_OPTIONS, CSP via django-csp.",
+      "sources": [
+        {"name": "Django SecurityMiddleware docs", "pyramid": 3, "year": 2024}
+      ]
+    }
+  }
+}

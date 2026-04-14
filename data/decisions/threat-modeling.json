@@ -1,0 +1,41 @@
+{
+  "id": "threat-modeling",
+  "domain": "security",
+  "question": "Comment modeliser les menaces (threat modeling) en phase de conception ?",
+  "depends_on": [],
+  "tags": ["security", "threat-modeling", "stride", "design", "risk-assessment"],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "Modelisation des menaces avec STRIDE en phase de conception. A realiser a chaque nouvelle fonctionnalite ou changement d'architecture.",
+        "grade": 3,
+        "level": "BONNE_PRATIQUE",
+        "sources": [
+          {"name": "SWEBOK v4 Security Knowledge Area", "pyramid": 1, "year": 2024, "quote": "Threat modeling in design phase"},
+          {"name": "OWASP Threat Modeling Cheat Sheet", "pyramid": 2, "year": 2024, "quote": "STRIDE methodology, DFD-based approach"},
+          {"name": "Microsoft SDL", "pyramid": 5, "year": 2024, "quote": "STRIDE originator, threat modeling mandatory in design"}
+        ]
+      },
+      {
+        "text": "Processus minimal : 1) Dessiner le Data Flow Diagram (DFD), 2) Appliquer STRIDE sur chaque flux/trust boundary (Spoofing, Tampering, Repudiation, Information Disclosure, Denial of Service, Elevation of Privilege), 3) Prioriser par impact, 4) Documenter les mitigations dans les tickets.",
+        "grade": 3,
+        "level": "BONNE_PRATIQUE",
+        "sources": [
+          {"name": "OWASP Threat Modeling Cheat Sheet", "pyramid": 2, "year": 2024},
+          {"name": "Microsoft SDL", "pyramid": 5, "year": 2024}
+        ]
+      },
+      {
+        "text": "Moments cles pour threat modeler : conception d'un nouveau module (STRIDE complet), ajout d'une API externe (evaluer S/T/I), changement d'authentification (STRIDE complet), avant chaque release majeure (revue des menaces existantes).",
+        "grade": 3,
+        "level": "BONNE_PRATIQUE",
+        "sources": [
+          {"name": "SWEBOK v4", "pyramid": 1, "year": 2024},
+          {"name": "OWASP Threat Modeling Cheat Sheet", "pyramid": 2, "year": 2024}
+        ]
+      }
+    ]
+  },
+  "variants": {}
+}

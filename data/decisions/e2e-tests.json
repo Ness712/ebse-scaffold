@@ -1,0 +1,47 @@
+{
+  "id": "e2e-tests",
+  "domain": "testing",
+  "question": "Quel framework pour les tests end-to-end ?",
+  "depends_on": ["frontend-framework"],
+  "tags": ["testing", "e2e", "playwright", "browser-testing"],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      "Les tests E2E representent ~10% de la pyramide de tests",
+      "Preferer un framework multi-browser avec auto-waiting natif",
+      "Utiliser les retries en CI pour gerer le flakiness inherent aux tests E2E",
+      "Configurer un webServer pour lancer l'app automatiquement"
+    ]
+  },
+  "variants": {
+    "java-spring-boot": {
+      "recommendation": "Playwright — multi-browser (Chromium + Firefox + WebKit), auto-waiting natif, parallelisation gratuite, API testing integre. Depasse Cypress en npm downloads (2025).",
+      "grade": 5,
+      "level": "RECOMMANDE",
+      "sources": [
+        "State of JS 2024 — Playwright #1 satisfaction (niv. 4)",
+        "JetBrains 2024 — croissance la plus rapide (niv. 4)",
+        "npm trends — depasse Cypress (niv. 4)",
+        "Playwright docs (niv. 3)"
+      ]
+    },
+    "typescript-nestjs": {
+      "recommendation": "Playwright — meme outil quel que soit le backend. Multi-browser, auto-waiting, parallelisation gratuite.",
+      "grade": 6,
+      "level": "RECOMMANDE",
+      "sources": [
+        "Playwright docs (niv. 3)",
+        "Double extraction batch 9 — accord 100% (niv. 5)"
+      ]
+    },
+    "python-django": {
+      "recommendation": "Playwright — meme outil quel que soit le backend. Multi-browser, auto-waiting, parallelisation gratuite.",
+      "grade": 6,
+      "level": "RECOMMANDE",
+      "sources": [
+        "Playwright docs (niv. 3)",
+        "Double extraction batch 9 — accord 100% (niv. 5)"
+      ]
+    }
+  }
+}

@@ -1,0 +1,49 @@
+{
+  "id": "transactions",
+  "domain": "reliability",
+  "question": "Comment gerer les transactions et l'idempotence des mutations API ?",
+  "depends_on": ["backend-framework", "database"],
+  "tags": ["reliability", "transactions", "idempotency", "acid", "transactional"],
+  "classification": "stack-specific",
+  "universal": {
+    "principles": [
+      "Transactions au service layer, jamais au controller (boundary HTTP) ni au repository (trop granulaire)",
+      "Default readOnly=true au niveau classe, ecraser pour les mutations",
+      "Idempotency-Key header pour les mutations API (eviter les doublons)",
+      "Attention aux pieges : @Transactional sur methode private ne fonctionne pas (proxy), exception checked non propagee, transaction trop longue"
+    ]
+  },
+  "variants": {
+    "java-spring-boot": {
+      "recommendation": "@Transactional(readOnly=true) au niveau classe service, @Transactional sur les methodes de mutation. Idempotency-Key header pour les POST. Pieges : pas de @Transactional sur methode private (proxy Spring), ajouter rollbackFor=Exception.class pour checked exceptions, eviter les appels externes dans la transaction.",
+      "grade": 4,
+      "level": "RECOMMANDE",
+      "sources": [
+        "Spring @Transactional docs — propagation, isolation (niv. 3)",
+        "SWEBOK v4 — ACID properties (niv. 1)",
+        "IETF draft — Idempotency-Key header (niv. 2)",
+        "Fowler — Saga pattern for distributed tx (niv. 5)"
+      ]
+    },
+    "typescript-nestjs": {
+      "recommendation": "TypeORM/Prisma transactions au service layer. Utiliser QueryRunner (TypeORM) ou prisma.$transaction (Prisma) pour les operations multi-tables. Idempotency-Key header pour les mutations API.",
+      "grade": 4,
+      "level": "RECOMMANDE",
+      "sources": [
+        "TypeORM/Prisma docs — transactions (niv. 3)",
+        "SWEBOK v4 — ACID properties (niv. 1)",
+        "IETF draft — Idempotency-Key header (niv. 2)"
+      ]
+    },
+    "python-django": {
+      "recommendation": "Django transaction.atomic() au service layer ou comme decorateur. with transaction.atomic(): pour les blocs explicites. Idempotency-Key header pour les mutations API.",
+      "grade": 4,
+      "level": "RECOMMANDE",
+      "sources": [
+        "Django docs — database transactions (niv. 3)",
+        "SWEBOK v4 — ACID properties (niv. 1)",
+        "IETF draft — Idempotency-Key header (niv. 2)"
+      ]
+    }
+  }
+}

@@ -1,0 +1,32 @@
+{
+  "id": "loading-states",
+  "domain": "design",
+  "question": "Quel pattern de chargement utiliser (skeleton, spinner, barre de progression) ?",
+  "depends_on": [],
+  "tags": ["loading", "skeleton", "spinner", "ux", "performance"],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "Skeleton screens plutot que spinners : reduisent la perception du temps d'attente de ~35% et l'abandon de 10-20%.",
+        "grade": 4,
+        "level": "RECOMMANDE",
+        "sources": [
+          "Baymard Institute — skeleton reduit abandon de 10-20% (niv. 3)",
+          "Nielsen Norman Group — seuils perception 0.1/1/10s (niv. 3)",
+          "Material Design 3 Progress Indicators (niv. 5)"
+        ]
+      },
+      {
+        "text": "Seuils : <200ms rien, 200ms-1s skeleton inline, 1s-5s skeleton pleine page, >5s skeleton + barre de progression.",
+        "grade": 4,
+        "level": "RECOMMANDE",
+        "sources": [
+          "Nielsen Norman Group — seuils perception 0.1/1/10s (niv. 3)",
+          "Baymard Institute (niv. 3)"
+        ]
+      }
+    ]
+  },
+  "variants": {}
+}

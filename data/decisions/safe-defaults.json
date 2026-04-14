@@ -1,0 +1,32 @@
+{
+  "id": "safe-defaults",
+  "domain": "safety",
+  "question": "Comment appliquer le principe deny-by-default pour que tout oubli de configuration ne cree pas de faille ?",
+  "depends_on": [],
+  "tags": ["safety", "security", "deny-by-default", "whitelist", "cors", "least-privilege"],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "Tout est interdit par defaut — autoriser explicitement. Deny-by-default pour l'authorization (.anyRequest().authenticated()), whitelist > blacklist, CORS restrictif (jamais '*' en prod), feature flags off par defaut.",
+        "grade": 6,
+        "level": "STANDARD",
+        "sources": [
+          {"name": "OWASP A01:2021 — Broken Access Control, deny by default", "pyramid": 2, "year": 2021},
+          {"name": "SWEBOK v4 — security principles, least privilege", "pyramid": 1, "year": 2024},
+          {"name": "CWE-276 — Incorrect Default Permissions", "pyramid": 2, "year": 2024}
+        ]
+      },
+      {
+        "text": "Circuit breaker ferme par defaut (ouvert seulement apres N erreurs). Appliquer le principe a chaque couche : authz, CORS, feature flags, reseau.",
+        "grade": 6,
+        "level": "STANDARD",
+        "sources": [
+          {"name": "OWASP A01:2021", "pyramid": 2, "year": 2021},
+          {"name": "Spring Security docs — authorize requests", "pyramid": 3, "year": 2024}
+        ]
+      }
+    ]
+  },
+  "variants": {}
+}

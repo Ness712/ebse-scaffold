@@ -1,0 +1,102 @@
+{
+  "id": "input-validation",
+  "domain": "security",
+  "question": "Comment valider les entrees utilisateur pour prevenir les injections (SQL, XSS, CSRF) ?",
+  "depends_on": ["backend-framework"],
+  "tags": ["security", "validation", "sql-injection", "xss", "csrf", "csp", "defense-in-depth"],
+  "classification": "mixed",
+  "universal": {
+    "principles": [
+      {
+        "text": "La validation des entrees est la premiere ligne de defense. Positive allow lists + strong data typing eliminent plus de 90% des attaques par injection.",
+        "grade": 6,
+        "level": "STANDARD",
+        "sources": [
+          {"name": "SWEBOK v4 Section 3.5", "pyramid": 1, "year": 2024, "quote": "Validate input — #1 dans le CERT/CC Top 10"},
+          {"name": "NIST SP 800-53 SI-10", "pyramid": 1, "year": 2020},
+          {"name": "OWASP Top 10 A03 (Injection)", "pyramid": 2, "year": 2021},
+          {"name": "CWE Top 25 2025", "pyramid": 2, "year": 2025},
+          {"name": "OWASP ASVS V5", "pyramid": 2, "year": 2021, "quote": "Properly implemented input validation controls can eliminate more than 90% of all injection attacks."}
+        ]
+      },
+      {
+        "text": "Utiliser des requetes parametrees (ORM/prepared statements) — JAMAIS de concatenation SQL. Bloque >99% des attaques SQL injection.",
+        "grade": 6,
+        "level": "STANDARD",
+        "sources": [
+          {"name": "OWASP Top 10 A03", "pyramid": 2, "year": 2021, "quote": "The preferred option is to use a safe API, which avoids using the interpreter entirely, provides a parameterized interface, or migrates to ORMs."},
+          {"name": "OWASP ASVS V5.3.4", "pyramid": 2, "year": 2021},
+          {"name": "NIST SP 800-53 SI-10", "pyramid": 1, "year": 2020}
+        ]
+      },
+      {
+        "text": "S'appuyer sur l'auto-escaping du framework frontend (React JSX, Angular, etc.) pour la prevention XSS. Ne JAMAIS injecter du HTML non sanitise. Utiliser DOMPurify si innerHTML est indispensable.",
+        "grade": 6,
+        "level": "STANDARD",
+        "sources": [
+          {"name": "OWASP XSS Cheat Sheet", "pyramid": 2, "year": 2024},
+          {"name": "React docs", "pyramid": 3, "year": 2024, "quote": "By default, React DOM escapes any values embedded in JSX before rendering them."},
+          {"name": "CWE-79 (XSS) #1 mondial", "pyramid": 2, "year": 2025}
+        ]
+      },
+      {
+        "text": "CSP (Content Security Policy) comme defense-en-profondeur contre XSS. Pas un remplacement du code securise.",
+        "grade": 4,
+        "level": "RECOMMANDE",
+        "sources": [
+          {"name": "W3C CSP Level 3", "pyramid": 1, "year": 2023},
+          {"name": "OWASP XSS Cheat Sheet", "pyramid": 2, "year": 2024, "quote": "CSP is a defense-in-depth mitigation against XSS. It is not a replacement for secure coding practices."}
+        ]
+      },
+      {
+        "text": "La validation client est uniquement pour l'UX (feedback instantane). La securite repose TOUJOURS sur le serveur. La validation client est contournee dans 100% des tests de penetration.",
+        "grade": 6,
+        "level": "STANDARD",
+        "sources": [
+          {"name": "OWASP Input Validation Cheat Sheet", "pyramid": 2, "year": 2024, "quote": "Input validation must be implemented on the server-side before any data is processed. Client-side validation can be used for UX but must never be trusted for security."}
+        ]
+      },
+      {
+        "text": "Defense en profondeur : aucune technique seule ne suffit. Empiler validation client, validation serveur, requetes parametrees, auto-escaping, headers securite, CSRF token.",
+        "grade": 6,
+        "level": "STANDARD",
+        "sources": [
+          {"name": "SWEBOK v4", "pyramid": 1, "year": 2024, "quote": "Practice defense in depth."},
+          {"name": "OWASP XSS Prevention Cheat Sheet", "pyramid": 2, "year": 2024, "quote": "No single technique will solve XSS."}
+        ]
+      }
+    ]
+  },
+  "variants": {
+    "java-spring-boot": {
+      "recommendation": "Bean Validation (JSR 380) + Hibernate Validator pour la validation serveur, Spring Security CSRF (active par defaut) + SameSite cookies",
+      "grade": 4,
+      "level": "RECOMMANDE",
+      "implementation": "Utiliser @Valid/@NotBlank/@Size/@Email/@Pattern sur les records/DTOs. CSRF via CookieCsrfTokenRepository. JPA parametrise automatiquement les requetes.",
+      "sources": [
+        {"name": "OWASP Input Validation Cheat Sheet", "pyramid": 2, "year": 2024},
+        {"name": "Spring Boot docs (Bean Validation)", "pyramid": 3, "year": 2024},
+        {"name": "Spring Security docs (CSRF)", "pyramid": 3, "year": 2024}
+      ]
+    },
+    "typescript-nestjs": {
+      "recommendation": "class-validator + ValidationPipe pour la validation serveur",
+      "grade": 6,
+      "level": "STANDARD",
+      "implementation": "Activer ValidationPipe globalement dans main.ts, utiliser les decorateurs class-validator (@IsString, @IsEmail, @MinLength, etc.) sur les DTOs.",
+      "sources": [
+        {"name": "NestJS Validation docs", "pyramid": 3, "year": 2024},
+        {"name": "class-validator docs", "pyramid": 3, "year": 2024}
+      ]
+    },
+    "python-django": {
+      "recommendation": "DRF Serializers (built-in) pour la validation serveur",
+      "grade": 7,
+      "level": "STANDARD",
+      "implementation": "Utiliser les Serializers DRF avec les champs types (CharField, EmailField, etc.) et les validateurs integres. L'ORM Django parametrise automatiquement les requetes.",
+      "sources": [
+        {"name": "Django REST Framework Serializers docs", "pyramid": 3, "year": 2024}
+      ]
+    }
+  }
+}

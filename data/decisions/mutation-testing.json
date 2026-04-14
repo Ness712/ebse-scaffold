@@ -1,0 +1,54 @@
+{
+  "id": "mutation-testing",
+  "domain": "testing",
+  "question": "Comment valider la qualite des tests au-dela de la couverture de code ?",
+  "depends_on": ["backend-framework", "frontend-framework"],
+  "tags": ["testing", "mutation-testing", "pitest", "stryker", "test-quality"],
+  "classification": "mixed",
+  "universal": {
+    "principles": [
+      "La couverture mesure si le code est execute, pas s'il est verifie",
+      "Le mutation testing injecte des bugs (mutants) et verifie que les tests les detectent",
+      "Mutation score = mutants tues / mutants totaux",
+      "> 80% = tests solides, 60-80% = acceptable, < 60% = tests superficiels"
+    ]
+  },
+  "variants": {
+    "java-spring-boot": {
+      "recommendation": "PIT (pitest) — Maven/Gradle plugin, CI compatible. Seuil recommande : mutationThreshold 70%. Commande : mvn test-compile org.pitest:pitest-maven:mutationCoverage.",
+      "grade": 3,
+      "level": "BONNE PRATIQUE",
+      "sources": [
+        "SWEBOK v4 — mutation testing as test effectiveness measure (niv. 1)",
+        "PIT docs — Java mutation testing, Maven integration (niv. 3)"
+      ]
+    },
+    "typescript-nestjs": {
+      "recommendation": "Stryker — mutation testing pour JS/TS, supporte Jest. npx stryker init puis npx stryker run.",
+      "grade": 5,
+      "level": "BONNE PRATIQUE",
+      "sources": [
+        "Stryker docs — JS/TS mutation testing, framework integrations (niv. 3)",
+        "Double extraction batch 9 — accord 100% (niv. 5)"
+      ]
+    },
+    "python-django": {
+      "recommendation": "mutmut — mutation testing pour Python. Simple a configurer, integration pytest.",
+      "grade": 4,
+      "level": "BONNE PRATIQUE",
+      "sources": [
+        "mutmut docs (niv. 3)",
+        "Double extraction batch 9 — accord 100% (niv. 5)"
+      ]
+    },
+    "typescript-react-vite": {
+      "recommendation": "Stryker — mutation testing pour JS/TS, supporte Vitest/Jest. npx stryker init puis npx stryker run.",
+      "grade": 3,
+      "level": "BONNE PRATIQUE",
+      "sources": [
+        "Stryker docs — JS/TS mutation testing, framework integrations (niv. 3)",
+        "SWEBOK v4 — mutation testing as test effectiveness measure (niv. 1)"
+      ]
+    }
+  }
+}

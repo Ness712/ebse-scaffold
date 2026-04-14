@@ -1,0 +1,61 @@
+{
+  "id": "scaling",
+  "domain": "architecture",
+  "question": "Comment scaler une application web de maniere progressive ?",
+  "depends_on": ["backend-framework", "database"],
+  "tags": ["architecture", "scaling", "horizontal", "monolith", "replicas", "stateless", "redis"],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "Monolithe modulaire d'abord (0-10k users), puis replicas horizontaux avec load balancer (10k-100k), puis read replicas PostgreSQL, puis microservices (rarement justifie avant des centaines de devs).",
+        "grade": 3,
+        "level": "BONNE_PRATIQUE",
+        "sources": [
+          {"name": "Fowler — MonolithFirst", "pyramid": 5, "year": 2015},
+          {"name": "Twelve-Factor VI — stateless processes", "pyramid": 5, "year": 2012},
+          {"name": "Docker Compose deploy docs — replicas", "pyramid": 3, "year": 2024}
+        ]
+      },
+      {
+        "text": "Prerequis : application stateless. Sessions externalisees dans Redis. Aucun etat en memoire serveur.",
+        "grade": 3,
+        "level": "BONNE_PRATIQUE",
+        "sources": [
+          {"name": "Twelve-Factor VI — stateless processes", "pyramid": 5, "year": 2012}
+        ]
+      }
+    ]
+  },
+  "variants": {
+    "java-spring-boot": {
+      "recommendation": "Spring Session Redis + @EnableRedisHttpSession. Deploy replicas via docker-compose deploy.replicas. SPRING_SESSION_STORE_TYPE=redis.",
+      "grade": 3,
+      "level": "BONNE_PRATIQUE",
+      "implementation": "@EnableRedisHttpSession dans la config. docker-compose : deploy.replicas: 2 avec SPRING_DATA_REDIS_HOST: redis.",
+      "sources": [
+        {"name": "Spring Session Redis docs", "pyramid": 3, "year": 2024},
+        {"name": "Docker Compose deploy docs", "pyramid": 3, "year": 2024}
+      ]
+    },
+    "typescript-nestjs": {
+      "recommendation": "connect-redis pour les sessions externalisees. PM2 cluster mode ou Docker replicas pour le scaling horizontal.",
+      "grade": 3,
+      "level": "BONNE_PRATIQUE",
+      "implementation": "NestJS avec express-session + connect-redis. Docker replicas ou PM2 cluster mode pour multi-instance.",
+      "sources": [
+        {"name": "NestJS docs — scaling", "pyramid": 3, "year": 2024}
+      ]
+    },
+    "python-django": {
+      "recommendation": "django-redis pour le cache et les sessions. Gunicorn workers pour le scaling vertical, Docker replicas pour l'horizontal.",
+      "grade": 3,
+      "level": "BONNE_PRATIQUE",
+      "implementation": "SESSION_ENGINE = 'django.contrib.sessions.backends.cache'. CACHES avec django-redis. Gunicorn --workers $(nproc) pour multi-process.",
+      "sources": [
+        {"name": "Django docs — sessions backend", "pyramid": 3, "year": 2024},
+        {"name": "Gunicorn docs — workers", "pyramid": 3, "year": 2024}
+      ]
+    }
+  }
+}

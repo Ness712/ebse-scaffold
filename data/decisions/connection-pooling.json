@@ -1,0 +1,52 @@
+{
+  "id": "connection-pooling",
+  "domain": "performance",
+  "question": "Comment configurer le pool de connexions a la base de donnees ?",
+  "depends_on": ["backend-framework", "database"],
+  "tags": ["performance", "connection-pooling", "hikaricp", "database", "pool-size"],
+  "classification": "stack-specific",
+  "universal": {
+    "principles": [
+      {
+        "text": "Utiliser le pool par defaut du framework. Formule pool size : (2 * CPU cores) + nb disques SSD. Ne pas sur-dimensionner. minimum-idle = maximum-pool-size. max-lifetime inferieur au timeout DB.",
+        "grade": 5,
+        "level": "STANDARD",
+        "sources": [
+          {"name": "HikariCP wiki — About Pool Sizing", "pyramid": 3, "year": 2024},
+          {"name": "PostgreSQL docs — connection management", "pyramid": 5, "year": 2024}
+        ]
+      }
+    ]
+  },
+  "variants": {
+    "java-spring-boot": {
+      "recommendation": "HikariCP (pool par defaut Spring Boot). Config : maximum-pool-size 10, minimum-idle 10, connection-timeout 30s, idle-timeout 10min, max-lifetime 30min (< timeout PostgreSQL).",
+      "grade": 5,
+      "level": "STANDARD",
+      "implementation": "spring.datasource.hikari.maximum-pool-size: 10, minimum-idle: 10, connection-timeout: 30000, idle-timeout: 600000, max-lifetime: 1800000.",
+      "sources": [
+        {"name": "Spring Boot docs — HikariCP auto-configuration", "pyramid": 3, "year": 2024},
+        {"name": "HikariCP wiki — pool sizing benchmarks", "pyramid": 3, "year": 2024}
+      ]
+    },
+    "typescript-nestjs": {
+      "recommendation": "Prisma connection pool (par defaut) ou TypeORM connection pool. Configuration via DATABASE_URL avec ?connection_limit=10.",
+      "grade": 5,
+      "level": "STANDARD",
+      "implementation": "Prisma : datasource db { url = env(\"DATABASE_URL\") } avec ?connection_limit=10 dans l'URL. TypeORM : extra: { max: 10 }.",
+      "sources": [
+        {"name": "Prisma docs — connection pool", "pyramid": 3, "year": 2024}
+      ]
+    },
+    "python-django": {
+      "recommendation": "Django persistent connections (CONN_MAX_AGE) + django-db-connection-pool ou pgBouncer pour le pooling avance.",
+      "grade": 5,
+      "level": "STANDARD",
+      "implementation": "DATABASES.default.CONN_MAX_AGE = 600 (10min). Pour du vrai pooling : pgBouncer devant PostgreSQL ou django-db-connection-pool.",
+      "sources": [
+        {"name": "Django docs — persistent connections", "pyramid": 3, "year": 2024},
+        {"name": "pgBouncer docs", "pyramid": 3, "year": 2024}
+      ]
+    }
+  }
+}

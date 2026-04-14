@@ -1,0 +1,52 @@
+{
+  "id": "ci-pipeline",
+  "domain": "cicd",
+  "question": "Quel outil CI/CD, quelles stages et quality gates pour le pipeline ?",
+  "depends_on": ["containerization", "linting"],
+  "tags": ["cicd", "github-actions", "pipeline", "quality-gates", "dora", "sonarqube"],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "GitHub Actions pour les equipes sur GitHub : 53% adoption (SO 2024), 61% equipes 2-10 devs (JetBrains), integration native, 2000 min/mois gratuit, onboarding < 1 jour.",
+        "grade": 4,
+        "level": "RECOMMANDE",
+        "sources": [
+          {"name": "SWEBOK v4", "pyramid": 1, "year": 2024, "quote": "Automated build should include compilation, testing, static analysis, packaging"},
+          {"name": "DORA State of DevOps 2024", "pyramid": 4, "year": 2024, "quote": "Teams that can onboard a new developer to the pipeline in under 1 day deploy 3x more frequently"},
+          {"name": "Stack Overflow Survey 2024 — GitHub Actions 53%", "pyramid": 4, "year": 2024},
+          {"name": "JetBrains 2024 — GitHub Actions 52%, 61% in 2-10 dev teams", "pyramid": 4, "year": 2024}
+        ]
+      },
+      {
+        "text": "Pipeline en 3 phases : PR (lint, build, test, static analysis, security scan) → Merge staging (build artifact, push registry, deploy staging, smoke test) → Merge main (deploy prod avec approbation, smoke test, tag release).",
+        "grade": 4,
+        "level": "RECOMMANDE",
+        "sources": [
+          {"name": "SWEBOK v4", "pyramid": 1, "year": 2024},
+          {"name": "Twelve-Factor Factor V — build/release/run", "pyramid": 5, "year": 2012},
+          {"name": "DORA — quality gates at PR level = strongest predictor of low change failure rate", "pyramid": 4, "year": 2024}
+        ]
+      },
+      {
+        "text": "Quality gates bloquants : zero lint violations, 100% tests pass, SonarQube (80% coverage new code, 0 bugs, 3% duplication), zero critical/high CVE, smoke test HTTP 200, >= 1 reviewer.",
+        "grade": 4,
+        "level": "RECOMMANDE",
+        "sources": [
+          {"name": "DORA 2024 — quality gates = strongest predictor", "pyramid": 4, "year": 2024},
+          {"name": "SonarQube Sonar way defaults", "pyramid": 3, "year": 2024}
+        ]
+      },
+      {
+        "text": "Optimisation : build < 10 min (4x deployment frequency), paralleliser lint/build/test, cache Maven/npm, fail fast (lint avant tests lourds), trunk-based development (-50% change failure rate).",
+        "grade": 4,
+        "level": "RECOMMANDE",
+        "sources": [
+          {"name": "DORA State of DevOps 2024", "pyramid": 4, "year": 2024, "quote": "Build times under 10 minutes correlate with 4x higher deployment frequency"},
+          {"name": "DORA/Accelerate", "pyramid": 4, "year": 2024},
+          {"name": "GitHub Actions docs — caching", "pyramid": 3, "year": 2024}
+        ]
+      }
+    ]
+  }
+}

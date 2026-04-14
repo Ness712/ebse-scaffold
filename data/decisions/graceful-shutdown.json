@@ -1,0 +1,49 @@
+{
+  "id": "graceful-shutdown",
+  "domain": "reliability",
+  "question": "Comment drainer les connexions avant l'arret pour zero requetes perdues ?",
+  "depends_on": ["backend-framework", "infrastructure"],
+  "tags": ["reliability", "graceful-shutdown", "deployment", "zero-downtime", "docker"],
+  "classification": "stack-specific",
+  "universal": {
+    "principles": [
+      "Un arret brutal (SIGKILL) perd les requetes en cours",
+      "Le graceful shutdown laisse les requetes actives se terminer avant de couper le processus",
+      "stop_grace_period Docker > timeout-per-shutdown-phase de l'app (evite SIGKILL avant fin du drain)",
+      "Jamais de kill -9 en prod (perte de donnees, connexions DB orphelines)"
+    ]
+  },
+  "variants": {
+    "java-spring-boot": {
+      "recommendation": "server.shutdown=graceful + spring.lifecycle.timeout-per-shutdown-phase=30s. Docker stop_grace_period=35s (> timeout). Sequence : SIGTERM -> arret nouvelles connexions -> drain requetes en cours -> timeout -> SIGKILL.",
+      "grade": 6,
+      "level": "STANDARD",
+      "sources": [
+        "Spring Boot docs — graceful shutdown (niv. 3)",
+        "Docker docs — SIGTERM/SIGKILL lifecycle (niv. 3)",
+        "Twelve-Factor Factor IX — disposability, fast shutdown (niv. 5)",
+        "SWEBOK v4 — reliability, fault tolerance (niv. 1)"
+      ]
+    },
+    "typescript-nestjs": {
+      "recommendation": "enableShutdownHooks() dans main.ts pour activer les lifecycle hooks NestJS (OnModuleDestroy, BeforeApplicationShutdown). Docker stop_grace_period > timeout applicatif.",
+      "grade": 5,
+      "level": "STANDARD",
+      "sources": [
+        "NestJS docs — lifecycle events, shutdown hooks (niv. 3)",
+        "Docker docs — SIGTERM/SIGKILL lifecycle (niv. 3)",
+        "Double extraction batch 10 — accord 96% (niv. 5)"
+      ]
+    },
+    "python-django": {
+      "recommendation": "Gunicorn graceful-timeout pour drainer les workers. Docker stop_grace_period > graceful-timeout. Gunicorn envoie SIGTERM aux workers qui terminent leurs requetes en cours.",
+      "grade": 5,
+      "level": "STANDARD",
+      "sources": [
+        "Gunicorn docs — graceful timeout (niv. 3)",
+        "Docker docs — SIGTERM/SIGKILL lifecycle (niv. 3)",
+        "Double extraction batch 10 — accord 96% (niv. 5)"
+      ]
+    }
+  }
+}

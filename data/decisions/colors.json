@@ -1,0 +1,41 @@
+{
+  "id": "colors",
+  "domain": "design",
+  "question": "Combien de couleurs dans la palette et quels ratios de contraste respecter ?",
+  "depends_on": ["wcag-level"],
+  "tags": ["colors", "palette", "contrast", "wcag", "accessibility", "dark-mode"],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "2-3 teintes principales + neutres : 1 primaire (10 nuances), 1 accent, 1 jeu semantique (succes/warning/erreur), 1 echelle neutre. Maximum 5 +/- 2 familles de teintes.",
+        "grade": 5,
+        "level": "STANDARD",
+        "sources": [
+          "ISO 9241-125 (niv. 1)",
+          "Material Design 3 Color System (niv. 5)"
+        ]
+      },
+      {
+        "text": "Contraste WCAG AA minimum : 4.5:1 pour texte normal, 3:1 pour texte large (>=24px ou >=18.66px bold), 3:1 pour composants UI et graphiques, 3:1 pour indicateurs de focus.",
+        "grade": 5,
+        "level": "STANDARD",
+        "sources": [
+          "WCAG 2.2 SC 1.4.3 (niv. 1)",
+          "WCAG 2.2 SC 1.4.11 (niv. 1)",
+          "WCAG 2.2 SC 2.4.11 (niv. 1)"
+        ]
+      },
+      {
+        "text": "Ne jamais utiliser la couleur seule pour transmettre une information. Dark mode : memes ratios, tester separement.",
+        "grade": 5,
+        "level": "STANDARD",
+        "sources": [
+          "WCAG 2.2 SC 1.4.1 (niv. 1)",
+          "WebAIM Million 2024 — 95.9% des pages echouent AA (niv. 4)"
+        ]
+      }
+    ]
+  },
+  "variants": {}
+}

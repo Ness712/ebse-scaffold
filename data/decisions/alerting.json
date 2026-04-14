@@ -1,0 +1,45 @@
+{
+  "id": "alerting",
+  "domain": "operations",
+  "question": "Comment alerter efficacement sans alert fatigue ?",
+  "depends_on": ["monitoring", "slos"],
+  "tags": ["operations", "alerting", "grafana", "prometheus", "sre"],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "Alerter sur les symptomes (latence, erreurs, disponibilite) — jamais sur les causes (CPU, memoire) seules.",
+        "grade": 3,
+        "level": "BONNE_PRATIQUE",
+        "sources": [
+          {"name": "Google SRE Book ch.6", "pyramid": 5, "year": 2016, "quote": "Every alert should be actionable"},
+          {"name": "DORA State of DevOps 2024", "pyramid": 4, "year": 2024, "quote": "Alert fatigue correle avec burnout"}
+        ]
+      },
+      {
+        "text": "Chaque alerte doit etre actionnable — si aucune action possible, supprimer l'alerte.",
+        "grade": 3,
+        "level": "BONNE_PRATIQUE",
+        "sources": [
+          {"name": "Google SRE Book ch.6", "pyramid": 5, "year": 2016, "quote": "Every alert should be actionable"}
+        ]
+      },
+      {
+        "text": "Regrouper les alertes par inhibition pour eviter les cascades de notifications.",
+        "grade": 3,
+        "level": "BONNE_PRATIQUE",
+        "sources": [
+          {"name": "Alertmanager docs", "pyramid": 3, "year": 2024}
+        ]
+      },
+      {
+        "text": "Escalade progressive : Slack pour warning, PagerDuty/OpsGenie on-call pour critical uniquement.",
+        "grade": 3,
+        "level": "BONNE_PRATIQUE",
+        "sources": [
+          {"name": "Google SRE Book ch.6", "pyramid": 5, "year": 2016}
+        ]
+      }
+    ]
+  }
+}

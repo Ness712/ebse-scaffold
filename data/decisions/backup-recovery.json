@@ -1,0 +1,50 @@
+{
+  "id": "backup-recovery",
+  "domain": "reliability",
+  "question": "Quelle strategie de backup et disaster recovery pour la base de donnees ?",
+  "depends_on": ["database"],
+  "tags": ["reliability", "backup", "disaster-recovery", "postgresql", "pitr", "rpo", "rto"],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      "Strategie 2 niveaux : backup logique quotidien (pg_dump, RPO 24h) + WAL archiving continu (RPO < 1h)",
+      "Cibles : RPO <= 1h (WAL archiving), RTO <= 4h (pg_restore + WAL replay)",
+      "Offsite backup obligatoire (rclone vers stockage distant)",
+      "Retention 30 jours minimum",
+      "Tester les restaurations regulierement — un backup non teste n'est pas un backup"
+    ]
+  },
+  "variants": {
+    "java-spring-boot": {
+      "recommendation": "pg_dump quotidien (cron 0 3 * * *) en format custom compresse (-Fc -Z 9) + WAL archiving pour PITR. Offsite via rclone. Retention 30 jours. Configuration postgresql.conf : wal_level=replica, archive_mode=on.",
+      "grade": 5,
+      "level": "STANDARD",
+      "sources": [
+        "PostgreSQL docs Ch. 26 PITR (niv. 3)",
+        "ISO 27001 A.8.13 Information backup (niv. 1)",
+        "SWEBOK v4 Ch.12 Maintenance (niv. 1)",
+        "Google SRE Book data integrity (niv. 5)"
+      ]
+    },
+    "typescript-nestjs": {
+      "recommendation": "Meme strategie PostgreSQL : pg_dump quotidien + WAL archiving pour PITR. Offsite via rclone. La strategie de backup est independante du framework backend.",
+      "grade": 5,
+      "level": "STANDARD",
+      "sources": [
+        "PostgreSQL docs Ch. 26 PITR (niv. 3)",
+        "ISO 27001 A.8.13 Information backup (niv. 1)",
+        "Google SRE Book data integrity (niv. 5)"
+      ]
+    },
+    "python-django": {
+      "recommendation": "Meme strategie PostgreSQL : pg_dump quotidien + WAL archiving pour PITR. Offsite via rclone. La strategie de backup est independante du framework backend.",
+      "grade": 5,
+      "level": "STANDARD",
+      "sources": [
+        "PostgreSQL docs Ch. 26 PITR (niv. 3)",
+        "ISO 27001 A.8.13 Information backup (niv. 1)",
+        "Google SRE Book data integrity (niv. 5)"
+      ]
+    }
+  }
+}

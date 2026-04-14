@@ -1,0 +1,47 @@
+{
+  "id": "database-migrations",
+  "domain": "reliability",
+  "question": "Comment gerer les migrations de base de donnees de maniere versionnee et reproductible ?",
+  "depends_on": ["backend-framework", "database"],
+  "tags": ["reliability", "database", "migrations", "flyway", "schema-versioning", "zero-downtime"],
+  "classification": "stack-specific",
+  "universal": {
+    "principles": [
+      "Les migrations manuelles sont la premiere source de drift entre environnements",
+      "Versionner chaque changement de schema",
+      "Additive only : pas de DROP/RENAME direct (ajouter, migrer donnees, supprimer l'ancienne)",
+      "Colonne nullable d'abord, backfill en migration separee, contrainte en dernier",
+      "Jamais modifier une migration deja appliquee (checksum verification)"
+    ]
+  },
+  "variants": {
+    "java-spring-boot": {
+      "recommendation": "Flyway — auto-configure par Spring Boot, migrations versionnees (V{n}__description.sql) et repeatables (R__description.sql). Convention de nommage stricte. Jamais JPA auto-ddl en prod (non reproductible, pas de versioning).",
+      "grade": 5,
+      "level": "RECOMMANDE",
+      "sources": [
+        "Spring Boot docs — Flyway auto-configuration (niv. 3)",
+        "Flyway docs — naming conventions, repeatable migrations, checksum validation (niv. 3)",
+        "Fowler — Evolutionary Database Design, versioned migrations (niv. 5)"
+      ]
+    },
+    "typescript-nestjs": {
+      "recommendation": "Prisma Migrate — migrations versionnees generees automatiquement a partir du schema Prisma. Integre au workflow de developpement NestJS.",
+      "grade": 6,
+      "level": "RECOMMANDE",
+      "sources": [
+        "Prisma docs — Prisma Migrate (niv. 3)",
+        "Double extraction batch 10 — accord 96% (niv. 5)"
+      ]
+    },
+    "python-django": {
+      "recommendation": "Built-in manage.py migrate — Django inclut un systeme de migrations robuste et mature. Commandes : makemigrations, migrate, showmigrations.",
+      "grade": 7,
+      "level": "RECOMMANDE",
+      "sources": [
+        "Django docs — migrations (niv. 3)",
+        "Double extraction batch 10 — accord 96% (niv. 5)"
+      ]
+    }
+  }
+}

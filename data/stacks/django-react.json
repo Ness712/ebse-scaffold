@@ -1,0 +1,12 @@
+{
+  "id": "django-react",
+  "name": "Python / Django + React",
+  "description": "Batteries-incluses, MVP rapide, equipes Python",
+  "choices": {
+    "approach": "constrained",
+    "backend": "python-django",
+    "frontend": "react",
+    "database": "postgresql",
+    "budget": "open-source"
+  }
+}

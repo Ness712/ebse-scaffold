@@ -1,0 +1,38 @@
+{
+  "id": "charts",
+  "domain": "design",
+  "question": "Quelle librairie de graphiques utiliser pour la visualisation de donnees ?",
+  "depends_on": ["component-library"],
+  "tags": ["charts", "data-visualization", "recharts", "react"],
+  "classification": "stack-specific",
+  "universal": {
+    "principles": [
+      {
+        "text": "Choisir une librairie de graphiques declarative, responsive et accessible, avec bonne integration TypeScript.",
+        "grade": 3,
+        "level": "BONNE PRATIQUE",
+        "sources": [
+          "npm trends 2025-2026 — Recharts et Chart.js co-leaders en telechargements (niv. 4)",
+          "State of JS 2024 — Recharts #1 satisfaction React charting (niv. 4)"
+        ]
+      }
+    ]
+  },
+  "variants": {
+    "react-vite": {
+      "choice": "Recharts",
+      "principles": [
+        {
+          "text": "Recharts pour React : composants declaratifs, SVG natif, responsive, bonne integration TypeScript.",
+          "grade": 3,
+          "level": "BONNE PRATIQUE",
+          "sources": [
+            "npm trends 2025-2026 — Recharts et Chart.js co-leaders (niv. 4)",
+            "State of JS 2024 — Recharts #1 satisfaction React charting (niv. 4)",
+            "Recharts docs — built on React + D3 (niv. 5)"
+          ]
+        }
+      ]
+    }
+  }
+}

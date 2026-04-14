@@ -1,0 +1,49 @@
+{
+  "id": "error-tracking",
+  "domain": "operations",
+  "question": "Quel outil de suivi d'erreurs en production (capture, grouping, alerting) ?",
+  "depends_on": ["backend-framework", "frontend-framework"],
+  "tags": ["operations", "error-tracking", "sentry", "glitchtip", "observability"],
+  "classification": "mixed",
+  "universal": {
+    "principles": [
+      {
+        "text": "Les erreurs en production doivent etre capturees automatiquement, groupees et notifiees. Les logs seuls ne suffisent pas.",
+        "grade": 4,
+        "level": "RECOMMANDE",
+        "sources": [
+          {"name": "Stack Overflow Survey 2024", "pyramid": 4, "year": 2024, "quote": "Sentry 32% adoption parmi les outils d'observabilite"},
+          {"name": "Sentry docs", "pyramid": 3, "year": 2024}
+        ]
+      },
+      {
+        "text": "Sentry SaaS pour les equipes sans infra. GlitchTip self-hosted si budget zero et infra existante.",
+        "grade": 4,
+        "level": "RECOMMANDE",
+        "sources": [
+          {"name": "Sentry docs — Spring Boot integration, source maps, alerting", "pyramid": 3, "year": 2024},
+          {"name": "GlitchTip docs — Sentry SDK compatible, lightweight self-hosted", "pyramid": 3, "year": 2024}
+        ]
+      }
+    ]
+  },
+  "variants": {
+    "java-spring-boot": {
+      "recommendation": "Sentry SDK pour Spring Boot : sentry.dsn, sentry.traces-sample-rate=0.2, sentry.environment=${SPRING_PROFILES_ACTIVE}. Source maps pour le frontend React.",
+      "grade": 4,
+      "level": "RECOMMANDE",
+      "sources": [
+        {"name": "Sentry docs — Spring Boot integration", "pyramid": 3, "year": 2024},
+        {"name": "Stack Overflow Survey 2024", "pyramid": 4, "year": 2024}
+      ]
+    },
+    "typescript-react-vite": {
+      "recommendation": "Sentry.init() avec @sentry/react, browserTracingIntegration, tracesSampleRate=0.2. DSN via VITE_SENTRY_DSN.",
+      "grade": 4,
+      "level": "RECOMMANDE",
+      "sources": [
+        {"name": "Sentry docs — React integration", "pyramid": 3, "year": 2024}
+      ]
+    }
+  }
+}

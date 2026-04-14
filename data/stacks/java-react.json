@@ -1,0 +1,12 @@
+{
+  "id": "java-react",
+  "name": "Java / Spring Boot + React",
+  "description": "Profil pour equipes Java, ecosysteme enterprise mature",
+  "choices": {
+    "approach": "constrained",
+    "backend": "java-spring-boot",
+    "frontend": "react",
+    "database": "postgresql",
+    "budget": "open-source"
+  }
+}

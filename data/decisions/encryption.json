@@ -1,0 +1,49 @@
+{
+  "id": "encryption",
+  "domain": "security",
+  "question": "Comment chiffrer les donnees en transit (TLS) et au repos (at-rest) ?",
+  "depends_on": [],
+  "tags": ["security", "encryption", "tls", "https", "aes"],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "TLS 1.3 obligatoire pour toutes les communications. HTTPS everywhere avec redirection automatique.",
+        "grade": 6,
+        "level": "STANDARD",
+        "sources": [
+          {"name": "NIST SP 800-52 Rev. 2", "pyramid": 1, "year": 2019},
+          {"name": "OWASP ASVS V6", "pyramid": 2, "year": 2021},
+          {"name": "Mozilla TLS Guidelines", "pyramid": 5, "year": 2024}
+        ]
+      },
+      {
+        "text": "HSTS avec includeSubDomains, maxAge >= 1 an (31536000s), preload active.",
+        "grade": 6,
+        "level": "STANDARD",
+        "sources": [
+          {"name": "NIST SP 800-52 Rev. 2", "pyramid": 1, "year": 2019},
+          {"name": "OWASP ASVS V6", "pyramid": 2, "year": 2021}
+        ]
+      },
+      {
+        "text": "Let's Encrypt pour les certificats TLS (gratuit, automatise, 90 jours). Cible grade A+ sur SSL Labs.",
+        "grade": 6,
+        "level": "STANDARD",
+        "sources": [
+          {"name": "Let's Encrypt docs", "pyramid": 3, "year": 2024}
+        ]
+      },
+      {
+        "text": "At-rest : disk-level encryption (LUKS ou cloud provider) pour la base. AES-256-GCM application-level pour champs sensibles specifiques (tokens, PII).",
+        "grade": 6,
+        "level": "STANDARD",
+        "sources": [
+          {"name": "NIST SP 800-175B", "pyramid": 1, "year": 2020},
+          {"name": "OWASP ASVS V6", "pyramid": 2, "year": 2021}
+        ]
+      }
+    ]
+  },
+  "variants": {}
+}

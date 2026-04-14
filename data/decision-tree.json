@@ -1,0 +1,201 @@
+{
+  "version": "2026.04",
+  "nodes": {
+    "start": {
+      "type": "choice",
+      "question": "Quelle approche pour ton projet ?",
+      "options": [
+        {
+          "label": "Je veux le MIEUX possible, je m'adapte",
+          "description": "Le guide determine LA stack optimale selon les sources EBSE. Tu adaptes ton equipe, tes competences, ton budget.",
+          "sets": { "approach": "optimal" },
+          "next": "project-type"
+        },
+        {
+          "label": "J'ai des contraintes (equipe, langage, budget...)",
+          "description": "Le guide s'adapte a ton contexte.",
+          "sets": { "approach": "constrained" },
+          "next": "project-type"
+        }
+      ]
+    },
+    "project-type": {
+      "type": "choice",
+      "question": "Quel type de projet ?",
+      "source": "SWEBOK v4 Software Architecture — project type affects architectural decisions",
+      "options": [
+        {
+          "label": "Web app SPA (dashboard, outil, plateforme)",
+          "sets": { "project_type": "spa" },
+          "next": "project-scale"
+        },
+        {
+          "label": "Site contenu (blog, docs, marketing)",
+          "sets": { "project_type": "content" },
+          "next": "project-scale"
+        },
+        {
+          "label": "API only (backend pour mobile ou autre frontend)",
+          "sets": { "project_type": "api-only" },
+          "next": "project-scale"
+        },
+        {
+          "label": "App temps-reel (chat, collaboration, streaming)",
+          "sets": { "project_type": "realtime" },
+          "next": "project-scale"
+        }
+      ]
+    },
+    "project-scale": {
+      "type": "choice",
+      "question": "Quelle echelle visee ?",
+      "source": "Twelve-Factor App + Google SRE — scale affects infrastructure decisions",
+      "options": [
+        {
+          "label": "Local / interne (< 100 utilisateurs)",
+          "sets": { "scale": "local" },
+          "next": "check-approach"
+        },
+        {
+          "label": "Startup / PME (100 - 10 000 utilisateurs)",
+          "sets": { "scale": "startup" },
+          "next": "check-approach"
+        },
+        {
+          "label": "Scale (10 000 - 1 000 000 utilisateurs)",
+          "sets": { "scale": "scale" },
+          "next": "check-approach"
+        },
+        {
+          "label": "Mondial (1M+ utilisateurs, multi-region)",
+          "sets": { "scale": "global" },
+          "next": "check-approach"
+        }
+      ]
+    },
+    "check-approach": {
+      "type": "router",
+      "condition": "approach",
+      "routes": {
+        "optimal": "optimal-result",
+        "constrained": "language-choice"
+      }
+    },
+    "language-choice": {
+      "type": "choice",
+      "question": "Quel langage maitrise ton equipe ?",
+      "source": "SWEBOK v4 SE Economics — productivity depends on language mastery",
+      "options": [
+        {
+          "label": "Java",
+          "sets": { "backend": "java-spring-boot", "backend_label": "Spring Boot (Java 21)" },
+          "next": "frontend-choice"
+        },
+        {
+          "label": "TypeScript / JavaScript",
+          "sets": { "backend": "typescript-nestjs", "backend_label": "NestJS (TypeScript)" },
+          "next": "frontend-choice"
+        },
+        {
+          "label": "Python",
+          "sets": { "backend": "python-django", "backend_label": "Django (Python)" },
+          "next": "frontend-choice"
+        },
+        {
+          "label": "C#",
+          "sets": { "backend": "csharp-aspnet", "backend_label": "ASP.NET Core (C#)" },
+          "next": "frontend-choice"
+        },
+        {
+          "label": "Aucun / je veux le mieux",
+          "sets": { "approach": "optimal" },
+          "next": "optimal-result"
+        }
+      ]
+    },
+    "frontend-choice": {
+      "type": "choice",
+      "question": "Framework frontend ?",
+      "source": "SO Survey 2025 + State of JS 2025 — React #1 adoption + satisfaction",
+      "options": [
+        {
+          "label": "React (recommande — GRADE 6/7)",
+          "sets": { "frontend": "react", "frontend_label": "React 19 + TypeScript" },
+          "next": "database-choice"
+        },
+        {
+          "label": "Vue.js",
+          "sets": { "frontend": "vue", "frontend_label": "Vue 3 + TypeScript" },
+          "next": "database-choice"
+        },
+        {
+          "label": "Angular",
+          "sets": { "frontend": "angular", "frontend_label": "Angular + TypeScript" },
+          "next": "database-choice"
+        },
+        {
+          "label": "Svelte",
+          "sets": { "frontend": "svelte", "frontend_label": "Svelte 5 + TypeScript" },
+          "next": "database-choice"
+        }
+      ]
+    },
+    "database-choice": {
+      "type": "choice",
+      "question": "Type de base de donnees ?",
+      "source": "SO Survey 2025 — PostgreSQL #1 adoption + satisfaction",
+      "options": [
+        {
+          "label": "Relationnelle (recommande : PostgreSQL — GRADE 5/7)",
+          "sets": { "database": "postgresql", "database_label": "PostgreSQL" },
+          "next": "budget-choice"
+        },
+        {
+          "label": "Document (MongoDB)",
+          "sets": { "database": "mongodb", "database_label": "MongoDB" },
+          "next": "budget-choice"
+        }
+      ]
+    },
+    "budget-choice": {
+      "type": "choice",
+      "question": "Budget pour les outils ?",
+      "options": [
+        {
+          "label": "Open source / self-hosted uniquement (gratuit)",
+          "sets": { "budget": "open-source" },
+          "next": "result"
+        },
+        {
+          "label": "SaaS autorise (budget disponible)",
+          "sets": { "budget": "saas-ok" },
+          "next": "result"
+        }
+      ]
+    },
+    "optimal-result": {
+      "type": "result",
+      "description": "Stack optimale determinee par EBSE (double extraction, 2 agents convergent)",
+      "source": "batch-12-optimal-stack.md — Agent A + Agent B 100% agreement",
+      "sets": {
+        "backend": "typescript-nestjs",
+        "backend_label": "NestJS (TypeScript) sur Fastify",
+        "frontend": "react",
+        "frontend_label": "React 19 + TypeScript",
+        "database": "postgresql",
+        "database_label": "PostgreSQL",
+        "orm": "prisma",
+        "css": "tailwind",
+        "build": "vite",
+        "test_unit": "vitest",
+        "test_e2e": "playwright",
+        "package_manager": "pnpm",
+        "budget": "open-source"
+      }
+    },
+    "result": {
+      "type": "result",
+      "description": "Generer le guide personnalise avec ces choix"
+    }
+  }
+}

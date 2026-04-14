@@ -1,0 +1,70 @@
+{
+  "id": "unit-tests",
+  "domain": "testing",
+  "question": "Quel framework et quelle strategie pour les tests unitaires ?",
+  "depends_on": ["backend-framework", "frontend-framework"],
+  "tags": ["testing", "unit-tests", "coverage", "junit", "vitest", "assertj"],
+  "classification": "mixed",
+  "universal": {
+    "principles": [
+      "Suivre la pyramide de tests : 70% unit / 20% integration / 10% E2E (Google Testing Blog)",
+      "Write lots of small and fast unit tests (Fowler, Practical Test Pyramid)",
+      "Push tests as far down the pyramid as you can (Fowler)",
+      "Tests should minimize programmer waiting — sub-seconde (Kent Beck)",
+      "Test for observable behaviour, not implementation details (Fowler, Beck)",
+      "Before fixing a bug from a high-level test, replicate with a unit test (Fowler)",
+      "Tester le comportement observable, pas l'implementation",
+      "Un test = une assertion logique",
+      "Noms de tests descriptifs (given/when/then ou should)",
+      "Supprimer les tests flaky",
+      "Le code de test a la meme qualite que le code de prod",
+      "Coverage recommandee : 75% projet, 90% nouveau code (rendements decroissants au-dela de 80%)"
+    ]
+  },
+  "variants": {
+    "java-spring-boot": {
+      "recommendation": "JUnit 5 (Jupiter) + AssertJ pour les assertions fluides. Inclus dans spring-boot-starter-test (JUnit 5, AssertJ, Hamcrest, Mockito, JSONassert, JsonPath). Coverage avec JaCoCo.",
+      "grade": 5,
+      "level": "RECOMMANDE",
+      "sources": [
+        "Spring Boot docs — JUnit 5 + AssertJ bundled by default (niv. 3)",
+        "JetBrains survey — JUnit 5 dominant Java (niv. 4)",
+        "Maven Central ~80% market share (niv. 4)",
+        "Google Testing Blog — 70/20/10 pyramid, 60/75/90% coverage tiers (niv. 5)",
+        "Fowler — test pyramid, test observable behaviour (niv. 5)",
+        "Kent Beck — 8 properties of good tests, sub-second, reliable (niv. 5)"
+      ]
+    },
+    "typescript-nestjs": {
+      "recommendation": "Jest + @nestjs/testing. Jest est le framework par defaut de NestJS. Coverage avec v8 ou Istanbul.",
+      "grade": 6,
+      "level": "RECOMMANDE",
+      "sources": [
+        "NestJS docs — Jest bundled by default (niv. 3)",
+        "State of JS 2024/2025 (niv. 4)",
+        "Double extraction batch 9 — accord 100% (niv. 5)"
+      ]
+    },
+    "python-django": {
+      "recommendation": "pytest + pytest-django. pytest est le standard de facto pour Python, pytest-django fournit les fixtures et integration Django.",
+      "grade": 6,
+      "level": "RECOMMANDE",
+      "sources": [
+        "pytest docs (niv. 3)",
+        "Django docs — testing (niv. 3)",
+        "Double extraction batch 9 — accord 100% (niv. 5)"
+      ]
+    },
+    "typescript-react-vite": {
+      "recommendation": "Vitest — framework de test natif de l'ecosysteme Vite, partage vite.config.ts, zero config supplementaire. Coverage avec v8 (natif Vitest). #1 satisfaction 90%+ (State of JS 2024-2025).",
+      "grade": 4,
+      "level": "RECOMMANDE",
+      "sources": [
+        "Vite utilise Vitest pour ses propres tests (niv. 3)",
+        "State of JS 2024-2025 — Vitest #1 satisfaction 90%+ (niv. 4)",
+        "npm 82M/mois et croissance 3.5x en 2 ans (niv. 4)",
+        "React Testing Library — supports Vitest with dedicated docs (niv. 3)"
+      ]
+    }
+  }
+}

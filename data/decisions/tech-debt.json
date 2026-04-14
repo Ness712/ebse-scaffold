@@ -1,0 +1,46 @@
+{
+  "id": "tech-debt",
+  "domain": "code-quality",
+  "question": "Comment mesurer, prioriser et reduire la dette technique ?",
+  "depends_on": ["linting"],
+  "tags": ["code-quality", "tech-debt", "sonarqube", "boy-scout-rule", "clean-code"],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "Mesurer la dette via SonarQube Technical Debt metric. Seuil : ratio dette < 5% (temps remediation / temps dev).",
+        "grade": 3,
+        "level": "BONNE_PRATIQUE",
+        "sources": [
+          {"name": "SonarQube docs — technical debt metric", "pyramid": 3, "year": 2024},
+          {"name": "Fowler — TechnicalDebt", "pyramid": 5, "year": 2009}
+        ]
+      },
+      {
+        "text": "Prioriser par impact x frequence de contact : code touche souvent + dette = priorite haute.",
+        "grade": 3,
+        "level": "BONNE_PRATIQUE",
+        "sources": [
+          {"name": "Fowler — TechnicalDebt", "pyramid": 5, "year": 2009},
+          {"name": "SWEBOK v4 — Software Maintenance KA", "pyramid": 1, "year": 2024}
+        ]
+      },
+      {
+        "text": "Allouer 20% du temps sprint pour la dette — integrer dans le backlog, pas 'quand on a le temps'.",
+        "grade": 3,
+        "level": "BONNE_PRATIQUE",
+        "sources": [
+          {"name": "Fowler — TechnicalDebt", "pyramid": 5, "year": 2009}
+        ]
+      },
+      {
+        "text": "Boy scout rule : laisser le code plus propre qu'on ne l'a trouve. Le refactor est dans le meme commit que le fix.",
+        "grade": 3,
+        "level": "BONNE_PRATIQUE",
+        "sources": [
+          {"name": "Martin — Clean Code, boy scout rule", "pyramid": 5, "year": 2008}
+        ]
+      }
+    ]
+  }
+}

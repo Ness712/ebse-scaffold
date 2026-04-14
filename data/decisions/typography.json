@@ -1,0 +1,53 @@
+{
+  "id": "typography",
+  "domain": "design",
+  "question": "Quelles regles typographiques appliquer (taille, line-height, largeur de ligne, echelle) ?",
+  "depends_on": [],
+  "tags": ["typography", "font-size", "line-height", "line-length", "type-scale"],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "Body text : 16px minimum. Ne jamais descendre en dessous de 14px pour du texte de contenu.",
+        "grade": 6,
+        "level": "STANDARD",
+        "sources": [
+          "ISO 9241-125:2017 — taille minimum (niv. 1)",
+          "Material Design 3 — Body Large 16sp (niv. 5)",
+          "Apple HIG — Body 17pt (niv. 5)",
+          "Web Almanac 2024 — median 16px (8M sites) (niv. 4)"
+        ]
+      },
+      {
+        "text": "Line-height : 1.5 pour body text, 1.2-1.3 pour headings, 1.2 pour UI labels et boutons.",
+        "grade": 6,
+        "level": "STANDARD",
+        "sources": [
+          "WCAG 2.2 criterion 1.4.8 (AAA) — line-height >= 1.5 (niv. 1)",
+          "Nielsen Norman Group — line-height 1.4-1.65 (niv. 3)",
+          "Web Almanac 2024 — line-height 1.5 (niv. 4)"
+        ]
+      },
+      {
+        "text": "Maximum 75 caracteres par ligne (max-width: 65ch en CSS).",
+        "grade": 6,
+        "level": "STANDARD",
+        "sources": [
+          "WCAG 2.2 criterion 1.4.8 — max 80 chars (niv. 1)",
+          "Ling & Van Schaik 2006 — 50-75 chars optimal (peer-reviewed) (niv. 2)",
+          "ISO 9241-125:2017 — longueur de ligne (niv. 1)"
+        ]
+      },
+      {
+        "text": "Echelle typographique : ratio 1.25 (major third) ou 1.333 (perfect fourth). Maximum 2 familles de polices (1 titres, 1 body, ou 1 seule).",
+        "grade": 3,
+        "level": "RECOMMANDE",
+        "sources": [
+          "Material Design 3 (niv. 5)",
+          "Apple HIG (niv. 5)"
+        ]
+      }
+    ]
+  },
+  "variants": {}
+}

@@ -1,0 +1,39 @@
+{
+  "id": "incident-response",
+  "domain": "operations",
+  "question": "Comment reagir aux incidents en production (runbooks, postmortems, blameless culture) ?",
+  "depends_on": ["alerting", "error-tracking"],
+  "tags": ["operations", "incident-response", "runbooks", "postmortem", "blameless", "sre"],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "Processus en 5 etapes : Identifier (quel service, quel impact) → Contenir (rollback, feature flag off, scale up) → Resoudre (fix + deploy) → Communiquer (status page, equipe informee) → Postmortem (dans les 48h, blameless).",
+        "grade": 3,
+        "level": "BONNE_PRATIQUE",
+        "sources": [
+          {"name": "Google SRE Book ch.15 — postmortem culture", "pyramid": 5, "year": 2016},
+          {"name": "PagerDuty Incident Response guide", "pyramid": 3, "year": 2024}
+        ]
+      },
+      {
+        "text": "Chaque alerte doit avoir un runbook associe : symptomes, diagnostic, actions correctives.",
+        "grade": 3,
+        "level": "BONNE_PRATIQUE",
+        "sources": [
+          {"name": "Google SRE Book ch.15", "pyramid": 5, "year": 2016},
+          {"name": "PagerDuty Incident Response guide", "pyramid": 3, "year": 2024}
+        ]
+      },
+      {
+        "text": "Postmortem blameless dans les 48h : impact, chronologie, cause racine, actions correctives avec responsable et deadline, lecons apprises.",
+        "grade": 3,
+        "level": "BONNE_PRATIQUE",
+        "sources": [
+          {"name": "Google SRE Book ch.15 — postmortem culture", "pyramid": 5, "year": 2016},
+          {"name": "Etsy — blameless postmortems", "pyramid": 4, "year": 2014}
+        ]
+      }
+    ]
+  }
+}

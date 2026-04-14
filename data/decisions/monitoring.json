@@ -1,0 +1,51 @@
+{
+  "id": "monitoring",
+  "domain": "reliability",
+  "question": "Quoi monitorer et avec quel stack d'observabilite ?",
+  "depends_on": ["infrastructure"],
+  "tags": ["reliability", "monitoring", "prometheus", "grafana", "sentry", "opentelemetry", "slo"],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      "Monitorer les 4 golden signals : Latency (P95 < 500ms), Traffic (req/s), Errors (5xx < 0.1%), Saturation (CPU, memoire, connexions DB)",
+      "Ajouter le monitoring securite : echecs login, acces non autorises",
+      "Definir des SLOs mesurables : disponibilite 99.9%, latence P95 < 500ms, taux d'erreur < 0.1%",
+      "Logs as event streams (Twelve-Factor App)"
+    ]
+  },
+  "variants": {
+    "java-spring-boot": {
+      "recommendation": "Prometheus (metriques + alerting, CNCF gradue, 67% adoption) + Grafana (dashboards, 43% adoption) + Sentry/GlitchTip (error tracking) + Loki ou ELK (logs) + OpenTelemetry (instrumentation vendor-agnostic). Spring Boot Actuator pour les health endpoints et metriques Micrometer.",
+      "grade": 4,
+      "level": "RECOMMANDE",
+      "sources": [
+        "SWEBOK v4 chap. 6 — monitoring multi-couche obligatoire (niv. 1)",
+        "OWASP A09:2021 — logging des evenements securite (niv. 2)",
+        "Google SRE Book chap. 6 — four golden signals (niv. 5)",
+        "CNCF — Prometheus et OpenTelemetry projets gradues (niv. 3)",
+        "SO Survey 2025 — Prometheus+Grafana 43%, Sentry 32% (niv. 4)",
+        "Twelve-Factor App — logs as event streams (niv. 5)"
+      ]
+    },
+    "typescript-nestjs": {
+      "recommendation": "Meme stack d'observabilite : Prometheus + Grafana + Sentry/GlitchTip + Loki/ELK + OpenTelemetry. Le stack de monitoring est independant du framework backend.",
+      "grade": 4,
+      "level": "RECOMMANDE",
+      "sources": [
+        "Google SRE Book chap. 6 — four golden signals (niv. 5)",
+        "CNCF — Prometheus et OpenTelemetry projets gradues (niv. 3)",
+        "SO Survey 2025 (niv. 4)"
+      ]
+    },
+    "python-django": {
+      "recommendation": "Meme stack d'observabilite : Prometheus + Grafana + Sentry/GlitchTip + Loki/ELK + OpenTelemetry. Le stack de monitoring est independant du framework backend.",
+      "grade": 4,
+      "level": "RECOMMANDE",
+      "sources": [
+        "Google SRE Book chap. 6 — four golden signals (niv. 5)",
+        "CNCF — Prometheus et OpenTelemetry projets gradues (niv. 3)",
+        "SO Survey 2025 (niv. 4)"
+      ]
+    }
+  }
+}

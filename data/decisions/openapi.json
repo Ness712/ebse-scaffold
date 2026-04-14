@@ -1,0 +1,60 @@
+{
+  "id": "openapi",
+  "domain": "architecture",
+  "question": "Comment documenter les APIs de maniere standardisee et maintenable ?",
+  "depends_on": ["api-protocol", "backend-framework"],
+  "tags": ["architecture", "openapi", "swagger", "api-documentation", "contract"],
+  "classification": "stack-specific",
+  "universal": {
+    "principles": [
+      {
+        "text": "Documenter toutes les APIs avec OpenAPI 3.x. Generer le schema depuis le code (single source of truth). 89% des equipes utilisent OpenAPI (SmartBear 2023).",
+        "grade": 5,
+        "level": "STANDARD",
+        "sources": [
+          {"name": "OpenAPI Specification 3.1 — standard IETF", "pyramid": 1, "year": 2024},
+          {"name": "SmartBear 2023 API Survey", "pyramid": 4, "year": 2023, "quote": "89% des equipes utilisent OpenAPI"}
+        ]
+      },
+      {
+        "text": "Exporter le JSON OpenAPI dans le CI pour detecter les breaking changes automatiquement.",
+        "grade": 5,
+        "level": "STANDARD",
+        "sources": [
+          {"name": "OpenAPI Specification 3.1", "pyramid": 1, "year": 2024}
+        ]
+      }
+    ]
+  },
+  "variants": {
+    "java-spring-boot": {
+      "recommendation": "springdoc-openapi-starter-webmvc-ui 2.8+ — generation automatique depuis les annotations @Operation, @ApiResponse. Accessible sur /swagger-ui.html et /v3/api-docs.",
+      "grade": 5,
+      "level": "STANDARD",
+      "implementation": "Ajouter springdoc-openapi-starter-webmvc-ui dans pom.xml. Annoter les endpoints avec @Operation(summary), @ApiResponse(responseCode, description).",
+      "sources": [
+        {"name": "Spring Boot docs — springdoc-openapi integration native", "pyramid": 3, "year": 2024}
+      ]
+    },
+    "typescript-nestjs": {
+      "recommendation": "@nestjs/swagger — generation automatique depuis les decorateurs NestJS. Support OpenAPI 3.x complet.",
+      "grade": 6,
+      "level": "STANDARD",
+      "implementation": "SwaggerModule.setup('api', app, document) dans main.ts. Decorateurs @ApiTags, @ApiOperation, @ApiResponse sur les controllers.",
+      "sources": [
+        {"name": "NestJS Swagger docs", "pyramid": 3, "year": 2024},
+        {"name": "Batch 11 — @nestjs/swagger accord 100%", "pyramid": 5, "year": 2026}
+      ]
+    },
+    "python-django": {
+      "recommendation": "drf-spectacular — generation OpenAPI 3.x depuis les serializers et views DRF. Remplace drf-yasg (deprecie).",
+      "grade": 6,
+      "level": "STANDARD",
+      "implementation": "pip install drf-spectacular. REST_FRAMEWORK = {'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema'}. SpectacularAPIView pour /api/schema/.",
+      "sources": [
+        {"name": "drf-spectacular docs", "pyramid": 3, "year": 2024},
+        {"name": "Batch 11 — drf-spectacular accord 100%", "pyramid": 5, "year": 2026}
+      ]
+    }
+  }
+}

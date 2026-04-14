@@ -1,0 +1,47 @@
+{
+  "id": "circuit-breaker",
+  "domain": "reliability",
+  "question": "Comment proteger le systeme contre les defaillances de services externes (circuit breaker) ?",
+  "depends_on": ["backend-framework"],
+  "tags": ["reliability", "circuit-breaker", "resilience", "resilience4j", "fault-tolerance"],
+  "classification": "stack-specific",
+  "universal": {
+    "principles": [
+      "Proteger les appels aux services externes (email, stockage, APIs tiers) avec un circuit breaker",
+      "Prevoir un fallback quand le circuit est ouvert (ex: file d'attente)",
+      "Combiner circuit breaker avec retry et exponential backoff",
+      "Le circuit breaker est le pattern #1 de stabilite (Nygard Release It!)"
+    ]
+  },
+  "variants": {
+    "java-spring-boot": {
+      "recommendation": "Resilience4j — successeur de Netflix Hystrix (deprecie 2018). Configuration YAML pour sliding-window-size, failure-rate-threshold, wait-duration-in-open-state. Annotations @CircuitBreaker + @Retry avec fallback method. Combiner avec une file d'attente pour les messages en erreur.",
+      "grade": 4,
+      "level": "RECOMMANDE",
+      "sources": [
+        "Resilience4j docs (niv. 3)",
+        "Spring Cloud Circuit Breaker (niv. 3)",
+        "Nygard 'Release It!' — #1 stability pattern (niv. 5)",
+        "Netflix Hystrix deprecation -> Resilience4j (niv. 3)"
+      ]
+    },
+    "typescript-nestjs": {
+      "recommendation": "opossum — circuit breaker pour Node.js. Configuration programmatique, supporte les fallbacks.",
+      "grade": 3,
+      "level": "RECOMMANDE",
+      "sources": [
+        "opossum docs (niv. 3)",
+        "Double extraction batch 10 — accord 96% (niv. 5)"
+      ]
+    },
+    "python-django": {
+      "recommendation": "pybreaker — circuit breaker pour Python. Configuration simple, compatible Django.",
+      "grade": 3,
+      "level": "RECOMMANDE",
+      "sources": [
+        "pybreaker docs (niv. 3)",
+        "Double extraction batch 10 — accord 96% (niv. 5)"
+      ]
+    }
+  }
+}

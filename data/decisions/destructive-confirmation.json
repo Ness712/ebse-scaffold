@@ -1,0 +1,32 @@
+{
+  "id": "destructive-confirmation",
+  "domain": "safety",
+  "question": "Comment proteger l'utilisateur contre les actions irreversibles (suppression, ecrasement) ?",
+  "depends_on": [],
+  "tags": ["safety", "confirmation", "destructive-action", "undo", "soft-delete", "ux"],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "Toute action destructive requiert une confirmation explicite via dialog modale (jamais window.confirm). Privilegier soft-delete + undo quand possible.",
+        "grade": 5,
+        "level": "STANDARD",
+        "sources": [
+          {"name": "Apple HIG — confirmation pour actions destructives", "pyramid": 5, "year": 2024},
+          {"name": "Material Design 3 — dialogs de confirmation", "pyramid": 5, "year": 2024},
+          {"name": "WCAG 2.2 SC 3.3.4 — prevention des erreurs, reversibilite", "pyramid": 1, "year": 2023}
+        ]
+      },
+      {
+        "text": "Suppression simple : toast 'Annuler' pendant 5s (soft-delete). Suppression definitive : dialog modale avec texte explicite. Suppression en masse : dialog + saisie de confirmation. Bouton destructif rouge, jamais a cote du bouton principal.",
+        "grade": 5,
+        "level": "STANDARD",
+        "sources": [
+          {"name": "Apple HIG", "pyramid": 5, "year": 2024},
+          {"name": "Material Design 3", "pyramid": 5, "year": 2024}
+        ]
+      }
+    ]
+  },
+  "variants": {}
+}

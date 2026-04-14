@@ -1,0 +1,51 @@
+{
+  "id": "uptime",
+  "domain": "operations",
+  "question": "Comment monitorer la disponibilite avec des checks externes et internes ?",
+  "depends_on": ["infrastructure", "backend-framework"],
+  "tags": ["operations", "uptime", "health-check", "monitoring", "prometheus", "actuator"],
+  "classification": "mixed",
+  "universal": {
+    "principles": [
+      {
+        "text": "Toujours un check externe en plus du monitoring interne — le serveur ne peut pas reporter sa propre mort.",
+        "grade": 4,
+        "level": "RECOMMANDE",
+        "sources": [
+          {"name": "Google SRE Book — monitoring externe obligatoire", "pyramid": 5, "year": 2016},
+          {"name": "SWEBOK v4 — availability monitoring", "pyramid": 1, "year": 2024}
+        ]
+      },
+      {
+        "text": "Separer liveness et readiness probes — Kubernetes/Docker healthcheck en depend.",
+        "grade": 4,
+        "level": "RECOMMANDE",
+        "sources": [
+          {"name": "Spring Boot Actuator docs — health probes, liveness/readiness", "pyramid": 3, "year": 2024},
+          {"name": "Prometheus blackbox exporter docs", "pyramid": 3, "year": 2024}
+        ]
+      },
+      {
+        "text": "Check toutes les 60s minimum pour detecter les pannes en < 2 min.",
+        "grade": 4,
+        "level": "RECOMMANDE",
+        "sources": [
+          {"name": "Google SRE Book", "pyramid": 5, "year": 2016}
+        ]
+      }
+    ]
+  },
+  "variants": {
+    "java-spring-boot": {
+      "recommendation": "Spring Boot Actuator avec /actuator/health, probes.enabled=true pour /health/liveness et /health/readiness. show-details: when_authorized. Check externe via UptimeRobot (SaaS gratuit 50 monitors) ou Prometheus blackbox exporter (self-hosted, integration Grafana native).",
+      "grade": 4,
+      "level": "RECOMMANDE",
+      "sources": [
+        {"name": "Spring Boot Actuator docs", "pyramid": 3, "year": 2024},
+        {"name": "Prometheus blackbox exporter docs", "pyramid": 3, "year": 2024},
+        {"name": "Google SRE Book", "pyramid": 5, "year": 2016},
+        {"name": "SWEBOK v4 — availability monitoring", "pyramid": 1, "year": 2024}
+      ]
+    }
+  }
+}

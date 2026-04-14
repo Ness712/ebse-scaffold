@@ -1,0 +1,57 @@
+{
+  "id": "backend-framework",
+  "domain": "architecture",
+  "question": "Quel framework backend choisir pour une application web ?",
+  "depends_on": [],
+  "tags": ["architecture", "backend", "framework", "spring-boot", "nestjs", "django", "aspnet"],
+  "classification": "team-choice",
+  "universal": {
+    "principles": [
+      {
+        "text": "Pas de reponse universelle. Le choix depend du langage maitrise par l'equipe (facteur #1 selon SWEBOK — productivite depend de la maitrise), du type d'application et du hiring pool cible.",
+        "grade": 2,
+        "level": "CHOIX_EQUIPE",
+        "sources": [
+          {"name": "SWEBOK v4 — SE Economics", "pyramid": 1, "year": 2024, "quote": "Productivity depends on language mastery"},
+          {"name": "SO Survey 2025", "pyramid": 4, "year": 2025, "quote": "49k devs"},
+          {"name": "JetBrains Developer Ecosystem 2024", "pyramid": 4, "year": 2024, "quote": "23k devs"},
+          {"name": "State of JS 2025", "pyramid": 4, "year": 2025},
+          {"name": "TIOBE 2026", "pyramid": 4, "year": 2026}
+        ]
+      }
+    ]
+  },
+  "variants": {
+    "java-spring-boot": {
+      "recommendation": "Spring Boot — JVM performante, ecosysteme enterprise mature, virtual threads Java 21. SO Survey 2025 : 14.7% adoption backend.",
+      "grade": 2,
+      "level": "CHOIX_EQUIPE",
+      "implementation": "Spring Boot 3.x avec Java 21. Ecosysteme Maven, Spring Security, Spring Data JPA. Courbe d'apprentissage raide mais ecosysteme le plus mature.",
+      "sources": [
+        {"name": "SO Survey 2025 — Spring Boot 14.7%", "pyramid": 4, "year": 2025},
+        {"name": "JetBrains 2024 — top satisfaction Java", "pyramid": 4, "year": 2024}
+      ]
+    },
+    "typescript-nestjs": {
+      "recommendation": "NestJS — meme langage front+back (TypeScript), structure Angular-like, Swagger auto. Croissance la plus rapide (State of JS 2025).",
+      "grade": 2,
+      "level": "CHOIX_EQUIPE",
+      "implementation": "NestJS avec Fastify adapter pour la performance. TypeORM ou Prisma pour l'ORM. Pipeline type-safe du schema DB au frontend React.",
+      "sources": [
+        {"name": "State of JS 2025 — croissance la plus rapide", "pyramid": 4, "year": 2025},
+        {"name": "SO Survey 2025 — NestJS 6.7%", "pyramid": 4, "year": 2025},
+        {"name": "Batch 12 — stack optimale consensus 2 agents", "pyramid": 5, "year": 2026}
+      ]
+    },
+    "python-django": {
+      "recommendation": "Django + DRF — MVP ultra-rapide, admin inclus, ORM inclus, hiring pool enorme. Python #1 TIOBE (26%).",
+      "grade": 2,
+      "level": "CHOIX_EQUIPE",
+      "implementation": "Django 5.x avec Django REST Framework. Migrations built-in, admin auto-genere, ORM mature. Performance sync par defaut, scaling plus complexe.",
+      "sources": [
+        {"name": "TIOBE 2026 — Python #1 (26%)", "pyramid": 4, "year": 2026},
+        {"name": "SO Survey 2025 — Django 12.6%", "pyramid": 4, "year": 2025}
+      ]
+    }
+  }
+}

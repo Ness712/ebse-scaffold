@@ -1,0 +1,12 @@
+{
+  "id": "nestjs-react",
+  "name": "TypeScript / NestJS + React",
+  "description": "Full-stack TypeScript, type safety DB→UI, equipes JS/TS",
+  "choices": {
+    "approach": "constrained",
+    "backend": "typescript-nestjs",
+    "frontend": "react",
+    "database": "postgresql",
+    "budget": "open-source"
+  }
+}

@@ -1,0 +1,40 @@
+{
+  "id": "meta-seo",
+  "domain": "design",
+  "question": "Quels meta tags, HTML semantique et donnees structurees implementer pour le SEO ?",
+  "depends_on": [],
+  "tags": ["seo", "meta-tags", "opengraph", "json-ld", "html-semantique"],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "Meta tags essentiels : title, description, OpenGraph (og:title, og:description, og:image, og:type) sur chaque page.",
+        "grade": 3,
+        "level": "BONNE PRATIQUE",
+        "sources": [
+          "Google Search Central — SEO starter guide (niv. 3)",
+          "OpenGraph protocol — og:tags (niv. 3)"
+        ]
+      },
+      {
+        "text": "HTML semantique obligatoire : header, nav, main, article, section, footer. Un seul h1 par page, hierarchie de headings respectee. Jamais de div soup.",
+        "grade": 3,
+        "level": "BONNE PRATIQUE",
+        "sources": [
+          "MDN — HTML semantics (niv. 3)",
+          "Google Search Central — SEO starter guide (niv. 3)"
+        ]
+      },
+      {
+        "text": "Donnees structurees JSON-LD (schema.org) pour enrichir les resultats de recherche.",
+        "grade": 3,
+        "level": "BONNE PRATIQUE",
+        "sources": [
+          "schema.org — Course type (niv. 2)",
+          "Google Search Central — SEO starter guide (niv. 3)"
+        ]
+      }
+    ]
+  },
+  "variants": {}
+}

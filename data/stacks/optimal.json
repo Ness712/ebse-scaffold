@@ -1,0 +1,25 @@
+{
+  "id": "optimal",
+  "name": "Stack Optimale (EBSE, sans contrainte)",
+  "description": "LA meilleure stack selon les sources — 2 agents independants convergent a 100%",
+  "source": "batch-12-optimal-stack.md",
+  "choices": {
+    "approach": "optimal",
+    "backend": "typescript-nestjs",
+    "frontend": "react",
+    "database": "postgresql",
+    "budget": "open-source"
+  },
+  "stack": {
+    "language": { "name": "TypeScript", "grade": 7, "reason": "Full-stack type safety DB→UI" },
+    "backend": { "name": "NestJS (Fastify)", "grade": 5, "reason": "#1 satisfaction croissante, structure Angular-like" },
+    "frontend": { "name": "React 19", "grade": 6, "reason": "#1 adoption 44.7% + satisfaction 83%" },
+    "database": { "name": "PostgreSQL", "grade": 5, "reason": "#1 admired + #1 adopted SO 2025" },
+    "orm": { "name": "Prisma", "grade": 4, "reason": "Type safety auto-generee depuis schema" },
+    "css": { "name": "Tailwind CSS 4", "grade": 5, "reason": "#1 satisfaction CSS, 80% retention" },
+    "build": { "name": "Vite 7", "grade": 6, "reason": "98% satisfaction, HMR <50ms" },
+    "test_unit": { "name": "Vitest", "grade": 4, "reason": "Vite-natif, 95% satisfaction" },
+    "test_e2e": { "name": "Playwright", "grade": 5, "reason": "#1 satisfaction E2E, multi-browser" },
+    "package_manager": { "name": "pnpm", "grade": 5, "reason": "2x npm, strict, content-addressable" }
+  }
+}

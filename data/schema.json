@@ -1,0 +1,82 @@
+{
+  "$schema": "https://json-schema.org/draft/2020-12/schema",
+  "title": "EBSE Decision",
+  "description": "Schema for a single EBSE-sourced technical decision",
+  "type": "object",
+  "required": ["id", "domain", "question", "universal", "tags"],
+  "properties": {
+    "id": { "type": "string", "description": "Unique identifier (kebab-case)" },
+    "domain": { "type": "string", "enum": ["architecture", "security", "design", "testing", "performance", "reliability", "operations", "cicd", "code-quality", "data", "project", "safety", "accessibility", "ui-libraries"] },
+    "question": { "type": "string", "description": "The decision question in plain language" },
+    "depends_on": {
+      "type": "array",
+      "items": { "type": "string" },
+      "description": "IDs of decisions that must be made before this one"
+    },
+    "tags": { "type": "array", "items": { "type": "string" } },
+    "classification": { "type": "string", "enum": ["universal", "mixed", "stack-specific"] },
+    "universal": {
+      "type": "object",
+      "description": "Principles valid for ANY stack",
+      "properties": {
+        "principles": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "required": ["text", "grade", "level", "sources"],
+            "properties": {
+              "text": { "type": "string" },
+              "grade": { "type": "integer", "minimum": 0, "maximum": 7 },
+              "level": { "type": "string", "enum": ["STANDARD", "RECOMMANDE", "BONNE_PRATIQUE", "CHOIX_EQUIPE"] },
+              "sources": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "required": ["name", "pyramid", "year"],
+                  "properties": {
+                    "name": { "type": "string" },
+                    "pyramid": { "type": "integer", "minimum": 1, "maximum": 6 },
+                    "year": { "type": "integer" },
+                    "quote": { "type": "string" },
+                    "url": { "type": "string" }
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "variants": {
+      "type": "object",
+      "description": "Stack-specific recommendations",
+      "patternProperties": {
+        "^[a-z]+-[a-z]+(-[a-z]+)?$": {
+          "type": "object",
+          "required": ["recommendation", "grade", "level", "sources"],
+          "properties": {
+            "recommendation": { "type": "string" },
+            "grade": { "type": "integer", "minimum": 0, "maximum": 7 },
+            "level": { "type": "string", "enum": ["STANDARD", "RECOMMANDE", "BONNE_PRATIQUE", "CHOIX_EQUIPE"] },
+            "implementation": { "type": "string" },
+            "code": { "type": "string" },
+            "sources": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "required": ["name", "pyramid"],
+                "properties": {
+                  "name": { "type": "string" },
+                  "pyramid": { "type": "integer" },
+                  "year": { "type": "integer" },
+                  "quote": { "type": "string" },
+                  "url": { "type": "string" }
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  }
+}

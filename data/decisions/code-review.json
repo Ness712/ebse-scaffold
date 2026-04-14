@@ -1,0 +1,55 @@
+{
+  "id": "code-review",
+  "domain": "code-quality",
+  "question": "Comment organiser les code reviews pour maximiser la detection de defauts ?",
+  "depends_on": [],
+  "tags": ["code-quality", "code-review", "pull-request", "defect-detection"],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "Review obligatoire par au moins 1 pair avant merge. La code review trouve 60-70% des defauts, contre 25-30% pour les tests unitaires seuls.",
+        "grade": 4,
+        "level": "RECOMMANDE",
+        "sources": [
+          {"name": "SWEBOK v4 — code inspection as verification technique", "pyramid": 1, "year": 2024},
+          {"name": "SmartBear study — 60-70% defect detection rate", "pyramid": 4, "year": 2015}
+        ]
+      },
+      {
+        "text": "Processus : auteur ouvre PR avec description claire → reviewer assigne (24h max) → review → corrections/discussion → approbation → merge.",
+        "grade": 4,
+        "level": "RECOMMANDE",
+        "sources": [
+          {"name": "Google Engineering Practices — code review guidelines", "pyramid": 5, "year": 2023}
+        ]
+      },
+      {
+        "text": "Checklist review : correctness, securite, lisibilite, tests, performance, design/architecture.",
+        "grade": 4,
+        "level": "RECOMMANDE",
+        "sources": [
+          {"name": "Google Engineering Practices — reviewer responsibilities", "pyramid": 5, "year": 2023},
+          {"name": "SWEBOK v4", "pyramid": 1, "year": 2024}
+        ]
+      },
+      {
+        "text": "Limiter a 400 lignes par review (au-dela, la qualite chute). Distinguer bloquant vs suggestion (nit:). Critiquer le code, pas la personne.",
+        "grade": 4,
+        "level": "RECOMMANDE",
+        "sources": [
+          {"name": "SmartBear study — 400 LOC max per review", "pyramid": 4, "year": 2015},
+          {"name": "Google Engineering Practices", "pyramid": 5, "year": 2023}
+        ]
+      },
+      {
+        "text": "PRs petites et focalisees, description claire (quoi + pourquoi), self-review avant assignation.",
+        "grade": 4,
+        "level": "RECOMMANDE",
+        "sources": [
+          {"name": "Google Engineering Practices", "pyramid": 5, "year": 2023}
+        ]
+      }
+    ]
+  }
+}

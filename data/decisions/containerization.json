@@ -1,0 +1,61 @@
+{
+  "id": "containerization",
+  "domain": "cicd",
+  "question": "Comment conteneuriser l'application (Docker, Dockerfile best practices, orchestration) ?",
+  "depends_on": ["backend-framework", "frontend-framework"],
+  "tags": ["cicd", "docker", "containerization", "dockerfile", "docker-compose", "multi-stage", "oci"],
+  "classification": "mixed",
+  "universal": {
+    "principles": [
+      {
+        "text": "Docker pour la conteneurisation : 73.8% adoption (SO 2025, +17 pts en 1 an), runtime containerd (CNCF gradue), format OCI standard.",
+        "grade": 6,
+        "level": "STANDARD",
+        "sources": [
+          {"name": "SWEBOK v4 s6.1 — container technologies to standardize deployment", "pyramid": 1, "year": 2024},
+          {"name": "OCI — standard ouvert container formats/runtimes", "pyramid": 2, "year": 2024},
+          {"name": "CNCF — containerd projet gradue", "pyramid": 2, "year": 2024},
+          {"name": "Stack Overflow Survey 2025 — Docker 73.8%", "pyramid": 4, "year": 2025},
+          {"name": "Twelve-Factor Factor X — dev/prod parity", "pyramid": 5, "year": 2012}
+        ]
+      },
+      {
+        "text": "Multi-stage builds + base minimale (JRE pas JDK, alpine) + USER non-root + .dockerignore + layered JARs (Spring Boot).",
+        "grade": 5,
+        "level": "RECOMMANDE",
+        "sources": [
+          {"name": "Docker best practices docs", "pyramid": 3, "year": 2024},
+          {"name": "Spring Boot Container Images docs", "pyramid": 3, "year": 2024}
+        ]
+      },
+      {
+        "text": "Docker Compose pour equipes 1-10 devs sur 1-3 serveurs. Kubernetes uniquement pour multi-node et auto-scaling (30% adoption vs Docker 74%).",
+        "grade": 5,
+        "level": "RECOMMANDE",
+        "sources": [
+          {"name": "SWEBOK v4 s6.1 — orchestrators to improve scalability", "pyramid": 1, "year": 2024},
+          {"name": "Stack Overflow Survey 2025 — K8s 30%", "pyramid": 4, "year": 2025}
+        ]
+      }
+    ]
+  },
+  "variants": {
+    "java-spring-boot": {
+      "recommendation": "Dockerfile multi-stage : eclipse-temurin:21-jdk (build) → eclipse-temurin:21-jre (runtime). Layered JARs via java -Djarmode=tools extract --layers. USER non-root. Image finale ~200MB vs ~800MB sans multi-stage.",
+      "grade": 5,
+      "level": "RECOMMANDE",
+      "sources": [
+        {"name": "Spring Boot Container Images docs — layered JARs", "pyramid": 3, "year": 2024},
+        {"name": "Docker best practices docs — multi-stage, non-root", "pyramid": 3, "year": 2024}
+      ]
+    },
+    "typescript-react-vite": {
+      "recommendation": "Dockerfile multi-stage : node:22-alpine (build avec pnpm) → nginx:alpine (serve static). COPY dist vers /usr/share/nginx/html. Config nginx personnalisee.",
+      "grade": 5,
+      "level": "RECOMMANDE",
+      "sources": [
+        {"name": "Docker best practices docs — multi-stage", "pyramid": 3, "year": 2024}
+      ]
+    }
+  }
+}

@@ -1,0 +1,45 @@
+{
+  "id": "forms",
+  "domain": "design",
+  "question": "Comment gerer les formulaires (validation, layout, accessibilite) ?",
+  "depends_on": ["wcag-level"],
+  "tags": ["forms", "validation", "react-hook-form", "zod", "accessibility", "react"],
+  "classification": "mixed",
+  "universal": {
+    "principles": [
+      {
+        "text": "Validation inline (au blur/changement) plutot qu'a la soumission seule : reduit les erreurs de soumission de 22%.",
+        "grade": 4,
+        "level": "RECOMMANDE",
+        "sources": [
+          "Baymard Institute — inline validation +22% completion (niv. 3)"
+        ]
+      },
+      {
+        "text": "Labels toujours visibles (jamais placeholder seul — WCAG 3.3.2). Messages d'erreur sous le champ, en rouge avec icone (pas couleur seule). 1 colonne par defaut.",
+        "grade": 4,
+        "level": "RECOMMANDE",
+        "sources": [
+          "WCAG 2.2 SC 3.3.1/3.3.2 — identification et labels d'erreur (niv. 1)",
+          "Baymard Institute — 2 colonnes augmentent le taux d'erreur (niv. 3)"
+        ]
+      }
+    ]
+  },
+  "variants": {
+    "react-vite": {
+      "choice": "React Hook Form + Zod",
+      "principles": [
+        {
+          "text": "React Hook Form avec zodResolver pour validation type-safe bout en bout, mode 'onBlur' pour validation inline.",
+          "grade": 4,
+          "level": "RECOMMANDE",
+          "sources": [
+            "React Hook Form docs — performance re-render minimal (niv. 5)",
+            "Baymard Institute — inline validation +22% completion (niv. 3)"
+          ]
+        }
+      ]
+    }
+  }
+}

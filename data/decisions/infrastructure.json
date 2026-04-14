@@ -1,0 +1,40 @@
+{
+  "id": "infrastructure",
+  "domain": "cicd",
+  "question": "Comment gerer l'infrastructure de maniere declarative et reproductible (IaC) ?",
+  "depends_on": [],
+  "tags": ["cicd", "infrastructure", "iac", "docker-compose", "terraform", "ansible", "twelve-factor"],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "L'infrastructure doit etre declarative, versionnee et reproductible. Jamais de config manuelle en prod.",
+        "grade": 4,
+        "level": "RECOMMANDE",
+        "sources": [
+          {"name": "SWEBOK v4 s2.2 — infrastructure as code", "pyramid": 1, "year": 2024},
+          {"name": "Twelve-Factor Factor X — dev/prod parity", "pyramid": 5, "year": 2012},
+          {"name": "DORA 2024 — manual changes = #1 cause of incidents", "pyramid": 4, "year": 2024}
+        ]
+      },
+      {
+        "text": "Docker Compose pour 1 serveur, < 5 services. Terraform quand l'infra cloud grandit (DNS, CDN, DB managed). Ansible en complement pour la configuration de serveurs existants.",
+        "grade": 4,
+        "level": "RECOMMANDE",
+        "sources": [
+          {"name": "SWEBOK v4 s2.2", "pyramid": 1, "year": 2024},
+          {"name": "Docker Compose docs", "pyramid": 3, "year": 2024},
+          {"name": "DORA 2024 — IaC correle avec deployment frequency", "pyramid": 4, "year": 2024}
+        ]
+      },
+      {
+        "text": "Environnements identiques (dev/staging/prod) — parite obligatoire.",
+        "grade": 4,
+        "level": "RECOMMANDE",
+        "sources": [
+          {"name": "Twelve-Factor Factor X — dev/prod parity", "pyramid": 5, "year": 2012}
+        ]
+      }
+    ]
+  }
+}

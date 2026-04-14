@@ -1,0 +1,65 @@
+{
+  "id": "database",
+  "domain": "architecture",
+  "question": "Quelle base de donnees relationnelle choisir pour un nouveau projet ?",
+  "depends_on": [],
+  "tags": ["architecture", "database", "postgresql", "mysql", "relational", "sql"],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "PostgreSQL pour les donnees relationnelles. #1 en adoption (55.6% SO 2025) et admiration (65.5%). 13x plus rapide que MySQL en SELECT 1M records (MDPI 2024, peer-reviewed).",
+        "grade": 5,
+        "level": "STANDARD",
+        "sources": [
+          {"name": "SO Survey 2025", "pyramid": 4, "year": 2025, "quote": "PostgreSQL 55.6% popular (#1), +15pts vs MySQL"},
+          {"name": "SO Survey 2024", "pyramid": 4, "year": 2024, "quote": "PostgreSQL 48.7% popular, 74.5% admired (#1)"},
+          {"name": "JetBrains 2025", "pyramid": 4, "year": 2025, "quote": "PostgreSQL depasse MySQL pour la premiere fois"},
+          {"name": "DB-Engines 2026", "pyramid": 4, "year": 2026, "quote": "PostgreSQL #4, DBMS of the Year 2023"},
+          {"name": "MDPI benchmark 2024", "pyramid": 4, "year": 2024, "quote": "PostgreSQL 13x plus rapide SELECT, stable sous charge"},
+          {"name": "CNCF — CloudNativePG", "pyramid": 2, "year": 2024, "quote": "Seul operateur SGBD cloud-native"}
+        ]
+      },
+      {
+        "text": "Conformite Twelve-Factor (Factor IV) : config 100% externalisee via variables d'environnement. Le SGBD est un attached resource interchangeable sans changement de code.",
+        "grade": 5,
+        "level": "STANDARD",
+        "sources": [
+          {"name": "Twelve-Factor IV — attached resources", "pyramid": 5, "year": 2012},
+          {"name": "SWEBOK v4 — Database Basics", "pyramid": 1, "year": 2024}
+        ]
+      }
+    ]
+  },
+  "variants": {
+    "java-spring-boot": {
+      "recommendation": "PostgreSQL avec Spring Data JPA + HikariCP (defaut). H2 embedded pour les tests. Flyway pour les migrations. ddl-auto: validate en prod.",
+      "grade": 5,
+      "level": "STANDARD",
+      "implementation": "spring.datasource.url: jdbc:postgresql://${DB_HOST}:${DB_PORT}/${DB_NAME}. HikariCP pool-size 10. spring.jpa.hibernate.ddl-auto: validate. Flyway enabled.",
+      "sources": [
+        {"name": "Spring Boot docs — PostgreSQL, HikariCP, H2 auto-configuration", "pyramid": 3, "year": 2024},
+        {"name": "PostgreSQL docs — ACID-compliant", "pyramid": 3, "year": 2024}
+      ]
+    },
+    "typescript-nestjs": {
+      "recommendation": "PostgreSQL avec Prisma (type-safe, migrations auto) ou TypeORM. Config via variables d'environnement.",
+      "grade": 5,
+      "level": "STANDARD",
+      "implementation": "Prisma schema avec provider postgresql. DATABASE_URL en variable d'environnement. Prisma Migrate pour les migrations versionnees.",
+      "sources": [
+        {"name": "Prisma docs — PostgreSQL connector", "pyramid": 3, "year": 2024},
+        {"name": "Batch 12 — Prisma + PostgreSQL consensus", "pyramid": 5, "year": 2026}
+      ]
+    },
+    "python-django": {
+      "recommendation": "PostgreSQL avec Django ORM (built-in). Support natif des fonctionnalites PostgreSQL avancees (JSONField, ArrayField, full-text search).",
+      "grade": 5,
+      "level": "STANDARD",
+      "implementation": "DATABASES = {'default': {'ENGINE': 'django.db.backends.postgresql', ...}}. Variables d'environnement via django-environ ou os.environ.",
+      "sources": [
+        {"name": "Django docs — PostgreSQL specific features", "pyramid": 3, "year": 2024}
+      ]
+    }
+  }
+}

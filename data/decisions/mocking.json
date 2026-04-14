@@ -1,0 +1,58 @@
+{
+  "id": "mocking",
+  "domain": "testing",
+  "question": "Quelle strategie et quels outils pour le mocking dans les tests ?",
+  "depends_on": ["backend-framework", "frontend-framework"],
+  "tags": ["testing", "mocking", "mockito", "msw", "test-doubles"],
+  "classification": "mixed",
+  "universal": {
+    "principles": [
+      "Mocker aux frontieres (DB, HTTP, FS) — tests stables, refactoring-safe",
+      "Ne pas mocker ce qu'on possede — evite le couplage a l'implementation",
+      "Preferer les fakes aux mocks si possible — plus realistes, moins fragiles",
+      "Ne jamais mocker les details d'implementation internes — rend les tests fragiles"
+    ]
+  },
+  "variants": {
+    "java-spring-boot": {
+      "recommendation": "Mockito — inclus dans spring-boot-starter-test. Mocker les repositories (frontiere), pas la logique metier. Utiliser @ExtendWith(MockitoExtension.class) + @Mock + @InjectMocks.",
+      "grade": 4,
+      "level": "RECOMMANDE",
+      "sources": [
+        "Spring Boot docs — Mockito inclus par defaut (niv. 3)",
+        "SWEBOK v4 — test doubles, stubs and mocks (niv. 1)",
+        "Fowler 'Mocks Aren't Stubs' (niv. 5)"
+      ]
+    },
+    "typescript-nestjs": {
+      "recommendation": "Jest mocks natifs pour les dependances. MSW (Mock Service Worker) pour intercepter les appels reseau au niveau HTTP.",
+      "grade": 6,
+      "level": "RECOMMANDE",
+      "sources": [
+        "NestJS docs — testing (niv. 3)",
+        "MSW docs — network-level mocking (niv. 5)",
+        "Double extraction batch 9 — accord 100% (niv. 5)"
+      ]
+    },
+    "python-django": {
+      "recommendation": "unittest.mock (stdlib) + pytest-mock pour les mocks. Mocker aux frontieres (DB, HTTP, FS).",
+      "grade": 6,
+      "level": "RECOMMANDE",
+      "sources": [
+        "Python docs — unittest.mock (niv. 3)",
+        "pytest-mock docs (niv. 3)",
+        "Double extraction batch 9 — accord 100% (niv. 5)"
+      ]
+    },
+    "typescript-react-vite": {
+      "recommendation": "vi.mock (Vitest) pour les modules + MSW pour intercepter les appels reseau (frontiere HTTP). Ne jamais mocker les details d'implementation internes.",
+      "grade": 4,
+      "level": "RECOMMANDE",
+      "sources": [
+        "MSW docs — network-level mocking (niv. 5)",
+        "Vitest docs — vi.mock API (niv. 3)",
+        "Fowler 'Mocks Aren't Stubs' (niv. 5)"
+      ]
+    }
+  }
+}

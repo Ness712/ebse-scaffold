@@ -1,0 +1,32 @@
+{
+  "id": "bundle-optimization",
+  "domain": "performance",
+  "question": "Comment optimiser la taille du bundle JavaScript pour des temps de chargement rapides ?",
+  "depends_on": ["frontend-framework", "rendering-strategy"],
+  "tags": ["performance", "bundle", "code-splitting", "lazy-loading", "tree-shaking", "vite"],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "Vite code splitting + lazy routes + tree shaking. Cible : bundle initial < 200KB gzipped, LCP < 2.5s (Core Web Vital).",
+        "grade": 4,
+        "level": "RECOMMANDE",
+        "sources": [
+          {"name": "Vite docs — Build Optimizations", "pyramid": 3, "year": 2024},
+          {"name": "web.dev Core Web Vitals", "pyramid": 4, "year": 2024},
+          {"name": "web.dev — code splitting guide", "pyramid": 5, "year": 2024}
+        ]
+      },
+      {
+        "text": "Lazy loading des routes avec React.lazy() + Suspense. Vendor splitting via rollupOptions.output.manualChunks pour separer react, react-dom, UI libs.",
+        "grade": 4,
+        "level": "RECOMMANDE",
+        "sources": [
+          {"name": "Vite docs — Build Optimizations", "pyramid": 3, "year": 2024},
+          {"name": "React docs — React.lazy", "pyramid": 3, "year": 2024}
+        ]
+      }
+    ]
+  },
+  "variants": {}
+}
