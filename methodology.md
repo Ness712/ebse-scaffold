@@ -1,10 +1,12 @@
 # Methodologie — EBSE Guide
 
-**Version** : 0.1
-**Date** : 2026-04-11
+**Version** : 1.0
+**Date** : 2026-04-14
 **Methode** : Adaptation de l'Evidence-Based Medicine (EBM) au genie logiciel, via Evidence-Based Software Engineering (EBSE, Kitchenham et al. 2004).
 
-Ce document est le **protocole pre-enregistre** du guide. Chaque etape est mecanique et reproductible. Deux personnes suivant ce protocole doivent arriver aux memes conclusions.
+Ce document est le **protocole pre-enregistre** de l'outil EBSE. Chaque etape est mecanique et reproductible. Deux personnes suivant ce protocole doivent arriver aux memes conclusions.
+
+**Format de sortie** : les recommandations sont stockees en JSON structure, servies via une application web (humains) et une API (IA/machines). L'outil ne GENERE pas de recommandations — il FILTRE et AFFICHE des donnees issues du processus EBSE. Pas de source = pas de recommandation affichee.
 
 ---
 
@@ -19,9 +21,11 @@ Ce document est le **protocole pre-enregistre** du guide. Chaque etape est mecan
 7. [Etape 5 — Recommandation](#7-etape-5--recommandation)
 8. [Etape 6 — Profils de stack](#8-etape-6--profils-de-stack)
 9. [Etape 7 — Verification (double extraction)](#9-etape-7--verification)
-10. [Etape 8 — Maintenance](#10-etape-8--maintenance)
-11. [Limites documentees](#11-limites-documentees)
-12. [References](#12-references)
+10. [Etape 8 — Recommandations conditionnelles et multi-stack](#10-etape-8--recommandations-conditionnelles)
+11. [Etape 9 — Arbre de decision](#11-etape-9--arbre-de-decision)
+12. [Etape 10 — Maintenance](#12-etape-10--maintenance)
+13. [Limites documentees](#13-limites-documentees)
+14. [References](#14-references)
 
 ---
 
@@ -502,7 +506,77 @@ Ce fichier prouve que la double extraction a ete faite et documente les resultat
 
 ---
 
-## 10. Etape 8 — Maintenance
+## 10. Etape 8 — Recommandations conditionnelles et multi-stack
+
+### Principe
+
+Une recommandation peut dependre d'un choix precedent. Par exemple :
+- "Quel framework de test ?" depend de "Quel framework backend ?"
+- Si backend = Spring Boot → JUnit 5. Si backend = NestJS → Jest/Vitest. Si backend = Django → pytest.
+
+### Format JSON conditionnel
+
+Chaque recommandation est stockee en JSON avec :
+- `universal` : principes valables pour TOUTE stack (ex: "pyramide 70/20/10")
+- `variants` : outils specifiques par stack (ex: { "java-spring-boot": "JUnit 5", "typescript-nestjs": "Vitest" })
+- `depends_on` : liste des choix prealables qui affectent cette recommandation
+
+### Classification des pages
+
+Chaque page est classee comme :
+- **UNIVERSEL** : la recommandation est valable quelle que soit la stack
+- **MIXTE** : principes universels + outils stack-specific (la majorite des pages)
+- **STACK-SPECIFIC** : uniquement pour une stack donnee
+
+### Obligation multi-stack
+
+Pour chaque page MIXTE ou STACK-SPECIFIC :
+- Les variantes pour **au moins 3 stacks backend** (Java/Spring Boot, TypeScript/NestJS, Python/Django) doivent exister
+- Chaque variante est sourcee via EBSE (PICO, GRADE, double extraction)
+- Les agents recherchant les variantes NE DOIVENT PAS voir le contenu des autres stacks pour eviter le biais
+
+---
+
+## 11. Etape 9 — Arbre de decision
+
+### Principe
+
+L'outil pose des questions a l'utilisateur. Chaque reponse affecte les recommandations suivantes.
+
+### Structure
+
+```
+ENTREE → Question 1 (approche) → Question 2 (langage) → Question 3 (frontend)
+→ ... → RESULTAT (ensemble de choix qui filtre les recommandations)
+```
+
+### Chemin "optimal"
+
+Un chemin special ou l'utilisateur dit "je veux LE MIEUX, sans contrainte."
+Ce chemin est determine par EBSE :
+- PICO : P=web app, aucune contrainte. I=meilleure stack. C=toutes. O=qualite maximale.
+- Double extraction 2 agents separes (aucune mention de stack existante dans le prompt)
+- Le resultat est LA stack optimale selon les sources pures
+
+### Chemin "contextuel"
+
+L'utilisateur repond a des questions sur son contexte :
+- Langage maitrise par l'equipe
+- Taille d'equipe
+- Budget (SaaS autorise ou self-hosted)
+- Type d'application (SPA, SSR, API only, mobile)
+
+Chaque branche mene a un profil de stack recommande, source via EBSE.
+
+### Regles
+
+- Chaque question de l'arbre doit avoir une justification (pourquoi cette question est pertinente)
+- Chaque branche doit etre sourcee (pourquoi ce choix mene a cette recommandation)
+- L'arbre ne contient PAS d'opinions — chaque branche est derivee de la methode EBSE
+
+---
+
+## 12. Etape 10 — Maintenance
 
 ### Frequence
 - **Revue annuelle** : toutes les recommandations sont revalidees avec les sources mises a jour
@@ -520,7 +594,7 @@ Ce fichier prouve que la double extraction a ete faite et documente les resultat
 
 ---
 
-## 11. Limites documentees
+## 13. Limites documentees
 
 | Limite | Explication |
 |--------|-------------|
@@ -533,7 +607,7 @@ Ce fichier prouve que la double extraction a ete faite et documente les resultat
 
 ---
 
-## 12. References
+## 14. References
 
 ### Methode
 - Kitchenham, B.A. et al. (2004). *Evidence-Based Software Engineering*. ICSE 2004.
