@@ -1,58 +1,116 @@
 # Plan de construction du guide EBSE
 
-## Phase 1 — Structure du guide final
-Definir le format que le lecteur verra :
-- Partie 1 : Profils de stack (combinaisons completes par type de projet)
-- Partie 2 : Recommandations par domaine (securite, design, testing, etc.)
-- Partie 3 : Justifications detaillees (cases PICO/GRADE, pour verification)
+## Historique
 
-Livrable : squelette du guide avec les sections vides.
+- v0.1 (2026-04-14) : 94 pages, methode EBSE complete, profil Java/React uniquement
+- **Probleme identifie** : le guide presuppose Spring Boot + React au lieu de guider le choix.
+  Les agents independants recommandent NestJS ou Django, pas Spring Boot, pour petites equipes.
+- **v1.0 (en cours)** : restructuration en configurateur adaptatif multi-stack
 
-## Phase 2 — Matrice de couverture
-Croiser ISO 25010:2023 (~40 sous-caracteristiques) x SWEBOK v4 (18 knowledge areas).
-Pour chaque case : active (= genere une decision technique) ou N/A (avec justification).
-Double extraction : 2 reviewers independants determinent les cases actives.
+---
 
-Livrable : matrice avec ~100-150 cases actives identifiees.
+## Nouvelle architecture du guide
 
-## Phase 3 — Priorisation
-Classer les cases actives par priorite :
-- P1 : decisions que TOUT projet doit prendre (stack, securite, testing, CI/CD)
-- P2 : decisions importantes (design, performance, monitoring)
-- P3 : decisions avancees (scalabilite, accessibilite poussee, safety)
+```
+ENTREE : "Je veux creer une web app"
+    │
+    ▼
+ETAPE 1 — Choix d'approche
+    ├── "Je veux le MIEUX, je m'adapte" → chemin OPTIMAL
+    │     Le guide determine LA meilleure stack selon les sources pures
+    │     L'utilisateur adapte son equipe, ses competences, son budget
+    │
+    └── "J'ai des CONTRAINTES" → chemin CONTEXTUEL
+          Questions : langage maitrise ? taille equipe ? budget ? type d'app ?
+          Le guide s'adapte au contexte
+    │
+    ▼
+ETAPE 2 — Arbres de decision (framework)
+    Le guide recommande : backend + frontend + BDD + CSS
+    Chaque choix est source (EBSE, double extraction)
+    │
+    ▼
+ETAPE 3 — Recommandations universelles
+    Pages valables QUELLE QUE SOIT la stack :
+    Design, accessibilite, git, Docker, monitoring principes, securite principes
+    │
+    ▼
+ETAPE 4 — Recommandations adaptees a la stack
+    Chaque page montre les outils POUR TA STACK :
+    "Tu as choisi Spring Boot → JUnit 5, Logback, @ControllerAdvice"
+    "Tu as choisi NestJS → Jest/Vitest, Pino, ExceptionFilter"
+    "Tu as choisi Django → pytest, structlog, middleware"
+```
 
-Livrable : liste ordonnee des cases a traiter.
+---
 
-## Phase 4 — Recherche systematique (par case)
-Pour chaque case active, dans l'ordre de priorite :
+## Phases de travail
 
-1. Formuler la question PICO
-2. Decouverte des alternatives (recherche dans les bases definies)
-3. Collecte des preuves (formulaire d'extraction standardise)
-4. **Double extraction** : 2 agents IA independants extraient les donnees
-5. Comparaison des extractions, resolution des divergences
-6. Evaluation GRADE (mecanique)
-7. Recommandation avec niveau de confiance
+### Phase A — Trier les 94 pages existantes (universel vs stack-specific)
 
-Livrable : une case documentee par decision.
+Pour chaque page : est-elle valable pour toute stack, ou specifique a Java/React ?
 
-## Phase 5 — Compilation du guide
-Transformer les cases en recommandations lisibles :
-- Chaque case → 1 recommandation concise dans le guide (partie 2)
-- Regrouper les recommandations interdependantes en profils de stack (partie 1)
-- Lier chaque recommandation a sa case detaillee (partie 3)
+Livrable : liste "universel" vs "stack-specific" pour les 94 pages.
 
-Livrable : guide v1.0 complet.
+### Phase B — Chemin OPTIMAL (sans contrainte)
 
-## Phase 6 — Verification finale
-- Relire le plan (PLAN.md) point par point, verifier que tout est fait
-- Verifier que chaque recommandation a sa source verifiable
-- Verifier que les profils de stack sont coherents (interdependances)
-- Verifier la double extraction sur un echantillon de cases
+PICO : P=web app, aucune contrainte, I=meilleure stack, C=toutes, O=qualite maximale
+Double extraction reelle (2 agents separes) pour determiner :
+- Meilleur framework backend (sans contrainte de langage)
+- Meilleur framework frontend
+- Meilleure BDD
+- Meilleur CSS framework
+- Meilleur bundler
+- etc.
 
-Livrable : guide v1.0 verifie.
+Livrable : profil OPTIMAL source et verifie.
 
-## Phase 7 — Maintenance
-- Revue annuelle de toutes les recommandations
-- Mise a jour quand une source majeure change (nouvelle enquete, nouveau standard)
-- Versioning : ANNEE.MOIS (ex: 2026.04)
+### Phase C — Chemin CONTEXTUEL (avec contraintes)
+
+Arbres de decision avec questions :
+1. Langage maitrise par l'equipe ?
+2. Taille d'equipe ?
+3. Budget (SaaS autorise ou self-hosted only) ?
+4. Type d'app (SPA, SSR, mobile, API only) ?
+
+Chaque branche mene a un profil de stack recommande.
+
+Livrable : arbres de decision sources.
+
+### Phase D — Pages multi-stack
+
+Pour chaque page stack-specific, ajouter les variantes :
+```
+## Si backend Java (Spring Boot)
+  JUnit 5, @ControllerAdvice, HikariCP, Logback...
+
+## Si backend TypeScript (NestJS)
+  Vitest/Jest, ExceptionFilter, Pino, pg pool...
+
+## Si backend Python (Django)
+  pytest, middleware, structlog, psycopg2...
+```
+
+Livrable : pages adaptatives couvrant les 3-4 stacks principales.
+
+### Phase E — Verification (meme methode que v0.1)
+
+- Double extraction 2 vrais agents separes sur chaque nouvelle page
+- Formulaires d'extraction standardises
+- Traces avec identifiants agents
+- Kappa calcule
+- Audit matrice → guide (couverture complete)
+
+### Phase F — Format final
+
+Decider si le guide reste un document markdown (option A) ou devient un outil interactif (option B — site web/CLI qui pose les questions et genere un guide personnalise).
+
+---
+
+## Ce qui est deja fait (reutilisable)
+
+- Methodologie EBSE complete (methodology.md) — parfaite, ne change pas
+- Matrice ISO 25010 x SWEBOK (matrix.md) — valide, ne change pas
+- ~40-50 pages universelles — a identifier et garder telles quelles
+- Infrastructure de verification (traces, formulaires, kappa) — reutilisable
+- 15 exemples de calibration GRADE — valides
