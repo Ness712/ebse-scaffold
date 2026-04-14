@@ -606,6 +606,39 @@ Les questions elles-memes sont justifiees par des sources (colonne "Source").
 - Le guide suit le versioning semantique : `ANNEE.MOIS` (ex: `2026.04`)
 - Chaque recommandation modifiee est marquee `[MAJ 2026.04]`
 
+### Scope et plateformes
+
+Le guide couvre actuellement **le web** (navigateur). Les autres plateformes ne sont PAS couvertes tant que la recherche EBSE n'a pas ete faite :
+
+| Plateforme | Statut | Prochaine etape |
+|-----------|--------|-----------------|
+| **Web (navigateur)** | ✓ Couvert | 106 decisions, 3 stacks backend, multi-frontend |
+| **Web → Mobile (PWA/Capacitor)** | ✓ Couvert | Page web-mobile-strategy.md, batch 16 |
+| Mobile natif Android | ❌ Pas couvert | Necessite EBSE : Kotlin, Jetpack Compose, etc. |
+| Mobile natif iOS | ❌ Pas couvert | Necessite EBSE : Swift, SwiftUI, etc. |
+| Mobile cross-platform | ❌ Pas couvert | Necessite EBSE : Flutter vs React Native vs KMP |
+| Desktop | ❌ Pas couvert | Necessite EBSE : Electron vs Tauri |
+
+**Regle** : le guide NE RECOMMANDE PAS une plateforme qu'il n'a pas recherchee. L'arbre de decision affiche "pas encore couvert" pour les plateformes non recherchees.
+
+### Watchlist — technologies emergentes
+
+Ces technologies sont a reevaluer lors de chaque revue annuelle. Si leur adoption/satisfaction atteint un seuil significatif dans les enquetes, elles sont evaluees via EBSE et ajoutees au guide.
+
+| Technologie | Categorie | Signal actuel (2026) | Seuil pour evaluation |
+|------------|-----------|---------------------|----------------------|
+| Bun | Runtime JS | ~2M dl/sem, satisfaction haute | Si >10% adoption SO Survey |
+| Deno | Runtime JS | Croissance moderee | Si >5% adoption SO Survey |
+| HTMX | Frontend alternatif | Niche, satisfaction tres haute | Si >5% adoption State of JS |
+| Rust web (Actix, Axum) | Backend | Haute satisfaction, faible adoption | Si >3% adoption SO Survey |
+| Go web (Gin, Fiber) | Backend | Bonne perf, ecosysteme croissant | Si >5% adoption backend SO |
+| Drizzle ORM | ORM TypeScript | Croissance rapide, menace Prisma | Si downloads > Prisma |
+| Biome | Linter+formatter | 35x plus rapide, 97% Prettier-compat | Si React docs le recommandent |
+| SolidJS | Frontend | 90% satisfaction, 10% adoption | Si >15% adoption State of JS |
+| Svelte 5 | Frontend | Haute satisfaction, runes | Si >15% adoption State of JS |
+
+**Processus watchlist** : a chaque revue annuelle, verifier les metriques. Si un seuil est atteint → PICO + double extraction + page guide.
+
 ---
 
 ## 13. Limites documentees
