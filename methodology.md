@@ -438,6 +438,40 @@ Controler que la lecture des sources n'a pas introduit d'erreurs.
 - Comparaison automatique des extractions
 - Divergences flaggees pour verification humaine
 
+### Tracabilite (OBLIGATOIRE)
+
+Chaque page du guide DOIT avoir un fichier de tracabilite dans `verification/extractions/`.
+Ce fichier prouve que la double extraction a ete faite et documente les resultats.
+
+**Format du fichier de tracabilite :**
+
+```markdown
+# Double Extraction — [Batch/Page name]
+
+**Date** : YYYY-MM-DD
+**Agent A** : [identifiant agent]
+**Agent B** : [identifiant agent]
+
+## Comparaison
+
+| # | Page | Agent A reco | Agent B reco | Accord reco | GRADE A | GRADE B | Accord GRADE |
+|---|------|-------------|-------------|:-----------:|---------|---------|:------------:|
+| 1 | nom-page | reco A | reco B | ✓ ou ❌ | X/7 | X/7 | ✓ ou ±N |
+
+## Resultats
+- Accord recommandations : X/Y (Z%)
+- Accord GRADE : X/Y (Z%)
+- Pages modifiees suite a la double extraction : [liste ou "aucune"]
+
+## Divergences et resolution
+[Pour chaque divergence : quelle divergence, comment resolue, quelle valeur retenue]
+```
+
+**Regles :**
+- Un fichier de tracabilite manquant = la page n'est PAS consideree comme validee
+- Les identifiants des agents doivent etre traces pour prouver que 2 contextes separes ont ete utilises
+- Les divergences et leur resolution doivent etre documentees, pas juste "convergence totale"
+
 ---
 
 ## 10. Etape 8 — Maintenance
