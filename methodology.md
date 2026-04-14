@@ -541,52 +541,63 @@ Pour chaque page MIXTE ou STACK-SPECIFIC :
 
 ### Principe
 
-L'outil pose des questions a l'utilisateur. Chaque reponse affecte les recommandations suivantes.
+L'outil pose des questions sur les **besoins metier** de l'utilisateur (qu'il connait). Le guide **deduit** les choix techniques (que l'utilisateur ne connait pas forcement). L'utilisateur ne voit JAMAIS de jargon technique dans les questions — il voit "tes utilisateurs telecharment depuis l'App Store ?" et le guide decide "Capacitor".
 
 ### Structure
 
 ```
-ENTREE → Question 1 (approche) → Question 2 (langage) → Question 3 (frontend)
-→ ... → RESULTAT (ensemble de choix qui filtre les recommandations)
+PLATEFORME (ou tes utilisateurs utilisent l'app ?)
+  → BESOIN MOBILE (aussi sur telephone ? app store ?)
+  → NOMBRE D'UTILISATEURS (echelle)
+  → EXPERIENCE EQUIPE (quel langage ?)
+  → BUT DE L'APP (interactif, contenu, API, temps-reel)
+  → TYPE DE DONNEES (relationnelles ou documents)
+  → BUDGET (gratuit ou SaaS autorise)
+  → RESULTAT (le guide deduit toute la stack)
 ```
 
-### Chemin "optimal"
+### Questions metier uniquement (pas de jargon technique)
 
-Un chemin special ou l'utilisateur dit "je veux LE MIEUX, sans contrainte."
-Ce chemin est determine par EBSE :
-- PICO : P=web app, aucune contrainte. I=meilleure stack. C=toutes. O=qualite maximale.
-- Double extraction 2 agents separes (aucune mention de stack existante dans le prompt)
-- Le resultat est LA stack optimale selon les sources pures
+L'arbre pose des questions que l'utilisateur peut TOUJOURS repondre :
 
-### Chemin "contextuel"
+| Question metier | Ce que le guide deduit | Source |
+|----------------|----------------------|--------|
+| "Ou tes utilisateurs utilisent l'app ?" | Plateforme (web/mobile/desktop) | Contrainte runtime W3C/Apple/Google |
+| "Aussi sur telephone ?" | PWA si oui (batch 16, GRADE 6/7) | StatCounter 59% trafic mobile 2025 |
+| "App Store obligatoire ?" | Capacitor si oui (batch 16, GRADE 5/7) | Batch 16 double extraction |
+| "Combien d'utilisateurs ?" | Infrastructure (Docker Compose vs K8s) | Twelve-Factor, Google SRE |
+| "Experience de l'equipe ?" | Langage → backend framework | SWEBOK v4 SE Economics |
+| "A quoi sert l'app ?" | Type projet (SPA/content/realtime/API) | SWEBOK v4 Software Architecture |
+| "Comment sont tes donnees ?" | BDD (PostgreSQL/MongoDB) | SO Survey 2025 PostgreSQL #1 |
+| "Budget outils ?" | Open source vs SaaS | Factuel |
 
-L'utilisateur repond a des questions sur son contexte. Les questions sont organisees en 2 categories :
+### "Je ne sais pas" obligatoire
 
-**Questions sur le PROJET (affectent l'architecture) :**
+Chaque question DOIT avoir une option "je ne sais pas" avec :
+- Une **recommandation par defaut** basee sur le GRADE EBSE le plus haut
+- Une **explication** de pourquoi c'est le defaut
+- L'utilisateur n'est **jamais bloque**
 
-| Question | Options | Affecte quoi | Source |
-|----------|---------|-------------|--------|
-| Type de projet | SPA, site contenu, API only, temps-reel | Rendu (CSR/SSR/SSG), WebSocket, framework | SWEBOK v4 "Software Architecture" |
-| Echelle visee | Local (<100 users), startup (100-10k), scale (10k-1M), mondial (1M+) | HA, CDN, caching, i18n, multi-region | Twelve-Factor, Google SRE |
-| Besoins specifiques | Temps-reel, offline, mobile, i18n | WebSocket, PWA, service workers | ISO 25010 Functional Suitability |
+### Deduction technique (`deduced_tech`)
 
-**Questions sur les CONTRAINTES (affectent les outils) :**
+Chaque option de reponse a un champ `deduced_tech` qui explique CE QUE LE GUIDE CHOISIT et POURQUOI :
+```json
+{
+  "label": "Oui, souvent sur telephone",
+  "sets": { "mobile_need": "pwa" },
+  "deduced_tech": "PWA recommande (GRADE 6/7) — installable, offline, push. Meme codebase."
+}
+```
 
-| Question | Options | Affecte quoi | Source |
-|----------|---------|-------------|--------|
-| Langage maitrise | Java, TypeScript, Python, C#, aucun | Framework backend | SWEBOK v4 "SE Economics — productivity depends on mastery" |
-| Taille equipe | 1-5, 5-20, 20+ | Complexite acceptable, boilerplate | DORA/Accelerate "team size affects practices" |
-| Budget | Gratuit/open-source only, SaaS autorise | Outils (GlitchTip vs Sentry, Unleash vs LaunchDarkly) | — |
-| Delai | MVP rapide, projet long terme | Stack speed-to-market vs robustesse | — |
-
-Chaque branche mene a un ensemble de choix qui filtre les recommandations.
-Les questions elles-memes sont justifiees par des sources (colonne "Source").
+L'utilisateur voit la question metier. Le guide montre la deduction technique en dessous, avec le GRADE.
 
 ### Regles
 
-- Chaque question de l'arbre doit avoir une justification (pourquoi cette question est pertinente)
-- Chaque branche doit etre sourcee (pourquoi ce choix mene a cette recommandation)
+- Chaque question porte sur un **besoin metier**, JAMAIS sur un choix technique
+- Chaque deduction technique cite sa **source EBSE** (batch, GRADE)
+- Chaque question a un **"je ne sais pas"** avec reco par defaut
 - L'arbre ne contient PAS d'opinions — chaque branche est derivee de la methode EBSE
+- La stack optimale (batch 12) est le defaut quand l'utilisateur n'a pas de contrainte
 
 ---
 
