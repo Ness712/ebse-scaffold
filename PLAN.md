@@ -321,12 +321,9 @@ Response: {
   □ Un humain peut utiliser le configurateur de A a Z
   □ Une IA peut consommer l'API et obtenir des recos exploitables
 
-### Phase H — Deploiement
+### ~~Phase H — Deploiement~~ (REPORTE — hors scope pour le moment)
 
-**Action** : mettre en ligne
-**Methode** : Vercel (gratuit pour static + serverless)
-**Livrable** : URL publique + API endpoint
-**Critere de completion** : accessible, fonctionnel, HTTPS
+L'app tourne en local via `pnpm dev`. Le deploiement web sera fait plus tard si besoin.
 
 ---
 
@@ -379,4 +376,4 @@ Le projet est termine quand :
 4. ✅ Les 3 stacks principales sont couvertes (Java/React, NestJS/React, Django/React)
 5. ✅ Le chemin "optimal" donne LA meilleure stack selon les sources
 6. ✅ Rien n'est invente — tout est source EBSE avec double extraction
-7. ✅ L'outil est deploye et accessible publiquement
+7. ~~L'outil est deploye et accessible publiquement~~ (reporte)
