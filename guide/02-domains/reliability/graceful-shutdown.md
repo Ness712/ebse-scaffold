@@ -1,6 +1,6 @@
 # Graceful shutdown
 
-**[RECOMMANDE]** Drainer les connexions avant l'arret — zero requetes perdues en deploiement | Score GRADE : 5/7
+**[STANDARD]** Drainer les connexions avant l'arret — zero requetes perdues en deploiement | Score GRADE : 6/7
 
 Un arret brutal (SIGKILL) perd les requetes en cours. Le graceful shutdown laisse les requetes actives se terminer avant de couper le processus.
 

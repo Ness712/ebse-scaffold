@@ -1,6 +1,6 @@
 # Error Tracking
 
-**[RECOMMANDE]** Outil de suivi d'erreurs avec grouping, source maps et alerting | Score GRADE : 3/7
+**[RECOMMANDE]** Outil de suivi d'erreurs avec grouping, source maps et alerting | Score GRADE : 4/7
 
 Les erreurs en production doivent etre capturees automatiquement, groupees et notifiees. Les logs seuls ne suffisent pas.
 

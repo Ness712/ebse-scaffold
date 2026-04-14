@@ -1,6 +1,6 @@
 # TypeScript strict mode
 
-**[RECOMMANDE]** Activer `"strict": true` dans tsconfig.json | Score GRADE : 5/7
+**[STANDARD]** Activer `"strict": true` dans tsconfig.json | Score GRADE : 6/7
 
 Le mode strict active un ensemble de verifications qui detectent des categories entieres de bugs a la compilation plutot qu'au runtime.
 

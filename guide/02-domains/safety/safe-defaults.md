@@ -1,6 +1,6 @@
 # Safe defaults (deny-by-default)
 
-**[STANDARD]** Tout est interdit par defaut — autoriser explicitement | Score GRADE : 5/7
+**[STANDARD]** Tout est interdit par defaut — autoriser explicitement | Score GRADE : 6/7
 
 Le principe de deny-by-default garantit qu'un oubli de configuration ne cree pas une faille. Si rien n'est configure, rien n'est accessible.
 

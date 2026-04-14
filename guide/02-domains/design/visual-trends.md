@@ -1,6 +1,6 @@
 # Tendances visuelles (2026)
 
-**[BONNE PRATIQUE]** Subtle borders, tonal elevation, coins arrondis 8-16px | Score GRADE : 2/7
+**[CHOIX D'EQUIPE]** Subtle borders, tonal elevation, coins arrondis 8-16px | Score GRADE : 2/7
 
 > **DATED** — a revoir annuellement. Les tendances evoluent, les principes restent.
 
