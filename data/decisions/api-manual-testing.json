@@ -1,0 +1,53 @@
+{
+  "id": "api-manual-testing",
+  "domain": "testing",
+  "question": "Comment tester manuellement les APIs pendant le developpement ?",
+  "depends_on": [],
+  "tags": [
+    "testing",
+    "api",
+    "http-client",
+    "swagger",
+    "developer-experience",
+    "versioning"
+  ],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "Fichiers .http versionnes dans le repo + Swagger UI en complement. Pas Postman (pas versionne nativement). Pas curl comme outil principal.",
+        "grade": 4,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "JetBrains IntelliJ HTTP Client",
+            "pyramid": 1,
+            "year": 2024,
+            "quote": "HTTP request files stored alongside code, supporting variables and environments"
+          },
+          {
+            "name": "VS Code REST Client 5M+ installs",
+            "pyramid": 1,
+            "year": 2024,
+            "quote": ".http files with inline request definitions, variables, and response handling"
+          },
+          {
+            "name": "SpringDoc OpenAPI Swagger UI",
+            "pyramid": 1,
+            "year": 2024,
+            "quote": "Auto-generated interactive API documentation from OpenAPI annotations"
+          },
+          {
+            "name": "SWEBOK v4 Software Testing",
+            "pyramid": 1,
+            "year": 2024,
+            "quote": "Test artifacts should be version-controlled and reproducible"
+          }
+        ],
+        "v3_review": "2026-04-15",
+        "robustness": "FRAGILE"
+      }
+    ]
+  },
+  "variants": {}
+}

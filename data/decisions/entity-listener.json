@@ -1,0 +1,58 @@
+{
+  "id": "entity-listener",
+  "domain": "architecture",
+  "question": "Comment gerer les preoccupations transversales sur les entites JPA ?",
+  "depends_on": [],
+  "tags": [
+    "architecture",
+    "jpa",
+    "entity-listener",
+    "cross-cutting",
+    "audit",
+    "aop"
+  ],
+  "classification": "stack-specific",
+  "universal": {
+    "principles": [
+      {
+        "text": "JPA @EntityListeners pour lifecycle entite (audit, sanitization). Spring AOP pour service/controller. Servlet Filter pour HTTP. Jamais traitement manuel dans services.",
+        "grade": 5,
+        "level": "STANDARD",
+        "sources": [
+          {
+            "name": "Spring Data JPA AuditingEntityListener",
+            "pyramid": 1,
+            "year": 2024,
+            "quote": "AuditingEntityListener automatically populates @CreatedDate, @LastModifiedDate, @CreatedBy"
+          },
+          {
+            "name": "JPA 3.2 Specification Entity Listeners",
+            "pyramid": 1,
+            "year": 2024,
+            "quote": "Entity listeners receive lifecycle callback events and can be shared across entities"
+          },
+          {
+            "name": "Hibernate ORM 7 Events",
+            "pyramid": 1,
+            "year": 2024,
+            "quote": "Event system provides hooks for pre/post insert, update, delete operations"
+          },
+          {
+            "name": "SWEBOK v4 Software Design cross-cutting",
+            "pyramid": 1,
+            "year": 2024,
+            "quote": "Cross-cutting concerns should be modularized to avoid scattering and tangling"
+          }
+        ],
+        "v3_review": "2026-04-15",
+        "robustness": "ROBUSTE"
+      }
+    ]
+  },
+  "variants": {
+    "java-spring-boot": {
+      "text": "JPA @EntityListeners pour lifecycle entite. NestJS utilise interceptors/guards. Django utilise signals/middleware.",
+      "sources": []
+    }
+  }
+}

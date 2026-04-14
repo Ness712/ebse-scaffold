@@ -1,0 +1,67 @@
+{
+  "id": "active-states",
+  "domain": "design",
+  "question": "Comment differencier les etats interactifs (hover, focus, selected, pressed) ?",
+  "depends_on": [
+    "color-system"
+  ],
+  "tags": [
+    "states",
+    "hover",
+    "focus",
+    "accessibility",
+    "design-system",
+    "interaction"
+  ],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "5 etats distincts: hover (bg subtil 8%), focus (outline 2px+ 3:1 contrast WCAG 2.4.13), pressed (bg plus sombre 10-12%), selected (accent persistent), disabled (38% opacity). :focus-visible pas :focus. M3 state layers model. Chaque etat doit etre visuellement distinct des autres.",
+        "grade": 6,
+        "level": "STANDARD",
+        "sources": [
+          {
+            "name": "WCAG 2.2 SC 2.4.13 Focus Appearance",
+            "pyramid": 1,
+            "year": 2023,
+            "quote": "Focus indicator must have 3:1 contrast and minimum 2px outline"
+          },
+          {
+            "name": "WCAG 2.2 SC 1.4.11 Non-text Contrast",
+            "pyramid": 1,
+            "year": 2023,
+            "quote": "UI components and their states require 3:1 contrast"
+          },
+          {
+            "name": "M3 State Layers",
+            "pyramid": 1,
+            "year": 2024,
+            "quote": "State layers use opacity overlays: hover 8%, pressed 10%, dragged 16%"
+          },
+          {
+            "name": "NNg Button States",
+            "pyramid": 2,
+            "year": 2023,
+            "quote": "Each interactive state must be visually distinguishable"
+          },
+          {
+            "name": "Deque Focus Indicators Guide",
+            "pyramid": 3,
+            "year": 2023,
+            "quote": "Use :focus-visible to avoid showing focus on click"
+          },
+          {
+            "name": "Sara Soueidan — Focus Indicators",
+            "pyramid": 3,
+            "year": 2022,
+            "quote": "Custom focus styles must meet WCAG 2.4.13 minimum area"
+          }
+        ],
+        "v3_review": "2026-04-15",
+        "robustness": "ROBUSTE"
+      }
+    ]
+  },
+  "variants": {}
+}

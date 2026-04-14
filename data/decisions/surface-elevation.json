@@ -1,0 +1,60 @@
+{
+  "id": "surface-elevation",
+  "domain": "design",
+  "question": "Comment organiser la hierarchie visuelle des surfaces (elevation) ?",
+  "depends_on": [
+    "dark-mode"
+  ],
+  "tags": [
+    "elevation",
+    "surfaces",
+    "z-index",
+    "design-system",
+    "tokens"
+  ],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "5 niveaux (0=base, 1=cards/sidebars, 2=dropdowns/popovers, 3=modals/dialogs, 4=toasts). Tonal elevation en dark mode. Semantic tokens --elevation-0 a --elevation-4. En light mode, ombre portee croissante. En dark mode, surface de plus en plus claire.",
+        "grade": 5,
+        "level": "STANDARD",
+        "sources": [
+          {
+            "name": "M3 Elevation",
+            "pyramid": 1,
+            "year": 2024,
+            "quote": "Five levels of elevation from 0dp to 5dp"
+          },
+          {
+            "name": "M3 Tone-based Surfaces",
+            "pyramid": 1,
+            "year": 2024,
+            "quote": "Surfaces use tonal color to indicate elevation in dark theme"
+          },
+          {
+            "name": "Apple HIG Materials",
+            "pyramid": 1,
+            "year": 2024,
+            "quote": "Use materials to indicate hierarchy and depth"
+          },
+          {
+            "name": "GitLab Pajamas Elevation",
+            "pyramid": 3,
+            "year": 2024,
+            "quote": "Consistent elevation scale across all components"
+          },
+          {
+            "name": "designsystems.surf",
+            "pyramid": 4,
+            "year": 2024,
+            "quote": "Survey of elevation patterns across 50+ design systems"
+          }
+        ],
+        "v3_review": "2026-04-15",
+        "robustness": "ROBUSTE"
+      }
+    ]
+  },
+  "variants": {}
+}

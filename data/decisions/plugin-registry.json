@@ -1,0 +1,53 @@
+{
+  "id": "plugin-registry",
+  "domain": "architecture",
+  "question": "Comment structurer une app modulaire avec systeme de plugins/registry ?",
+  "depends_on": [],
+  "tags": [
+    "architecture",
+    "plugins",
+    "registry",
+    "modularity",
+    "lazy-loading",
+    "extension-points"
+  ],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "Registry interne VS Code-inspired (PAS micro-frontends pour single team). Module definition declarative + lazy loading React.lazy + communication par events types. Shell fournit extension points, modules les peuplent. Chaque module declare ses contributions (routes, panels, commandes) dans un manifest statique.",
+        "grade": 4,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "VS Code Extension API — Contribution Points",
+            "pyramid": 1,
+            "year": 2024,
+            "quote": "Extensions declare contributions in package.json, activated lazily"
+          },
+          {
+            "name": "Martin Fowler — Micro Frontends",
+            "pyramid": 2,
+            "year": 2019,
+            "quote": "Micro frontends add complexity — justify only for multiple autonomous teams"
+          },
+          {
+            "name": "Module Federation Documentation",
+            "pyramid": 3,
+            "year": 2024,
+            "quote": "Runtime module loading for independent deployment"
+          },
+          {
+            "name": "VS Code Extensibility Principles",
+            "pyramid": 2,
+            "year": 2024,
+            "quote": "Stability through extension host isolation and declarative contributions"
+          }
+        ],
+        "v3_review": "2026-04-15",
+        "robustness": "ROBUSTE"
+      }
+    ]
+  },
+  "variants": {}
+}

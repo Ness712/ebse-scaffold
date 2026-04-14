@@ -1,0 +1,53 @@
+{
+  "id": "drill-down-navigation",
+  "domain": "design",
+  "question": "Comment naviguer dans des collections imbriquees (parent/enfants) ?",
+  "depends_on": [],
+  "tags": [
+    "design",
+    "ux",
+    "navigation",
+    "breadcrumbs",
+    "routing",
+    "drill-down"
+  ],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "Routes imbriquees parent/:id/children. Breadcrumbs pour 3+ niveaux. Bouton retour pour 2 niveaux. Jamais de modals pour navigation detail.",
+        "grade": 4,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "React Router nested routes",
+            "pyramid": 1,
+            "year": 2024,
+            "quote": "Nested routes enable hierarchical URL structures matching UI component hierarchy"
+          },
+          {
+            "name": "NNg Breadcrumbs Guidelines",
+            "pyramid": 2,
+            "year": 2023,
+            "quote": "Breadcrumbs support wayfinding for hierarchies of 3+ levels"
+          },
+          {
+            "name": "W3C ARIA Breadcrumb pattern",
+            "pyramid": 1,
+            "year": 2024,
+            "quote": "Breadcrumb navigation with aria-label and aria-current for accessibility"
+          },
+          {
+            "name": "Material Design Navigation",
+            "pyramid": 1,
+            "year": 2024,
+            "quote": "Lateral and forward navigation patterns for hierarchical content"
+          }
+        ],
+        "v3_review": "2026-04-15",
+        "robustness": "ROBUSTE"
+      }
+    ]
+  },
+  "variants": {}
+}

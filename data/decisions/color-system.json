@@ -1,0 +1,59 @@
+{
+  "id": "color-system",
+  "domain": "design",
+  "question": "Comment generer un systeme de couleurs coherent pour un design system ?",
+  "depends_on": [],
+  "tags": [
+    "design-system",
+    "colors",
+    "tokens",
+    "css-custom-properties",
+    "hct",
+    "oklch"
+  ],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "3-tier CSS custom property tokens (primitive → semantic → component), generate with HCT (@material/material-color-utilities) or OKLCH. Les primitives definissent la palette brute, les semantiques mappent l'intention (--color-primary, --color-surface), les component tokens specialisent par composant.",
+        "grade": 5,
+        "level": "STANDARD",
+        "sources": [
+          {
+            "name": "Material Design 3 Color System",
+            "pyramid": 1,
+            "year": 2024,
+            "quote": "Dynamic color is algorithmic, using a single source color to derive five key colors"
+          },
+          {
+            "name": "M3 Color Roles",
+            "pyramid": 1,
+            "year": 2024,
+            "quote": "Color roles map to components automatically"
+          },
+          {
+            "name": "W3C WCAG 1.4.11 Non-text Contrast",
+            "pyramid": 1,
+            "year": 2023,
+            "quote": "3:1 contrast ratio for UI components"
+          },
+          {
+            "name": "EightShapes Color in Design Systems",
+            "pyramid": 3,
+            "year": 2023,
+            "quote": "Three-tier token architecture: global, alias, component"
+          },
+          {
+            "name": "State of CSS 2024",
+            "pyramid": 4,
+            "year": 2024,
+            "quote": "OKLCH adoption growing for perceptual uniformity"
+          }
+        ],
+        "v3_review": "2026-04-15",
+        "robustness": "ROBUSTE"
+      }
+    ]
+  },
+  "variants": {}
+}

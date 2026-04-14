@@ -1,0 +1,60 @@
+{
+  "id": "glass-effects",
+  "domain": "design",
+  "question": "Quand utiliser des effets de verre (backdrop-blur/glassmorphism) ?",
+  "depends_on": [
+    "surface-elevation"
+  ],
+  "tags": [
+    "glassmorphism",
+    "backdrop-blur",
+    "design-system",
+    "accessibility",
+    "performance"
+  ],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "UNIQUEMENT pour overlays (modals, dropdowns, command palette). Blur 8-12px max. Semi-opaque bg (alpha >= 0.7) pour WCAG AA. Max 3-5 elements blur par viewport. prefers-reduced-transparency fallback obligatoire pour les utilisateurs sensibles.",
+        "grade": 4,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "Apple HIG Materials/Vibrancy",
+            "pyramid": 1,
+            "year": 2024,
+            "quote": "Use materials to convey depth and hierarchy in overlays"
+          },
+          {
+            "name": "Axess Lab Glassmorphism Accessibility",
+            "pyramid": 3,
+            "year": 2022,
+            "quote": "Glassmorphism can cause readability issues without sufficient opacity"
+          },
+          {
+            "name": "Can I Use backdrop-filter — 92% support",
+            "pyramid": 2,
+            "year": 2024,
+            "quote": "Global support 92% including all modern browsers"
+          },
+          {
+            "name": "WCAG 2.2 SC 1.4.3 Contrast",
+            "pyramid": 1,
+            "year": 2023,
+            "quote": "Text over translucent backgrounds must still meet 4.5:1"
+          },
+          {
+            "name": "Josh Comeau — backdrop-filter",
+            "pyramid": 3,
+            "year": 2023,
+            "quote": "Performance cost of blur is real — limit to 3-5 elements"
+          }
+        ],
+        "v3_review": "2026-04-15",
+        "robustness": "FRAGILE"
+      }
+    ]
+  },
+  "variants": {}
+}

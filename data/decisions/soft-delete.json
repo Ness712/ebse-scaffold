@@ -1,0 +1,59 @@
+{
+  "id": "soft-delete",
+  "domain": "architecture",
+  "question": "Quand utiliser le soft delete vs hard delete ?",
+  "depends_on": [],
+  "tags": [
+    "architecture",
+    "soft-delete",
+    "hard-delete",
+    "data-lifecycle",
+    "rgpd",
+    "persistence"
+  ],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "Soft delete (deletedAt timestamp) pour entites owned restaurables. Hard delete pour donnees techniques/ephemeres. Jamais event sourcing pour du CRUD.",
+        "grade": 5,
+        "level": "STANDARD",
+        "sources": [
+          {
+            "name": "Hibernate ORM @SoftDelete",
+            "pyramid": 1,
+            "year": 2024,
+            "quote": "Built-in @SoftDelete annotation with automatic filtering of deleted rows"
+          },
+          {
+            "name": "JPA 3.1 Specification",
+            "pyramid": 1,
+            "year": 2023,
+            "quote": "Entity lifecycle callbacks enable transparent soft delete filtering"
+          },
+          {
+            "name": "SWEBOK v4 Software Maintenance",
+            "pyramid": 1,
+            "year": 2024,
+            "quote": "Data retention policies must balance recoverability with storage costs"
+          },
+          {
+            "name": "Martin Fowler Temporal Patterns",
+            "pyramid": 2,
+            "year": 2005,
+            "quote": "Temporal properties track when facts are believed to be true"
+          },
+          {
+            "name": "RGPD Article 17 — Droit a l'effacement",
+            "pyramid": 1,
+            "year": 2018,
+            "quote": "Le responsable du traitement efface les donnees a caractere personnel dans les meilleurs delais"
+          }
+        ],
+        "v3_review": "2026-04-15",
+        "robustness": "ROBUSTE"
+      }
+    ]
+  },
+  "variants": {}
+}

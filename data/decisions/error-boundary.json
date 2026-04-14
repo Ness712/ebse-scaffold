@@ -1,0 +1,58 @@
+{
+  "id": "error-boundary",
+  "domain": "reliability",
+  "question": "Comment structurer les error boundaries dans une app React ?",
+  "depends_on": [],
+  "tags": [
+    "error-boundary",
+    "react",
+    "reliability",
+    "error-handling",
+    "resilience"
+  ],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "3 layers: global (catch-all reload), per-route (isole crash module du shell), per-feature (optionnel, sections critiques). react-error-boundary package. NE PAS wrapper chaque composant — granularite excessive est contre-productive. Le global empeche le white screen, le per-route preserve la navigation.",
+        "grade": 5,
+        "level": "STANDARD",
+        "sources": [
+          {
+            "name": "React Official Docs — Error Boundaries",
+            "pyramid": 1,
+            "year": 2024,
+            "quote": "Error boundaries catch errors in their child component tree"
+          },
+          {
+            "name": "React 19 Release Notes",
+            "pyramid": 1,
+            "year": 2024,
+            "quote": "Improved error reporting and boundary behavior in React 19"
+          },
+          {
+            "name": "react-error-boundary npm — 10M+ dl/week",
+            "pyramid": 3,
+            "year": 2024,
+            "quote": "De facto standard for declarative error boundaries"
+          },
+          {
+            "name": "Kent C. Dodds — Use react-error-boundary",
+            "pyramid": 3,
+            "year": 2023,
+            "quote": "Layer boundaries at route and feature level, not per-component"
+          },
+          {
+            "name": "React Router errorElement",
+            "pyramid": 1,
+            "year": 2024,
+            "quote": "Built-in per-route error handling via errorElement prop"
+          }
+        ],
+        "v3_review": "2026-04-15",
+        "robustness": "ROBUSTE"
+      }
+    ]
+  },
+  "variants": {}
+}

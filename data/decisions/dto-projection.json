@@ -1,0 +1,53 @@
+{
+  "id": "dto-projection",
+  "domain": "architecture",
+  "question": "Comment exposer les donnees d'une entite via API ?",
+  "depends_on": [],
+  "tags": [
+    "architecture",
+    "dto",
+    "projection",
+    "api",
+    "security",
+    "mapping"
+  ],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "Toujours DTO explicite, jamais entite directe. Un DTO par cas d'usage (Summary, Detail, Create, Update). MapStruct pour mappings simples.",
+        "grade": 5,
+        "level": "STANDARD",
+        "sources": [
+          {
+            "name": "OWASP API Security Top 10 API3:2023",
+            "pyramid": 1,
+            "year": 2023,
+            "quote": "Broken Object Property Level Authorization — APIs exposing all object properties without filtering"
+          },
+          {
+            "name": "Spring Data JPA Projections",
+            "pyramid": 1,
+            "year": 2024,
+            "quote": "Interface and class-based projections to limit data fetched from database"
+          },
+          {
+            "name": "SWEBOK v4 Information Hiding",
+            "pyramid": 1,
+            "year": 2024,
+            "quote": "Information hiding principle limits exposure of internal implementation details"
+          },
+          {
+            "name": "Martin Fowler LocalDTO",
+            "pyramid": 2,
+            "year": 2004,
+            "quote": "DTOs should carry data between processes, not within a single process"
+          }
+        ],
+        "v3_review": "2026-04-15",
+        "robustness": "ROBUSTE"
+      }
+    ]
+  },
+  "variants": {}
+}

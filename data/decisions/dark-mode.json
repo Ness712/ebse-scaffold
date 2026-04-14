@@ -1,0 +1,54 @@
+{
+  "id": "dark-mode",
+  "domain": "design",
+  "question": "Comment implementer un dark mode dans un design system ?",
+  "depends_on": [
+    "color-system"
+  ],
+  "tags": [
+    "dark-mode",
+    "design-system",
+    "tokens",
+    "theming",
+    "accessibility"
+  ],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "Simultaneous light+dark avec semantic tokens. Jamais inverser le light. Tonal elevation en dark (surfaces plus claires = plus elevees). prefers-color-scheme par defaut. Chaque semantic token a une valeur light et une valeur dark, switchees via attribut data-theme ou media query.",
+        "grade": 5,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "Material Design 3 Dark Theme",
+            "pyramid": 1,
+            "year": 2024,
+            "quote": "Dark theme uses tonal elevation instead of shadow elevation"
+          },
+          {
+            "name": "Apple HIG Dark Mode",
+            "pyramid": 1,
+            "year": 2024,
+            "quote": "Don't just invert colors — design specifically for dark backgrounds"
+          },
+          {
+            "name": "Nielsen Norman Group Dark Mode Research",
+            "pyramid": 2,
+            "year": 2020,
+            "quote": "Dark mode is not universally better for readability"
+          },
+          {
+            "name": "WCAG 2.2 SC 1.4.3 Contrast",
+            "pyramid": 1,
+            "year": 2023,
+            "quote": "4.5:1 minimum contrast applies equally to dark and light themes"
+          }
+        ],
+        "v3_review": "2026-04-15",
+        "robustness": "ROBUSTE"
+      }
+    ]
+  },
+  "variants": {}
+}

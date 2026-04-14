@@ -1,0 +1,53 @@
+{
+  "id": "form-spellcheck",
+  "domain": "design",
+  "question": "Comment gerer la verification orthographique dans les formulaires web ?",
+  "depends_on": [],
+  "tags": [
+    "design",
+    "ux",
+    "spellcheck",
+    "forms",
+    "accessibility",
+    "i18n"
+  ],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "Spellcheck natif navigateur actif par defaut (gratuit, zero maintenance). Desactiver explicitement sur champs techniques (noms scientifiques, code, identifiants). Service externe (LanguageTool) optionnel a la demande, pas en temps reel.",
+        "grade": 3,
+        "level": "BONNE_PRATIQUE",
+        "sources": [
+          {
+            "name": "HTML Living Standard WHATWG spellcheck attribute",
+            "pyramid": 1,
+            "year": 2024,
+            "quote": "The spellcheck attribute controls whether the element is checked for spelling errors"
+          },
+          {
+            "name": "MDN Web Docs spellcheck",
+            "pyramid": 1,
+            "year": 2024,
+            "quote": "spellcheck global attribute enables browser-native spell checking on editable elements"
+          },
+          {
+            "name": "W3C WCAG 2.2 Input Assistance",
+            "pyramid": 1,
+            "year": 2023,
+            "quote": "Input error identification and suggestions help users avoid and correct mistakes"
+          },
+          {
+            "name": "LanguageTool API docs",
+            "pyramid": 1,
+            "year": 2024,
+            "quote": "REST API for grammar and spell checking with language detection"
+          }
+        ],
+        "v3_review": "2026-04-15",
+        "robustness": "FRAGILE"
+      }
+    ]
+  },
+  "variants": {}
+}

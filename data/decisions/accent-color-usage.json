@@ -1,0 +1,60 @@
+{
+  "id": "accent-color-usage",
+  "domain": "design",
+  "question": "Comment utiliser la couleur d'accent dans un design system ?",
+  "depends_on": [
+    "color-system"
+  ],
+  "tags": [
+    "accent",
+    "colors",
+    "design-system",
+    "cta",
+    "accessibility"
+  ],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "Accent uniquement pour: CTAs primaires, etats actifs/selectionnes, liens, focus rings, toggles. PAS pour decoration, backgrounds non-fonctionnels. 60-30-10 rule (60% neutre, 30% secondary, 10% accent). Separer brand vs functional colors pour eviter les conflits semantiques.",
+        "grade": 5,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "M3 Color Roles",
+            "pyramid": 1,
+            "year": 2024,
+            "quote": "Primary color is reserved for key components like FAB and prominent buttons"
+          },
+          {
+            "name": "EightShapes Color in Design Systems",
+            "pyramid": 3,
+            "year": 2023,
+            "quote": "Separate brand color from functional accent to avoid semantic conflicts"
+          },
+          {
+            "name": "UX4Sight Accent Colors",
+            "pyramid": 3,
+            "year": 2023,
+            "quote": "60-30-10 rule for balanced color distribution"
+          },
+          {
+            "name": "WCAG 2.2 SC 1.4.11 Non-text Contrast",
+            "pyramid": 1,
+            "year": 2023,
+            "quote": "Active controls must have 3:1 contrast against adjacent colors"
+          },
+          {
+            "name": "Adobe Spectrum Color System",
+            "pyramid": 1,
+            "year": 2024,
+            "quote": "Accent color used sparingly for interactive elements only"
+          }
+        ],
+        "v3_review": "2026-04-15",
+        "robustness": "ROBUSTE"
+      }
+    ]
+  },
+  "variants": {}
+}

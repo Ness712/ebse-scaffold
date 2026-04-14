@@ -1,0 +1,58 @@
+{
+  "id": "documentation-organization",
+  "domain": "project",
+  "question": "Comment organiser la documentation d'un projet ?",
+  "depends_on": [],
+  "tags": [
+    "documentation",
+    "diataxis",
+    "organization",
+    "project",
+    "maintenance"
+  ],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "Split par type/audience (Diataxis): tutorials, how-to guides, reference, explanation. Chaque info a un seul endroit. Mettre a jour docs dans le meme commit que le code. Supprimer docs mortes. Le framework Diataxis evite le melange tutorial/reference qui rend la doc inutilisable.",
+        "grade": 5,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "Google SWE Book Ch.10 — Documentation",
+            "pyramid": 2,
+            "year": 2020,
+            "quote": "Treat documentation like code: review, test, maintain"
+          },
+          {
+            "name": "Google Style Guide — Doc Best Practices",
+            "pyramid": 2,
+            "year": 2024,
+            "quote": "Each document should have one purpose and one audience"
+          },
+          {
+            "name": "Diataxis Framework",
+            "pyramid": 3,
+            "year": 2024,
+            "quote": "Four documentation modes: tutorials, how-to, reference, explanation"
+          },
+          {
+            "name": "SWEBOK v4 — Software Engineering Management",
+            "pyramid": 1,
+            "year": 2024,
+            "quote": "Documentation is a key engineering artifact requiring maintenance"
+          },
+          {
+            "name": "Martin Fowler — Architecture Decision Records",
+            "pyramid": 2,
+            "year": 2023,
+            "quote": "Record decisions as lightweight documents alongside code"
+          }
+        ],
+        "v3_review": "2026-04-15",
+        "robustness": "ROBUSTE"
+      }
+    ]
+  },
+  "variants": {}
+}

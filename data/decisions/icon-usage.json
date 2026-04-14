@@ -1,0 +1,58 @@
+{
+  "id": "icon-usage",
+  "domain": "design",
+  "question": "Quand et comment utiliser des icones dans une interface ?",
+  "depends_on": [],
+  "tags": [
+    "icons",
+    "usability",
+    "accessibility",
+    "design-system",
+    "labels"
+  ],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "Toujours pairer icone + texte visible. Icon-only uniquement pour universels (search, close, home) + tooltip. Regle 5 secondes (si pas d'icone evidente en 5s, utiliser texte seul). Icons pour actions, pas decoration. Chaque icone icon-only doit avoir un aria-label explicite.",
+        "grade": 6,
+        "level": "STANDARD",
+        "sources": [
+          {
+            "name": "NNg Icon Usability",
+            "pyramid": 1,
+            "year": 2024,
+            "quote": "Icon+label outperforms icon-only in task completion by 88%"
+          },
+          {
+            "name": "NNg Bad Icons — Why They Fail",
+            "pyramid": 1,
+            "year": 2023,
+            "quote": "Only universally recognized icons can stand alone"
+          },
+          {
+            "name": "Apple HIG Icons",
+            "pyramid": 1,
+            "year": 2024,
+            "quote": "Pair icons with text labels to improve clarity"
+          },
+          {
+            "name": "WCAG 2.2 SC 1.1.1 Text Alternatives",
+            "pyramid": 1,
+            "year": 2023,
+            "quote": "All non-text content must have a text alternative"
+          },
+          {
+            "name": "NNg How to Test Icons",
+            "pyramid": 1,
+            "year": 2024,
+            "quote": "5-second test reveals if icon meaning is guessable"
+          }
+        ],
+        "v3_review": "2026-04-15",
+        "robustness": "ROBUSTE"
+      }
+    ]
+  },
+  "variants": {}
+}

@@ -1,0 +1,66 @@
+{
+  "id": "scheduled-tasks",
+  "domain": "reliability",
+  "question": "Comment gerer les taches planifiees dans un backend ?",
+  "depends_on": [],
+  "tags": [
+    "reliability",
+    "scheduling",
+    "cron",
+    "monitoring",
+    "backend",
+    "spring"
+  ],
+  "classification": "stack-specific",
+  "universal": {
+    "principles": [
+      {
+        "text": "@Scheduled natif Spring + registre monitoring. Quartz uniquement si clustering. ShedLock si multi-instance. Jamais cron OS.",
+        "grade": 5,
+        "level": "STANDARD",
+        "sources": [
+          {
+            "name": "Spring Boot 4.0.3 Task Scheduling",
+            "pyramid": 1,
+            "year": 2026,
+            "quote": "@Scheduled provides declarative task scheduling with cron, fixedRate, and fixedDelay"
+          },
+          {
+            "name": "Spring Framework @Scheduled",
+            "pyramid": 1,
+            "year": 2024,
+            "quote": "Annotation-driven scheduling with TaskScheduler abstraction"
+          },
+          {
+            "name": "SWEBOK v4 Software Maintenance",
+            "pyramid": 1,
+            "year": 2024,
+            "quote": "Automated maintenance tasks require monitoring and observability"
+          },
+          {
+            "name": "Spring Boot Actuator /scheduledtasks",
+            "pyramid": 1,
+            "year": 2024,
+            "quote": "Actuator endpoint exposes all scheduled tasks with their triggers and intervals"
+          }
+        ],
+        "v3_review": "2026-04-15",
+        "robustness": "ROBUSTE"
+      }
+    ]
+  },
+  "variants": {
+    "java-spring-boot": {
+      "text": "Spring @Scheduled avec @EnableScheduling. Monitoring via Actuator /scheduledtasks.",
+      "sources": []
+    },
+    "typescript-nestjs": {
+      "text": "@nestjs/schedule + @Cron decorator pour taches planifiees NestJS.",
+      "sources": []
+    },
+    "python-django": {
+      "text": "Celery Beat ou django-crontab pour taches planifiees Django.",
+      "sources": []
+    }
+  }
+}

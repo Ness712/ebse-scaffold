@@ -1,0 +1,86 @@
+{
+  "id": "lombok-usage",
+  "domain": "code-quality",
+  "question": "Quand utiliser Lombok vs Java Records ?",
+  "depends_on": [],
+  "tags": [
+    "lombok",
+    "records",
+    "java",
+    "jpa",
+    "code-quality",
+    "boilerplate"
+  ],
+  "classification": "stack-specific",
+  "universal": {
+    "principles": [
+      {
+        "text": "Lombok pour JPA entities (@Getter @Setter @Builder, JAMAIS @Data/@EqualsAndHashCode sur entities), @RequiredArgsConstructor services, @Slf4j. Records pour DTOs simples immutables (MapStruct 1.5+ les supporte). Records ne peuvent PAS etre des JPA entities (besoin de no-arg constructor + mutabilite).",
+        "grade": 4,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "JPA Buddy — Lombok Best Practices",
+            "pyramid": 3,
+            "year": 2024,
+            "quote": "Never use @Data on JPA entities — breaks equals/hashCode with proxies"
+          },
+          {
+            "name": "Thorben Janssen — Lombok+Hibernate Pitfalls",
+            "pyramid": 3,
+            "year": 2023,
+            "quote": "@EqualsAndHashCode on entities causes proxy comparison bugs"
+          },
+          {
+            "name": "Baeldung — Record vs Lombok",
+            "pyramid": 4,
+            "year": 2024,
+            "quote": "Records are ideal for DTOs, Lombok for mutable entities"
+          },
+          {
+            "name": "JetBrains State of Java 2025",
+            "pyramid": 2,
+            "year": 2025,
+            "quote": "Lombok used by 67% of Java developers, records adoption growing"
+          },
+          {
+            "name": "Baeldung — Records with JPA",
+            "pyramid": 4,
+            "year": 2024,
+            "quote": "Records cannot be JPA entities — no no-arg constructor, immutable"
+          }
+        ],
+        "v3_review": "2026-04-15",
+        "robustness": "ROBUSTE"
+      }
+    ]
+  },
+  "variants": {
+    "java-spring-boot": {
+      "recommendation": "Lombok pour entities JPA: @Getter @Setter @Builder @NoArgsConstructor @AllArgsConstructor. JAMAIS @Data sur entities. @RequiredArgsConstructor pour injection dans services. @Slf4j pour logging. Records pour tous les DTOs simples.",
+      "grade": 4,
+      "level": "RECOMMANDE",
+      "implementation": "Configurer lombok.config a la racine: lombok.addLombokGeneratedAnnotation=true (pour exclusion Jacoco). Entities: @Getter @Setter @Builder @NoArgsConstructor @AllArgsConstructor. Services: @RequiredArgsConstructor + champs final. DTOs: Java Records avec MapStruct 1.5+.",
+      "sources": [
+        {
+          "name": "JPA Buddy — Lombok Best Practices",
+          "pyramid": 3,
+          "year": 2024,
+          "quote": "Use @Getter @Setter explicitly, avoid @Data on entities"
+        },
+        {
+          "name": "Thorben Janssen — Lombok+Hibernate Pitfalls",
+          "pyramid": 3,
+          "year": 2023,
+          "quote": "@EqualsAndHashCode breaks lazy-loaded proxy comparison"
+        },
+        {
+          "name": "JetBrains State of Java 2025",
+          "pyramid": 2,
+          "year": 2025,
+          "quote": "67% Lombok adoption, records growing for DTOs"
+        }
+      ]
+    }
+  }
+}

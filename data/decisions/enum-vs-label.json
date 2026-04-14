@@ -1,0 +1,65 @@
+{
+  "id": "enum-vs-label",
+  "domain": "architecture",
+  "question": "Quand utiliser un enum code vs des labels configurables en base ?",
+  "depends_on": [],
+  "tags": [
+    "architecture",
+    "database",
+    "domain-model",
+    "enum",
+    "lookup-table",
+    "configuration"
+  ],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "3 questions dans l'ordre : (1) Le code branche-t-il sur cette valeur ? (if/switch) → enum. (2) Les utilisateurs doivent-ils ajouter des valeurs sans deploiement ? → label configurable (table lookup en BDD). (3) La valeur a-t-elle besoin de metadata (i18n, tri, couleur) ? → label. Regle d'or : si ajouter une nouvelle valeur necessite zero changement de code → label. Si ca necessite un nouveau branchement → enum. Pattern hybride possible : enum pour les valeurs code-critical + table BDD pour les labels utilisateur.",
+        "grade": 4,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "Bloch — Effective Java 3rd ed., Item 34",
+            "pyramid": 2,
+            "year": 2018,
+            "quote": "Enums provide compile-time type safety. Use when set is inherently fixed."
+          },
+          {
+            "name": "Evans — Domain-Driven Design, Ch. 5 & 9",
+            "pyramid": 2,
+            "year": 2003,
+            "quote": "When domain experts need to define new types at runtime, types belong in database, not code."
+          },
+          {
+            "name": "Karwin — SQL Antipatterns, Ch. 10",
+            "pyramid": 2,
+            "year": 2010,
+            "quote": "Use ENUM only when the set of values will never change. If any chance of change, use lookup table."
+          },
+          {
+            "name": "Vernon — Implementing DDD, Ch. 6 Standard Types",
+            "pyramid": 2,
+            "year": 2013,
+            "quote": "Who owns the lifecycle? Developer-owned → enum. Business-owned → database Standard Type."
+          },
+          {
+            "name": "Microsoft .NET Architecture Guide — Enum vs Lookup",
+            "pyramid": 1,
+            "year": 2023,
+            "quote": "Use enum for logic-driving values, lookup table for user-configurable values with metadata."
+          },
+          {
+            "name": "Fowler — Refactoring 2nd ed., Ch. 12",
+            "pyramid": 2,
+            "year": 2018,
+            "quote": "If type code affects behavior, replace with subclasses. Key question: is set fixed or open to extension?"
+          }
+        ],
+        "v3_review": "2026-04-15",
+        "robustness": "ROBUSTE"
+      }
+    ]
+  },
+  "variants": {}
+}

@@ -1,0 +1,60 @@
+{
+  "id": "badge-status",
+  "domain": "design",
+  "question": "Comment concevoir des badges de statut dans un design system ?",
+  "depends_on": [
+    "color-system"
+  ],
+  "tags": [
+    "badge",
+    "status",
+    "design-system",
+    "accessibility",
+    "indicators"
+  ],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "5-6 variants semantiques (success/warning/error/info/neutral + optionnel accent). Couleur + icone + texte (jamais couleur seule, WCAG 1.4.1). Forme pill. Max 1-2 mots. Ne pas surcharger (3 max par element). Chaque variant doit etre distinguable sans couleur (icone ou forme differente).",
+        "grade": 4,
+        "level": "BONNE_PRATIQUE",
+        "sources": [
+          {
+            "name": "Carbon Design System Status Indicators",
+            "pyramid": 2,
+            "year": 2024,
+            "quote": "Use shape and icon in addition to color for status"
+          },
+          {
+            "name": "Adobe Spectrum Badge",
+            "pyramid": 1,
+            "year": 2024,
+            "quote": "Badges are small, keyword-based status descriptors"
+          },
+          {
+            "name": "Baymard Institute Trust Badges",
+            "pyramid": 2,
+            "year": 2023,
+            "quote": "Limit badge count to avoid visual noise"
+          },
+          {
+            "name": "WCAG 2.2 SC 1.4.1 Use of Color",
+            "pyramid": 1,
+            "year": 2023,
+            "quote": "Color is not used as the only visual means of conveying information"
+          },
+          {
+            "name": "GitLab Pajamas Badge",
+            "pyramid": 3,
+            "year": 2024,
+            "quote": "5 semantic variants with icon+color+text triple encoding"
+          }
+        ],
+        "v3_review": "2026-04-15",
+        "robustness": "FRAGILE"
+      }
+    ]
+  },
+  "variants": {}
+}

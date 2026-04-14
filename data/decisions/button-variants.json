@@ -1,0 +1,61 @@
+{
+  "id": "button-variants",
+  "domain": "design",
+  "question": "Quels variants de boutons definir dans un design system ?",
+  "depends_on": [
+    "active-states",
+    "color-system"
+  ],
+  "tags": [
+    "buttons",
+    "design-system",
+    "variants",
+    "hierarchy",
+    "accessibility"
+  ],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "5 variants: primary (filled, 1 par section), secondary (outlined), tertiary/ghost (text-only), danger (filled red), icon-only (avec aria-label + tooltip). Tous les variants: 5 etats (enabled, hover, focus, pressed, disabled). Un seul primary par section pour guider l'action principale.",
+        "grade": 5,
+        "level": "STANDARD",
+        "sources": [
+          {
+            "name": "Carbon Design System Buttons",
+            "pyramid": 2,
+            "year": 2024,
+            "quote": "Primary, secondary, tertiary, danger, and ghost button types"
+          },
+          {
+            "name": "EightShapes Buttons in Design Systems",
+            "pyramid": 3,
+            "year": 2023,
+            "quote": "Limit to one primary button per section for clear hierarchy"
+          },
+          {
+            "name": "M3 Button Types",
+            "pyramid": 1,
+            "year": 2024,
+            "quote": "Filled, outlined, text, elevated, and tonal button variants"
+          },
+          {
+            "name": "NNg Button States",
+            "pyramid": 2,
+            "year": 2023,
+            "quote": "All button variants need consistent state treatment"
+          },
+          {
+            "name": "SubUX Button Hierarchy",
+            "pyramid": 3,
+            "year": 2023,
+            "quote": "Visual weight of button indicates importance in the action hierarchy"
+          }
+        ],
+        "v3_review": "2026-04-15",
+        "robustness": "ROBUSTE"
+      }
+    ]
+  },
+  "variants": {}
+}

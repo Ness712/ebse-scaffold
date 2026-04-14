@@ -1,0 +1,58 @@
+{
+  "id": "changelog-display",
+  "domain": "project",
+  "question": "Comment communiquer les changements aux utilisateurs ?",
+  "depends_on": [],
+  "tags": [
+    "changelog",
+    "release-notes",
+    "ux",
+    "communication",
+    "notifications"
+  ],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "2 tiers: page changelog persistante (historique complet) + notification in-app subtile (badge/dot, PAS modal bloquante) pour MAJ significatives. Modal uniquement pour breaking changes necessitant action utilisateur. Le changelog doit etre consultable a tout moment, la notification signale la nouveaute sans interrompre le flux.",
+        "grade": 3,
+        "level": "BONNE_PRATIQUE",
+        "sources": [
+          {
+            "name": "Appcues — Release Notes Best Practices",
+            "pyramid": 4,
+            "year": 2024,
+            "quote": "Persistent changelog page combined with subtle in-app notifications"
+          },
+          {
+            "name": "UserPilot — Release Notes UX",
+            "pyramid": 4,
+            "year": 2024,
+            "quote": "Avoid modal interruptions for non-critical updates"
+          },
+          {
+            "name": "UX Studio — Product Updates Communication",
+            "pyramid": 4,
+            "year": 2023,
+            "quote": "Badge notifications outperform modals for engagement"
+          },
+          {
+            "name": "AnnounceKit — Changelog Patterns",
+            "pyramid": 4,
+            "year": 2024,
+            "quote": "Two-tier approach: persistent page + widget notification"
+          },
+          {
+            "name": "Eleken — Modal UX Best Practices",
+            "pyramid": 4,
+            "year": 2023,
+            "quote": "Modals should be reserved for actions requiring user decision"
+          }
+        ],
+        "v3_review": "2026-04-15",
+        "robustness": "FRAGILE"
+      }
+    ]
+  },
+  "variants": {}
+}

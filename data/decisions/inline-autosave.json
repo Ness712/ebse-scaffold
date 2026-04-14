@@ -1,0 +1,53 @@
+{
+  "id": "inline-autosave",
+  "domain": "design",
+  "question": "Quand utiliser l'auto-save vs bouton save explicite ?",
+  "depends_on": [],
+  "tags": [
+    "design",
+    "ux",
+    "auto-save",
+    "forms",
+    "feedback",
+    "usability"
+  ],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "Auto-save on blur pour edition de contenu existant (detail panels). Bouton save explicite pour creation/formulaires de soumission. Indicateur visuel obligatoire.",
+        "grade": 3,
+        "level": "BONNE_PRATIQUE",
+        "sources": [
+          {
+            "name": "NNg Auto-Saving and Versions",
+            "pyramid": 2,
+            "year": 2016,
+            "quote": "Auto-saving reduces data loss but requires clear status indicators"
+          },
+          {
+            "name": "Google Docs/Notion UX patterns",
+            "pyramid": 4,
+            "year": 2024,
+            "quote": "Inline auto-save with visual confirmation is now a standard UX pattern"
+          },
+          {
+            "name": "SWEBOK v4 Usability",
+            "pyramid": 1,
+            "year": 2024,
+            "quote": "User feedback must confirm system state changes to prevent confusion"
+          },
+          {
+            "name": "W3C ARIA feedback",
+            "pyramid": 1,
+            "year": 2024,
+            "quote": "Live regions and status roles communicate dynamic changes to assistive technology"
+          }
+        ],
+        "v3_review": "2026-04-15",
+        "robustness": "FRAGILE"
+      }
+    ]
+  },
+  "variants": {}
+}

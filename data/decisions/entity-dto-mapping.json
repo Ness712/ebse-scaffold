@@ -1,0 +1,101 @@
+{
+  "id": "entity-dto-mapping",
+  "domain": "code-quality",
+  "question": "Comment mapper les entites vers les DTOs ?",
+  "depends_on": [],
+  "tags": [
+    "mapping",
+    "dto",
+    "entity",
+    "mapstruct",
+    "serialization",
+    "code-quality"
+  ],
+  "classification": "stack-specific",
+  "universal": {
+    "principles": [
+      {
+        "text": "Utiliser un mapper compile-time pour les mappings simples, manual mapping pour la logique custom. Eviter les mappers par reflection (lents, fragiles). Les DTOs immutables (records/dataclasses) sont preferables pour la type-safety.",
+        "grade": 5,
+        "level": "STANDARD",
+        "sources": [
+          {
+            "name": "Martin Fowler — LocalDTO",
+            "pyramid": 2,
+            "year": 2004,
+            "quote": "DTOs should be simple data holders for remote facade boundaries"
+          }
+        ],
+        "v3_review": "2026-04-15",
+        "robustness": "ROBUSTE"
+      }
+    ]
+  },
+  "variants": {
+    "java-spring-boot": {
+      "recommendation": "MapStruct (@Mapper componentModel=\"spring\") pour mappings simples. Manual @Component pour logique custom. Jamais ModelMapper (152x plus lent, reflection). Records OK comme DTO avec MapStruct 1.5+.",
+      "grade": 5,
+      "level": "STANDARD",
+      "implementation": "Creer des interfaces @Mapper(componentModel = \"spring\") pour chaque paire entity/DTO. MapStruct genere le code a la compilation, zero reflection. Utiliser @Mapping pour les champs non-triviaux. Records Java comme DTOs immutables.",
+      "sources": [
+        {
+          "name": "MapStruct Official Documentation",
+          "pyramid": 1,
+          "year": 2024,
+          "quote": "Compile-time code generation, type-safe, no reflection"
+        },
+        {
+          "name": "java-object-mapper-benchmark JMH",
+          "pyramid": 3,
+          "year": 2023,
+          "quote": "MapStruct 152x faster than ModelMapper in throughput benchmarks"
+        },
+        {
+          "name": "Baeldung — Record vs Lombok",
+          "pyramid": 4,
+          "year": 2024,
+          "quote": "Records ideal for DTOs, MapStruct 1.5+ supports record targets"
+        }
+      ]
+    },
+    "typescript-nestjs": {
+      "recommendation": "class-transformer avec @Exclude/@Expose pour la serialisation. class-validator pour la validation. Pas de mapper externe — les decorateurs TypeScript suffisent.",
+      "grade": 5,
+      "level": "STANDARD",
+      "implementation": "Definir les DTOs comme classes avec decorateurs class-validator. Utiliser ClassSerializerInterceptor pour la transformation automatique. @Exclude() pour les champs sensibles, @Expose() pour le whitelist approach.",
+      "sources": [
+        {
+          "name": "NestJS Serialization Documentation",
+          "pyramid": 1,
+          "year": 2024,
+          "quote": "Use ClassSerializerInterceptor with class-transformer decorators"
+        },
+        {
+          "name": "class-transformer npm — 5M+ dl/week",
+          "pyramid": 3,
+          "year": 2024
+        }
+      ]
+    },
+    "python-django": {
+      "recommendation": "Django REST Framework Serializers pour mapping model → API. ModelSerializer pour CRUD standard, Serializer custom pour logique complexe. Serializers gerent validation + transformation.",
+      "grade": 5,
+      "level": "STANDARD",
+      "implementation": "ModelSerializer pour les cas simples (declare Meta.model + fields). Serializer custom pour les representations complexes. Methodes to_representation/to_internal_value pour la logique custom. Nested serializers pour les relations.",
+      "sources": [
+        {
+          "name": "Django REST Framework Serializers Documentation",
+          "pyramid": 1,
+          "year": 2024,
+          "quote": "Serializers handle deserialization, validation, and complex data types"
+        },
+        {
+          "name": "DRF Best Practices — HackSoft",
+          "pyramid": 3,
+          "year": 2024,
+          "quote": "Keep serializers thin, move business logic to services"
+        }
+      ]
+    }
+  }
+}
