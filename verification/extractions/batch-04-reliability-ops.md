@@ -1,29 +1,35 @@
-# Double Extraction — Batch 4 : Reliability + Operations (13 pages)
+# Double Extraction — Batch 4 : Reliability + Operations (13 pages) — VRAIS AGENTS SEPARES
 
 **Date** : 2026-04-14
-**Agent A** : context a0b2ae993269cacc4 (perspective A)
-**Agent B** : context a0b2ae993269cacc4 (perspective B)
+**Agent A** : a5cc737d2859bd1d3 (contexte independant)
+**Agent B** : a60c6618ad40559da (contexte independant)
 
 ## Resultats
 
 - **Accord recommandations : 13/13 (100%)**
-- **Accord GRADE : 13/13 (100%)**
-- **Pages modifiees : aucune**
+- **Accord GRADE : 2/13 (15%)** — divergences systematiques (Agent B note +1-2 vs Agent A)
+- **Cause** : calibration differente de l'echelle GRADE entre agents. Agent B classe les docs Spring Boot comme niv.1 (standard), Agent A comme niv.4 (doc officielle). La methodologie clarifiee dit niv.3.
 
 ## Comparaison
 
-| # | Page | GRADE | Accord |
-|---|------|-------|:------:|
-| 1 | monitoring | 4/7 | ✓ |
-| 2 | error-tracking | 4/7 | ✓ |
-| 3 | logging | 6/7 | ✓ |
-| 4 | error-handling | 6/7 | ✓ |
-| 5 | circuit-breaker | 4/7 | ✓ |
-| 6 | backup-recovery | 5/7 | ✓ |
-| 7 | database-migrations | 5/7 | ✓ |
-| 8 | graceful-shutdown | 6/7 | ✓ |
-| 9 | slos | 2/7 | ✓ |
-| 10 | alerting | 3/7 | ✓ |
-| 11 | uptime | 4/7 | ✓ |
-| 12 | feature-flags | 3/7 | ✓ |
-| 13 | env-config | 6/7 | ✓ |
+| # | Page | Agent A | Agent B | Accord reco | GRADE A | GRADE B | Conservatif |
+|---|------|---------|---------|:-----------:|---------|---------|-------------|
+| 1 | monitoring | Prometheus+Grafana | Prometheus+Grafana | ✓ | 5/7 | 6/7 | 5/7 |
+| 2 | error-tracking | GlitchTip/Sentry | GlitchTip/Sentry | ✓ | 4/7 | 5/7 | 4/7 |
+| 3 | logging | Logback JSON + MDC | Logback JSON + MDC | ✓ | 5/7 | 6/7 | 5/7 |
+| 4 | error-handling | RFC 9457 + @ControllerAdvice | RFC 9457 + @ControllerAdvice | ✓ | 5/7 | 7/7 | 5/7 |
+| 5 | circuit-breaker | Resilience4j | Resilience4j | ✓ | 4/7 | 5/7 | 4/7 |
+| 6 | backup-recovery | pg_dump + WAL | pg_dump + WAL | ✓ | 5/7 | 6/7 | 5/7 |
+| 7 | database-migrations | Flyway | Flyway | ✓ | 6/7 | 7/7 | 6/7 |
+| 8 | graceful-shutdown | server.shutdown=graceful | server.shutdown=graceful | ✓ | 5/7 | 7/7 | 5/7 |
+| 9 | slos | 99.5% + error budget | 99.5% + error budget | ✓ | 5/7 | 4/7 | 4/7 |
+| 10 | alerting | Alertmanager Prometheus | Alertmanager Prometheus | ✓ | 5/7 | 5/7 | 5/7 |
+| 11 | uptime | Uptime Kuma | Uptime Kuma | ✓ | 4/7 | 6/7 | 4/7 |
+| 12 | feature-flags | Unleash | Unleash/Spring Profiles | ✓ | 3/7 | 3/7 | 3/7 |
+| 13 | env-config | application-{profile}.yml | application-{profile}.yml | ✓ | 6/7 | 7/7 | 6/7 |
+
+## Observations
+
+- Les 2 agents recommandent Uptime Kuma au lieu de UptimeRobot/Prometheus blackbox. Flagge mais guide garde blackbox (deja dans la stack Prometheus).
+- Les 2 agents suggerent SLO 99.5% (pas 99.9%). Coherent avec la recommandation existante (guide dit [CHOIX D'EQUIPE] pour les seuils).
+- La forte divergence GRADE confirme que les criteres de calibration doivent etre encore plus precis. Recommandation : ajouter des exemples concrets dans la methodologie.
