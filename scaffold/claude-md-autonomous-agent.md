@@ -127,7 +127,7 @@ Ces operations **DOIVENT TOUJOURS** demander l'approbation du PO, peu importe ta
 5. **SAST** — utiliser l'outil configure pour le projet (`[CONFIGURER: ex: SonarQube deja en CI, eslint-plugin-security, Semgrep]`). Note : SAST seul detecte 55-65% des defauts — necessaire mais non suffisant (`linting.json`, Capers Jones 13k+ projets).
 6. **Review sub-agent** — apres feature complete, spawn un reviewer independant :
    ```
-   Agent({model: "sonnet", prompt: "Review ce diff pour : 1) bugs et securite (OWASP Top 10), 2) violations conventions du projet, 3) alignment avec les recommandations EBSE ([CONFIGURER: chemin recommendations, ex: ../ebse-scaffold/guide/data/stacks/ols-recommendations.json]). Contexte frais — sois critique. Rapport structure : Problemes bloquants / Avertissements / Verdict OK ou KO."})
+   Agent({model: "sonnet", prompt: "Review ce diff pour : 1) bugs et securite (OWASP Top 10), 2) violations conventions du projet, 3) alignment avec les recommandations EBSE ([CONFIGURER: chemin recommendations, ex: ../ebse-scaffold/ebse/guide/data/stacks/ols-recommendations.json]). Contexte frais — sois critique. Rapport structure : Problemes bloquants / Avertissements / Verdict OK ou KO."})
    ```
    Le rapport du reviewer est **obligatoire avant de creer la PR** — voir section PR ci-dessous.
 
@@ -226,7 +226,7 @@ Les metriques multi-dimensionnelles correlent mieux avec la performance producti
 
 Quand le PO te donne une tache :
 
-1. **Consulte le guide EBSE** : `[CONFIGURER: chemin, ex: guide/data/decisions/ai-agent-*.json]` pour les decisions techniques couvertes
+1. **Consulte le guide EBSE** : `[CONFIGURER: chemin, ex: ebse/guide/data/decisions/ai-agent-*.json]` pour les decisions techniques couvertes
 2. **Consulte la doc officielle** du framework/outil concerne (via Context7 MCP ou web search si disponible)
 3. **Produis un plan decompose** avec des sous-taches claires, chacune verifiable independamment
 4. **Presente le plan au PO** pour approbation (sauf si la tache est triviale : rename, dep bump, fix lint — dans ce cas execute directement)
@@ -483,10 +483,10 @@ Langue commits : [ex: francais]
 ### Guide EBSE `[CONFIGURER]`
 
 ```
-Chemin : [ex: ../ebse-scaffold/guide/data/decisions/]
-Decision tree : [ex: ../ebse-scaffold/guide/data/decision-tree.json]
-Domaine ai-collaboration : [ex: ../ebse-scaffold/guide/data/decisions/ai-agent-*.json]
-Profil projet : [ex: ../ebse-scaffold/guide/data/stacks/ols.json]
+Chemin : [ex: ../ebse-scaffold/ebse/guide/data/decisions/]
+Decision tree : [ex: ../ebse-scaffold/ebse/guide/data/decision-tree.json]
+Domaine ai-collaboration : [ex: ../ebse-scaffold/ebse/guide/data/decisions/ai-agent-*.json]
+Profil projet : [ex: ../ebse-scaffold/ebse/guide/data/stacks/ols.json]
 ```
 
 **Regles d'utilisation du profil :**

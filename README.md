@@ -21,13 +21,13 @@ Adaptation de l'Evidence-Based Medicine au genie logiciel (EBSE, Kitchenham et a
 - **Kappa de Cohen** : taux d'accord mesure et documente
 - **Tracabilite** : chaque recommandation a un fichier de preuve
 
-Voir [methodology.md](methodology.md) pour le protocole complet.
+Voir [ebse/guide/methodology.md](ebse/guide/methodology.md) pour le protocole complet.
 
 ## Utilisation
 
 ### Humain (web UI)
 ```bash
-cd app
+cd ebse/app
 pnpm install
 pnpm dev
 # Ouvrir http://localhost:5173
@@ -42,27 +42,27 @@ curl -X POST http://localhost:5173/api/guide \
 ```
 
 ### Donnees brutes
-Les recommandations sont dans `guide/data/decisions/*.json` (lisibles par humain et machine).
+Les recommandations sont dans `ebse/guide/data/decisions/*.json` (lisibles par humain et machine).
 
 ## Structure du projet
 
 ```
 ebse-scaffold/
-├── guide/                  ← Guide EBSE (decisions techniques basees sur preuves)
-│   ├── methodology.md      ← Methode EBSE (PICOC, GRADE, double extraction)
-│   ├── data/               ← Base de donnees de recommandations (JSON)
-│   │   ├── decisions/      ← 1 fichier par decision (PICOC)
-│   │   ├── decision-tree.json
-│   │   └── stacks/         ← Profils pre-calcules par stack
-│   └── verification/       ← Traces de double extraction + PRISMA
-├── scaffold/               ← Scaffold agent (templates operationnels)
-│   ├── claude-md-autonomous-agent.md  ← Template CLAUDE.md universel
-│   ├── settings-autonomous-agent.jsonc
-│   ├── commands/           ← Slash commands templates
-│   └── ...
-├── app/                    ← Application web (React + Vite + TypeScript)
-├── matrix.md               ← Matrice ISO 25010 x SWEBOK (scope)
-└── PLAN.md                 ← Avancement
+├── ebse/                   ← Guide EBSE (decisions + app web)
+│   ├── guide/              ← Decisions techniques basees sur preuves
+│   │   ├── methodology.md  ← Methode EBSE (PICOC, GRADE, double extraction)
+│   │   ├── data/           ← Base de donnees de recommandations (JSON)
+│   │   │   ├── decisions/  ← 1 fichier par decision (PICOC)
+│   │   │   ├── decision-tree.json
+│   │   │   └── stacks/     ← Profils pre-calcules par stack
+│   │   ├── verification/   ← Traces de double extraction + PRISMA
+│   │   └── scripts/        ← Outils de maintenance du guide
+│   └── app/                ← Application web (React + Vite + TypeScript)
+└── scaffold/               ← Scaffold agent (templates operationnels)
+    ├── claude-md-autonomous-agent.md  ← Template CLAUDE.md universel
+    ├── settings-autonomous-agent.jsonc
+    ├── commands/           ← Slash commands templates
+    └── ...
 ```
 
 ## Stacks couvertes
@@ -71,7 +71,3 @@ ebse-scaffold/
 - TypeScript / NestJS + React
 - Python / Django + React
 - (C# / ASP.NET — prevu)
-
-## Statut
-
-En construction. Voir [PLAN.md](PLAN.md) pour l'avancement.
