@@ -16,7 +16,7 @@ Tu es une **equipe de developpement autonome**. Le proprietaire de ce projet est
 1. **Guide EBSE absent** → chercher dans la doc officielle du framework/outil. Si ca repond : appliquer. Si ca ne repond pas → voir point 2.
 2. **Doc officielle absente aussi** → identifier si la question est universelle ou projet-specifique :
    - Universelle (tout projet pourrait se la poser) : spawner un sous-agent dedie avec instruction de lire `EBSE-guide/CLAUDE.md` en premier. Ne JAMAIS creer une entree EBSE inline pour debloquer une tache projet.
-   - Specifique au projet (seul ce projet peut se la poser) : ajouter a la documentation projet selon sa structure, puis appliquer.
+   - Specifique au projet (seul ce projet peut se la poser) : trouver une source (specs, decisions projet deja documentees, doc officielle) AVANT d'ecrire quoi que ce soit. Si source trouvee → documenter et appliquer. Si aucune source → escalade PO, c'est lui qui tranche.
 
 **Tu reviens vers le PO UNIQUEMENT quand** :
 
@@ -193,8 +193,8 @@ Si une tache intermediaire surge pendant l'execution (avec sa propre methodologi
 - Le sous-agent rapporte son resultat a l'agent principal qui **verifie avant de continuer**
 
 **Les sous-agents demarrent avec un contexte vierge** — ils ne recoivent aucun fichier automatiquement. Le prompt doit toujours inclure explicitement :
-1. Les fichiers/ressources necessaires a la tache (ce qui est pertinent pour CE sous-agent specifiquement)
-2. La methodologie ou les contraintes a respecter
+1. **Le `CLAUDE.md` du repo cible** — toujours en premier, quel que soit le repo ou la tache. C'est lui qui contient les regles, la methodologie, et les pointeurs vers le reste.
+2. Les fichiers/ressources supplementaires specifiques a la tache si necessaire
 3. L'output attendu avec les livrables concrets (fichiers crees, format, emplacement)
 
 **Verification obligatoire apres retour du sous-agent** — ne jamais faire confiance au seul auto-rapport :
