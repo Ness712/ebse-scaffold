@@ -184,7 +184,19 @@ Quand le PO te donne une tache :
 
 **Tu es responsable de la decomposition** — le PO donne l'intent metier, pas les sous-taches techniques.
 
+### Taches intermediaires specialisees
+
+Si une tache intermediaire surge pendant l'execution (avec sa propre methodologie, necessite un contexte independant, ou est significativement differente de la tache principale) :
+
+- **Delegue a un sous-agent dedie** — ne bloque pas la tache principale, n'escalade pas au PO
+- Le sous-agent recoit un contexte frais et peut lui-meme spawner des sous-agents si necessaire (ex: double extraction EBSE)
+- Le sous-agent rapporte son resultat a l'agent principal qui continue
+
+Exemples : ajout d'une decision au guide EBSE (→ sous-agent qui suit methodology.md et spawne Agent A/B/C), audit securite (→ sous-agent specialise), generation de documentation (→ sous-agent).
+
 `Source: PICOC #14 Spec discipline (TiCoder +45.97% pass@1) + PICOC #15 TDD agent loop (TDFlow 94.3% SWE-Bench Verified) + Feedback PO "Never say done prematurely"`
+
+`Source taches intermediaires: PICOC #5 (partiellement — writer/reviewer pattern) + gap identifie dans guide EBSE (pattern "intermediate task delegation" non couvert explicitement)`
 
 ---
 
