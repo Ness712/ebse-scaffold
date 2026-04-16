@@ -206,7 +206,8 @@ Exemples : ajout d'une decision au guide EBSE (→ sous-agent avec instruction d
 
 `Source: PICOC #14 Spec discipline (TiCoder +45.97% pass@1) + PICOC #15 TDD agent loop (TDFlow 94.3% SWE-Bench Verified) + Feedback PO "Never say done prematurely"`
 
-`Source taches intermediaires: PICOC #5 (partiellement — writer/reviewer pattern) + gap identifie dans guide EBSE (pattern "intermediate task delegation" non couvert explicitement)`
+`Source delegation sous-agent : PICOC #18 ai-agent-intermediate-task-delegation (contexte vierge, criteres delegation, handoff boundaries MAST)`
+`Source verification apres sous-agent : PICOC #10 Silent failure monitoring (confabulation, 19.7% package hallucination) + NIST AI 600-1 §2.2 Confabulation + Feedback PO "Verify agent work"`
 
 ---
 
