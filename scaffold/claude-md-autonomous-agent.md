@@ -286,6 +286,8 @@ Les audits basés sur grep ou recherche de patterns sont **insuffisants** : ils 
 
 **Règle fondamentale** : l'agent qui audite ≠ l'agent qui a construit le truc audité (PICOC #5 — biais de confirmation).
 
+**Quand spawner un agent reviewer** (PICOC #5) : le pattern writer/reviewer a un coût token — ne l'appliquer que si la tâche est non-triviale (multi-fichiers, feature complète, chemins critiques). Pour une vérification mineure (un fichier, syntaxe, format), un agent seul avec tool use suffit.
+
 Les trois types d'audit sont des **variantes d'un même pattern** : source-first + agent indépendant + output structuré. Ce qui varie c'est la nature de la cible.
 
 ### Type 1 — Audit d'alignement documentation (doc A → doc B)
@@ -319,7 +321,9 @@ La référence est une checklist de standards (OWASP, conventions projet, recomm
 1. **Lire d'abord** : CONVENTIONS.md + CLAUDE.md + recommandations EBSE — pas grep
 2. **Checklist explicite** fournie dans le prompt (OWASP Top 10, conventions, EBSE)
 3. Agent indépendant avec contexte frais lit les fichiers concernés
-4. Output obligatoire : Bloquants / Avertissements / Verdict OK ou KO
+4. **SAST sur diffs agent** (PICOC #10) : cibler `git diff main...HEAD` — pas l'ensemble du codebase. Le CI test suite seul ne détecte pas les API parameters hallucinés.
+5. **Hallucination package ≠ CVE** (PICOC #10 — base rate 19.7%) : CVE classiques → Snyk/Dependabot. Packages inventés → vérifier l'existence avant tout install (`npm info <pkg>` / `pip show <pkg>`). Les deux sont distincts et nécessitent des outils différents.
+6. Output obligatoire : Bloquants / Avertissements / Verdict OK ou KO
 
 ```
 Agent({
@@ -341,6 +345,7 @@ Différent des deux premiers — c'est de l'observation de l'état runtime, pas 
 - Qualité statique (SonarQube quality gate)
 - Métriques infra (Grafana/Prometheus : CPU, RAM, latence)
 - Tests E2E navigateur (Playwright MCP)
+- **Semantic-drift** (PICOC #10) : après une intervention agent multi-fichiers, lancer les tests de régression sur les fonctionnalités non-modifiées pour détecter les effets de bord silencieux. Le CI seul est insuffisant — les comportements adjacents peuvent être dégradés sans que les tests de la feature modifiée le détectent.
 
 Implémenter comme commande slash `/health-check` séparée et l'appeler depuis `/audit`.
 
@@ -350,7 +355,7 @@ Implémenter comme commande slash `/health-check` séparée et l'appeler depuis 
 
 **Slash commands** : ces trois types d'audit sont implémentés comme commandes slash dans `.claude/commands/` — les utiliser en priorité car elles contiennent les chemins et checklists pré-remplis pour le projet. Si la commande ne couvre pas le périmètre demandé, appliquer le pattern ci-dessus manuellement.
 
-`Source: PICOC #5 Writer/reviewer (Aider architect +30%) + PICOC #10 NIST AI 600-1 §2.2 + PICOC #11 Team metrics + PICOC #19 Verification method (Lu et al. arXiv:2512.02304, Wataoka et al. arXiv:2410.21819, AGENTIF arXiv:2505.16944)`
+`Source: PICOC #5 Writer/reviewer (Aider architect +30%, condition non-trivial multi-fichiers) + PICOC #10 Silent failure monitoring (semantic-drift, SAST sur diffs agent, hallucination package 19.7% Spracklen 2024) + PICOC #11 Team metrics + PICOC #19 Verification method (Lu et al. arXiv:2512.02304, Wataoka et al. arXiv:2410.21819, AGENTIF arXiv:2505.16944)`
 
 ---
 
