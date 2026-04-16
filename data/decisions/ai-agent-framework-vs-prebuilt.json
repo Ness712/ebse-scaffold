@@ -1,0 +1,86 @@
+{
+  "id": "ai-agent-framework-vs-prebuilt",
+  "domain": "ai-collaboration",
+  "question": "Pour un PO qui delegue tout le developpement logiciel a l'IA, un framework agentique custom (LangChain, AutoGen, CrewAI, LangGraph) offre-t-il une efficacite superieure a une configuration de systeme agentique pre-construit (Claude Code + CLAUDE.md) en termes de taux de completion de taches, fiabilite et autonomie ?",
+  "depends_on": ["ai-agent-autonomy-granularity", "ai-agent-mast-failure-modes", "ai-agent-process-redesign"],
+  "tags": [
+    "ai-collaboration",
+    "framework",
+    "scaffold",
+    "Claude-Code",
+    "LangChain",
+    "AutoGen",
+    "CrewAI",
+    "delegation",
+    "PO",
+    "insufficient-evidence"
+  ],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "PREUVE INSUFFISANTE — aucune etude empirique ne compare directement un framework agentique custom (LangChain, AutoGen, CrewAI) configure pour un PO non-developpeur contre un systeme agentique pre-construit (Claude Code + CLAUDE.md) sur des taches de developpement logiciel. Les signaux directionnels disponibles — charge de maintenance documentee pour les frameworks custom (96% multi-framework en production, conflits de versions >23% des obstacles — Wang et al., N=1575) et performance documentee des systemes pre-construits en conditions reelles (83.8% PR merge rate Claude Code Agent, +36.3% commits — Agarwal et al., MSR '26, N=1001 repos) — suggerent sans prouver que les systemes pre-construits presentent une charge operationnelle moindre pour les equipes sans developpeur dedie. En l'absence de preuves directes, la decision releve du PO selon son contexte (competences disponibles, besoin de customisation, couts de mise en place). Re-evaluer dans 12-18 mois quand la litterature sur les workflows PO-seulement aura ete publiee.",
+        "grade": 1,
+        "level": "PREUVE_INSUFFISANTE",
+        "sources": [
+          {
+            "name": "Agarwal, He, Vasilescu (CMU) — AI IDEs or Autonomous Agents? (arXiv:2601.13597, MSR 2026)",
+            "pyramid": 2,
+            "year": 2026,
+            "quote": "Agent-first repos demonstrate +36.3% commits and 83.8% PR merge rate; IDE-first repos show only +4.0% commits",
+            "note": "MSR 2026 (Mining Software Repositories, peer-reviewed). N=1001 repos apparies. Compare Claude Code Agent vs IDE AI (Cursor, Copilot) — PAS vs frameworks custom. Source pertinente indirecte pour la performance des systemes pre-construits en production. Biais : contexte open-source, mainteneurs humains presents. VERIFIE Agent C (PARTIEL — proceedings non verifies verbatim)."
+          },
+          {
+            "name": "Pinna, Gong, Williams, Sarro — Comparing AI Coding Agents: Task-Stratified Analysis of PR Acceptance (arXiv:2602.08915, MSR 2026)",
+            "pyramid": 2,
+            "year": 2026,
+            "quote": "The task type gap (29 percentage points between best and worst task) exceeds the gap between tools",
+            "note": "MSR 2026 (peer-reviewed). N=7156 PRs, dataset AIDev. Compare outils pre-construits entre eux — PAS vs frameworks custom. Finding cle : le type de tache determine les resultats plus que le choix d'outil. Claims 92.3%/72.6% Claude Code = NOT_VERIFIED_INDEPENDENTLY (une seule source). VERIFIE Agent C (PARTIEL)."
+          },
+          {
+            "name": "Xu, Deng et al. (Kuaishou Technology / Nanjing University) — SWE-Compass (arXiv:2511.05459)",
+            "pyramid": 2,
+            "year": 2025,
+            "quote": "The scaffolding (infrastructure around the model) significantly determines performance even with the same underlying model",
+            "note": "Preprint multi-auteurs (50+), methodologie rigoureuse, 2000 instances, 10 LLMs. Compare SWE-Agent vs Claude Code — deux systemes pre-construits. Finding pertinent : le scaffolding impacte autant que le modele. Mais ne compare pas framework custom vs pre-construit. VERIFIE Agent C."
+          },
+          {
+            "name": "Wang, Xu, Chen et al. — An Empirical Study of Agent Developer Practices in AI Agent Frameworks (arXiv:2512.01939)",
+            "pyramid": 3,
+            "year": 2025,
+            "quote": "96% of top-starred projects adopt multiple frameworks in parallel; version conflicts account for >23% of all technical obstacles",
+            "note": "Preprint arXiv (pas encore peer-reviewed). N=1575 repos + 8710 discussions, kappa=0.82. 42% charge cognitive excessive LangChain ; 31% echecs compatibilite outils AutoGen. Documente la charge de maintenance des frameworks custom mais ne compare pas avec systemes pre-construits. VERIFIE Agent C (correction niveau 2→3)."
+          },
+          {
+            "name": "Becker, Rush, Barnes, Rein (METR) 2025 — Measuring AI Impact on Developer Productivity (arXiv:2507.09089)",
+            "pyramid": 1,
+            "year": 2025,
+            "quote": "allowing AI actually increases completion time by 19%—AI tooling slowed developers down",
+            "note": "RCT niveau 1. N=16 developpeurs experimentes. Source INDIRECTE pour PICOC #28 : montre que la charge operationnelle des outils AI integres n'est pas nulle meme pour des developpeurs experimentes. Ne distingue pas framework custom vs pre-construit. VERIFIE Agent C (identique PICOC #21, #27)."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 1,
+          "plus": [],
+          "minus": [],
+          "note": "GRADE 1 reflète l'absence de preuve directe sur la question centrale. Aucune source ne compare framework custom vs systeme pre-construit pour un PO delegant tout. Les sources niveau 2 disponibles (MSR '26) repondent a des questions adjacentes (Claude Code vs IDE AI ; outils pre-construits entre eux). Ce GRADE ne peut pas evoluer sans une etude empirique ciblant le cas d'usage PO-sans-developpeur vs framework custom configure par IA. Reevaluation recommandee dans 12-18 mois."
+        },
+        "robustness": "INSUFFISANTE",
+        "critical_sources": [
+          "Wang et al. arXiv:2512.01939 (source critique maintenance burden frameworks)",
+          "Agarwal et al. MSR '26 arXiv:2601.13597 (source critique performance Claude Code production)"
+        ],
+        "etd_balance": {
+          "benefices": "Non calculables — absence de donnees directes",
+          "risques": "Non calculables — absence de donnees directes",
+          "balance": "Indeterminee. Signal directionnel (non prouve) : systemes pre-construits ont une charge operationnelle moindre pour equipes sans developpeur dedie.",
+          "faisabilite": "Non evaluable sans donnees directes. La decision reste contextuelle (competences, budget, besoin de customisation)."
+        },
+        "prisma_ref": "verification/prisma/ai-agent-framework-vs-prebuilt.md",
+        "sensitivity_ref": "verification/extractions/picoc-28-framework-vs-prebuilt.md",
+        "date_extraction": "2026-04-16"
+      }
+    ]
+  },
+  "variants": {}
+}

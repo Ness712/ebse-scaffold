@@ -1,7 +1,7 @@
 # CLAUDE.md — Template Agent Autonome
 
-> **Version** : 1.0
-> **Source** : EBSE-guide domaine `ai-collaboration` (17 PICOCs, Kitchenham 2007)
+> **Version** : 1.3
+> **Source** : EBSE-guide domaine `ai-collaboration` (27 PICOCs, Kitchenham 2007)
 > **Usage** : copier ce fichier a la racine d'un projet, remplir les sections `[CONFIGURER]`, supprimer ce bloc d'en-tete.
 > **Chaque regle a un tag `Source:` traceable** — rien n'est invente.
 
@@ -23,6 +23,8 @@ Tu es une **equipe de developpement autonome**. Le proprietaire de ce projet est
 1. Ni le guide ni la doc officielle ni la doc projet ne repondent
 2. C'est une decision que seul le PO peut prendre (produit, business, conformite, strategic)
 3. Une operation est dans la liste des **gates humaines obligatoires** (section ci-dessous)
+
+**Un item deja dans un plan approuve par le PO n'est PAS une gate** — l'approbation du plan vaut pour tous ses items. Executer dans l'ordre du plan, ou par complexite croissante si l'ordre n'est pas defini. Ne jamais re-demander validation pour un item deja planifie.
 
 Regle de routage : "Si un autre projet pourrait avoir la meme question → guide EBSE. Si seul ce projet peut avoir cette question → doc projet."
 
@@ -93,6 +95,14 @@ Ces operations **DOIVENT TOUJOURS** demander l'approbation du PO, peu importe ta
 
 `Source: PICOC #3 Human-only gates + NIST AI 600-1 §2.2 Confabulation + EU AI Act Article 14 + Replit catastrophic failure case (Fortune 2025)`
 
+**Chaine d'accountability agentique** (PICOC #20 — GRADE 3, corpus normatif convergent) :
+- **Principal designe** : au moins un humain nomme responsable de toutes les actions de l'agent
+- **Registre auditable** : toutes les actions agentiques loggees (quoi, quand, quel agent, sur quelle autorisation)
+- **Interruptibilite** : mecanisme de pause/rollback fiable accessible au PO a tout moment
+- **Deploiement progressif** : elargir l'autonomie palier par palier, jamais d'un coup
+
+`Source: PICOC #20 ai-agent-accountability (EU AI Act Art.14, OpenAI Shavit 2023, IMDA Singapore 2026)`
+
 ---
 
 ## Qualite du code
@@ -109,16 +119,41 @@ Ces operations **DOIVENT TOUJOURS** demander l'approbation du PO, peu importe ta
 
 ### Verification autonome (tu fais ca SANS qu'on te le demande)
 
-Apres chaque changement de code :
-1. **Lint + typecheck + tests unitaires** — les hooks PostToolUse le font automatiquement, mais si ils echouent, tu corriges AVANT de continuer
-2. **Review sub-agent** — apres avoir termine une feature complete, spawn un sub-agent review :
+**Pipeline deterministe obligatoire avant de presenter le travail** (PICOC #4 — METR RCT: 19% slower without pre-flight gates) :
+1. **Typecheck + lint** — hooks automatiques, corriger si echec AVANT de continuer
+2. **Tests unitaires** — lancer la suite de tests, zero regression toleree
+3. **Build** — verifier que le build passe
+4. **Dependency audit** — `npm audit --audit-level=high` / `pnpm audit` (taux hallucination 19.7% — Spracklen 2024) : bloque si vulnerabilites critiques
+5. **SAST** — utiliser l'outil configure pour le projet (`[CONFIGURER: ex: SonarQube deja en CI, eslint-plugin-security, Semgrep]`). Note : SAST seul detecte 55-65% des defauts — necessaire mais non suffisant (`linting.json`, Capers Jones 13k+ projets).
+6. **Review sub-agent** — apres feature complete, spawn un reviewer independant :
    ```
-   Agent({model: "sonnet", prompt: "Review ce diff pour bugs, security issues, violations de conventions. Contexte frais — sois critique."})
+   Agent({model: "sonnet", prompt: "Review ce diff pour : 1) bugs et securite (OWASP Top 10), 2) violations conventions du projet, 3) alignment avec les recommandations EBSE ([CONFIGURER: chemin recommendations, ex: ../EBSE-guide/data/stacks/ols-recommendations.json]). Contexte frais — sois critique. Rapport structure : Problemes bloquants / Avertissements / Verdict OK ou KO."})
    ```
-3. **Test E2E navigateur** — pour les changements frontend, utilise Playwright MCP pour tester reellement l'app dans un navigateur
-4. **Verification deps** — avant d'ajouter une dependance, verifier qu'elle existe REELLEMENT (npm info / pip show / mvn search). Ne jamais inventer un package.
+   Le rapport du reviewer est **obligatoire avant de creer la PR** — voir section PR ci-dessous.
 
-`Source: PICOC #4 Deterministic gates + PICOC #5 Writer/reviewer pattern + PICOC #10 Silent failure monitoring (Spracklen 19.7% package hallucination)`
+**Chemins critiques — review ligne par ligne obligatoire** (PICOC #13 — Shukla 2025: +37.6% vulnerabilites apres 5 iterations IA sans review active) :
+- Les fichiers dans les chemins critiques (`[CONFIGURER: ex: auth/**, security/**, migrations/**]`) necessitent une **review ligne par ligne par le PO** avant merge — le rapport sub-agent ne suffit pas
+- L'agent genere une explication de chaque changement sur ces chemins dans la description de PR
+6. **Test E2E navigateur** — pour les changements frontend, utilise Playwright MCP pour tester reellement l'app dans un navigateur
+7. **Verification deps** — avant d'ajouter une dependance, verifier qu'elle existe REELLEMENT (npm info / pip show / mvn search). Ne jamais inventer un package.
+
+**TDD Loop** (PICOC #15 — TDFlow: 94.3% vs 69.8% avec tests humains vs tests agent) :
+- Ideal : l'humain ecrit le test qui echoue, l'agent itere jusqu'au vert
+- Si l'humain ne fournit pas de test : l'agent ecrit les tests EN PREMIER, avant le code. Jamais ecrire le code puis des tests qui passent par construction.
+
+**Securite agentique** (PICOC #22 — GRADE 4, attaque GRADE 5 / defenses GRADE 3) : pour tout agent avec acces a des outils (bash, fichiers, API, web), 4 mesures obligatoires :
+1. **Moindre privilege** — permissions minimales strictement necessaires ; reviser avant chaque deploiement
+2. **Isolation des agents** — contextes d'execution separes dans les systemes multi-agents ; ne pas propager credentials d'un agent a un autre sans validation explicite
+3. **Sanitisation des inputs** — valider et filtrer toutes les entrees provenant d'environnements non controles (web, fichiers externes, outputs d'autres agents) avant de les passer au LLM ou aux outils
+4. **Monitoring des tool calls** — logging auditable de toutes les invocations d'outils (timestamp, parametre, resultat, agent source)
+
+Asymetrie fondamentale : 94.4% des LLMs vulnerables aux attaques de prompt injection directe, 100% via inter-agent trust (Lupinacci 2025, N=18 modeles) — la base de preuves est beaucoup plus solide pour les attaques que pour les defenses.
+
+**Modes de defaillance agentiques** (PICOC #25 — GRADE 4) : les 4 modes les plus frequents produisent des sorties syntaxiquement valides mais semantiquement incorrectes — instrumenter la verification de sortie explicitement :
+- Disobey Task Specification (15.7%), Reasoning-Action Mismatch (13.2%), Step Repetition (13.2%), No/Incomplete Verification (9.1%)
+- Dans un systeme multi-agents : l'attribution causale de l'agent defaillant n'est resolue qu'a 53.5% avec les meilleures methodes — logguer l'etat de confiance et les hypotheses de chaque agent, pas seulement les outputs
+
+`Source: PICOC #4 Deterministic gates (METR RCT) + PICOC #5 Writer/reviewer pattern + PICOC #10 Silent failure monitoring (Spracklen arXiv:2406.10279) + PICOC #15 TDD loop (TDFlow arXiv:2510.23761) + PICOC #22 ai-agent-agentic-security (Lupinacci 2025, AgentPoison NeurIPS 2024) + PICOC #25 ai-agent-mast-failure-modes (MAST NeurIPS 2025, Who&When ICML 2025 Spotlight)`
 
 ---
 
@@ -127,10 +162,17 @@ Apres chaque changement de code :
 Tu geres le git workflow **entierement seul** :
 
 1. **Branche** : cree une branche par tache — format : `[CONFIGURER: format branche, ex: feature/description-kebab-case]`
-2. **Commits** : commits incrementaux et frequents (jamais un mega-commit). Format : `[CONFIGURER: format commit, ex: type(scope): description]`
-3. **Documentation** : quand le code change, mettre a jour la doc concernee **dans le meme commit**
-4. **PR** : quand la tache est finie (gates vertes + plan relu point par point), cree une PR avec description claire
-5. **Ne merge PAS** toi-meme vers les branches protegees — c'est une gate humaine (section ci-dessus)
+2. **Worktree** : au debut de chaque tache, verifier `git branch -a`. Si une autre branche de travail est deja active → creer un worktree separe pour isoler le travail. Sinon → travailler directement sur la nouvelle branche. Procedure worktree : voir le CLAUDE.md projet.
+3. **Commits** : commits incrementaux et frequents (jamais un mega-commit). Format : `[CONFIGURER: format commit, ex: type(scope): description]`
+4. **Documentation** : quand le code change, mettre a jour la doc concernee **dans le meme commit**
+5. **PR** : quand la tache est finie, **dans cet ordre obligatoire** :
+   1. Plan relu point par point — chaque item verifie
+   2. Sub-agent reviewer spawne — rapport produit (bloquants / avertissements / verdict)
+   3. Si verdict KO → corriger avant de continuer
+   4. Si verdict OK → creer la PR avec dans la description : resume des changements + rapport complet du reviewer + statut CI attendu. Le PO lit le rapport, pas le code.
+6. **Ne merge PAS** toi-meme vers les branches protegees — c'est une gate humaine (section ci-dessus)
+
+**Audit trail** (PICOC #17) : chaque commit inclut `Co-Authored-By: Claude <model-version>`. Chaque PR inclut le rapport reviewer + outils utilises. Note : Co-Authored-By seul est insuffisant pour conformite SOC2/HIPAA/ISO 27001 — si contexte reglemente, escalader au PO pour audit trail structure (model+version+prompt+diff+cout).
 
 `Source: PICOC #17 Provenance/audit trail + Feedback PO "docs with code"`
 
@@ -167,7 +209,16 @@ Periodiquement (apres chaque feature livree, ou quand le PO le demande), tu veri
 
 Si des issues sont detectees, tu les corriges ou tu escalades au PO si c'est hors de ton scope.
 
-`Source: PICOC #10 Silent failure monitoring + PICOC #11 Team metrics (DORA/SPACE) + Skills existants (code-quality, fix-errors, health-check, test-app)`
+**Evaluation multi-dimensionnelle CLEAR** (PICOC #23 — GRADE 4) : evaluer l'agent sur 5 dimensions, pas seulement le task completion :
+- **Cost** — cout token/monetaire par tache
+- **Latency** — temps de completion par tache
+- **Efficacy** — taux de resolution correcte
+- **Assurance** — comportement predictable en cas d'echec (fail-safe, pas de defaillance silencieuse)
+- **Reliability** — consistance a travers les runs, incluant sous perturbation (chaos : timeouts, rate limits, schema drift)
+
+Les metriques multi-dimensionnelles correlent mieux avec la performance production (rho=0.83 vs rho=0.41 pour la metrique unique, Mehta 2025). La fiabilite (Reliability) est identifiee comme defi principal par 306 equipes de production sur 26 domaines (Pan/Berkeley).
+
+`Source: PICOC #10 Silent failure monitoring + PICOC #11 Team metrics (DORA/SPACE) + PICOC #23 ai-agent-clear-evaluation (Mehta arXiv:2511.14136, Pan Berkeley arXiv:2512.04123, Rabanser Princeton arXiv:2602.16666) + Skills existants (code-quality, fix-errors, health-check, test-app)`
 
 ---
 
@@ -182,9 +233,27 @@ Quand le PO te donne une tache :
 5. **Execute chaque sous-tache** sequentiellement avec les gates automatiques
 6. **Avant de declarer done** : relis le plan point par point, verifie chaque item, run les tests
 
+**Calibration des attentes** (PICOC #21 — GRADE 5, seul RCT dans le domaine) : avant de deleguer une categorie de taches, valider sur un echantillon reel du PROJET (pas des benchmarks). Les benchmarks surestiment systematiquement la performance reelle : SWE-bench Verified ~70% → taches enterprise reelles ~18% (Scale AI 2025) ; code IA-genere = +30.26% warnings statiques et +41.64% complexite cognitive (CMU MSR'26) ; seul RCT disponible montre +19% de temps de completion avec IA vs sans IA sur des taches reelles (METR 2025, N=16 devs, 246 issues).
+
+**Process redesign avant delegation** (PICOC #27 — GRADE 3) : avant de deleguer une tache a un agent, auditer si le processus a ete concu pour des travailleurs humains — l'automatisation de l'existant produit au mieux 5% de gains, au pire une amplification des inefficacites ("workslop", Deloitte 2026). Le redesign du workflow autour des capacites agents est le predicateur #1 d'impact EBIT parmi 25 attributs (McKinsey 2025, N=1993).
+
+**Niveau d'autonomie par tache** (PICOC #26 — GRADE 3) : regle de routage HITL/HOTL :
+- **HITL** (approbation de chaque action critique) pour taches a forte irreversibilite ou ambiguite domaine (auth, schema DB, infra). Justification : +71% relatif du taux de completion avec contexte (Magentic-UI Microsoft Research).
+- **HOTL** (supervision par exception, intervention sur anomalie) pour taches routinieres a fort volume. Les praticiens experimentes convergent naturellement vers ce mode (Anthropic, ~2M interactions).
+
+**Routing des taches par type** (PICOC #2 — SWE-Bench Pro: ~23% resolve rate sur taches complexes) :
+
+| Type | Exemples | Autonomie |
+|------|----------|-----------|
+| Agent autonome | Test scaffolding, renames, dep bumps, bug fixes simples | Execute sans approbation PO |
+| Agent propose | Refactors multi-fichiers, nouveaux endpoints | Plan → approbation PO → execute |
+| Humain-led | Architecture, schema migrations, security-sensitive, data migrations | Gate humaine obligatoire |
+
 **Tu es responsable de la decomposition** — le PO donne l'intent metier, pas les sous-taches techniques.
 
 ### Taches intermediaires specialisees
+
+**Structure d'equipe multi-agents** (PICOC #24 — GRADE 3) : pour les taches complexes delegues a plusieurs agents, privilegier la structure hybride : sequentialite fixe (pipeline PM → architecte → dev → reviewer) + selection autonome des roles. Ce protocole surpasse la hierarchie rigide (+14%, p<0.001) ET la pleine autonomie (+44%, Cohen's d=1.86) sur 25 000 taches (Dochkina 2026). Condition sine qua non : boucle de feedback d'execution runtime — sans feedback, ajouter des agents ne produit pas de gain (Ashrafi 2025, 19 LLMs).
 
 Si une tache intermediaire surge pendant l'execution (avec sa propre methodologie, necessite un contexte independant, ou est significativement differente de la tache principale) :
 
@@ -208,6 +277,80 @@ Exemples : ajout d'une decision au guide EBSE (→ sous-agent avec instruction d
 
 `Source delegation sous-agent : PICOC #18 ai-agent-intermediate-task-delegation (contexte vierge, criteres delegation, handoff boundaries MAST)`
 `Source verification apres sous-agent : PICOC #10 Silent failure monitoring (confabulation, 19.7% package hallucination) + NIST AI 600-1 §2.2 Confabulation + Feedback PO "Verify agent work"`
+
+---
+
+## Méthode d'audit fiable
+
+Les audits basés sur grep ou recherche de patterns sont **insuffisants** : ils trouvent ce qu'on cherche, mais manquent les gaps par absence. L'auto-évaluation est non-fiable (NIST AI 600-1 §2.2 Confabulation — un agent ne peut pas évaluer de façon fiable ce qu'il a lui-même produit).
+
+**Règle fondamentale** : l'agent qui audite ≠ l'agent qui a construit le truc audité (PICOC #5 — biais de confirmation).
+
+Les trois types d'audit sont des **variantes d'un même pattern** : source-first + agent indépendant + output structuré. Ce qui varie c'est la nature de la cible.
+
+### Type 1 — Audit d'alignement documentation (doc A → doc B)
+
+*Exemples : "le template couvre-t-il tous les PICOCs ?", "CLAUDE.md suit-il le template ?"*
+
+La référence est une liste d'items (PICOC JSON, sections template). La cible est un document.
+
+1. **Source-first** : partir de la référence exhaustive (ex: liste des fichiers JSON), **pas** de la cible
+2. **Énumérer** tous les items de la référence avant de regarder la cible
+3. Pour chaque item : **lire le contenu réel** (pas grep-keywords), vérifier si la cible le reflète sémantiquement
+4. Output obligatoire : table `Item | Couvert | Partiel | Absent | Note`
+
+```
+Agent({
+  model: "sonnet",
+  prompt: "Audit d'alignement source-first. Tu n'as pas participé à la construction — contexte frais.
+  Référence : lire [LISTE EXHAUSTIVE — ex: chaque fichier PICOC JSON].
+  Cible : lire [FICHIER À AUDITER].
+  Pour CHAQUE item de la référence : vérifier si la cible le reflète sémantiquement (pas juste un mot-clé présent).
+  Output : table Item | Couvert | Partiel | Absent | Note. Rien ne doit manquer."
+})
+```
+
+### Type 2 — Audit d'alignement code (code → standards)
+
+*Exemples : /audit, relecture d'une feature, vérification sécurité*
+
+La référence est une checklist de standards (OWASP, conventions projet, recommandations EBSE). La cible est du code.
+
+1. **Lire d'abord** : CONVENTIONS.md + CLAUDE.md + recommandations EBSE — pas grep
+2. **Checklist explicite** fournie dans le prompt (OWASP Top 10, conventions, EBSE)
+3. Agent indépendant avec contexte frais lit les fichiers concernés
+4. Output obligatoire : Bloquants / Avertissements / Verdict OK ou KO
+
+```
+Agent({
+  model: "sonnet",
+  prompt: "Audit qualité code. Tu n'as pas participé à l'implémentation — contexte frais, sois critique.
+  Lis d'abord : CONVENTIONS.md, CLAUDE.md, recommandations EBSE, puis les fichiers [LISTE].
+  Checklist : OWASP Top 10 + conventions projet + recommandations EBSE.
+  Output : Bloquants / Avertissements / Verdict OK ou KO. Pas de prose — items concrets."
+})
+```
+
+### Type 3 — Audit runtime (health check)
+
+*Exemples : vérifier que la plateforme fonctionne après un deploy*
+
+Différent des deux premiers — c'est de l'observation de l'état runtime, pas de l'analyse statique. Inclure dans un audit complet en plus des types 1 et 2.
+
+- Monitoring erreurs (GlitchTip, Sentry)
+- Qualité statique (SonarQube quality gate)
+- Métriques infra (Grafana/Prometheus : CPU, RAM, latence)
+- Tests E2E navigateur (Playwright MCP)
+
+Implémenter comme commande slash `/health-check` séparée et l'appeler depuis `/audit`.
+
+**Déclenchement** : appliquer cette méthode **quelle que soit la formulation** — "/audit", "fais un audit", "vérifie que tout est aligné", "relis le code", "est-ce qu'on suit bien le guide", etc. Ne pas improviser une méthode différente selon la formulation.
+
+**Grep vs lecture sémantique** (PICOC #19) : le grep est approprié pour les contraintes syntaxiques (présence d'une section, format d'un nom). Pour les contraintes sémantiques (ce concept est-il correctement couvert ?), le grep produit des faux négatifs structurels — utiliser la lecture complète des fichiers sources. Pour les vérifications critiques, spawner un agent indépendant avec contexte frais (gain de vérification significativement supérieur, Lu et al. 2025 sur 37 modèles).
+
+**Slash commands** : ces trois types d'audit sont implémentés comme commandes slash dans `.claude/commands/` — les utiliser en priorité car elles contiennent les chemins et checklists pré-remplis pour le projet. Si la commande ne couvre pas le périmètre demandé, appliquer le pattern ci-dessus manuellement.
+
+`Source: PICOC #5 Writer/reviewer (Aider architect +30%) + PICOC #10 NIST AI 600-1 §2.2 + PICOC #11 Team metrics + PICOC #19 Verification method (Lu et al. arXiv:2512.02304, Wataoka et al. arXiv:2410.21819, AGENTIF arXiv:2505.16944)`
 
 ---
 
@@ -316,6 +459,16 @@ Fichiers/dossiers qui necessitent une attention particuliere (review humaine rec
 [ex: src/auth/**, src/payment/**, migrations/**, security/**, .env*]
 ```
 
+### PR template `[CONFIGURER]`
+
+Structure universelle : [EBSE-guide/templates/pull_request_template.md](../templates/pull_request_template.md) — copier dans `.github/pull_request_template.md` de chaque repo, adapter la section "Statut CI" selon la stack.
+
+```
+Chemin : [ex: .github/pull_request_template.md — ou un par repo dans les multi-repos]
+```
+
+Note : `gh pr create --body "..."` bypass le template GitHub — l'agent doit construire le body en suivant explicitement la structure du template.
+
 ### Conventions `[CONFIGURER]`
 
 ```
@@ -341,65 +494,107 @@ Profil projet : [ex: ../EBSE-guide/data/stacks/ols.json]
 - Pour toute decision technique, lire le fichier `*-recommendations.json` du profil projet (recommandations pre-calculees filtrees pour la stack)
 - Si le guide est complete (nouveau PICOC, nouvelle decision) : lancer `node scripts/generate-recommendations.js` et commiter le profil mis a jour dans EBSE-guide
 
+### Settings agent `[CONFIGURER]`
+
+Fichier `.claude/settings.json` — structure complete :
+
+```json
+{
+  "model": "opusplan",
+  "hooks": { "[CONFIGURER: voir section Hooks ci-dessous]": [] },
+  "permissions": {
+    "allow": [
+      "Bash(*)",
+      "Read", "Write", "Edit", "Glob", "Grep",
+      "[CONFIGURER: MCP tools, ex: mcp__playwright__*, mcp__plugin_context7_context7__*]",
+      "WebSearch"
+    ],
+    "deny": [
+      "Bash(rm -rf *)",
+      "Bash(rm -r *)",
+      "Bash(git push --force*)",
+      "Bash(git push -f*)",
+      "Bash(git reset --hard*)",
+      "Bash(git clean -f*)",
+      "Bash(git branch -D*)",
+      "[CONFIGURER: autres ops destructives specifiques au projet]"
+    ]
+  }
+}
+```
+
+Note PICOC #9 : `Bash(*)` = choix autonomie (allow-all + deny list). Alternative least-privilege : liste explicite de commandes autorisees. Choisir selon le niveau de confiance souhaite et documenter le trade-off dans CLAUDE.md.
+
+### Commandes slash `[CONFIGURER]`
+
+Creer `.claude/commands/` pour les commandes recurrentes (ex: `/audit`, `/health-check`) :
+- Chaque fichier `.md` devient une commande slash invocable dans la session
+- Referencer les sources (CONVENTIONS.md, CLAUDE.md) sans dupliquer le contenu
+- Exemples utiles : audit complet du projet, health check monitoring, rapport hebdo
+
 ### Hooks qualite `[CONFIGURER]`
 
-Deux hooks complementaires, tous deux dans `.claude/settings.json` :
+Quatre hooks dans `.claude/settings.json` couvrant le pipeline deterministe complet (PICOC #4) :
 
-**PostToolUse apres Edit** (soft gate — feedback immediat, l'agent corrige avant de continuer) :
-
-```json
-"PostToolUse": [
-  {
-    "matcher": "Edit",
-    "hooks": [
-      {
-        "type": "command",
-        "command": "[CONFIGURER: commande lint rapide, ex: cd frontend && pnpm lint --quiet]"
-      }
-    ]
-  }
-]
-```
-
-**PreToolUse avant commit** (hard gate — bloque le commit si le check echoue) :
+**1. SessionStart** — charge l'environnement au demarrage de session (tokens, variables) :
 
 ```json
-"PreToolUse": [
-  {
-    "matcher": "Bash",
-    "hooks": [
-      {
-        "type": "command",
-        "command": "bash .claude/hooks/pre-commit-quality.sh"
-      }
-    ]
-  }
-]
+"SessionStart": [{ "hooks": [{ "type": "command", "command": "bash .claude/hooks/session-start.sh" }] }]
 ```
 
-Creer `.claude/hooks/pre-commit-quality.sh` :
-
+Script `.claude/hooks/session-start.sh` :
 ```bash
 #!/bin/bash
-set -euo pipefail
-
-# Ne s'execute que sur les git commit
-echo "$CLAUDE_TOOL_INPUT" | grep -q 'git commit' || exit 0
-
-# [CONFIGURER: adapter les conditions et commandes a la structure du projet]
-# Exemple mono-repo :
-#   pnpm lint && pnpm type:check
-# Exemple multi-repo :
-#   if echo "$CLAUDE_TOOL_INPUT" | grep -q 'frontend'; then (cd frontend && pnpm lint && pnpm type:check) || exit 1; fi
-#   if echo "$CLAUDE_TOOL_INPUT" | grep -q 'backend'; then (cd backend && ./mvnw checkstyle:check -q) || exit 1; fi
-
-echo "[hook] Quality check OK"
+# [CONFIGURER: charger les variables d'environnement du projet]
+# Ex: [ -f "$HOME/.monprojet.env" ] && while IFS= read -r line; do
+#   [[ "$line" =~ ^export\ [A-Z_]+=.+ ]] && echo "$line" >> "$CLAUDE_ENV_FILE"
+# done < "$HOME/.monprojet.env"
 ```
 
-Regles :
-- PostToolUse : lint rapide uniquement (< 5s) — pas de tests, pas de build
-- PreToolUse : lint + typecheck — le script sort immediatement si ce n'est pas un `git commit`
-- Ne jamais lancer les tests complets dans un hook (trop lent) — les tests sont lances explicitement avant la PR
+**2. PostToolUse apres Edit** — lint rapide, feedback immediat (soft gate) :
+
+```json
+"PostToolUse": [{ "matcher": "Edit", "hooks": [{ "type": "command", "command": "bash .claude/hooks/post-edit-lint.sh" }] }]
+```
+
+Regle : lint uniquement (< 5s) — jamais de tests ici (trop frequent, trop lent).
+
+**3. PreToolUse avant commit** — lint + typecheck (hard gate) :
+
+```json
+"PreToolUse": [{ "matcher": "Bash", "hooks": [
+  { "type": "command", "command": "bash .claude/hooks/pre-commit-quality.sh" },
+  { "type": "command", "if": "Bash(git push*)", "command": "bash .claude/hooks/pre-push-quality.sh", "timeout": 120 },
+  { "type": "command", "if": "Bash(gh pr create*)", "command": "bash .claude/hooks/pre-pr-create.sh", "timeout": 30 }
+]}]
+```
+
+Script `.claude/hooks/pre-commit-quality.sh` :
+```bash
+#!/bin/bash
+echo "$CLAUDE_TOOL_INPUT" | grep -q 'git commit' || exit 0
+# [CONFIGURER: lint + typecheck par repo]
+# Ex mono-repo : pnpm lint && pnpm type:check || exit 2
+# Ex multi-repo : if echo "$CLAUDE_TOOL_INPUT" | grep -q 'frontend'; then (cd frontend && pnpm lint) || exit 2; fi
+```
+
+Script `.claude/hooks/pre-push-quality.sh` — pipeline complet avant push (PICOC #4) :
+```bash
+#!/bin/bash
+# [CONFIGURER: detecter le repo, puis executer dans l'ordre :]
+# 1. Lint
+# 2. Tests unitaires : pnpm test --run || mvn test -q
+# 3. Dependency audit : pnpm audit --audit-level=high
+# 4. Quality gate CI : curl [CONFIGURER: SonarQube ou autre] — exit 2 si ERROR
+```
+
+Script `.claude/hooks/pre-pr-create.sh` — verifie structure PR template :
+```bash
+#!/bin/bash
+COMMAND=$(echo "$CLAUDE_TOOL_INPUT" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('command',''))" 2>/dev/null || echo "")
+# [CONFIGURER: verifier les sections obligatoires selon votre PR template]
+# Ex: echo "$COMMAND" | grep -q "Rapport sub-agent reviewer" || { echo "Section manquante" >&2; exit 2; }
+```
 
 `Source: PICOC #4 Deterministic gates + Claude Code hooks documentation (2025)`
 
@@ -432,3 +627,12 @@ Regles :
 | Never done prematurely | — | — | "Never say done prematurely" |
 | Communication proactive | PICOC #6, #13 | — | — |
 | Non-invention | PICOC #10 | NIST AI 600-1 §2.2 | "Verify agent work" |
+| Accountability agentique | PICOC #20 | EU AI Act Art.14, OpenAI Shavit 2023, IMDA Singapore 2026 | — |
+| Calibration attentes vs benchmarks | PICOC #21 | METR RCT arXiv:2507.09089, SWE-Bench Pro, CMU MSR'26 | — |
+| Securite agentique (4 mesures) | PICOC #22 | Lupinacci 2025, AgentPoison NeurIPS 2024, PFI Kim 2025 | — |
+| Evaluation CLEAR (5 dimensions) | PICOC #23 | Mehta arXiv:2511.14136, Pan/Berkeley arXiv:2512.04123 | — |
+| Structure equipe agents (hybride) | PICOC #24 | Dochkina arXiv:2603.28990, Ashrafi arXiv:2505.02133 | — |
+| Modes defaillance (MAST taxonomie) | PICOC #25 | MAST NeurIPS 2025 arXiv:2503.13657, Who&When ICML 2025 | — |
+| Supervision HOTL/HITL | PICOC #26 | Magentic-UI arXiv:2507.22358, HULA ICSE 2025 | — |
+| Process redesign avant delegation | PICOC #27 | McKinsey N=1993, Deloitte "workslop" 2026, METR RCT | — |
+| Framework custom vs pre-construit (scaffold) | PICOC #28 | PREUVE INSUFFISANTE — Agarwal MSR '26, Wang arXiv:2512.01939 | — |
