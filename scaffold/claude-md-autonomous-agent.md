@@ -319,8 +319,8 @@ Agent({
 La référence est une checklist de standards (OWASP, conventions projet, recommandations EBSE). La cible est du code.
 
 1. **Lire d'abord** : CONVENTIONS.md + CLAUDE.md + recommandations EBSE — pas grep
-2. **Checklist explicite** fournie dans le prompt (OWASP Top 10, conventions, EBSE)
-3. Agent indépendant avec contexte frais lit les fichiers concernés
+2. Agent indépendant avec contexte frais **lit les fichiers concernés en entier** (DBR — lecture complète structurée, Porter TSE 1995 : DBR > ad hoc > checklist)
+3. **Checklist comme aide-mémoire** (OWASP Top 10, conventions, EBSE) — pas un plafond. Lire les fichiers complètement, pas seulement chercher les items de la liste. Ce qui n'est pas sur la liste peut quand même être un défaut.
 4. **SAST sur diffs agent** (PICOC #10) : cibler `git diff main...HEAD` — pas l'ensemble du codebase. Le CI test suite seul ne détecte pas les API parameters hallucinés.
 5. **Hallucination package ≠ CVE** (PICOC #10 — base rate 19.7%) : CVE classiques → Snyk/Dependabot. Packages inventés → vérifier l'existence avant tout install (`npm info <pkg>` / `pip show <pkg>`). Les deux sont distincts et nécessitent des outils différents.
 6. Output obligatoire : Bloquants / Avertissements / Verdict OK ou KO
