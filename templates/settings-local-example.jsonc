@@ -1,0 +1,29 @@
+// ============================================================================
+// Template settings.local.json — Overrides personnels (PAS commite)
+// ============================================================================
+//
+// Ce fichier va dans <projet>/.claude/settings.local.json
+// Il est dans .gitignore — JAMAIS commite
+// Il OVERRIDE le settings.json projet — attention a ne pas casser les protections
+//
+// NE PAS mettre "defaultMode": "bypassPermissions" ici
+// car ca desactive TOUTES les protections de settings.json
+// ============================================================================
+
+{
+  "permissions": {
+    // ---- Directories supplementaires accessibles ----
+    // Utile quand le projet a besoin d'acceder a des fichiers hors du repo
+    "additionalDirectories": [
+      // [CONFIGURER] : chemins locaux specifiques a votre machine
+      // "C:\\Users\\<user>\\.claude",
+      // "C:\\Users\\<user>\\<autre-projet>",
+      // "/tmp"
+    ]
+
+    // ---- Overrides personnels ----
+    // Vous pouvez ajouter des "allow" supplementaires pour votre usage perso
+    // Ex: un outil que vous seul utilisez, un chemin specifique
+    // Mais NE PAS retirer des "deny" de settings.json — c'est la pour proteger
+  }
+}

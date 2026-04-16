@@ -1,0 +1,151 @@
+// ============================================================================
+// Template settings.json — Agent Autonome
+// ============================================================================
+//
+// Source : Claude Code docs (code.claude.com/docs/en/) + EBSE ai-collaboration
+// Usage : copier dans <projet>/.claude/settings.json
+//         retirer les commentaires (JSON strict ne supporte pas les //)
+//         adapter les [CONFIGURER] selon le projet
+//
+// Precedence Claude Code (du plus fort au plus faible) :
+//   Managed policy > Project .claude/settings.json > User ~/.claude/settings.json > Local .claude/settings.local.json
+//
+// IMPORTANT : si un .claude/settings.local.json existe avec "defaultMode": "bypassPermissions",
+//             il OVERRIDE ce fichier. Supprimer ou modifier le local pour que ce fichier prenne effet.
+// ============================================================================
+
+{
+  // --- Modele par defaut ---
+  // Source: code.claude.com/docs/en/model-config
+  // "opusplan" = Opus pour la reflexion/decomposition, Sonnet pour l'execution
+  // Optimise le quota : Opus (24-40h/semaine) uniquement pour les plans,
+  // Sonnet (240-480h/semaine quasi-illimite) pour l'execution code
+  "model": "opusplan",
+
+  // --- Permissions ---
+  // Source: code.claude.com/docs/en/permission-modes + PICOC #1, #3, #9
+  //
+  // Philosophie : allow = outils necessaires au travail autonome
+  //               deny = operations destructives/irreversibles (PICOC #3 human-only gates)
+  //               tout le reste = demande approbation (comportement "auto"-like)
+  "permissions": {
+
+    "allow": [
+      // ---- Lecture / Ecriture fichiers ----
+      "Read",
+      "Write",
+      "Edit",
+      "Glob",
+      "Grep",
+
+      // ---- Git (operations non-destructives) ----
+      "Bash(git status*)",
+      "Bash(git diff*)",
+      "Bash(git log*)",
+      "Bash(git add*)",
+      "Bash(git commit*)",
+      "Bash(git checkout -b*)",
+      "Bash(git branch*)",
+      "Bash(git push*)",
+      "Bash(git pull*)",
+      "Bash(git fetch*)",
+      "Bash(git stash*)",
+      "Bash(git worktree*)",
+
+      // ---- GitHub CLI ----
+      "Bash(gh pr*)",
+      "Bash(gh issue*)",
+      "Bash(gh run*)",
+
+      // ---- Build / Test / Lint (adapter selon stack) ----
+      // [CONFIGURER] : decommenter et adapter selon votre stack
+      //
+      // TypeScript/React :
+      // "Bash(pnpm *)",
+      // "Bash(npm run *)",
+      // "Bash(npx *)",
+      //
+      // Java/Spring Boot :
+      // "Bash(mvn *)",
+      // "Bash(./mvnw *)",
+      // "Bash(gradle *)",
+      //
+      // Python/Django :
+      // "Bash(python *)",
+      // "Bash(pip *)",
+      // "Bash(pytest *)",
+      // "Bash(ruff *)",
+      // "Bash(mypy *)",
+
+      // ---- Package verification (anti-hallucination PICOC #10) ----
+      // "Bash(npm info *)",
+      // "Bash(pip show *)",
+
+      // ---- Infra (si acces serveur autorise) ----
+      // "Bash(ssh *)",
+      // "Bash(docker *)",
+      // "Bash(docker compose *)",
+
+      // ---- Outils qualite ----
+      // "Bash(curl *)",
+
+      // ---- MCP servers ----
+      // [CONFIGURER] : decommenter selon vos MCP installes
+      // "mcp__playwright__*",
+      // "mcp__plugin_context7_context7__*",
+
+      // ---- Web ----
+      "WebSearch"
+    ],
+
+    "deny": [
+      // ---- Destruction fichiers/systeme (PICOC #3 + #9) ----
+      "Bash(rm -rf *)",
+      "Bash(rm -r *)",
+      "Bash(shred*)",
+      "Bash(dd *)",
+      "Bash(mkfs*)",
+      "Bash(format*)",
+
+      // ---- Git destructif (PICOC #3 human-only gates) ----
+      "Bash(git push --force*)",
+      "Bash(git push -f*)",
+      "Bash(git reset --hard*)",
+      "Bash(git clean -f*)",
+      "Bash(git branch -D*)",
+      "Bash(git checkout -- .)",
+
+      // ---- Systeme ----
+      "Bash(shutdown*)",
+      "Bash(reboot*)",
+      "Bash(kill -9 -1*)",
+      "Bash(chmod -R 777*)",
+
+      // ---- Docker destructif ----
+      "Bash(docker system prune*)",
+      "Bash(docker rm -f*)"
+    ]
+  },
+
+  // --- Hooks ---
+  // Source: code.claude.com/docs/en/hooks + PICOC #4, #6
+  //
+  // PostToolUse : run lint+typecheck apres chaque edit (PICOC #4 deterministic gates)
+  //               exit code 0 = OK, exit code != 0 = Claude voit l'erreur et corrige
+  //
+  // Stop : rappel avant de declarer "done" (Feedback PO "never say done prematurely")
+  //        exit code 2 = empeche Claude de s'arreter, force re-verification
+  "hooks": {
+    "PostToolUse": [
+      {
+        "matcher": "Write|Edit",
+        "command": "[CONFIGURER: ex: pnpm lint --quiet && pnpm typecheck 2>&1 | tail -20]"
+      }
+    ],
+    "Stop": [
+      {
+        "command": "echo 'RAPPEL: As-tu relu le plan point par point ? Chaque item est-il verifie ? Les tests passent ?'"
+      }
+    ]
+  }
+}
