@@ -202,7 +202,7 @@ Si une tache intermediaire surge pendant l'execution (avec sa propre methodologi
 - Spot-check la qualite (structure, sources, respect de la methodologie)
 - Si non-conforme : relancer le sous-agent avec les corrections, pas corriger soi-meme inline
 
-Exemples : ajout d'une decision au guide EBSE (→ sous-agent avec instruction de lire EBSE-guide/CLAUDE.md + methodology.md en entier, puis spawner Agent A/B/C), audit securite (→ sous-agent avec checklist explicite), generation de documentation (→ sous-agent avec structure Diataxis explicite).
+Exemples : ajout d'une decision au guide EBSE (→ sous-agent avec instruction de lire `EBSE-guide/CLAUDE.md` en premier — il contient lui-meme les instructions pour lire methodology.md et suivre la methodologie), audit securite (→ sous-agent avec checklist explicite), generation de documentation (→ sous-agent avec structure Diataxis explicite).
 
 `Source: PICOC #14 Spec discipline (TiCoder +45.97% pass@1) + PICOC #15 TDD agent loop (TDFlow 94.3% SWE-Bench Verified) + Feedback PO "Never say done prematurely"`
 
