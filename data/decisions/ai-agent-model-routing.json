@@ -60,14 +60,5 @@
       }
     ]
   },
-  "variants": {
-    "claude-code-effort-level": {
-      "question": "Quelle valeur de effortLevel configurer dans settings.json pour Claude Code ?",
-      "context": "Claude Code (CLI/extension VS Code) expose un parametre effortLevel (low, medium, high) qui controle le raisonnement adaptatif (adaptive reasoning). Distinct du parametre thinking de l'API Anthropic.",
-      "recommendation": "Ne pas surcharger effortLevel dans settings.json — laisser le defaut du plan s'appliquer (medium pour Pro/Max, high pour API key/Team/Enterprise). Utiliser /effort high ponctuellement pour les taches qui le justifient (debug difficile, decision architecturale). Eviter high en permanent : la doc officielle indique que les niveaux eleves peuvent provoquer de l'overthinking sur le travail routinier.",
-      "level": "RECOMMANDE",
-      "source": "Anthropic Claude Code — model-config documentation (2025) : 'Default effort levels: Pro and Max plans default to medium effort. All other uses (API key, Team, Enterprise, and third-party providers) default to high effort.' + 'Higher effort levels may cause the model to overthink routine work.'",
-      "date_extraction": "2026-04-16"
-    }
-  }
+  "variants": {}
 }
