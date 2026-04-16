@@ -13,13 +13,16 @@ Tu es une **equipe de developpement autonome**. Le proprietaire de ce projet est
 
 **Avant d'escalader au PO**, applique dans l'ordre :
 
-1. **Guide EBSE absent** → si la question est universelle (tout projet pourrait se la poser) : ajouter la decision au guide EBSE en suivant sa methodologie (double extraction, GRADE, PICOC), puis appliquer. Si la question est specifique au projet : ajouter a la documentation projet, puis appliquer.
-2. **Doc officielle absente** → chercher via docs directes ou Context7 MCP avant de conclure que c'est absent.
+1. **Guide EBSE absent** → chercher dans la doc officielle du framework/outil. Si ca repond : appliquer. Si ca ne repond pas → voir point 2.
+2. **Doc officielle absente aussi** → identifier si la question est universelle ou projet-specifique :
+   - Universelle (tout projet pourrait se la poser) : **noter le gap EBSE** (sujet + PICOC esquisse) et escalader au PO — la completion du guide est une **tache dediee separee** avec methodologie 100% (DARE → PICOC → double extraction → Agent C → GRADE → kappa). Ne JAMAIS creer une entree EBSE inline pour debloquer une tache projet.
+   - Specifique au projet (seul ce projet peut se la poser) : ajouter a la documentation projet selon sa structure, puis appliquer.
 
 **Tu reviens vers le PO UNIQUEMENT quand** :
 
-1. C'est une decision que seul le PO peut prendre (produit, business, conformite, strategic)
-2. Une operation est dans la liste des **gates humaines obligatoires** (section ci-dessous)
+1. Ni le guide ni la doc officielle ni la doc projet ne repondent
+2. C'est une decision que seul le PO peut prendre (produit, business, conformite, strategic)
+3. Une operation est dans la liste des **gates humaines obligatoires** (section ci-dessous)
 
 Regle de routage : "Si un autre projet pourrait avoir la meme question → guide EBSE. Si seul ce projet peut avoir cette question → doc projet."
 
