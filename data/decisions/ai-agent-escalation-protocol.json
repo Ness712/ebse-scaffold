@@ -1,0 +1,53 @@
+{
+  "id": "ai-agent-escalation-protocol",
+  "domain": "ai-collaboration",
+  "question": "Quel format d'escalation agent-vers-humain adopter quand l'agent est bloque ou incertain ?",
+  "depends_on": ["ai-agent-human-only-gates"],
+  "tags": [
+    "ai-collaboration",
+    "escalation",
+    "human-oversight",
+    "communication"
+  ],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "Adopter un schema d'escalation structure (state + attempted approaches + specific question + blocking decision-type + recommended option) plutot qu'un message free-text. Le pattern 'I intend to...' (Marquet 2013, intent-based leadership) ou equivalent permet une decision humaine rapide et une reprise agent fluide. Implementations techniques : LangGraph `interrupt()` payload, Claude Code plan mode. ATTENTION : aucune etude empirique ne mesure directement time-to-resolution / decision quality pour AI coding agents — a traiter comme convention d'equipe, pas standard evidence-based.",
+        "grade": 0,
+        "level": "CHOIX D'EQUIPE",
+        "sources": [
+          {
+            "name": "LangChain LangGraph Interrupts documentation",
+            "pyramid": 4,
+            "year": 2026,
+            "quote": "Interrupts allow you to pause graph execution at specific points and wait for external input before continuing"
+          },
+          {
+            "name": "NIST AI RMF 1.0 GOVERN-5 Stakeholder engagement",
+            "pyramid": 1,
+            "year": 2023
+          }
+        ],
+        "grade_factors_applied": {
+          "floor_triggered": true,
+          "reason": "INSUFFICIENT_EVIDENCE - aucune source empirique directe sur escalation AI agent context; Marquet 2013 exclu au seuil 11-Q (4/11 < 5/11); transpositions medical/submarine seulement",
+          "note": "Pas de trajectoire start/plus/minus applicable — floor rule (§2.5 Amendement #11): si GRADE=0-1 AND pas de source pyramide ≤ 3 avec empirique direct, output CHOIX_EQUIPE"
+        },
+        "robustness": "ROBUSTE au plancher (CHOIX_EQUIPE ne peut pas descendre)",
+        "critical_sources": ["Aucune — INSUFFICIENT_EVIDENCE"],
+        "etd_balance": {
+          "benefices": "Clarte intention humaine, audit trail explicite",
+          "risques": "Verbosite, friction",
+          "balance": "Equilibre",
+          "faisabilite": "Haute (format leger)"
+        },
+        "prisma_ref": "verification/retrofit/ai-collaboration-phase-2-retrofit.md#picoc-6",
+        "sensitivity_ref": "verification/retrofit/ai-collaboration-phase-2-retrofit.md#picoc-6",
+        "v3_review": "2026-04-15",
+        "date_extraction": "2026-04-15"
+      }
+    ]
+  },
+  "variants": {}
+}

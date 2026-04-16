@@ -1,0 +1,75 @@
+{
+  "id": "ai-agent-permissions-sandbox",
+  "domain": "ai-collaboration",
+  "question": "Comment configurer les permissions et le sandbox pour limiter le blast radius d'un agent IA ?",
+  "depends_on": ["ai-agent-autonomy-granularity"],
+  "tags": [
+    "ai-collaboration",
+    "security",
+    "permissions",
+    "sandbox",
+    "blast-radius"
+  ],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "Appliquer le principe du least-privilege avec deny-by-default + allow-list explicite des outils accessibles. Combiner avec isolation au niveau OS : microVM (E2B/Firecracker, Devin VM, Sculptor par Imbue) pour isolation hardware ; devcontainers ou git-worktrees pour isolation moindre mais plus ergonomique. Le shared-kernel container seul est insuffisant pour du code AI non-trusted. Les regles deny doivent avoir precedence sur allow. Ne jamais utiliser 'bypassPermissions' ou YOLO mode contre des repos production (prompt injection documente peut exfiltrer secrets / executer rm -rf).",
+        "grade": 2,
+        "level": "BONNE PRATIQUE",
+        "sources": [
+          {
+            "name": "Claude Code permissions documentation",
+            "pyramid": 2,
+            "year": 2026,
+            "quote": "Rules are evaluated in order: deny -> ask -> allow. The first matching rule wins, so deny rules always take precedence"
+          },
+          {
+            "name": "ISO/IEC 42001:2023 §8.4 AI system impact assessment",
+            "pyramid": 1,
+            "year": 2023
+          },
+          {
+            "name": "NIST AI 600-1 §2.10 Information Security risk category",
+            "pyramid": 1,
+            "year": 2024
+          },
+          {
+            "name": "ISO/IEC 23894:2023 - Guidance on AI risk management",
+            "pyramid": 1,
+            "year": 2023,
+            "quote": "This document provides guidance on how organizations that develop, produce, deploy or use products, systems and services that utilize artificial intelligence (AI) can manage risk specifically related to AI"
+          },
+          {
+            "name": "E2B Firecracker microVMs documentation",
+            "pyramid": 2,
+            "year": 2024,
+            "quote": "Built on Firecracker microVMs for full isolation"
+          },
+          {
+            "name": "Claude Code issue #10077 - rm -rf incident in bypass mode",
+            "pyramid": 4,
+            "year": 2025
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 3,
+          "plus": ["convergence (normative + vendor + incident)", "important-effect (rm -rf catastrophic case)"],
+          "minus": ["CoI (vendor sources for mechanism)", "imprecision (no incidents/1000h metric)"]
+        },
+        "robustness": "FRAGILE",
+        "critical_sources": ["NIST AI 600-1 Information Security"],
+        "etd_balance": {
+          "benefices": "Isolation incidents destructifs (rm -rf case), conformite ISO 42001 + NIST",
+          "risques": "Overhead latence microVM, complexite setup",
+          "balance": "Benefices >> Risques",
+          "faisabilite": "Moyenne (microVM) / Haute (FS perms natives)"
+        },
+        "prisma_ref": "verification/retrofit/ai-collaboration-phase-2-retrofit.md#picoc-9",
+        "sensitivity_ref": "verification/retrofit/ai-collaboration-phase-2-retrofit.md#picoc-9",
+        "date_extraction": "2026-04-15"
+      }
+    ]
+  },
+  "variants": {}
+}

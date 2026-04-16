@@ -1,0 +1,65 @@
+{
+  "id": "ai-agent-task-type-routing",
+  "domain": "ai-collaboration",
+  "question": "Comment router les taches d'ingenierie logicielle entre agent-autonome, agent-propose et humain-led selon le type de tache ?",
+  "depends_on": ["ai-agent-autonomy-granularity"],
+  "tags": [
+    "ai-collaboration",
+    "task-routing",
+    "delegation",
+    "governance"
+  ],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "Etablir une policy explicite mappant les classes de taches a leur niveau d'autonomie. Agent autonome acceptable : test scaffolding, renames, dependency bumps, low/medium complexity bug fixes (SWE-bench-like). Agent propose (humain approuve) : refactors multi-fichiers, nouveaux endpoints. Humain-led obligatoire : architecture, schema migrations, security-sensitive code, data migrations, force-push main.",
+        "grade": 3,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "SWE-Bench Pro arXiv:2509.16941 - Long-Horizon SE Tasks benchmark",
+            "pyramid": 2,
+            "year": 2025,
+            "quote": "OpenAI GPT-5 and Claude Opus 4.1 achieve the highest resolve rates at 23.3% and 22.7% respectively"
+          },
+          {
+            "name": "GitHub Copilot coding agent documentation",
+            "pyramid": 4,
+            "year": 2025,
+            "quote": "the agent excels at low-to-medium complexity tasks in well-tested codebases, from adding features and fixing bugs to extending tests, refactoring code, and improving documentation"
+          },
+          {
+            "name": "Toth, Feng et al. arXiv:2509.14745",
+            "pyramid": 3,
+            "year": 2025,
+            "quote": "revisions to Agentic-PRs target bug fixes (45.1%), documentation updates (27.4%), refactoring (25.7%), and code style improvements (22.1%)"
+          },
+          {
+            "name": "Hou et al. 2024 - LLMs for Software Engineering: A Systematic Literature Review",
+            "pyramid": 2,
+            "year": 2024,
+            "quote": "395 research papers from January 2017 to January 2024 to answer four key research questions"
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 4,
+          "plus": ["convergence (benchmark + 2 vendors)", "large-scale (SWE-Bench Pro 1800+ tasks)"],
+          "minus": ["CoI (vendors)", "indirectness (benchmarks not production routing), -1 compromise divergence"]
+        },
+        "robustness": "FRAGILE",
+        "critical_sources": ["SWE-Bench Pro arXiv:2509.16941"],
+        "etd_balance": {
+          "benefices": "+taux succes (SWE-Bench Pro delta ~3x inter-types), cout optimise par classe",
+          "risques": "Complexite infra routing, mauvaise classification initiale",
+          "balance": "Benefices > Risques",
+          "faisabilite": "Moyenne (requiert taxonomie taches + metrics)"
+        },
+        "prisma_ref": "verification/retrofit/ai-collaboration-phase-2-retrofit.md#picoc-2",
+        "sensitivity_ref": "verification/retrofit/ai-collaboration-phase-2-retrofit.md#picoc-2",
+        "date_extraction": "2026-04-15"
+      }
+    ]
+  },
+  "variants": {}
+}

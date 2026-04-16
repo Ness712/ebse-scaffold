@@ -1,0 +1,71 @@
+{
+  "id": "ai-agent-context-compaction",
+  "domain": "ai-collaboration",
+  "question": "Comment gerer le contexte de l'agent sur des sessions longues (>100k tokens) ?",
+  "depends_on": [],
+  "tags": [
+    "ai-collaboration",
+    "context-management",
+    "long-sessions",
+    "memory"
+  ],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "Utiliser une compaction active (summarize-and-restart avec handoff note) plutot que la truncation naive (drop oldest) ou l'extended-context seul. Les benchmarks recents (Context-Folding, ACON, ReSum) montrent des gains de 26-54% reduction memory avec preservation de la task performance. Claude Code `/compact` et equivalents implementent ce pattern. La degradation 'lost in the middle' des long contextes (Liu et al. TACL 2023) reste un probleme meme avec des modeles 1M-token : la compaction contourne ce probleme en gardant l'active context focused.",
+        "grade": 2,
+        "level": "BONNE PRATIQUE",
+        "sources": [
+          {
+            "name": "Anthropic Compaction API documentation",
+            "pyramid": 2,
+            "year": 2026,
+            "quote": "Compaction extends the effective context length for long-running conversations and tasks by automatically summarizing older context when approaching the context window limit"
+          },
+          {
+            "name": "Chen et al. 2025 - Scaling Long-Horizon LLM Agent via Context-Folding (arXiv:2510.11967)",
+            "pyramid": 3,
+            "year": 2025,
+            "quote": "An agent can procedurally branch into a sub-trajectory to handle a subtask and then fold it upon completion, collapsing the intermediate steps while retaining a concise summary"
+          },
+          {
+            "name": "Wang et al. 2025 - ACON: Optimizing Context Compression for Long-horizon LLM Agents (arXiv:2510.00615)",
+            "pyramid": 3,
+            "year": 2025,
+            "quote": "ACON reduces memory usage by 26-54% (peak tokens) while largely preserving task performance"
+          },
+          {
+            "name": "Wu et al. 2025 - ReSum: Long-Horizon Search Intelligence via Context Summarization (arXiv:2509.13313)",
+            "pyramid": 3,
+            "year": 2025,
+            "quote": "condenses interaction histories into compact summaries"
+          },
+          {
+            "name": "Liu et al. 2023 - Lost in the Middle: How Language Models Use Long Contexts (TACL)",
+            "pyramid": 3,
+            "year": 2023,
+            "quote": "Performance is often highest when relevant information occurs at the beginning or end of the input context, and significantly degrades when models must access relevant information in the middle of long contexts"
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 3,
+          "plus": ["convergence (3 empirical papers same direction)"],
+          "minus": ["CoI (vendor-aligned labs)", "indirectness (academic benchmarks != production dev sessions)"]
+        },
+        "robustness": "FRAGILE",
+        "critical_sources": ["Anthropic Compaction doc"],
+        "etd_balance": {
+          "benefices": "Contexte maintenu sur longues sessions, cout reduit 26-54% (ACON), retention coherence",
+          "risques": "Perte info critique (Lost in the Middle), summaries hallucinees",
+          "balance": "Benefices > Risques avec garde-fous",
+          "faisabilite": "Haute (natif Claude Code /compact)"
+        },
+        "prisma_ref": "verification/retrofit/ai-collaboration-phase-2-retrofit.md#picoc-7",
+        "sensitivity_ref": "verification/retrofit/ai-collaboration-phase-2-retrofit.md#picoc-7",
+        "date_extraction": "2026-04-15"
+      }
+    ]
+  },
+  "variants": {}
+}

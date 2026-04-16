@@ -1,0 +1,75 @@
+{
+  "id": "ai-agent-prompt-spec-discipline",
+  "domain": "ai-collaboration",
+  "question": "Quel niveau de discipline de spec/prompt adopter pour deleguer des taches a un agent IA ?",
+  "depends_on": [],
+  "tags": [
+    "ai-collaboration",
+    "prompt-engineering",
+    "spec-driven-development",
+    "requirements"
+  ],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "Adopter une discipline spec-first : plan-then-code (Claude Code plan mode via `/plan` et `--permission-mode plan`, Aider `/architect` mode), acceptance criteria explicites dans les issues, spec-driven development avec outils formels (GitHub Spec-Kit avec constitution.md, Amazon Kiro). Les evidences empiriques (TiCoder, TGen) montrent +12 a +46pp d'amelioration en pass@1 vs freeform prompting sur benchmarks synthetiques courts (MBPP, HumanEval). Indirectness a noter : ces gains ne sont pas encore valides sur du real-world feature work longer-horizon.",
+        "grade": 3,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "GitHub Spec-Kit - spec-driven.md",
+            "pyramid": 3,
+            "year": 2025,
+            "quote": "Specifications don't serve code—code serves specifications"
+          },
+          {
+            "name": "GitHub Spec-Kit constitution.md Article III - Test-First Imperative",
+            "pyramid": 3,
+            "year": 2025,
+            "quote": "No implementation code shall be written before: 1. Unit tests are written 2. Tests are validated and approved by the user"
+          },
+          {
+            "name": "Naik et al. 2024 - TiCoder: LLM-Based Test-Driven Interactive Code Generation (arXiv:2404.10100, TSE 2024)",
+            "pyramid": 2,
+            "year": 2024,
+            "quote": "We observe an average absolute improvement of 45.97% in the pass@1 code generation accuracy for both datasets and across all LLMs within 5 user interactions"
+          },
+          {
+            "name": "Mathews & Nadi 2024 - TGen: Test-Driven Development for Code Generation (arXiv:2402.13521, 2 LLMs tested)",
+            "pyramid": 2,
+            "year": 2024,
+            "quote": "including tests contributes to solving an additional 12.0% and 8.5% of problems"
+          },
+          {
+            "name": "Fowler/Bird - Understanding Spec-Driven Development: Kiro, spec-kit, Tessl",
+            "pyramid": 3,
+            "year": 2025
+          },
+          {
+            "name": "ISO/IEC 5338:2023 §6.4.2 Stakeholder needs + §6.4.3 System requirements (Technical processes)",
+            "pyramid": 1,
+            "year": 2023
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 4,
+          "plus": ["convergence (3 sources empirical + 1 standard)", "important-effect (TiCoder +45.97%)"],
+          "minus": ["indirectness (MBPP/HumanEval short synthetic tasks)", "imprecision (TGen 2 LLMs only)"]
+        },
+        "robustness": "FRAGILE",
+        "critical_sources": ["TiCoder TSE 2024", "ISO/IEC 5338:2023"],
+        "etd_balance": {
+          "benefices": "TiCoder +45.97% pass@1 correctness, ISO 5338 conformance",
+          "risques": "Cout upfront spec, rigidite vs exploration",
+          "balance": "Benefices > Risques",
+          "faisabilite": "Moyenne"
+        },
+        "prisma_ref": "verification/retrofit/ai-collaboration-phase-2-retrofit.md#picoc-14",
+        "sensitivity_ref": "verification/retrofit/ai-collaboration-phase-2-retrofit.md#picoc-14",
+        "date_extraction": "2026-04-15"
+      }
+    ]
+  },
+  "variants": {}
+}

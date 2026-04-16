@@ -1,0 +1,70 @@
+{
+  "id": "ai-agent-situational-awareness",
+  "domain": "ai-collaboration",
+  "question": "Comment preserver la competence humaine sur le code critique quand l'agent ecrit la majorite du code ?",
+  "depends_on": ["ai-agent-task-type-routing"],
+  "tags": [
+    "ai-collaboration",
+    "situational-awareness",
+    "ironies-of-automation",
+    "human-factors",
+    "critical-paths"
+  ],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "Preserver activement la situational awareness humaine sur les chemins critiques (auth, payment, data deletion, security, architectural boundaries) via : (1) lecture obligatoire ligne-par-ligne avant merge sur fichiers designes critical-path ; (2) rotation 'hands-on days' ou l'humain ecrit du code manuellement ; (3) explications generees par l'agent a relire avant merge ; (4) un pourcentage minimum de code critical-path ecrit manuellement (le seuil >=30% reste CHOIX d'equipe). Fondement theorique : Bainbridge 1983 'Ironies of Automation' — les operateurs out-of-the-loop perdent la competence necessaire pour rattraper les erreurs. Evidence empirique : Shukla et al. 2025 montre +37.6% critical vulnerabilities apres 5 iterations AI sans review active.",
+        "grade": 3,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "Bainbridge 1983 - Ironies of Automation (Automatica 19(6), DOI 10.1016/0005-1098(83)90046-8)",
+            "pyramid": 2,
+            "year": 1983,
+            "quote": "the more advanced a control system is, so the more crucial may be the contribution of the human operator"
+          },
+          {
+            "name": "Shukla, Joshi, Syed 2025 - Security Degradation in Iterative AI Code Generation (IEEE-ISTAS, arXiv:2506.11022)",
+            "pyramid": 3,
+            "year": 2025,
+            "quote": "37.6% increase in critical vulnerabilities after just five iterations"
+          },
+          {
+            "name": "Regulation (EU) 2024/1689 AI Act Article 14 §4(b)",
+            "pyramid": 1,
+            "year": 2024,
+            "quote": "to remain aware of the possible tendency of automatically relying or over-relying on the output produced by a high-risk AI system (automation bias)"
+          },
+          {
+            "name": "NIST AI RMF 1.0 GOVERN-3.2 Training competencies",
+            "pyramid": 1,
+            "year": 2023
+          },
+          {
+            "name": "Qodo State of AI Code Quality 2025 - survey",
+            "pyramid": 4,
+            "year": 2025
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 3,
+          "plus": ["convergence (law + theory + empirical + practitioner)", "important-effect (Shukla +37.6% vulns)"],
+          "minus": ["indirectness (Bainbridge aviation/HF not SE specific)", "imprecision (no RCT on >=30% threshold)"]
+        },
+        "robustness": "FRAGILE",
+        "critical_sources": ["EU AI Act Art 14 §4(b)", "Shukla arXiv:2506.11022", "NIST AI RMF GOVERN-3.2"],
+        "etd_balance": {
+          "benefices": "Shukla +37.6% vulnerabilites sans awareness -> gate humaine essentielle critical paths",
+          "risques": "Fatigue cognitive, faux sens securite, friction sur taches simples",
+          "balance": "Benefices > Risques (sur critical paths uniquement)",
+          "faisabilite": "Moyenne (formation + policy critical paths)"
+        },
+        "prisma_ref": "verification/retrofit/ai-collaboration-phase-2-retrofit.md#picoc-13",
+        "sensitivity_ref": "verification/retrofit/ai-collaboration-phase-2-retrofit.md#picoc-13",
+        "date_extraction": "2026-04-15"
+      }
+    ]
+  },
+  "variants": {}
+}

@@ -1,0 +1,73 @@
+{
+  "id": "ai-agent-budget-caps",
+  "domain": "ai-collaboration",
+  "question": "Quels caps techniques imposer aux agents IA pour eviter les runaway loops ?",
+  "depends_on": [],
+  "tags": [
+    "ai-collaboration",
+    "cost-control",
+    "budget",
+    "runaway-prevention"
+  ],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "Imposer un dual cap (iterations + dollar budget) par session d'agent, avec hard-stop (HTTP 429 ou equivalent) et escalation sur breach. Implementations : LiteLLM max_iterations + max_budget_per_session ; Claude Code maxTurns en headless mode ; Cursor usage limits. NOTE TECHNIQUE : LiteLLM ne supporte PAS nativement un wall-clock cap — un 'triple cap' complet (iterations + tokens + wall-clock) necessite une implementation custom au niveau orchestrator (timeout wrapper, systemd timer, ou custom agent code). Incidents publics documentent des runaway loops 10x le cout normal ($0.90 → $9+ par session). ISO/IEC 42001 §8.1 (Operational planning and control) mandate des controls operationnels pour les AI systems.",
+        "grade": 2,
+        "level": "BONNE PRATIQUE",
+        "sources": [
+          {
+            "name": "LiteLLM Agent Iteration Budgets documentation",
+            "pyramid": 3,
+            "year": 2025,
+            "quote": "Max Iterations: Hard cap on the number of LLM calls per session"
+          },
+          {
+            "name": "LiteLLM Max Budget Per Session",
+            "pyramid": 3,
+            "year": 2025,
+            "quote": "Max Budget Per Session: Dollar cap per session (identified by x-litellm-trace-id)"
+          },
+          {
+            "name": "ISO/IEC 42001:2023 §8.1 Operational planning and control",
+            "pyramid": 1,
+            "year": 2023
+          },
+          {
+            "name": "ISO/IEC 5338:2023 §6.2.2 Infrastructure management + §6.3.1 Project planning",
+            "pyramid": 1,
+            "year": 2023
+          },
+          {
+            "name": "Anthropic Claude Code - Models usage and limits",
+            "pyramid": 3,
+            "year": 2026
+          },
+          {
+            "name": "RelayPlane - Agent Runaway Costs 2026",
+            "pyramid": 5,
+            "year": 2026
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 3,
+          "plus": ["convergence (LiteLLM + Claude Code + ISO)"],
+          "minus": ["CoI (3/4 vendor)", "imprecision (no RCT on triple vs partial)", "publication-bias (all pro-cap)"]
+        },
+        "robustness": "FRAGILE",
+        "critical_sources": ["ISO/IEC 42001 §8.1"],
+        "etd_balance": {
+          "benefices": "Prevention runaway cost (10x incidents documentes), conformite ISO 42001",
+          "risques": "Coupure mid-task, perte work en cours",
+          "balance": "Benefices > Risques",
+          "faisabilite": "Haute (dual cap) / Custom required pour wall-clock"
+        },
+        "prisma_ref": "verification/retrofit/ai-collaboration-phase-2-retrofit.md#picoc-16",
+        "sensitivity_ref": "verification/retrofit/ai-collaboration-phase-2-retrofit.md#picoc-16",
+        "date_extraction": "2026-04-15"
+      }
+    ]
+  },
+  "variants": {}
+}

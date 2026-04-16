@@ -1,0 +1,72 @@
+{
+  "id": "ai-agent-autonomy-granularity",
+  "domain": "ai-collaboration",
+  "question": "Quel niveau d'autonomie accorder a un agent de codage IA par type d'action (read, edit, commit, push, deploy) ?",
+  "depends_on": [],
+  "tags": [
+    "ai-collaboration",
+    "autonomy",
+    "permissions",
+    "human-oversight",
+    "governance"
+  ],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "Utiliser une autonomie graduee par type d'action : read-only → edit-in-branch → commit → push → deploy, avec approbation humaine explicite entre tiers. Ne jamais utiliser le mode 'bypassPermissions' ou equivalent YOLO sur des repos production. L'autonomie doit etre commensurate avec le risque et le blast radius de l'action.",
+        "grade": 3,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "Regulation (EU) 2024/1689 (AI Act) Article 14 Human Oversight",
+            "pyramid": 1,
+            "year": 2024,
+            "quote": "The oversight measures shall be commensurate with the risks, level of autonomy and context of use of the high-risk AI system"
+          },
+          {
+            "name": "Parasuraman, Sheridan & Wickens 2000 - A Model for Types and Levels of Human Interaction with Automation",
+            "pyramid": 2,
+            "year": 2000,
+            "quote": "automation can be applied to four broad classes of functions: 1) information acquisition; 2) information analysis; 3) decision and action selection; and 4) action implementation"
+          },
+          {
+            "name": "Claude Code permission-modes documentation",
+            "pyramid": 4,
+            "year": 2026,
+            "quote": "Each mode makes a different tradeoff between convenience and oversight"
+          },
+          {
+            "name": "Faros AI - DORA Report 2025 Key Takeaways",
+            "pyramid": 3,
+            "year": 2025,
+            "quote": "Incidents per PR are up 242.7%, meaning for every code change merged, the probability of a production incident has more than tripled"
+          },
+          {
+            "name": "Toth, Feng et al. arXiv:2509.14745 - Empirical Study of Agentic Coding PRs",
+            "pyramid": 3,
+            "year": 2025,
+            "quote": "567 pull requests across 157 open-source projects; 83.77% of agentic-generated PRs were accepted and merged"
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 3,
+          "plus": ["convergence (3 sources)", "important-effect (Faros +242% incidents)"],
+          "minus": ["CoI (vendor Faros)", "indirectness (aggregate, not per-tier)"]
+        },
+        "robustness": "FRAGILE",
+        "critical_sources": ["EU AI Act Art 14", "Parasuraman Sheridan Wickens 2000"],
+        "etd_balance": {
+          "benefices": "Controle fin (conformite EU AI Act Art 14), prevention d'incidents destructifs, calibration de la confiance",
+          "risques": "Friction cognitive (approval fatigue), ralentissement flow, contournement via 'always allow'",
+          "balance": "Benefices > Risques",
+          "faisabilite": "Haute"
+        },
+        "prisma_ref": "verification/retrofit/ai-collaboration-phase-2-retrofit.md#picoc-1",
+        "sensitivity_ref": "verification/retrofit/ai-collaboration-phase-2-retrofit.md#picoc-1",
+        "date_extraction": "2026-04-15"
+      }
+    ]
+  },
+  "variants": {}
+}

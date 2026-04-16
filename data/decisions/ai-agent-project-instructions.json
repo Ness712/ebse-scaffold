@@ -1,0 +1,75 @@
+{
+  "id": "ai-agent-project-instructions",
+  "domain": "ai-collaboration",
+  "question": "Comment persister les instructions et conventions de projet pour l'agent IA ?",
+  "depends_on": [],
+  "tags": [
+    "ai-collaboration",
+    "project-instructions",
+    "onboarding",
+    "conventions"
+  ],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "Maintenir un fichier d'instructions de projet committed dans le repo (CLAUDE.md pour Claude Code, AGENTS.md pour le standard cross-vendor stewarded par Agentic AI Foundation/Linux Foundation, .cursorrules/.cursor/rules/*.mdc pour Cursor, .clinerules/ pour Cline, .github/copilot-instructions.md pour GitHub Copilot). ATTENTION paradoxe empirique : Gloaguen et al. 2026 (arXiv:2602.11988) montre que les context files peuvent *reduire* la task success rate et augmenter le cout d'inference de 20%+. Recommendation : **keep minimal and non-inferable** — documenter uniquement ce qui ne peut pas etre devine du code source (build/run commands, conventions de nommage custom, constraints techniques non-evidentes). Eviter les listes exhaustives.",
+        "grade": 2,
+        "level": "BONNE PRATIQUE",
+        "sources": [
+          {
+            "name": "Gloaguen, Mundler, Muller, Raychev, Vechev 2026 - Evaluating AGENTS.md (arXiv:2602.11988)",
+            "pyramid": 3,
+            "year": 2026,
+            "quote": "context files tend to reduce task success rates compared to providing no repository context, while also increasing inference cost by over 20%"
+          },
+          {
+            "name": "Daiki et al. 2025 - On the Use of Agentic Coding Manifests (arXiv:2509.14744, PROFES 2025)",
+            "pyramid": 3,
+            "year": 2025,
+            "quote": "253 CLAUDE.md files from 242 repositories; Build and Run (77.1%), Implementation Details (71.9%), Architecture (64.8%), Testing (60.5%)"
+          },
+          {
+            "name": "Agent READMEs arXiv:2511.12884",
+            "pyramid": 3,
+            "year": 2025,
+            "quote": "2,303 agent context files from 1,925 repositories; 16 instruction types"
+          },
+          {
+            "name": "Jiang & Nam 2026 - Beyond the Prompt: Cursor Rules Empirical Study (arXiv:2512.18925, MSR'26)",
+            "pyramid": 2,
+            "year": 2026,
+            "quote": "Through a qualitative analysis of 401 open-source repositories containing cursor rules, we developed a comprehensive taxonomy of project context"
+          },
+          {
+            "name": "Linux Foundation AAIF - AGENTS.md standardization",
+            "pyramid": 5,
+            "year": 2025
+          },
+          {
+            "name": "ISO/IEC 42001:2023 §7.5 Documented information",
+            "pyramid": 1,
+            "year": 2023
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 3,
+          "plus": ["convergence (widespread use confirmed)", "important-effect (negative finding Gloaguen is policy-relevant)"],
+          "minus": ["inconsistency (Gloaguen negatif vs vendor pro)", "indirectness (adoption != measured outcome)"]
+        },
+        "robustness": "FRAGILE",
+        "critical_sources": ["Jiang & Nam MSR'26", "Gloaguen 2602.11988 (contre-poids)"],
+        "etd_balance": {
+          "benefices": "Cohesion projet, reduction re-explication, onboarding agents",
+          "risques": "Gloaguen 2026 paradoxe : context files peuvent REDUIRE task success et +20% cout",
+          "balance": "Equilibre tendance Benefices si instructions minimales/non-inferables",
+          "faisabilite": "Haute"
+        },
+        "prisma_ref": "verification/retrofit/ai-collaboration-phase-2-retrofit.md#picoc-8",
+        "sensitivity_ref": "verification/retrofit/ai-collaboration-phase-2-retrofit.md#picoc-8",
+        "date_extraction": "2026-04-15"
+      }
+    ]
+  },
+  "variants": {}
+}

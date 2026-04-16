@@ -1,0 +1,77 @@
+{
+  "id": "ai-agent-multi-agent-topology",
+  "domain": "ai-collaboration",
+  "question": "Quelle architecture multi-agents adopter : writer/reviewer, orchestrator-worker, single-agent avec tool use ?",
+  "depends_on": [],
+  "tags": [
+    "ai-collaboration",
+    "architecture",
+    "multi-agent",
+    "verification"
+  ],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "Defaut : single-agent avec tool use. N'adopter un pattern writer/reviewer 2-agents que pour des taches non-triviales multi-fichiers ou un defect specifique est mesure et justifie le surcout token. Eviter les architectures N-agents orchestrator-worker sauf preuve concrete de gains : la litterature est contradictoire. Cognition (Devin team) rapporte que les systemes multi-agents produisent 'fragile systems' en production ; les benchmarks (ACT, DARS, Aider architect) montrent des gains de +3 a +10pp mais au prix d'un token cost x2-3 et de complexity cascade failures (MAST paper, Cemri et al.).",
+        "grade": 2,
+        "level": "BONNE PRATIQUE",
+        "sources": [
+          {
+            "name": "Dong et al. 2025 - A Survey on Code Generation with LLM-based Agents (arXiv:2508.00083)",
+            "pyramid": 3,
+            "year": 2025,
+            "quote": "agents in the ChatDev system respectively play roles of programmers, reviewers, and testers"
+          },
+          {
+            "name": "Singh et al. 2025 - Enhancing LLM Code Generation (arXiv:2505.02133)",
+            "pyramid": 3,
+            "year": 2025,
+            "quote": "The basic single-agent approach achieved 54.09% accuracy, while the three-agent ACT system reached 57.16%. The combined ACT + Debugger approach achieved 64.82% mean accuracy across 19 language models"
+          },
+          {
+            "name": "Cemri et al. 2025 - Why Do Multi-Agent LLM Systems Fail? MAST (arXiv:2503.13657)",
+            "pyramid": 3,
+            "year": 2025,
+            "quote": "1,600+ annotated traces; 14 unique modes, clustered into 3 categories; their performance gains on popular benchmarks are often minimal"
+          },
+          {
+            "name": "Cognition - Don't Build Multi-Agents",
+            "pyramid": 4,
+            "year": 2025,
+            "quote": "running multiple agents in collaboration only results in fragile systems"
+          },
+          {
+            "name": "Aider architect/editor benchmark (September 2024)",
+            "pyramid": 2,
+            "year": 2024,
+            "quote": "Pairing o1-preview as Architect with either Deepseek or o1-mini as Editor sets a SOTA significantly above the previous best score"
+          },
+          {
+            "name": "He, Treude, Lo 2024/25 - LLM Multi-Agent Systems for SE (ACM TOSEM, arXiv:2404.04834)",
+            "pyramid": 3,
+            "year": 2024,
+            "quote": "systematic review of recent primary studies to map the current landscape of LMA applications across various stages of the software development lifecycle"
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 3,
+          "plus": ["large-scale (Singh 19 LLMs)"],
+          "minus": ["inconsistency (Cognition anti vs Singh/Aider pro)", "CoI (Cognition vendor)"]
+        },
+        "robustness": "FRAGILE",
+        "critical_sources": ["Aider architect (seule preuve positive)", "Cemri MAST (seul contre-poids empirique)"],
+        "etd_balance": {
+          "benefices": "Aider architect +30% Polyglot benchmark, capture erreurs writer",
+          "risques": "Cout 2x tokens, Cemri MAST 14 failure modes observees, fragile systems en prod per Cognition",
+          "balance": "Equilibre, tendance Benefices si topologie simple 2-role",
+          "faisabilite": "Moyenne"
+        },
+        "prisma_ref": "verification/retrofit/ai-collaboration-phase-2-retrofit.md#picoc-5",
+        "sensitivity_ref": "verification/retrofit/ai-collaboration-phase-2-retrofit.md#picoc-5",
+        "date_extraction": "2026-04-15"
+      }
+    ]
+  },
+  "variants": {}
+}

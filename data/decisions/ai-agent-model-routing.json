@@ -1,0 +1,64 @@
+{
+  "id": "ai-agent-model-routing",
+  "domain": "ai-collaboration",
+  "question": "Comment router les taches entre modeles IA selon la complexite pour optimiser cout et qualite ?",
+  "depends_on": ["ai-agent-task-type-routing"],
+  "tags": [
+    "ai-collaboration",
+    "model-routing",
+    "cost-optimization",
+    "task-complexity"
+  ],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "Utiliser un router task-aware pour selectionner le modele par tache : model cheap/fast (Haiku, Sonnet, GPT-4o-mini) pour scaffolding/renames/documentation ; model strong reasoning (Opus, o1) pour architecture/debug/security-sensitive. Les benchmarks (RouteLLM ICLR 2025, LLMRouterBench EMNLP 2025) montrent >2x cost savings vs single-strong-model sans degradation substantielle de qualite. Le pattern architect+editor (Aider 2024) demontre empiriquement +3-10pp gain sur SWE-Bench Lite en separant reasoning et execution. ATTENTION : RouteLLM '75% cost reduction' est vs random router baseline, pas absolute.",
+        "grade": 4,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "Ong et al. 2025 - RouteLLM: Learning to Route LLMs with Preference Data (ICLR 2025, arXiv:2406.18665)",
+            "pyramid": 3,
+            "year": 2024,
+            "quote": "significantly reduces costs by over 2 times in certain cases without compromising the quality of responses"
+          },
+          {
+            "name": "Aider architect/editor mode announcement (September 2024)",
+            "pyramid": 2,
+            "year": 2024,
+            "quote": "Pairing o1-preview as Architect with either Deepseek or o1-mini as Editor sets a SOTA significantly above the previous best score"
+          },
+          {
+            "name": "LLMRouterBench (EMNLP Findings 2025)",
+            "pyramid": 3,
+            "year": 2025,
+            "quote": "benchmark comprises over 400,000 query-model instances, 21 datasets across diverse domains, 33 open and proprietary LLMs, and 10 representative routing methods"
+          },
+          {
+            "name": "ISO/IEC 5338:2023 §6.2.2 Infrastructure management process et §6.2.4 Human resource management process",
+            "pyramid": 1,
+            "year": 2023
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 3,
+          "plus": ["convergence (4 sources convergentes)", "large-scale (LLMRouterBench 400k instances)", "important-effect (>2x cost savings)"],
+          "minus": ["indirectness (benchmarks generaux, pas coding-specific sauf Aider)"]
+        },
+        "robustness": "ROBUSTE",
+        "critical_sources": ["Aucune — 4 sources convergentes interchangeables"],
+        "etd_balance": {
+          "benefices": "RouteLLM >2x cost reduction meme qualite, Aider architect +3-10pp quality",
+          "risques": "Latence router, mis-routing, complexite infra",
+          "balance": "Benefices > Risques",
+          "faisabilite": "Moyenne"
+        },
+        "prisma_ref": "verification/retrofit/ai-collaboration-phase-2-retrofit.md#picoc-12",
+        "sensitivity_ref": "verification/retrofit/ai-collaboration-phase-2-retrofit.md#picoc-12",
+        "date_extraction": "2026-04-15"
+      }
+    ]
+  },
+  "variants": {}
+}

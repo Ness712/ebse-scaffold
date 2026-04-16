@@ -1,0 +1,76 @@
+{
+  "id": "ai-agent-team-metrics",
+  "domain": "ai-collaboration",
+  "question": "Quelles metriques utiliser pour mesurer la productivite et la qualite d'une equipe humain+agent ?",
+  "depends_on": [],
+  "tags": [
+    "ai-collaboration",
+    "metrics",
+    "dora",
+    "space",
+    "productivity"
+  ],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "Composer DORA 4-keys (Deployment Frequency, Lead Time, Change Failure Rate, MTTR) + SPACE 5-dimensions (Satisfaction, Performance, Activity, Communication, Efficiency) + metrics agent-specific (agent-authored LOC ratio, human-override rate, escalation rate, cost per merged PR). Ne JAMAIS utiliser une metrique seule — Goodhart risk. Eviter les vanity metrics type Copilot acceptance rate ou Cursor tab-accept rate. Le DORA 2025 confirme que 'AI's primary role is as an amplifier' : les AI assistants augmentent l'output individuel (21% more tasks, 98% more PRs merged) mais incrementent aussi review time (+441%) et incidents per PR (+242%) — un composite DORA+SPACE capture ce tradeoff, un single-metric le manque.",
+        "grade": 3,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "Forsgren, Storey, Maddila, Zimmermann, Houck, Butler 2021 - The SPACE of Developer Productivity (ACM Queue 19(1))",
+            "pyramid": 3,
+            "year": 2021,
+            "quote": "Satisfaction and well-being, Performance, Activity, Communication and collaboration, Efficiency and flow"
+          },
+          {
+            "name": "DORA 2025 Report - State of AI-assisted Software Development",
+            "pyramid": 3,
+            "year": 2025,
+            "quote": "AI's primary role is as an amplifier, magnifying an organization's existing strengths and weaknesses"
+          },
+          {
+            "name": "Ziegler et al. 2024 - Measuring GitHub Copilot's Impact on Productivity (CACM)",
+            "pyramid": 3,
+            "year": 2024,
+            "quote": "acceptance rate to be better correlated with reported productivity than more detailed measures of contribution"
+          },
+          {
+            "name": "Peng et al. 2023 - Impact of AI on Developer Productivity Copilot RCT (arXiv:2302.06590)",
+            "pyramid": 4,
+            "year": 2023,
+            "quote": "treatment group, with access to the AI pair programmer, completed the task 55.8% faster than the control group"
+          },
+          {
+            "name": "ISO/IEC 5338:2023 §6.3.7 Measurement process (sous Technical management processes)",
+            "pyramid": 1,
+            "year": 2023
+          },
+          {
+            "name": "NIST AI RMF 1.0 MEASURE function",
+            "pyramid": 1,
+            "year": 2023
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 3,
+          "plus": ["convergence (DORA + SPACE + RCT)", "large-scale (DORA n~5000)"],
+          "minus": ["CoI (industry authors)", "inconsistency (acceptance rate mixed)"]
+        },
+        "robustness": "FRAGILE",
+        "critical_sources": ["DORA 2025 Report (large sample)", "Peng RCT 2302.06590"],
+        "etd_balance": {
+          "benefices": "Visibilite impact AI, decisions fondees, capture tradeoff speed/quality",
+          "risques": "Metriques mal-interpretees, Goodhart law",
+          "balance": "Benefices > Risques",
+          "faisabilite": "Moyenne (requiert instrumentation)"
+        },
+        "prisma_ref": "verification/retrofit/ai-collaboration-phase-2-retrofit.md#picoc-11",
+        "sensitivity_ref": "verification/retrofit/ai-collaboration-phase-2-retrofit.md#picoc-11",
+        "date_extraction": "2026-04-15"
+      }
+    ]
+  },
+  "variants": {}
+}

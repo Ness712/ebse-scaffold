@@ -1,0 +1,65 @@
+{
+  "id": "ai-agent-deterministic-gates",
+  "domain": "ai-collaboration",
+  "question": "Quelles verifications deterministes l'agent doit-il executer localement avant de presenter son travail a l'humain ?",
+  "depends_on": [],
+  "tags": [
+    "ai-collaboration",
+    "verification",
+    "quality-gates",
+    "testing"
+  ],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "L'agent doit executer localement un pipeline deterministe obligatoire avant de presenter son travail : typecheck + lint + unit tests + build + SAST + dependency audit. Ne jamais accepter le self-report de l'agent comme seule evidence de correction. Le CI seul (post-PR) est trop tardif : il decale la charge de verification sur l'humain. Les pre-commit hooks seuls sont insuffisants (typecheck + build absents).",
+        "grade": 2,
+        "level": "BONNE PRATIQUE",
+        "sources": [
+          {
+            "name": "NIST AI 600-1 §2.2 Confabulation risk category",
+            "pyramid": 1,
+            "year": 2024,
+            "quote": "Confabulations have been shown to be pervasive in current state-of-the-art LLMs"
+          },
+          {
+            "name": "METR 2025 - Measuring the Impact of Early-2025 AI on Experienced OSS Developers RCT",
+            "pyramid": 2,
+            "year": 2025,
+            "quote": "when developers use AI tools, they take 19% longer than without"
+          },
+          {
+            "name": "Anthropic Claude Code Auto Mode documentation",
+            "pyramid": 4,
+            "year": 2026,
+            "quote": "A separate classifier model reviews actions before they run, blocking anything that escalates beyond your request"
+          },
+          {
+            "name": "Faros AI DORA 2025 - PR review time impact",
+            "pyramid": 3,
+            "year": 2025,
+            "quote": "Median time in PR review is up 441%, compared to 91% in our 2025 dataset"
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 3,
+          "plus": ["convergence (3 sources)"],
+          "minus": ["CoI (3 vendors)", "indirectness (no head-to-head gate-vs-no-gate RCT)"]
+        },
+        "robustness": "FRAGILE",
+        "critical_sources": ["METR RCT arXiv:2507.09089"],
+        "etd_balance": {
+          "benefices": "Feedback loop objectif, reduction hallucination code (tests passent ou non)",
+          "risques": "METR RCT montre -19% productivity experts avec AI, tests flaky",
+          "balance": "Equilibre tendance Benefices si tests robustes",
+          "faisabilite": "Haute"
+        },
+        "prisma_ref": "verification/retrofit/ai-collaboration-phase-2-retrofit.md#picoc-4",
+        "sensitivity_ref": "verification/retrofit/ai-collaboration-phase-2-retrofit.md#picoc-4",
+        "date_extraction": "2026-04-15"
+      }
+    ]
+  },
+  "variants": {}
+}

@@ -1,0 +1,75 @@
+{
+  "id": "ai-agent-tdd-loop",
+  "domain": "ai-collaboration",
+  "question": "Dans un workflow TDD avec agent IA, qui ecrit les tests : l'humain ou l'agent ?",
+  "depends_on": ["ai-agent-prompt-spec-discipline"],
+  "tags": [
+    "ai-collaboration",
+    "tdd",
+    "testing",
+    "agent-loop"
+  ],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "Le pattern TDD agent loop preferable : l'humain ecrit le failing test (specifiant l'intent), l'agent itere l'implementation jusqu'a tests verts + tests existants toujours verts. Cette approche beats les alternatives : quand l'agent genere ses propres tests (self-test), la performance chute (TDFlow : 94.3% SWE-Bench Verified avec human tests vs 69.8% avec agent-generated tests). Le final human read of the diff before merge reste obligatoire (bridge avec PICOC #13 SA) — 'no human review per iteration' est valide sur benchmarks mais a qualifier pour production.",
+        "grade": 3,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "Han et al. 2025 - TDFlow: Agentic Workflows for Test Driven Development (arXiv:2510.23761)",
+            "pyramid": 3,
+            "year": 2025,
+            "quote": "TDFlow attains 88.8% pass rate on SWE-Bench Lite (an absolute improvement of 27.8% over the next best baseline) and 94.3% on SWE-Bench Verified"
+          },
+          {
+            "name": "Han et al. 2025 - TDFlow agent-generated tests performance drop",
+            "pyramid": 3,
+            "year": 2025,
+            "quote": "69.8% performance on SWE-Bench Verified"
+          },
+          {
+            "name": "Mathews & Nadi 2024 - TGen additional remediation loop gains",
+            "pyramid": 2,
+            "year": 2024,
+            "quote": "MBPP: Additional 2.8% improvement through remediation; HumanEval: Additional 3.0% improvement through remediation"
+          },
+          {
+            "name": "Naik et al. 2024 - TiCoder (arXiv:2404.10100)",
+            "pyramid": 2,
+            "year": 2024,
+            "quote": "average absolute improvement of 45.97% in the pass@1 code generation accuracy for both datasets and across all LLMs within 5 user interactions"
+          },
+          {
+            "name": "Simon Willison - Red/green TDD Agentic Engineering Patterns",
+            "pyramid": 4,
+            "year": 2025
+          },
+          {
+            "name": "SWEBOK v4 KA 5 §7.1 Testing of Emerging Technologies",
+            "pyramid": 1,
+            "year": 2024
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 3,
+          "plus": ["important-effect (TDFlow 94.3% SWE-Bench Verified)", "convergence (TDFlow + TGen + TiCoder)"],
+          "minus": ["indirectness (benchmarks not production)", "inconsistency (TDFlow 69.8% with agent tests blurs C1)"]
+        },
+        "robustness": "FRAGILE",
+        "critical_sources": ["TDFlow arXiv:2510.23761"],
+        "etd_balance": {
+          "benefices": "TDFlow 88.8% SWE-Bench Lite, 94.3% Verified (human tests), deterministic stopping",
+          "risques": "Chute a 69.8% si agent-generated tests - limite self-verification",
+          "balance": "Benefices > Risques si human-written tests",
+          "faisabilite": "Moyenne"
+        },
+        "prisma_ref": "verification/retrofit/ai-collaboration-phase-2-retrofit.md#picoc-15",
+        "sensitivity_ref": "verification/retrofit/ai-collaboration-phase-2-retrofit.md#picoc-15",
+        "date_extraction": "2026-04-15"
+      }
+    ]
+  },
+  "variants": {}
+}

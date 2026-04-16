@@ -1,0 +1,72 @@
+{
+  "id": "ai-agent-human-only-gates",
+  "domain": "ai-collaboration",
+  "question": "Quelles decisions doivent rester exclusivement humaines quelle que soit la confiance de l'agent ?",
+  "depends_on": ["ai-agent-autonomy-granularity"],
+  "tags": [
+    "ai-collaboration",
+    "human-oversight",
+    "governance",
+    "blast-radius",
+    "compliance"
+  ],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "Maintenir une liste explicite et ecrite des decisions qui doivent rester humaines quelle que soit la confiance auto-reportee par l'agent : schema migrations, secret rotation, production deploys, license changes, customer-data handling (PII deletion/access), architectural boundary changes, force-push sur branches protegees. Enforcer techniquement via allow/deny lists, branch protection, CI approvals nommees. Ne JAMAIS utiliser de confidence-threshold gating : la confabulation (NIST AI 600-1) rend la confiance auto-reportee non-fiable.",
+        "grade": 2,
+        "level": "BONNE PRATIQUE",
+        "sources": [
+          {
+            "name": "Regulation (EU) 2024/1689 (AI Act) Article 14 §5",
+            "pyramid": 1,
+            "year": 2024,
+            "quote": "no action or decision is taken by the deployer on the basis of the identification resulting from the system unless that identification has been separately verified and confirmed by at least two natural persons with the necessary competence, training and authority"
+          },
+          {
+            "name": "NIST AI 600-1 Generative AI Profile §2.2 Confabulation",
+            "pyramid": 1,
+            "year": 2024,
+            "quote": "Confabulation refers to a phenomenon in which GAI systems generate and confidently present erroneous or false content in response to prompts"
+          },
+          {
+            "name": "ISO/IEC 42001:2023 §8.2 AI risk assessment + §9.2 Internal audit",
+            "pyramid": 1,
+            "year": 2023,
+            "quote": "This document specifies the requirements and provides guidance for establishing, implementing, maintaining and continually improving an AI management system"
+          },
+          {
+            "name": "Fortune 2025 - Replit catastrophic failure incident",
+            "pyramid": 5,
+            "year": 2025,
+            "quote": "This was a catastrophic failure on my part. I destroyed months of work in seconds"
+          },
+          {
+            "name": "AI Incident Database Incident #1152 - Replit Agent Destructive Commands",
+            "pyramid": 3,
+            "year": 2025,
+            "quote": "LLM-Driven Replit Agent Reportedly Executed Unauthorized Destructive Commands During Code Freeze"
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 3,
+          "plus": ["convergence (law + regulator + incident)", "important-effect (catastrophic)"],
+          "minus": ["imprecision (N=1 case)", "publication-bias (spectacular only)"]
+        },
+        "robustness": "FRAGILE",
+        "critical_sources": ["EU AI Act Art 14 §5", "NIST AI 600-1 §2.2 Confabulation"],
+        "etd_balance": {
+          "benefices": "Prevention incidents catastrophiques (Replit DB wipe), conformite EU AI Act",
+          "risques": "Friction, tentation de bypass",
+          "balance": "Benefices >> Risques (asymetrie des consequences)",
+          "faisabilite": "Haute"
+        },
+        "prisma_ref": "verification/retrofit/ai-collaboration-phase-2-retrofit.md#picoc-3",
+        "sensitivity_ref": "verification/retrofit/ai-collaboration-phase-2-retrofit.md#picoc-3",
+        "date_extraction": "2026-04-15"
+      }
+    ]
+  },
+  "variants": {}
+}

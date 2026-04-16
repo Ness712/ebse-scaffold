@@ -1,0 +1,78 @@
+{
+  "id": "ai-agent-provenance-audit",
+  "domain": "ai-collaboration",
+  "question": "Comment tracer la provenance et maintenir un audit trail du code genere par agent IA ?",
+  "depends_on": [],
+  "tags": [
+    "ai-collaboration",
+    "audit-trail",
+    "provenance",
+    "compliance",
+    "traceability"
+  ],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "Maintenir un audit trail structure par session d'agent : model name + version, prompt, tool calls, cost, final diff, lie au git commit via trailer metadata (ex: Agent-Logs-Url style GitHub Copilot). Le simple Co-Authored-By trailer est insuffisant pour compliance (pas de cryptographic signature, pas de contenu queryable). Pour contextes regles (SOC2, ISO 27001, HIPAA, ISO 42001 certification), escalade obligatoire vers **STANDARD** : audit trail structured + queryable + immutable. Full session replay est CHOIX d'equipe (storage cost tradeoff). Outils emergents : git-ai (OSS) + GitHub Copilot Agent-Logs-Url + CodeSlick (vendor).",
+        "grade": 3,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "GitHub Blog 2026-03-20 - Trace any Copilot coding agent commit to its session logs",
+            "pyramid": 3,
+            "year": 2026,
+            "quote": "the agent's commits link back to the agent session logs by including an Agent-Logs-Url trailer in the commit message"
+          },
+          {
+            "name": "ISO/IEC 42001:2023 §7.5 Documented information + §8 Operation",
+            "pyramid": 1,
+            "year": 2023
+          },
+          {
+            "name": "ISO/IEC 5338:2023 §6.3.6 Information management + §6.3.7 Measurement (sous Technical management processes)",
+            "pyramid": 1,
+            "year": 2023
+          },
+          {
+            "name": "NIST AI RMF 1.0 GOVERN function (accountability)",
+            "pyramid": 1,
+            "year": 2023
+          },
+          {
+            "name": "Regulation (EU) 2024/1689 AI Act Article 12 Record-keeping",
+            "pyramid": 1,
+            "year": 2024
+          },
+          {
+            "name": "Kothari - Claude Code SOC 2 compliance practitioner guide",
+            "pyramid": 4,
+            "year": 2026
+          },
+          {
+            "name": "git-ai-project/git-ai - Git extension for AI-generated code tracking",
+            "pyramid": 3,
+            "year": 2026
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 3,
+          "plus": ["convergence (regulation + vendor + OSS + practitioner)", "important-effect (production implementation exists, SOC2 compliance gap)"],
+          "minus": ["CoI (CodeSlick vendor)", "imprecision (no audit-pass-rate RCT)"]
+        },
+        "robustness": "FRAGILE",
+        "critical_sources": ["ISO/IEC 42001 §7.5 + §8"],
+        "etd_balance": {
+          "benefices": "Tracabilite incidents, conformite SOC 2 + EU AI Act Art 12 + ISO 42001",
+          "risques": "Volume logs, PII leak dans traces, cout storage",
+          "balance": "Benefices > Risques",
+          "faisabilite": "Moyenne (instrumentation + retention policy)"
+        },
+        "prisma_ref": "verification/retrofit/ai-collaboration-phase-2-retrofit.md#picoc-17",
+        "sensitivity_ref": "verification/retrofit/ai-collaboration-phase-2-retrofit.md#picoc-17",
+        "date_extraction": "2026-04-15"
+      }
+    ]
+  },
+  "variants": {}
+}
