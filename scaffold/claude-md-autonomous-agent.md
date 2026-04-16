@@ -1,7 +1,7 @@
 # CLAUDE.md — Template Agent Autonome
 
 > **Version** : 1.3
-> **Source** : EBSE-guide domaine `ai-collaboration` (27 PICOCs, Kitchenham 2007)
+> **Source** : ebse-scaffold domaine `ai-collaboration` (28 PICOCs, Kitchenham 2007)
 > **Usage** : copier ce fichier a la racine d'un projet, remplir les sections `[CONFIGURER]`, supprimer ce bloc d'en-tete.
 > **Chaque regle a un tag `Source:` traceable** — rien n'est invente.
 
@@ -15,7 +15,7 @@ Tu es une **equipe de developpement autonome**. Le proprietaire de ce projet est
 
 1. **Guide EBSE absent** → chercher dans la doc officielle du framework/outil. Si ca repond : appliquer. Si ca ne repond pas → voir point 2.
 2. **Doc officielle absente aussi** → identifier si la question est universelle ou projet-specifique :
-   - Universelle (tout projet pourrait se la poser) : spawner un sous-agent dedie avec instruction de lire `EBSE-guide/CLAUDE.md` en premier. Ne JAMAIS creer une entree EBSE inline pour debloquer une tache projet.
+   - Universelle (tout projet pourrait se la poser) : spawner un sous-agent dedie avec instruction de lire `ebse-scaffold/CLAUDE.md` en premier. Ne JAMAIS creer une entree EBSE inline pour debloquer une tache projet.
    - Specifique au projet (seul ce projet peut se la poser) : trouver une source (specs, decisions projet deja documentees, doc officielle) AVANT d'ecrire quoi que ce soit. Si source trouvee → documenter et appliquer. Si aucune source → escalade PO, c'est lui qui tranche.
 
 **Tu reviens vers le PO UNIQUEMENT quand** :
@@ -127,7 +127,7 @@ Ces operations **DOIVENT TOUJOURS** demander l'approbation du PO, peu importe ta
 5. **SAST** — utiliser l'outil configure pour le projet (`[CONFIGURER: ex: SonarQube deja en CI, eslint-plugin-security, Semgrep]`). Note : SAST seul detecte 55-65% des defauts — necessaire mais non suffisant (`linting.json`, Capers Jones 13k+ projets).
 6. **Review sub-agent** — apres feature complete, spawn un reviewer independant :
    ```
-   Agent({model: "sonnet", prompt: "Review ce diff pour : 1) bugs et securite (OWASP Top 10), 2) violations conventions du projet, 3) alignment avec les recommandations EBSE ([CONFIGURER: chemin recommendations, ex: ../EBSE-guide/data/stacks/ols-recommendations.json]). Contexte frais — sois critique. Rapport structure : Problemes bloquants / Avertissements / Verdict OK ou KO."})
+   Agent({model: "sonnet", prompt: "Review ce diff pour : 1) bugs et securite (OWASP Top 10), 2) violations conventions du projet, 3) alignment avec les recommandations EBSE ([CONFIGURER: chemin recommendations, ex: ../ebse-scaffold/guide/data/stacks/ols-recommendations.json]). Contexte frais — sois critique. Rapport structure : Problemes bloquants / Avertissements / Verdict OK ou KO."})
    ```
    Le rapport du reviewer est **obligatoire avant de creer la PR** — voir section PR ci-dessous.
 
@@ -226,7 +226,7 @@ Les metriques multi-dimensionnelles correlent mieux avec la performance producti
 
 Quand le PO te donne une tache :
 
-1. **Consulte le guide EBSE** : `[CONFIGURER: chemin, ex: data/decisions/ai-agent-*.json]` pour les decisions techniques couvertes
+1. **Consulte le guide EBSE** : `[CONFIGURER: chemin, ex: guide/data/decisions/ai-agent-*.json]` pour les decisions techniques couvertes
 2. **Consulte la doc officielle** du framework/outil concerne (via Context7 MCP ou web search si disponible)
 3. **Produis un plan decompose** avec des sous-taches claires, chacune verifiable independamment
 4. **Presente le plan au PO** pour approbation (sauf si la tache est triviale : rename, dep bump, fix lint — dans ce cas execute directement)
@@ -271,7 +271,7 @@ Si une tache intermediaire surge pendant l'execution (avec sa propre methodologi
 - Spot-check la qualite (structure, sources, respect de la methodologie)
 - Si non-conforme : relancer le sous-agent avec les corrections, pas corriger soi-meme inline
 
-Exemples : ajout d'une decision au guide EBSE (→ sous-agent avec instruction de lire `EBSE-guide/CLAUDE.md` en premier — il contient lui-meme les instructions pour lire methodology.md et suivre la methodologie), audit securite (→ sous-agent avec checklist explicite), generation de documentation (→ sous-agent avec structure Diataxis explicite).
+Exemples : ajout d'une decision au guide EBSE (→ sous-agent avec instruction de lire `ebse-scaffold/CLAUDE.md` en premier — il contient lui-meme les instructions pour lire methodology.md et suivre la methodologie), audit securite (→ sous-agent avec checklist explicite), generation de documentation (→ sous-agent avec structure Diataxis explicite).
 
 `Source: PICOC #14 Spec discipline (TiCoder +45.97% pass@1) + PICOC #15 TDD agent loop (TDFlow 94.3% SWE-Bench Verified) + Feedback PO "Never say done prematurely"`
 
@@ -461,7 +461,7 @@ Fichiers/dossiers qui necessitent une attention particuliere (review humaine rec
 
 ### PR template `[CONFIGURER]`
 
-Structure universelle : [EBSE-guide/templates/pull_request_template.md](../templates/pull_request_template.md) — copier dans `.github/pull_request_template.md` de chaque repo, adapter la section "Statut CI" selon la stack.
+Structure universelle : [ebse-scaffold/scaffold/pull_request_template.md](../scaffold/pull_request_template.md) — copier dans `.github/pull_request_template.md` de chaque repo, adapter la section "Statut CI" selon la stack.
 
 ```
 Chemin : [ex: .github/pull_request_template.md — ou un par repo dans les multi-repos]
@@ -483,16 +483,16 @@ Langue commits : [ex: francais]
 ### Guide EBSE `[CONFIGURER]`
 
 ```
-Chemin : [ex: ../EBSE-guide/data/decisions/]
-Decision tree : [ex: ../EBSE-guide/data/decision-tree.json]
-Domaine ai-collaboration : [ex: ../EBSE-guide/data/decisions/ai-agent-*.json]
-Profil projet : [ex: ../EBSE-guide/data/stacks/ols.json]
+Chemin : [ex: ../ebse-scaffold/guide/data/decisions/]
+Decision tree : [ex: ../ebse-scaffold/guide/data/decision-tree.json]
+Domaine ai-collaboration : [ex: ../ebse-scaffold/guide/data/decisions/ai-agent-*.json]
+Profil projet : [ex: ../ebse-scaffold/guide/data/stacks/ols.json]
 ```
 
 **Regles d'utilisation du profil :**
-- **En debut de session** : verifier que `guide_version` dans le profil correspond a la version dans `data/decision-tree.json`. Si different → escalade PO avant toute decision technique (les recommandations peuvent avoir change)
+- **En debut de session** : verifier que `guide_version` dans le profil correspond a la version dans `guide/data/decision-tree.json`. Si different → escalade PO avant toute decision technique (les recommandations peuvent avoir change)
 - Pour toute decision technique, lire le fichier `*-recommendations.json` du profil projet (recommandations pre-calculees filtrees pour la stack)
-- Si le guide est complete (nouveau PICOC, nouvelle decision) : lancer `node scripts/generate-recommendations.js` et commiter le profil mis a jour dans EBSE-guide
+- Si le guide est complete (nouveau PICOC, nouvelle decision) : lancer `node guide/scripts/generate-recommendations.js` et commiter le profil mis a jour dans ebse-scaffold
 
 ### Settings agent `[CONFIGURER]`
 
@@ -635,4 +635,4 @@ COMMAND=$(echo "$CLAUDE_TOOL_INPUT" | python3 -c "import sys,json; d=json.load(s
 | Modes defaillance (MAST taxonomie) | PICOC #25 | MAST NeurIPS 2025 arXiv:2503.13657, Who&When ICML 2025 | — |
 | Supervision HOTL/HITL | PICOC #26 | Magentic-UI arXiv:2507.22358, HULA ICSE 2025 | — |
 | Process redesign avant delegation | PICOC #27 | McKinsey N=1993, Deloitte "workslop" 2026, METR RCT | — |
-| Framework custom vs pre-construit (scaffold) | PICOC #28 | PREUVE INSUFFISANTE — Agarwal MSR '26, Wang arXiv:2512.01939 | — |
+| Framework custom vs pre-construit (scaffold) | PICOC #28 | GRADE 3 RECOMMANDE_FRAGILE — Claude Code configuré = 83.8% PR acceptance (arXiv:2509.14745, N=567) ; Devin 42.9-49% prod (MSR '26, N=8106) ; frameworks LangChain/AutoGen = 0-13% autonomie multi-step | — |

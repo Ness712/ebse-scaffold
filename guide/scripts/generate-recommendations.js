@@ -5,7 +5,7 @@
 const fs = require('fs');
 const path = require('path');
 
-const BASE = path.join(__dirname, '..');
+const BASE = path.join(__dirname, '../..');
 const DECISIONS_DIR = path.join(BASE, 'guide/data/decisions');
 const TREE_PATH = path.join(BASE, 'guide/data/decision-tree.json');
 const STACKS_DIR = path.join(BASE, 'guide/data/stacks');
