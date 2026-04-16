@@ -6,6 +6,8 @@ Ce repo est un **guide de decisions techniques universel** base sur la methodolo
 
 **Methodologie obligatoire** : voir [methodology.md](methodology.md) — source unique. **Lire methodology.md en entier avant toute modification.** Suivre a 100%, sans raccourcis.
 
+**Source d'abord, regle ensuite** : toute regle ajoutee au guide ou aux templates doit avoir sa source identifiee AVANT d'etre ecrite. Jamais l'inverse (raisonner une regle puis chercher une source pour la justifier apres coup). Si aucune source n'existe → noter le gap, traiter comme tache EBSE dediee.
+
 ---
 
 ## Ou trouver quoi
