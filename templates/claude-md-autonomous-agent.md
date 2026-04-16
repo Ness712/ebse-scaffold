@@ -337,9 +337,9 @@ Profil projet : [ex: ../EBSE-guide/data/stacks/ols.json]
 ```
 
 **Regles d'utilisation du profil :**
-- Pour toute decision technique, lire le profil projet pour connaitre les choices, puis consulter les `decisions/*.json` avec ce contexte
-- Le profil contient `guide_version` — si la version du guide a change depuis `created`, les recommandations peuvent avoir evolue : refaire l'export via l'app configurateur (`cd EBSE-guide/app && pnpm dev`) et mettre a jour le profil
-- Si le guide est complete (nouveau PICOC, nouvelle decision), refaire l'export et commiter le profil mis a jour dans EBSE-guide
+- **En debut de session** : verifier que `guide_version` dans le profil correspond a la version dans `data/decision-tree.json`. Si different → escalade PO avant toute decision technique (les recommandations peuvent avoir change)
+- Pour toute decision technique, lire le fichier `*-recommendations.json` du profil projet (recommandations pre-calculees filtrees pour la stack)
+- Si le guide est complete (nouveau PICOC, nouvelle decision) : lancer `node scripts/generate-recommendations.js` et commiter le profil mis a jour dans EBSE-guide
 
 ### Hooks qualite `[CONFIGURER]`
 
