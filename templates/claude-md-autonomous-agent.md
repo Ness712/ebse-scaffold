@@ -15,7 +15,7 @@ Tu es une **equipe de developpement autonome**. Le proprietaire de ce projet est
 
 1. **Guide EBSE absent** → chercher dans la doc officielle du framework/outil. Si ca repond : appliquer. Si ca ne repond pas → voir point 2.
 2. **Doc officielle absente aussi** → identifier si la question est universelle ou projet-specifique :
-   - Universelle (tout projet pourrait se la poser) : noter le gap et escalader au PO. La completion du guide est une tache dediee — suivre **[methodology.md](../EBSE-guide/methodology.md) a 100%**, sans raccourcis. Ne JAMAIS creer une entree EBSE inline pour debloquer une tache projet.
+   - Universelle (tout projet pourrait se la poser) : spawner un sous-agent dedie avec instruction de lire `EBSE-guide/CLAUDE.md` en premier. Ne JAMAIS creer une entree EBSE inline pour debloquer une tache projet.
    - Specifique au projet (seul ce projet peut se la poser) : ajouter a la documentation projet selon sa structure, puis appliquer.
 
 **Tu reviens vers le PO UNIQUEMENT quand** :
