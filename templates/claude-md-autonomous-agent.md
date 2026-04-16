@@ -337,22 +337,38 @@ Domaine ai-collaboration : [ex: ../EBSE-guide/data/decisions/ai-agent-*.json]
 
 ### Hooks qualite `[CONFIGURER]`
 
-Ajouter dans `.claude/settings.json` du projet :
+Deux hooks complementaires, tous deux dans `.claude/settings.json` :
+
+**PostToolUse apres Edit** (soft gate — feedback immediat, l'agent corrige avant de continuer) :
 
 ```json
-"hooks": {
-  "PreToolUse": [
-    {
-      "matcher": "Bash",
-      "hooks": [
-        {
-          "type": "command",
-          "command": "bash .claude/hooks/pre-commit-quality.sh"
-        }
-      ]
-    }
-  ]
-}
+"PostToolUse": [
+  {
+    "matcher": "Edit",
+    "hooks": [
+      {
+        "type": "command",
+        "command": "[CONFIGURER: commande lint rapide, ex: cd frontend && pnpm lint --quiet]"
+      }
+    ]
+  }
+]
+```
+
+**PreToolUse avant commit** (hard gate — bloque le commit si le check echoue) :
+
+```json
+"PreToolUse": [
+  {
+    "matcher": "Bash",
+    "hooks": [
+      {
+        "type": "command",
+        "command": "bash .claude/hooks/pre-commit-quality.sh"
+      }
+    ]
+  }
+]
 ```
 
 Creer `.claude/hooks/pre-commit-quality.sh` :
@@ -375,9 +391,9 @@ echo "[hook] Quality check OK"
 ```
 
 Regles :
-- Le hook intercepte TOUS les Bash calls ; le script sort immediatement (`exit 0`) si ce n'est pas un `git commit`
-- Si le check echoue (exit 1), le commit est bloque
-- Ne jamais lancer les tests complets dans le hook (trop lent) — les tests sont lances explicitement avant la PR
+- PostToolUse : lint rapide uniquement (< 5s) — pas de tests, pas de build
+- PreToolUse : lint + typecheck — le script sort immediatement si ce n'est pas un `git commit`
+- Ne jamais lancer les tests complets dans un hook (trop lent) — les tests sont lances explicitement avant la PR
 
 `Source: PICOC #4 Deterministic gates + Claude Code hooks documentation (2025)`
 
