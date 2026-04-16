@@ -2,6 +2,7 @@ import type { UserChoices } from '../../shared/types/decisions';
 import type { FilteredRecommendation } from '../../shared/hooks/use-decisions';
 
 export interface ApiResponse {
+  guide_version: string;
   stack: Record<string, string>;
   recommendations: ApiRecommendation[];
   total: number;
@@ -24,10 +25,12 @@ export interface ApiRecommendation {
 export function generateApiResponse(
   choices: UserChoices,
   filtered: FilteredRecommendation[],
+  guideVersion: string,
 ): ApiResponse {
   const backend = choices.backend ?? 'unknown';
 
   return {
+    guide_version: guideVersion,
     stack: {
       backend: choices.backend ?? 'not set',
       frontend: choices.frontend ?? 'not set',

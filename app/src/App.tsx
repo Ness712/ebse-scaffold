@@ -6,6 +6,7 @@ import { GuideView } from './features/guide/guide-view';
 import { useProfiles } from './shared/hooks/use-profiles';
 import { useAllDecisions, useFilteredDecisions } from './shared/hooks/use-decisions';
 import { generateApiResponse } from './features/export/api-export';
+import decisionTreeData from '../../data/decision-tree.json';
 
 type AppState = 'home' | 'configurator' | 'guide';
 
@@ -27,7 +28,7 @@ export default function App() {
   };
 
   const handleExport = () => {
-    const apiResponse = generateApiResponse(choices, filtered);
+    const apiResponse = generateApiResponse(choices, filtered, decisionTreeData.version);
     const blob = new Blob([JSON.stringify(apiResponse, null, 2)], { type: 'application/json' });
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
