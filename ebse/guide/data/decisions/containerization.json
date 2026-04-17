@@ -85,6 +85,48 @@
             "year": 2025
           }
         ]
+      },
+      {
+        "text": "Valider localement avant chaque push CI quand Dockerfile ou docker-compose.yml est modifie : `docker build --check` (lint Dockerfile, < 1 sec) + `docker compose config` (validation YAML compose). Evite un pipeline complet de 10-20 min pour chaque erreur de syntaxe ou de configuration.",
+        "grade": 5,
+        "level": "STANDARD",
+        "sources": [
+          {
+            "name": "Docker Blog — Introducing Docker Build Checks (\"A good practice is to evaluate a new or updated Dockerfile before committing or sharing your changes\")",
+            "pyramid": 3,
+            "year": 2024
+          },
+          {
+            "name": "Docker Docs — Build checks (docker build --check, \"faster feedback typically completes in less than a second\")",
+            "pyramid": 3,
+            "year": 2024
+          },
+          {
+            "name": "DORA — Capabilities: Continuous Integration (\"Each commit should trigger a series of automated tests that provide feedback in a few minutes\")",
+            "pyramid": 2,
+            "year": 2024
+          },
+          {
+            "name": "Docker Blog — Shift-Left Testing with Testcontainers (\"local integration testing enables at least 65% faster defect identification than testing on a Shared Integration Environment\")",
+            "pyramid": 3,
+            "year": 2024
+          },
+          {
+            "name": "Microsoft DevOps Docs — Shift testing left (\"Shifting left ensures that most testing is completed before a change merges into the main branch\")",
+            "pyramid": 3,
+            "year": 2025
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 3,
+          "plus": [
+            "convergence : 5 sources independantes (Docker + DORA + Microsoft) arrivent a la meme conclusion",
+            "effet important : feedback < 1 sec vs 10-20 min pipeline, 65% reduction Lead Time for Changes"
+          ],
+          "minus": []
+        },
+        "v3_review": "2026-04-17",
+        "robustness": "FRAGILE"
       }
     ]
   },
