@@ -131,9 +131,10 @@ Si le hook n'est pas encore configure, ces violations restent non-detecees — c
 1. **Typecheck + lint** — hooks automatiques, corriger si echec AVANT de continuer
 2. **Tests unitaires** — lancer la suite de tests, zero regression toleree
 3. **Build** — verifier que le build passe. **Si Dockerfile ou docker-compose modifie** → `docker build --check` + `docker compose config` avant tout push (feedback < 1 sec vs 10-20 min pipeline CI — PICOC containerization STANDARD)
-4. **Dependency audit** — `npm audit --audit-level=high` / `pnpm audit` (taux hallucination 19.7% — Spracklen 2024) : bloque si vulnerabilites critiques
-5. **SAST** — utiliser l'outil configure pour le projet (`[CONFIGURER: ex: SonarQube deja en CI, eslint-plugin-security, Semgrep]`). Note : SAST seul detecte 55-65% des defauts — necessaire mais non suffisant (`linting.json`, Capers Jones 13k+ projets).
-6. **Review sub-agent** — apres feature complete, spawn un reviewer independant :
+4. **Attente pipeline CI** — pour surveiller un pipeline GitHub Actions apres push, utiliser `gh run watch <run-id> --exit-status` en `run_in_background: true`. **Ne jamais faire de polling manuel** (boucle sleep/until ou ScheduleWakeup repetitif) — `gh run watch` bloque et notifie a la fin en une seule fois.
+5. **Dependency audit** — `npm audit --audit-level=high` / `pnpm audit` (taux hallucination 19.7% — Spracklen 2024) : bloque si vulnerabilites critiques
+6. **SAST** — utiliser l'outil configure pour le projet (`[CONFIGURER: ex: SonarQube deja en CI, eslint-plugin-security, Semgrep]`). Note : SAST seul detecte 55-65% des defauts — necessaire mais non suffisant (`linting.json`, Capers Jones 13k+ projets).
+7. **Review sub-agent** — apres feature complete, spawn un reviewer independant :
    ```
    Agent({model: "sonnet", prompt: "Review ce diff pour : 1) bugs et securite (OWASP Top 10), 2) violations conventions du projet, 3) alignment avec les recommandations EBSE ([CONFIGURER: chemin recommendations, ex: ../ebse-scaffold/ebse/guide/data/stacks/ols-recommendations.json]). Contexte frais — sois critique. Rapport structure : Problemes bloquants / Avertissements / Verdict OK ou KO."})
    ```
@@ -142,8 +143,8 @@ Si le hook n'est pas encore configure, ces violations restent non-detecees — c
 **Chemins critiques — review ligne par ligne obligatoire** (PICOC #13 — Shukla 2025: +37.6% vulnerabilites apres 5 iterations IA sans review active) :
 - Les fichiers dans les chemins critiques (`[CONFIGURER: ex: auth/**, security/**, migrations/**]`) necessitent une **review ligne par ligne par le PO** avant merge — le rapport sub-agent ne suffit pas
 - L'agent genere une explication de chaque changement sur ces chemins dans la description de PR
-7. **Test E2E navigateur** — pour les changements frontend, utilise Playwright MCP pour tester reellement l'app dans un navigateur
-8. **Verification deps** — avant d'ajouter une dependance, verifier qu'elle existe REELLEMENT (npm info / pip show / mvn search). Ne jamais inventer un package.
+8. **Test E2E navigateur** — pour les changements frontend, utilise Playwright MCP pour tester reellement l'app dans un navigateur. **Ne JAMAIS fermer le navigateur** (browser_close ou kill du process) — ouvrir une nouvelle fenetre/tab si besoin. Fermer le navigateur casse le profil MCP et bloque les sessions suivantes.
+9. **Verification deps** — avant d'ajouter une dependance, verifier qu'elle existe REELLEMENT (npm info / pip show / mvn search). Ne jamais inventer un package.
 
 **TDD Loop** (PICOC #15 — TDFlow: 94.3% vs 69.8% avec tests humains vs tests agent) :
 - Ideal : l'humain ecrit le test qui echoue, l'agent itere jusqu'au vert
@@ -652,6 +653,31 @@ exit 0
 ```
 
 `Source: PICOC #4 Deterministic gates + PICOC #20 Accountability + Claude Code hooks documentation (2025)`
+
+**5. Stop — notification OS quand Claude termine** :
+
+```json
+"Stop": [{ "hooks": [{ "type": "command", "command": "bash .claude/hooks/stop-notify.sh" }] }]
+```
+
+Script `.claude/hooks/stop-notify.sh` (Windows) — notification toast visible :
+```bash
+#!/bin/bash
+powershell.exe -NonInteractive -NoProfile -Command "
+  Add-Type -AssemblyName System.Windows.Forms
+  Add-Type -AssemblyName System.Drawing
+  \$n = New-Object System.Windows.Forms.NotifyIcon
+  \$n.Icon = [System.Drawing.SystemIcons]::Information
+  \$n.Visible = \$true
+  \$n.ShowBalloonTip(10000, 'Claude Code', 'Tache terminee — en attente de ta reponse.', [System.Windows.Forms.ToolTipIcon]::Info)
+  Start-Sleep 11
+  \$n.Dispose()
+" 2>/dev/null &
+```
+
+Sur macOS/Linux, remplacer par `osascript -e 'display notification "Tache terminee" with title "Claude Code"'` ou `notify-send`.
+
+`Source: Claude Code hooks documentation — Stop event (docs.anthropic.com/en/docs/claude-code/hooks)`
 
 ---
 
