@@ -199,7 +199,15 @@ Tu geres le git workflow **entierement seul** :
 
 ## Monitoring autonome
 
-Periodiquement (apres chaque feature livree, ou quand le PO le demande), tu verifies proactivement :
+Preference : monitoring **proactif** (alerte-driven) sur reactif (attente signalement utilisateur). Quand une alerte se declenche, investiguer immediatement. Ne pas surveiller passivement les dashboards sans alerte — configurer les alertes correctement plutot que "stare at a screen" (Google SRE Book). `Source: PICOC #30 ai-agent-monitoring-review-cadence (BONNE PRATIQUE)`
+
+**Declencheurs de revue :**
+1. **Apres chaque deploy** (staging ou prod) — verifier erreurs runtime et metriques infra dans les minutes suivant le deploy
+2. **Quotidiennement** — trier les nouvelles issues dans l'outil d'error tracking (Review List / For Review : issues avec state change dans les 7 derniers jours)
+3. **Regulierement** — revoir la configuration des alertes ; supprimer celles non actionnables (alertes exercees moins d'une fois par trimestre = candidates a la suppression)
+4. **Apres incident** — post-mortem : identifier les indicateurs predicteurs, les ajouter aux alertes
+
+**Outils a verifier :**
 
 - **Erreurs runtime** : `[CONFIGURER: outil et commande, ex: curl GlitchTip API pour lire les erreurs recentes]`
 - **Qualite statique** : `[CONFIGURER: outil et commande, ex: sonar-scanner ou eslint --report]`
@@ -207,7 +215,7 @@ Periodiquement (apres chaque feature livree, ou quand le PO le demande), tu veri
 - **Health check infra** : `[CONFIGURER: outil et commande, ex: curl Grafana API pour metriques]`
 - **Tests E2E** : `[CONFIGURER: script ou MCP, ex: Playwright MCP browser_navigate + assertions]`
 
-Si des issues sont detectees, tu les corriges ou tu escalades au PO si c'est hors de ton scope.
+Si des issues sont detectees, les corriger ou escalader au PO si hors scope.
 
 **Evaluation multi-dimensionnelle CLEAR** (PICOC #23 — GRADE 4) : evaluer l'agent sur 5 dimensions, pas seulement le task completion :
 - **Cost** — cout token/monetaire par tache
@@ -321,9 +329,11 @@ Agent({
 3. **SAST sur diffs agent** : cibler `git diff main...HEAD` — pas l'ensemble du codebase.
 4. **Runtime observability** post-merge : monitoring erreurs (GlitchTip, Sentry), métriques infra (Grafana/Prometheus), tests E2E navigateur (Playwright MCP).
 
+**Audit pre-release (PICOC #29)** : avant chaque release milestone (deploy vers utilisateurs reels), effectuer une review complete du codebase — en complement de la verification task-scoped apres chaque tache. Perimetre : fichiers modifies depuis la derniere release tag + chemins critiques. Methode : sous-agent reviewer independant (contexte frais, PICOC #19). Fondement : IEEE 1028-2008 prescrit des Technical Reviews aux jalons du cycle de vie ; McIntosh 2016 demontre que la couverture de review est le facteur #1 correle aux defauts post-release ; le code genere par LLM introduit des defauts non-fonctionnels cumulatifs non detectes par les tests seuls (Sun 2025, JSS). [STANDARD — score GRADE 6/7] `Source: PICOC #29 ai-agent-pre-release-review (IEEE 1028-2008, ISO 12207:2017, McIntosh EMSE 2016, Sun JSS 2025, DORA 2024)`
+
 **Slash commands** : implémenter les vérifications récurrentes comme commandes slash dans `.claude/commands/` avec chemins et procédures pré-remplis. Si la commande ne couvre pas le périmètre, appliquer les principes ci-dessus manuellement.
 
-`Source: PICOC #5 Writer/reviewer + PICOC #10 Silent failure monitoring (Spracklen arXiv:2406.10279, NIST AI 600-1, ISO 42001) + PICOC #19 Verification method (Porter TSE 1995, Lu et al. arXiv:2512.02304, Panickssery NeurIPS 2024 arXiv:2404.13076, Mitropoulos arXiv:2603.18740)`
+`Source: PICOC #5 Writer/reviewer + PICOC #10 Silent failure monitoring (Spracklen arXiv:2406.10279, NIST AI 600-1, ISO 42001) + PICOC #19 Verification method (Porter TSE 1995, Lu et al. arXiv:2512.02304, Panickssery NeurIPS 2024 arXiv:2404.13076, Mitropoulos arXiv:2603.18740) + PICOC #29 Pre-release review (IEEE 1028-2008, McIntosh EMSE 2016, Sun JSS 2025) + PICOC #30 Monitoring review cadence (DORA 2014+, Sentry docs, Google SRE Book)`
 
 ---
 
@@ -609,3 +619,5 @@ COMMAND=$(echo "$CLAUDE_TOOL_INPUT" | python3 -c "import sys,json; d=json.load(s
 | Supervision HOTL/HITL | PICOC #26 | Magentic-UI arXiv:2507.22358, HULA ICSE 2025 | — |
 | Process redesign avant delegation | PICOC #27 | McKinsey N=1993, Deloitte "workslop" 2026, METR RCT | — |
 | Framework custom vs pre-construit (scaffold) | PICOC #28 | GRADE 3 RECOMMANDE_FRAGILE — Claude Code configuré = 83.8% PR acceptance (arXiv:2509.14745, N=567) ; Devin 42.9-49% prod (MSR '26, N=8106) ; frameworks LangChain/AutoGen = 0-13% autonomie multi-step | — |
+| Pre-release review codebase (vs task-scoped) | PICOC #29 | GRADE 6 STANDARD — IEEE 1028-2008 + ISO 12207:2017 prescrivent reviews aux milestones ; McIntosh EMSE 2016 : couverture review = facteur #1 correle aux defauts post-release ; Sun JSS 2025 : defauts LLM non-fonctionnels non detectes par tests ; DORA 2024 N=39 000+ : bug rate +9% code IA | — |
+| Monitoring review cadence (proactif vs reactif) | PICOC #30 | GRADE 2 BONNE PRATIQUE — DORA 2014 : monitoring proactif = predicteur significatif performance livraison ; Sentry docs : 'review this list once a day' (Review List) ; SRE Book Chap. 6 : symptom-based alerting > cause-based, 'stare at screen' a eviter | — |

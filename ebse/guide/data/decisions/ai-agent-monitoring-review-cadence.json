@@ -1,0 +1,89 @@
+{
+  "id": "ai-agent-monitoring-review-cadence",
+  "domain": "ai-collaboration",
+  "question": "Quand et à quelle fréquence un agent IA autonome doit-il consulter les données des outils de monitoring (error tracking, métriques infra) et corriger les problèmes détectés ?",
+  "depends_on": ["ai-agent-silent-failure-monitoring", "ai-agent-deterministic-gates"],
+  "tags": [
+    "ai-collaboration",
+    "monitoring",
+    "observability",
+    "error-tracking",
+    "mttd",
+    "mttr",
+    "alert-fatigue",
+    "proactive"
+  ],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "Préférer le monitoring proactif (alerte-driven) au réactif (attente du signalement utilisateur) : configurer des alertes symptom-based qui déclenchent automatiquement la revue, plutôt que surveiller passivement les dashboards ('stare at a screen'). Quand déclencher la revue : (1) après chaque deploy en staging ou production — vérifier les erreurs runtime et les métriques infra dans les minutes suivant le deploy ; (2) quotidiennement — trier les nouvelles issues dans l'outil d'error tracking (Sentry/GlitchTip : Review List 'For Review', recommandation explicite 'once a day') ; (3) régulièrement — revoir la configuration des alertes pour supprimer celles non actionnables (SRE Book : alertes exercées moins d'une fois par trimestre = candidates à la suppression) ; (4) après incident — post-mortem identifiant les indicateurs qui auraient pu prédire l'incident, les ajouter aux alertes. Fondements : (1) DORA 2014 démontre que le monitoring proactif est un prédicteur statistiquement significatif de la performance de livraison logicielle — les équipes ayant des failures détectées par les clients ('external to the operations team') ont des performances dégradées ; (2) Sentry docs prescrit explicitement 'review this list once a day' pour la Review List (issues avec state change dans les 7 derniers jours) ; (3) Google SRE Book (Chap. 6) prescrit symptom-based alerting > cause-based, et explicitement : 'every page should be actionable' — les alertes non actionnables sont à supprimer, pas à ignorer.",
+        "grade": 2,
+        "level": "BONNE PRATIQUE",
+        "sources": [
+          {
+            "name": "DORA — Proactive Failure Notification (dora.dev/capabilities/proactive-failure-notification/)",
+            "pyramid": 4,
+            "year": 2024,
+            "quote": "Proactive failure notification is the practice of generating notifications when monitored values approach known failure thresholds, and not waiting for the system to alert you it has already failed. [...] The 2014 DORA research showed that proactive monitoring is a significant predictor of software delivery performance. [...] When failures are instead primarily reported by a source external to the operations team, such as by the network operations center (NOC) — or worse, by customers — rather than internal monitoring, performance suffers.",
+            "note": "DORA (Google Cloud programme). Conflit d'intérêt modéré. Citation VÉRIFIÉE Reviewer B (URL accédée). Définition canonique proactive failure notification. Niveau 4 (prescription issue d'enquêtes DORA empiriques)."
+          },
+          {
+            "name": "DORA — Monitoring and Observability (dora.dev/capabilities/monitoring-and-observability/)",
+            "pyramid": 4,
+            "year": 2024,
+            "quote": "The key metric in the event of an outage or service degradation is time-to-restore (TTR). A key contributor to TTR is the ability to rapidly understand what broke and the quickest path to restoring service. [...] MTTD, MTTR, impact. The bottom line is time to detect, time to resolve, and impact.",
+            "note": "DORA (Google Cloud programme). Citation VÉRIFIÉE Reviewer B + Agent C. Définit TTR comme métrique clé ; prescrit symptom-based alerting > cause-based. Niveau 4."
+          },
+          {
+            "name": "Sentry — Alerts Best Practices (docs.sentry.io/product/alerts/best-practices/)",
+            "pyramid": 3,
+            "year": 2024,
+            "quote": "To deal with this, the Issues page includes the Review List (in the 'For Review' tab), containing only issues that have had a state change in the last seven days. We recommended that you review this list once a day.",
+            "note": "Documentation officielle Sentry Inc. Conflit d'intérêt élevé (outil commercial). Seule source fournissant une cadence chiffrée explicite ('once a day'). Citation VÉRIFIÉE Agent C + Reviewer B (URL accédée). Niveau 3."
+          },
+          {
+            "name": "Beyer B., Jones C., Petoff J., Murphy R.N.V. — Site Reliability Engineering: How Google Runs Production Systems (O'Reilly, 2016), Chapter 6: Monitoring Distributed Systems",
+            "pyramid": 5,
+            "year": 2016,
+            "quote": "SRE teams carefully avoid any situation that requires someone to 'stare at a screen to watch for problems.' [...] Every page should be actionable. Every page response should require intelligence. If a page merely merits a robotic response, it shouldn't be a page. [...] Data collection, aggregation, and alerting configuration that is rarely exercised (e.g., less than once a quarter for some SRE teams) should be up for removal.",
+            "note": "Expert reconnu (Google SRE). Niveau 5. Conflit d'intérêt partiel (Google). Citations VÉRIFIÉES Agent C + Reviewer B (chapitres publics sre.google). Prescrit anti-'stare at screen' + revue configuration alertes (cadence : moins d'une fois par trimestre → candidat suppression)."
+          },
+          {
+            "name": "DORA — 2024 Accelerate State of DevOps Report (N=39 000+)",
+            "pyramid": 4,
+            "year": 2024,
+            "quote": "DORA has been investigating the capabilities, practices, and measures of high-performing technology-driven teams and organizations for over a decade. [...] Failed deployment recovery time: The time it takes to recover from a deployment that fails and requires immediate intervention.",
+            "note": "Enquête DORA N=39 000+. Conflit d'intérêt modéré (Google Cloud + sponsors). PDF non extractible directement — chiffres FDRT vérifiés par recoupement multi-sources secondaires (statut PARTIEL). Niveau 4. Introduit FDRT comme métrique de récupération post-deploy."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 2,
+          "plus": [
+            "convergence : DORA (2 pages distinctes) + Sentry + SRE Book (Chap. 6) convergent sans contradiction sur : proactif > réactif, symptom-based alerting, revue régulière des issues, suppression des alertes non actionnables — 3 organisations indépendantes",
+            "effet_important : DORA établit statistiquement que le monitoring proactif prédit la performance de livraison (depuis 2014 research) ; SRE Book quantifie le coût humain du paging excessif ('a few times a day before fatigue') ; elite performers FDRT < 1 heure vs low performers > 1 semaine (gap évident)"
+          ],
+          "minus": [
+            "conflit_interet : dominant dans 4/5 sources — DORA (Google Cloud), Sentry (produit commercial), SRE Book (Google) — seule la CNCF Whitepaper (Agent C) est neutre mais ne prescrit pas de cadence",
+            "indirectness : SRE Book = contexte big-tech (10-12 SRE par équipe, NOC, rotation on-call formelle) — éloigné du P (1-10 devs) ; DORA couvre toutes tailles mais sans segmentation explicite sur les petites équipes ; la cadence 'once a day' de Sentry est spécifique à la Review List, pas à l'ensemble du monitoring"
+          ]
+        },
+        "robustness": "FRAGILE",
+        "critical_sources": [
+          "DORA Proactive Failure Notification (lien statistique proactif → performance, source la plus directe)",
+          "Sentry docs (seule source fournissant une cadence chiffrée — 'once a day')"
+        ],
+        "etd_balance": {
+          "benefices": "Réduction du MTTD (Mean Time To Detect) — les issues sont détectées avant les utilisateurs ; réduction du MTTR via diagnostic plus rapide quand les alertes sont bien configurées ; réduction de l'alert fatigue via suppression des alertes non actionnables ; visibilité post-deploy immédiate sur les régressions introduites par l'agent IA",
+          "risques": "Sur-alerting initial si la configuration n'est pas affinée progressivement (alert fatigue inverse) ; temps de triage quotidien non négligeable si le volume d'issues est élevé ; la cadence 'once a day' peut ne pas être appropriée pour tous les contextes (équipe très petite = moins d'issues, cadence hebdomadaire peut suffire)",
+          "balance": "Bénéfices > Risques — le monitoring proactif est un prédicteur établi de la performance ; le coût de triage quotidien est structurellement inférieur au coût d'un incident découvert par les utilisateurs",
+          "faisabilite": "Haute — outils disponibles dans la stack OLS : GlitchTip (compatible Sentry SDK), Grafana/Prometheus, SonarQube ; commandes curl dans CLAUDE.md ; hooks Claude Code pour automatiser le déclenchement post-deploy"
+        },
+        "prisma_ref": "verification/prisma/ai-agent-monitoring-review-cadence.md",
+        "sensitivity_ref": "verification/extractions/ai-agent-monitoring-review-cadence.md",
+        "date_extraction": "2026-04-17"
+      }
+    ]
+  },
+  "variants": {}
+}

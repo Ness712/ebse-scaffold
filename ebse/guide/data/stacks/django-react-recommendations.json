@@ -1,15 +1,99 @@
 {
   "guide_version": "2026.04.5",
-  "generated_at": "2026-04-16T16:15:34.490Z",
+  "generated_at": "2026-04-17T07:03:03.487Z",
   "profile_id": "django-react",
   "stack": {
     "backend": "python-django",
     "frontend": "react",
     "database": "postgresql"
   },
-  "total": 177,
+  "total": 180,
   "methodology": "EBSE (Kitchenham 2004), adapted from Evidence-Based Medicine",
   "recommendations": [
+    {
+      "id": "database-migrations",
+      "domain": "reliability",
+      "question": "Comment gerer les migrations de base de donnees de maniere versionnee et reproductible ?",
+      "recommendation": "Built-in manage.py migrate — Django inclut un systeme de migrations robuste et mature. Commandes : makemigrations, migrate, showmigrations.",
+      "grade": 7,
+      "level": "RECOMMANDE",
+      "is_universal": false,
+      "sources": [
+        {},
+        {}
+      ]
+    },
+    {
+      "id": "ui-lucide-react",
+      "domain": "ui-libraries",
+      "question": "Quel outil pour les icones ?",
+      "recommendation": "lucide-react",
+      "grade": 7,
+      "level": "STANDARD",
+      "implementation": "pnpm add lucide-react",
+      "is_universal": false,
+      "sources": [
+        {
+          "name": "npm trends",
+          "pyramid": 4,
+          "year": 2026
+        },
+        {
+          "name": "Lucide docs",
+          "pyramid": 5,
+          "year": 2026
+        }
+      ]
+    },
+    {
+      "id": "ui-tanstack-react-query",
+      "domain": "ui-libraries",
+      "question": "Quel outil pour le data fetching et le cache client ?",
+      "recommendation": "@tanstack/react-query",
+      "grade": 7,
+      "level": "STANDARD",
+      "implementation": "pnpm add @tanstack/react-query",
+      "is_universal": false,
+      "sources": [
+        {
+          "name": "npm trends",
+          "pyramid": 4,
+          "year": 2026
+        },
+        {
+          "name": "State of JS 2024",
+          "pyramid": 4,
+          "year": 2024
+        },
+        {
+          "name": "TanStack Query docs",
+          "pyramid": 5,
+          "year": 2026
+        }
+      ]
+    },
+    {
+      "id": "ui-tanstack-react-table",
+      "domain": "ui-libraries",
+      "question": "Quel outil pour les tables avec tri, filtre et pagination ?",
+      "recommendation": "@tanstack/react-table",
+      "grade": 7,
+      "level": "STANDARD",
+      "implementation": "pnpm add @tanstack/react-table",
+      "is_universal": false,
+      "sources": [
+        {
+          "name": "npm trends",
+          "pyramid": 4,
+          "year": 2026
+        },
+        {
+          "name": "TanStack Table docs",
+          "pyramid": 5,
+          "year": 2026
+        }
+      ]
+    },
     {
       "id": "active-states",
       "domain": "design",
@@ -48,6 +132,62 @@
           "name": "Sara Soueidan — Focus Indicators",
           "pyramid": 3,
           "year": 2022
+        }
+      ]
+    },
+    {
+      "id": "ai-agent-pre-release-review",
+      "domain": "ai-collaboration",
+      "question": "Dans un projet développé par un agent IA autonome, une review complète du codebase doit-elle être effectuée avant chaque release milestone, ou la vérification task-scoped (fichiers modifiés uniquement) est-elle suffisante ?",
+      "recommendation": "Pour un projet développé par un agent IA autonome, effectuer une review complète du codebase avant chaque release milestone — en complément (et non en remplacement) de la vérification task-scoped après chaque tâche (PICOC #19). Fondements : (1) IEEE Std 1028-2008 et ISO/IEC/IEEE 12207:2017 prescrivent des Technical Reviews et decision gates aux jalons du cycle de vie — ces reviews portent sur l'ensemble des artefacts concernés par la release, pas uniquement les derniers changements ; (2) McIntosh et al. (EMSE 2016, répliqué 2020) démontrent que la couverture de review est le facteur le plus fortement corrélé aux défauts post-release — les composants insuffisamment reviewés ont une densité de défauts significativement plus élevée ; (3) Le code généré par LLM introduit des défauts non-fonctionnels cumulatifs (code smells, vulnérabilités, dette technique) non corrélés à la performance fonctionnelle et non capturés par les tests seuls (Sun et al. JSS 2025, 109 papiers) ; (4) DORA 2024 (N=39 000+) montre que le code IA corrèle avec +9% de bug rate, churn doublé et PR +154% — contexte qui augmente précisément le risque de défauts inter-fichiers non détectés par une review task-scoped. Périmètre pratique : fichiers modifiés depuis la dernière release tag + chemins critiques (auth, migrations, infrastructure) — pas l'intégralité historique du codebase.",
+      "grade": 6,
+      "level": "STANDARD",
+      "is_universal": true,
+      "sources": [
+        {
+          "name": "IEEE Std 1028-2008 — IEEE Standard for Software Reviews and Audits",
+          "pyramid": 1,
+          "year": 2008
+        },
+        {
+          "name": "ISO/IEC/IEEE 12207:2017 — Systems and software engineering — Software life cycle processes",
+          "pyramid": 1,
+          "year": 2017
+        },
+        {
+          "name": "IEEE Std 730-2014 — IEEE Standard for Software Quality Assurance Processes",
+          "pyramid": 1,
+          "year": 2014
+        },
+        {
+          "name": "OWASP Code Review Guide v2.0",
+          "pyramid": 2,
+          "year": 2017
+        },
+        {
+          "name": "McIntosh S., Kamei Y., Adams B., Hassan A.E. (2016). An Empirical Study of the Impact of Modern Code Review Practices on Software Quality. Empirical Software Engineering, 21(5), 2146-2189.",
+          "pyramid": 3,
+          "year": 2016
+        },
+        {
+          "name": "Sun X. et al. (2025). Quality Assurance of LLM-generated Code: Addressing Non-Functional Quality Characteristics. Journal of Systems and Software (ScienceDirect / arXiv:2511.10271).",
+          "pyramid": 3,
+          "year": 2025
+        },
+        {
+          "name": "DORA — 2024 Accelerate State of DevOps Report (Google/DORA, N=39 000+)",
+          "pyramid": 4,
+          "year": 2024
+        },
+        {
+          "name": "Capers Jones & Olivier Bonsignour — Software Defect Removal Efficiency (PPI, 2021)",
+          "pyramid": 5,
+          "year": 2021
+        },
+        {
+          "name": "NIST Planning Report 02-3 — The Economic Impacts of Inadequate Infrastructure for Software Testing (Tassey, 2002)",
+          "pyramid": 2,
+          "year": 2002
         }
       ]
     },
@@ -96,6 +236,379 @@
         {
           "name": "Batch 11 — django-redis accord 100%",
           "pyramid": 5,
+          "year": 2026
+        }
+      ]
+    },
+    {
+      "id": "date-time",
+      "domain": "data",
+      "question": "Comment gerer les dates et heures de maniere coherente entre backend, frontend et base de donnees ?",
+      "recommendation": "django.utils.timezone (USE_TZ = True obligatoire). datetime.datetime avec tzinfo=timezone.utc. JAMAIS de datetime naive.",
+      "grade": 6,
+      "level": "STANDARD",
+      "implementation": "settings.py : USE_TZ = True, TIME_ZONE = 'UTC'. timezone.now() pour les dates. DateTimeField stocke en UTC. DRF serialise en ISO 8601 par defaut.",
+      "is_universal": false,
+      "sources": [
+        {
+          "name": "Django docs — time zones",
+          "pyramid": 3,
+          "year": 2024
+        }
+      ]
+    },
+    {
+      "id": "dependency-scanning",
+      "domain": "security",
+      "question": "Comment detecter et gerer les vulnerabilites dans les dependances ?",
+      "recommendation": "Dependabot (GitHub) + pip-audit ou safety en CI",
+      "grade": 6,
+      "level": "STANDARD",
+      "implementation": "Configurer dependabot.yml pour pip (weekly), ajouter pip-audit dans le pipeline CI pour scanner les vulnerabilites PyPI.",
+      "is_universal": false,
+      "sources": [
+        {
+          "name": "pip-audit docs",
+          "pyramid": 3,
+          "year": 2024
+        },
+        {
+          "name": "Dependabot docs",
+          "pyramid": 3,
+          "year": 2024
+        }
+      ]
+    },
+    {
+      "id": "e2e-tests",
+      "domain": "testing",
+      "question": "Quel framework pour les tests end-to-end ?",
+      "recommendation": "Les tests E2E representent ~10% de la pyramide de tests",
+      "grade": 6,
+      "level": "STANDARD",
+      "is_universal": true,
+      "sources": []
+    },
+    {
+      "id": "encoding",
+      "domain": "data",
+      "question": "Quel encodage de caracteres utiliser a travers toutes les couches de l'application ?",
+      "recommendation": "UTF-8 partout : base de donnees, API, fichiers source, HTML. Tout autre choix cause des bugs d'affichage et des failles de securite. 98.2% du web en UTF-8 (Web Almanac 2024).",
+      "grade": 6,
+      "level": "STANDARD",
+      "is_universal": true,
+      "sources": [
+        {
+          "name": "IETF RFC 3629 — standard UTF-8",
+          "pyramid": 1,
+          "year": 2003
+        },
+        {
+          "name": "W3C — UTF-8 obligatoire pour HTML5",
+          "pyramid": 1,
+          "year": 2024
+        },
+        {
+          "name": "Web Almanac 2024",
+          "pyramid": 4,
+          "year": 2024
+        }
+      ]
+    },
+    {
+      "id": "encryption",
+      "domain": "security",
+      "question": "Comment chiffrer les donnees en transit (TLS) et au repos (at-rest) ?",
+      "recommendation": "TLS 1.3 obligatoire pour toutes les communications. HTTPS everywhere avec redirection automatique.",
+      "grade": 6,
+      "level": "STANDARD",
+      "is_universal": true,
+      "sources": [
+        {
+          "name": "NIST SP 800-52 Rev. 2",
+          "pyramid": 1,
+          "year": 2019
+        },
+        {
+          "name": "OWASP ASVS V6",
+          "pyramid": 2,
+          "year": 2021
+        },
+        {
+          "name": "Mozilla TLS Guidelines",
+          "pyramid": 5,
+          "year": 2024
+        }
+      ]
+    },
+    {
+      "id": "safe-defaults",
+      "domain": "safety",
+      "question": "Comment appliquer le principe deny-by-default pour que tout oubli de configuration ne cree pas de faille ?",
+      "recommendation": "Tout est interdit par defaut — autoriser explicitement. Deny-by-default pour l'authorization (.anyRequest().authenticated()), whitelist > blacklist, CORS restrictif (jamais '*' en prod), feature flags off par defaut.",
+      "grade": 6,
+      "level": "STANDARD",
+      "is_universal": true,
+      "sources": [
+        {
+          "name": "OWASP A01:2021 — Broken Access Control, deny by default",
+          "pyramid": 2,
+          "year": 2021
+        },
+        {
+          "name": "SWEBOK v4 — security principles, least privilege",
+          "pyramid": 1,
+          "year": 2024
+        },
+        {
+          "name": "CWE-276 — Incorrect Default Permissions",
+          "pyramid": 2,
+          "year": 2024
+        }
+      ]
+    },
+    {
+      "id": "scaling",
+      "domain": "architecture",
+      "question": "Comment scaler une application web de maniere progressive ?",
+      "recommendation": "Monolithe modulaire d'abord (0-10k users), puis replicas horizontaux avec load balancer (10k-100k), puis read replicas PostgreSQL, puis microservices (rarement justifie avant des centaines de devs).",
+      "grade": 6,
+      "level": "STANDARD",
+      "is_universal": true,
+      "sources": [
+        {
+          "name": "Fowler — MonolithFirst",
+          "pyramid": 5,
+          "year": 2015
+        },
+        {
+          "name": "Twelve-Factor VI — stateless processes",
+          "pyramid": 5,
+          "year": 2012
+        },
+        {
+          "name": "Docker Compose deploy docs — replicas",
+          "pyramid": 3,
+          "year": 2024
+        }
+      ]
+    },
+    {
+      "id": "test-data",
+      "domain": "testing",
+      "question": "Comment gerer les donnees de test (factories, faker, isolation) ?",
+      "recommendation": "factory_boy + Faker pour les factories de donnees de test. factory_boy est le standard Python pour les test factories, integre avec Django ORM.",
+      "grade": 6,
+      "level": "BONNE PRATIQUE",
+      "is_universal": false,
+      "sources": [
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "id": "typescript-strict",
+      "domain": "code-quality",
+      "question": "Faut-il activer le mode strict de TypeScript ?",
+      "recommendation": "strict: true dans tsconfig.json. Active strictNullChecks, noImplicitAny, strictFunctionTypes, strictBindCallApply, strictPropertyInitialization, noImplicitThis, alwaysStrict, useUnknownInCatchVariables.",
+      "grade": 6,
+      "level": "STANDARD",
+      "is_universal": false,
+      "sources": [
+        {
+          "name": "TypeScript docs — strict compiler options",
+          "pyramid": 3,
+          "year": 2024
+        },
+        {
+          "name": "Google TypeScript Style Guide",
+          "pyramid": 5,
+          "year": 2023
+        },
+        {
+          "name": "State of JS 2024",
+          "pyramid": 4,
+          "year": 2024
+        }
+      ]
+    },
+    {
+      "id": "typography",
+      "domain": "design",
+      "question": "Quelles regles typographiques appliquer (taille, line-height, largeur de ligne, echelle) ?",
+      "recommendation": "Body text : 16px minimum. Ne jamais descendre en dessous de 14px pour du texte de contenu.",
+      "grade": 6,
+      "level": "STANDARD",
+      "is_universal": true,
+      "sources": [
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "id": "ui-cmdk",
+      "domain": "ui-libraries",
+      "question": "Quel outil pour la command palette ?",
+      "recommendation": "cmdk",
+      "grade": 6,
+      "level": "RECOMMANDE",
+      "implementation": "pnpm add cmdk",
+      "is_universal": false,
+      "sources": [
+        {
+          "name": "npm trends",
+          "pyramid": 4,
+          "year": 2026
+        },
+        {
+          "name": "cmdk docs",
+          "pyramid": 5,
+          "year": 2026
+        }
+      ]
+    },
+    {
+      "id": "ui-dnd-kit",
+      "domain": "ui-libraries",
+      "question": "Quel outil pour le drag and drop ?",
+      "recommendation": "@dnd-kit/core",
+      "grade": 6,
+      "level": "RECOMMANDE",
+      "implementation": "pnpm add @dnd-kit/core @dnd-kit/sortable @dnd-kit/utilities",
+      "is_universal": false,
+      "sources": [
+        {
+          "name": "npm trends",
+          "pyramid": 4,
+          "year": 2026
+        },
+        {
+          "name": "dnd-kit docs",
+          "pyramid": 5,
+          "year": 2026
+        }
+      ]
+    },
+    {
+      "id": "ui-react-dropzone",
+      "domain": "ui-libraries",
+      "question": "Quel outil pour l'upload de fichiers par drag and drop ?",
+      "recommendation": "react-dropzone",
+      "grade": 6,
+      "level": "RECOMMANDE",
+      "implementation": "pnpm add react-dropzone",
+      "is_universal": false,
+      "sources": [
+        {
+          "name": "npm trends",
+          "pyramid": 4,
+          "year": 2026
+        },
+        {
+          "name": "react-dropzone docs",
+          "pyramid": 5,
+          "year": 2026
+        }
+      ]
+    },
+    {
+      "id": "ui-react-resizable-panels",
+      "domain": "ui-libraries",
+      "question": "Quel outil pour les panels redimensionnables ?",
+      "recommendation": "react-resizable-panels",
+      "grade": 6,
+      "level": "RECOMMANDE",
+      "implementation": "pnpm add react-resizable-panels",
+      "is_universal": false,
+      "sources": [
+        {
+          "name": "npm trends",
+          "pyramid": 4,
+          "year": 2026
+        },
+        {
+          "name": "react-resizable-panels docs",
+          "pyramid": 5,
+          "year": 2026
+        }
+      ]
+    },
+    {
+      "id": "ui-tanstack-react-virtual",
+      "domain": "ui-libraries",
+      "question": "Quel outil pour la virtualisation de listes longues ?",
+      "recommendation": "@tanstack/react-virtual",
+      "grade": 6,
+      "level": "RECOMMANDE",
+      "implementation": "pnpm add @tanstack/react-virtual",
+      "is_universal": false,
+      "sources": [
+        {
+          "name": "npm trends",
+          "pyramid": 4,
+          "year": 2026
+        },
+        {
+          "name": "TanStack Virtual docs",
+          "pyramid": 5,
+          "year": 2026
+        }
+      ]
+    },
+    {
+      "id": "unit-tests",
+      "domain": "testing",
+      "question": "Quel framework et quelle strategie pour les tests unitaires ?",
+      "recommendation": "pytest + pytest-django. pytest est le standard de facto pour Python, pytest-django fournit les fixtures et integration Django.",
+      "grade": 6,
+      "level": "RECOMMANDE",
+      "is_universal": false,
+      "sources": [
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "id": "wcag-level",
+      "domain": "accessibility",
+      "question": "Quel niveau WCAG cibler (A, AA, AAA) ?",
+      "recommendation": "WCAG 2.2 Level AA : obligatoire legalement (EU, US, Canada), contraste 4.5:1, pas de restriction de niveau de lecture (contrairement a AAA qui exige niveau college, impossible pour contenu scientifique).",
+      "grade": 6,
+      "level": "STANDARD",
+      "is_universal": true,
+      "sources": [
+        {},
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "id": "web-mobile-strategy",
+      "domain": "architecture",
+      "question": "Comment rendre une web app accessible sur mobile ?",
+      "grade": 6,
+      "level": "RECOMMANDE",
+      "is_universal": false,
+      "sources": [
+        {
+          "name": "web.dev PWA docs",
+          "pyramid": 3,
+          "year": 2026
+        },
+        {
+          "name": "Can I Use service worker 97%",
+          "pyramid": 4,
+          "year": 2026
+        },
+        {
+          "name": "vite-plugin-pwa 3M+ dl/sem",
+          "pyramid": 4,
           "year": 2026
         }
       ]
@@ -311,6 +824,557 @@
           "name": "SubUX Button Hierarchy",
           "pyramid": 3,
           "year": 2023
+        }
+      ]
+    },
+    {
+      "id": "code-ownership",
+      "domain": "project",
+      "question": "Comment organiser l'ownership du code pour reduire les defauts tout en diffusant la connaissance ?",
+      "recommendation": "Ownership collectif avec domain experts identifies. Pas de proprietaire unique (bus factor de 1). CODEOWNERS pour auto-assign les reviewers. 1 reviewer minimum par PR.",
+      "grade": 5,
+      "level": "STANDARD",
+      "is_universal": true,
+      "sources": [
+        {
+          "name": "Bird et al. 2011 — Microsoft code ownership study (Windows Vista)",
+          "pyramid": 4,
+          "year": 2011
+        },
+        {
+          "name": "GitHub CODEOWNERS docs",
+          "pyramid": 5,
+          "year": 2024
+        }
+      ]
+    },
+    {
+      "id": "code-review",
+      "domain": "code-quality",
+      "question": "Comment organiser les code reviews pour maximiser la detection de defauts ?",
+      "recommendation": "Review obligatoire par au moins 1 pair avant merge. La code review trouve 60-70% des defauts, contre 25-30% pour les tests unitaires seuls.",
+      "grade": 5,
+      "level": "STANDARD",
+      "is_universal": true,
+      "sources": [
+        {
+          "name": "SWEBOK v4 — code inspection as verification technique",
+          "pyramid": 1,
+          "year": 2024
+        },
+        {
+          "name": "SmartBear study — 60-70% defect detection rate",
+          "pyramid": 4,
+          "year": 2015
+        }
+      ]
+    },
+    {
+      "id": "color-system",
+      "domain": "design",
+      "question": "Comment generer un systeme de couleurs coherent pour un design system ?",
+      "recommendation": "3-tier CSS custom property tokens (primitive → semantic → component), generate with HCT (@material/material-color-utilities) or OKLCH. Les primitives definissent la palette brute, les semantiques mappent l'intention (--color-primary, --color-surface), les component tokens specialisent par composant.",
+      "grade": 5,
+      "level": "STANDARD",
+      "is_universal": true,
+      "sources": [
+        {
+          "name": "Material Design 3 Color System",
+          "pyramid": 1,
+          "year": 2024
+        },
+        {
+          "name": "M3 Color Roles",
+          "pyramid": 1,
+          "year": 2024
+        },
+        {
+          "name": "W3C WCAG 1.4.11 Non-text Contrast",
+          "pyramid": 1,
+          "year": 2023
+        },
+        {
+          "name": "EightShapes Color in Design Systems",
+          "pyramid": 3,
+          "year": 2023
+        },
+        {
+          "name": "State of CSS 2024",
+          "pyramid": 4,
+          "year": 2024
+        }
+      ]
+    },
+    {
+      "id": "connection-pooling",
+      "domain": "performance",
+      "question": "Comment configurer le pool de connexions a la base de donnees ?",
+      "recommendation": "Django persistent connections (CONN_MAX_AGE) + django-db-connection-pool ou pgBouncer pour le pooling avance.",
+      "grade": 5,
+      "level": "STANDARD",
+      "implementation": "DATABASES.default.CONN_MAX_AGE = 600 (10min). Pour du vrai pooling : pgBouncer devant PostgreSQL ou django-db-connection-pool.",
+      "is_universal": false,
+      "sources": [
+        {
+          "name": "Django docs — persistent connections",
+          "pyramid": 3,
+          "year": 2024
+        },
+        {
+          "name": "pgBouncer docs",
+          "pyramid": 3,
+          "year": 2024
+        }
+      ]
+    },
+    {
+      "id": "containerization",
+      "domain": "cicd",
+      "question": "Comment conteneuriser l'application (Docker, Dockerfile best practices, orchestration) ?",
+      "recommendation": "Dockerfile multi-stage : eclipse-temurin:21-jdk (build) → eclipse-temurin:21-jre (runtime). Layered JARs via java -Djarmode=tools extract --layers. USER non-root. Image finale ~200MB vs ~800MB sans multi-stage.",
+      "grade": 5,
+      "level": "RECOMMANDE",
+      "is_universal": false,
+      "sources": [
+        {
+          "name": "Spring Boot Container Images docs — layered JARs",
+          "pyramid": 3,
+          "year": 2024
+        },
+        {
+          "name": "Docker best practices docs — multi-stage, non-root",
+          "pyramid": 3,
+          "year": 2024
+        }
+      ]
+    },
+    {
+      "id": "dark-mode",
+      "domain": "design",
+      "question": "Comment implementer un dark mode dans un design system ?",
+      "recommendation": "Simultaneous light+dark avec semantic tokens. Jamais inverser le light. Tonal elevation en dark (surfaces plus claires = plus elevees). prefers-color-scheme par defaut. Chaque semantic token a une valeur light et une valeur dark, switchees via attribut data-theme ou media query.",
+      "grade": 5,
+      "level": "RECOMMANDE",
+      "is_universal": true,
+      "sources": [
+        {
+          "name": "Material Design 3 Dark Theme",
+          "pyramid": 1,
+          "year": 2024
+        },
+        {
+          "name": "Apple HIG Dark Mode",
+          "pyramid": 1,
+          "year": 2024
+        },
+        {
+          "name": "Nielsen Norman Group Dark Mode Research",
+          "pyramid": 2,
+          "year": 2020
+        },
+        {
+          "name": "WCAG 2.2 SC 1.4.3 Contrast",
+          "pyramid": 1,
+          "year": 2023
+        }
+      ]
+    },
+    {
+      "id": "database",
+      "domain": "architecture",
+      "question": "Quelle base de donnees relationnelle choisir pour un nouveau projet ?",
+      "recommendation": "PostgreSQL pour les donnees relationnelles. #1 en adoption (55.6% SO 2025) et admiration (65.5%). 13x plus rapide que MySQL en SELECT 1M records (MDPI 2024, peer-reviewed).",
+      "grade": 5,
+      "level": "STANDARD",
+      "is_universal": true,
+      "sources": [
+        {
+          "name": "SO Survey 2025",
+          "pyramid": 4,
+          "year": 2025
+        },
+        {
+          "name": "SO Survey 2024",
+          "pyramid": 4,
+          "year": 2024
+        },
+        {
+          "name": "JetBrains 2025",
+          "pyramid": 4,
+          "year": 2025
+        },
+        {
+          "name": "DB-Engines 2026",
+          "pyramid": 4,
+          "year": 2026
+        },
+        {
+          "name": "MDPI benchmark 2024",
+          "pyramid": 4,
+          "year": 2024
+        },
+        {
+          "name": "CNCF — CloudNativePG",
+          "pyramid": 2,
+          "year": 2024
+        }
+      ]
+    },
+    {
+      "id": "destructive-confirmation",
+      "domain": "safety",
+      "question": "Comment proteger l'utilisateur contre les actions irreversibles (suppression, ecrasement) ?",
+      "recommendation": "Toute action destructive requiert une confirmation explicite via dialog modale (jamais window.confirm). Privilegier soft-delete + undo quand possible.",
+      "grade": 5,
+      "level": "STANDARD",
+      "is_universal": true,
+      "sources": [
+        {
+          "name": "Apple HIG — confirmation pour actions destructives",
+          "pyramid": 5,
+          "year": 2024
+        },
+        {
+          "name": "Material Design 3 — dialogs de confirmation",
+          "pyramid": 5,
+          "year": 2024
+        },
+        {
+          "name": "WCAG 2.2 SC 3.3.4 — prevention des erreurs, reversibilite",
+          "pyramid": 1,
+          "year": 2023
+        }
+      ]
+    },
+    {
+      "id": "documentation-organization",
+      "domain": "project",
+      "question": "Comment organiser la documentation d'un projet ?",
+      "recommendation": "Split par type/audience (Diataxis): tutorials, how-to guides, reference, explanation. Chaque info a un seul endroit. Mettre a jour docs dans le meme commit que le code. Supprimer docs mortes. Le framework Diataxis evite le melange tutorial/reference qui rend la doc inutilisable.",
+      "grade": 5,
+      "level": "RECOMMANDE",
+      "is_universal": true,
+      "sources": [
+        {
+          "name": "Google SWE Book Ch.10 — Documentation",
+          "pyramid": 2,
+          "year": 2020
+        },
+        {
+          "name": "Google Style Guide — Doc Best Practices",
+          "pyramid": 2,
+          "year": 2024
+        },
+        {
+          "name": "Diataxis Framework",
+          "pyramid": 3,
+          "year": 2024
+        },
+        {
+          "name": "SWEBOK v4 — Software Engineering Management",
+          "pyramid": 1,
+          "year": 2024
+        },
+        {
+          "name": "Martin Fowler — Architecture Decision Records",
+          "pyramid": 2,
+          "year": 2023
+        }
+      ]
+    },
+    {
+      "id": "dto-projection",
+      "domain": "architecture",
+      "question": "Comment exposer les donnees d'une entite via API ?",
+      "recommendation": "Toujours DTO explicite, jamais entite directe. Un DTO par cas d'usage (Summary, Detail, Create, Update). MapStruct pour mappings simples.",
+      "grade": 5,
+      "level": "STANDARD",
+      "is_universal": true,
+      "sources": [
+        {
+          "name": "OWASP API Security Top 10 API3:2023",
+          "pyramid": 1,
+          "year": 2023
+        },
+        {
+          "name": "Spring Data JPA Projections",
+          "pyramid": 1,
+          "year": 2024
+        },
+        {
+          "name": "SWEBOK v4 Information Hiding",
+          "pyramid": 1,
+          "year": 2024
+        },
+        {
+          "name": "Martin Fowler LocalDTO",
+          "pyramid": 2,
+          "year": 2004
+        }
+      ]
+    },
+    {
+      "id": "env-config",
+      "domain": "operations",
+      "question": "Comment gerer la configuration par environnement et les secrets ?",
+      "recommendation": "django-environ pour charger les variables d'environnement dans settings.py. Fichier .env pour le dev local (jamais commite). Variables d'env directes en production.",
+      "grade": 5,
+      "level": "RECOMMANDE",
+      "is_universal": false,
+      "sources": [
+        {
+          "name": "django-environ docs",
+          "pyramid": 3,
+          "year": 2024
+        },
+        {
+          "name": "Twelve-Factor App Factor III",
+          "pyramid": 5,
+          "year": 2012
+        },
+        {
+          "name": "Double extraction batch 10 — accord 96%",
+          "pyramid": 5,
+          "year": 2026
+        }
+      ]
+    },
+    {
+      "id": "environment-management",
+      "domain": "project",
+      "question": "Combien d'environnements maintenir et comment garantir la parite dev/staging/prod ?",
+      "recommendation": "3 environnements : dev (local Docker Compose), staging (auto-deploy miroir exact de prod), prod (CI/CD uniquement, jamais de deploy manuel).",
+      "grade": 5,
+      "level": "STANDARD",
+      "is_universal": true,
+      "sources": [
+        {
+          "name": "SWEBOK v4 ch.8",
+          "pyramid": 1,
+          "year": 2024
+        },
+        {
+          "name": "DORA/Accelerate — predictor of elite performance",
+          "pyramid": 4,
+          "year": 2019
+        },
+        {
+          "name": "Twelve-Factor App",
+          "pyramid": 5,
+          "year": 2017
+        }
+      ]
+    },
+    {
+      "id": "error-handling",
+      "domain": "reliability",
+      "question": "Comment centraliser et securiser le traitement des erreurs ?",
+      "recommendation": "DRF exception handler personnalise pour centraliser le traitement des erreurs. Format RFC 9457 Problem Details dans les reponses. Jamais de stack trace exposee (DEBUG=False en prod).",
+      "grade": 5,
+      "level": "STANDARD",
+      "is_universal": false,
+      "sources": [
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "id": "responsive",
+      "domain": "design",
+      "question": "Quelle strategie responsive adopter (breakpoints, touch targets, mobile-first) ?",
+      "recommendation": "Mobile-first : commencer par le mobile et enrichir progressivement. Breakpoints : sm 640px, md 768px, lg 1024px, xl 1280px, 2xl 1536px.",
+      "grade": 5,
+      "level": "RECOMMANDE",
+      "is_universal": true,
+      "sources": [
+        {},
+        {}
+      ]
+    },
+    {
+      "id": "rewrite-strategy",
+      "domain": "architecture",
+      "question": "Comment organiser une reecriture complete de stack backend ?",
+      "recommendation": "Combinaison Strangler Fig + Spec-first + Test-driven (GRADE 5/7, 32+ sources). Jamais de big bang (20-30% succes, Netscape/Borland). Phase 0 : mapper modules + dependances, extraire contrats API (OpenAPI), ecrire tests d'integration contre l'API actuelle, trier modules du moins couple au plus couple. Phase 1 : reecrire LE module le plus simple, proxy/gateway pour router le trafic, verifier parite, mettre en prod. Phase 2 : module par module (spec → tests → implementer → verifier → basculer), chaque etape reversible (principe Stripe), BDD partagee pendant transition. Phase 3 : decommissionner ancien module par module. Regles : commencer par le plus simple PAS le plus important (SoundCloud lesson), ne jamais pauser le dev de features, garder la fenetre de migration courte par module, automatiser la verification de parite.",
+      "grade": 5,
+      "level": "STANDARD",
+      "is_universal": true,
+      "sources": [
+        {
+          "name": "Fowler — StranglerFigApplication",
+          "pyramid": 2,
+          "year": 2004
+        },
+        {
+          "name": "Spolsky — Things You Should Never Do",
+          "pyramid": 3,
+          "year": 2000
+        },
+        {
+          "name": "Google SWE Book Ch.15 — Deprecation",
+          "pyramid": 2,
+          "year": 2020
+        },
+        {
+          "name": "Stripe Engineering — Online Migrations at Scale",
+          "pyramid": 2,
+          "year": 2017
+        },
+        {
+          "name": "Slack Engineering — Rebuilding Slack on Desktop",
+          "pyramid": 2,
+          "year": 2019
+        },
+        {
+          "name": "Taibi et al. — Processes for Migrating to Microservices (IEEE)",
+          "pyramid": 4,
+          "year": 2017
+        },
+        {
+          "name": "Balalaie et al. — Microservices Migration Patterns (SPE)",
+          "pyramid": 4,
+          "year": 2016
+        },
+        {
+          "name": "Microsoft Azure — Strangler Fig Pattern",
+          "pyramid": 1,
+          "year": 2025
+        },
+        {
+          "name": "Shopify Engineering — Deconstructing the Monolith",
+          "pyramid": 2,
+          "year": 2019
+        },
+        {
+          "name": "ThoughtWorks Technology Radar",
+          "pyramid": 3,
+          "year": 2025
+        }
+      ]
+    },
+    {
+      "id": "secrets-management",
+      "domain": "security",
+      "question": "Comment gerer les secrets (credentials, API keys, tokens) de maniere securisee ?",
+      "recommendation": "django-environ pour la gestion des variables d'environnement",
+      "grade": 5,
+      "level": "RECOMMANDE",
+      "implementation": "Installer django-environ, initialiser env = environ.Env() dans settings.py, lire les valeurs via env('DATABASE_URL'), env('SECRET_KEY').",
+      "is_universal": false,
+      "sources": [
+        {
+          "name": "django-environ docs",
+          "pyramid": 3,
+          "year": 2024
+        }
+      ]
+    },
+    {
+      "id": "shadows",
+      "domain": "design",
+      "question": "Quel systeme d'ombres et d'elevation utiliser ?",
+      "recommendation": "Ombres diffuses sur 4 niveaux (sm/md/lg/xl), jamais de box-shadow durs. Ombres subtiles et multicouches pour hierarchie visuelle naturelle.",
+      "grade": 5,
+      "level": "RECOMMANDE",
+      "is_universal": true,
+      "sources": [
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "id": "soft-delete",
+      "domain": "architecture",
+      "question": "Quand utiliser le soft delete vs hard delete ?",
+      "recommendation": "Soft delete (deletedAt timestamp) pour entites owned restaurables. Hard delete pour donnees techniques/ephemeres. Jamais event sourcing pour du CRUD.",
+      "grade": 5,
+      "level": "STANDARD",
+      "is_universal": true,
+      "sources": [
+        {
+          "name": "Hibernate ORM @SoftDelete",
+          "pyramid": 1,
+          "year": 2024
+        },
+        {
+          "name": "JPA 3.1 Specification",
+          "pyramid": 1,
+          "year": 2023
+        },
+        {
+          "name": "SWEBOK v4 Software Maintenance",
+          "pyramid": 1,
+          "year": 2024
+        },
+        {
+          "name": "Martin Fowler Temporal Patterns",
+          "pyramid": 2,
+          "year": 2005
+        },
+        {
+          "name": "RGPD Article 17 — Droit a l'effacement",
+          "pyramid": 1,
+          "year": 2018
+        }
+      ]
+    },
+    {
+      "id": "surface-elevation",
+      "domain": "design",
+      "question": "Comment organiser la hierarchie visuelle des surfaces (elevation) ?",
+      "recommendation": "5 niveaux (0=base, 1=cards/sidebars, 2=dropdowns/popovers, 3=modals/dialogs, 4=toasts). Tonal elevation en dark mode. Semantic tokens --elevation-0 a --elevation-4. En light mode, ombre portee croissante. En dark mode, surface de plus en plus claire.",
+      "grade": 5,
+      "level": "STANDARD",
+      "is_universal": true,
+      "sources": [
+        {
+          "name": "M3 Elevation",
+          "pyramid": 1,
+          "year": 2024
+        },
+        {
+          "name": "M3 Tone-based Surfaces",
+          "pyramid": 1,
+          "year": 2024
+        },
+        {
+          "name": "Apple HIG Materials",
+          "pyramid": 1,
+          "year": 2024
+        },
+        {
+          "name": "GitLab Pajamas Elevation",
+          "pyramid": 3,
+          "year": 2024
+        },
+        {
+          "name": "designsystems.surf",
+          "pyramid": 4,
+          "year": 2024
+        }
+      ]
+    },
+    {
+      "id": "tech-debt",
+      "domain": "code-quality",
+      "question": "Comment mesurer, prioriser et reduire la dette technique ?",
+      "recommendation": "Mesurer la dette via SonarQube Technical Debt metric. Seuil : ratio dette < 5% (temps remediation / temps dev).",
+      "grade": 5,
+      "level": "STANDARD",
+      "is_universal": true,
+      "sources": [
+        {
+          "name": "SonarQube docs — technical debt metric",
+          "pyramid": 3,
+          "year": 2024
+        },
+        {
+          "name": "Fowler — TechnicalDebt",
+          "pyramid": 5,
+          "year": 2009
         }
       ]
     },
@@ -615,6 +1679,84 @@
       ]
     },
     {
+      "id": "ci-pipeline",
+      "domain": "cicd",
+      "question": "Quel outil CI/CD, quelles stages et quality gates pour le pipeline ?",
+      "recommendation": "GitHub Actions pour les equipes sur GitHub : 53% adoption (SO 2024), 61% equipes 2-10 devs (JetBrains), integration native, 2000 min/mois gratuit, onboarding < 1 jour.",
+      "grade": 4,
+      "level": "RECOMMANDE",
+      "is_universal": true,
+      "sources": [
+        {
+          "name": "SWEBOK v4",
+          "pyramid": 1,
+          "year": 2024
+        },
+        {
+          "name": "DORA State of DevOps 2024",
+          "pyramid": 4,
+          "year": 2024
+        },
+        {
+          "name": "Stack Overflow Survey 2024 — GitHub Actions 53%",
+          "pyramid": 4,
+          "year": 2024
+        },
+        {
+          "name": "JetBrains 2024 — GitHub Actions 52%, 61% in 2-10 dev teams",
+          "pyramid": 4,
+          "year": 2024
+        }
+      ]
+    },
+    {
+      "id": "requirements-format",
+      "domain": "project",
+      "question": "Quel format utiliser pour exprimer les exigences fonctionnelles de maniere structuree et testable ?",
+      "recommendation": "Formuler les exigences en user stories : En tant que [role], je veux [action], afin de [benefice]. Accompagner chaque story de criteres d'acceptation Given/When/Then.",
+      "grade": 4,
+      "level": "RECOMMANDE",
+      "is_universal": true,
+      "sources": [
+        {
+          "name": "SWEBOK v4 — Software Requirements Knowledge Area",
+          "pyramid": 1,
+          "year": 2024
+        },
+        {
+          "name": "Cohn 'User Stories Applied'",
+          "pyramid": 5,
+          "year": 2004
+        }
+      ]
+    },
+    {
+      "id": "reverse-proxy",
+      "domain": "operations",
+      "question": "Quel reverse proxy utiliser (auto-HTTPS, TLS, load balancing) ?",
+      "recommendation": "Caddy pour les petites-moyennes equipes : auto-provision Let's Encrypt, HTTP/2 par defaut, config minimale. Nginx si besoin de controle avance a tres haute charge.",
+      "grade": 4,
+      "level": "RECOMMANDE",
+      "is_universal": true,
+      "sources": [
+        {
+          "name": "Caddy docs — automatic HTTPS",
+          "pyramid": 3,
+          "year": 2024
+        },
+        {
+          "name": "Let's Encrypt stats — 300M+ certificats actifs",
+          "pyramid": 3,
+          "year": 2024
+        },
+        {
+          "name": "OWASP TLS guidelines",
+          "pyramid": 2,
+          "year": 2024
+        }
+      ]
+    },
+    {
       "id": "ai-agent-accountability",
       "domain": "ai-collaboration",
       "question": "Quels mecanismes d'accountability et de gouvernance permettent de s'assurer qu'au moins un humain est responsable des actions d'un agent IA autonome dans un contexte de developpement logiciel ?",
@@ -681,6 +1823,57 @@
         },
         {
           "name": "Toth, Feng et al. arXiv:2509.14745 - Empirical Study of Agentic Coding PRs",
+          "pyramid": 3,
+          "year": 2025
+        }
+      ]
+    },
+    {
+      "id": "ai-agent-framework-vs-prebuilt",
+      "domain": "ai-collaboration",
+      "question": "Pour un PO qui delegue tout le developpement logiciel a l'IA, quel type d'outil agentique est le plus adapte : framework custom (LangChain, AutoGen, CrewAI), systeme pre-construit concu pour l'autonomie (Devin, OpenHands), ou systeme pre-construit configurable (Claude Code + CLAUDE.md) ?",
+      "recommendation": "Pour un PO delegant tout le developpement a l'IA : (1) les frameworks custom (LangChain, AutoGen, CrewAI) sont inadaptes — concus pour des developpeurs qui construisent des agents, pas pour un operateur non-technique ; pas de donnees de production en mode autonome ; performance multi-step mediocre en laboratoire (LangChain 13.3%, AutoGen 0% avec Qwen, arXiv:2504.04650) ; (2) les outils pre-construits concus pour l'autonomie (Devin, OpenHands) sont mieux alignes par design intent mais montrent des taux d'acceptation inferieurs en production reelle (Devin : 42.9-49%, arXiv:2602.00164 MSR '26 N=8106) ; (3) Claude Code configure (CLAUDE.md + hooks + auto mode), bien que concu pour des developpeurs (Anthropic docs officiels : 'decisions about what code ships remain with the human'), atteint 83.8% d'acceptation PRs en production reelle (arXiv:2509.14745, N=567, peer-reviewed) — depassant les outils concus pour l'autonomie. PARADOXE NON EXPLIQUE : outil developeur > outil autonome en production — l'ecart peut refleter une selection de taches plus simples dans les projets utilisant Claude Code plutot qu'une superiorite intrinseque. ROBUSTESSE FRAGILE : les populations de taches ne sont pas identiques entre etudes ; le cas PO-only sans developpeur humain n'a jamais ete etudie directement.",
+      "grade": 3,
+      "level": "RECOMMANDE_FRAGILE",
+      "is_universal": true,
+      "sources": [
+        {
+          "name": "Chen et al. 2025 — On the Use of Agentic Coding: An Empirical Study of Pull Requests on GitHub (arXiv:2509.14745)",
+          "pyramid": 2,
+          "year": 2025
+        },
+        {
+          "name": "Ehsani et al. 2026 — Why AI Agent PRs Remain Unmerged? (arXiv:2602.00164, MSR 2026)",
+          "pyramid": 2,
+          "year": 2026
+        },
+        {
+          "name": "Wang et al. (All-Hands AI) — OpenHands: An Open Platform for AI Software Agents (arXiv:2407.16741, NeurIPS)",
+          "pyramid": 2,
+          "year": 2024
+        },
+        {
+          "name": "Yang et al. (Princeton NLP) — SWE-agent: Agent-Computer Interfaces Enable Automated Software Engineering (arXiv:2405.15793, NeurIPS 2024)",
+          "pyramid": 2,
+          "year": 2024
+        },
+        {
+          "name": "Anthropic — Claude Code Documentation Officielle (code.claude.com/docs)",
+          "pyramid": 3,
+          "year": 2025
+        },
+        {
+          "name": "Dochkina et al. 2026 — The Rise of AI Teammates in SE 3.0 (arXiv:2507.15003)",
+          "pyramid": 3,
+          "year": 2026
+        },
+        {
+          "name": "Wang et al. 2025 — An Empirical Study of Agent Developer Practices in AI Agent Frameworks (arXiv:2512.01939)",
+          "pyramid": 3,
+          "year": 2025
+        },
+        {
+          "name": "Comparaison performance frameworks autonome (arXiv:2504.04650)",
           "pyramid": 3,
           "year": 2025
         }
@@ -1379,6 +2572,42 @@
       ]
     },
     {
+      "id": "ai-agent-monitoring-review-cadence",
+      "domain": "ai-collaboration",
+      "question": "Quand et à quelle fréquence un agent IA autonome doit-il consulter les données des outils de monitoring (error tracking, métriques infra) et corriger les problèmes détectés ?",
+      "recommendation": "Préférer le monitoring proactif (alerte-driven) au réactif (attente du signalement utilisateur) : configurer des alertes symptom-based qui déclenchent automatiquement la revue, plutôt que surveiller passivement les dashboards ('stare at a screen'). Quand déclencher la revue : (1) après chaque deploy en staging ou production — vérifier les erreurs runtime et les métriques infra dans les minutes suivant le deploy ; (2) quotidiennement — trier les nouvelles issues dans l'outil d'error tracking (Sentry/GlitchTip : Review List 'For Review', recommandation explicite 'once a day') ; (3) régulièrement — revoir la configuration des alertes pour supprimer celles non actionnables (SRE Book : alertes exercées moins d'une fois par trimestre = candidates à la suppression) ; (4) après incident — post-mortem identifiant les indicateurs qui auraient pu prédire l'incident, les ajouter aux alertes. Fondements : (1) DORA 2014 démontre que le monitoring proactif est un prédicteur statistiquement significatif de la performance de livraison logicielle — les équipes ayant des failures détectées par les clients ('external to the operations team') ont des performances dégradées ; (2) Sentry docs prescrit explicitement 'review this list once a day' pour la Review List (issues avec state change dans les 7 derniers jours) ; (3) Google SRE Book (Chap. 6) prescrit symptom-based alerting > cause-based, et explicitement : 'every page should be actionable' — les alertes non actionnables sont à supprimer, pas à ignorer.",
+      "grade": 2,
+      "level": "BONNE PRATIQUE",
+      "is_universal": true,
+      "sources": [
+        {
+          "name": "DORA — Proactive Failure Notification (dora.dev/capabilities/proactive-failure-notification/)",
+          "pyramid": 4,
+          "year": 2024
+        },
+        {
+          "name": "DORA — Monitoring and Observability (dora.dev/capabilities/monitoring-and-observability/)",
+          "pyramid": 4,
+          "year": 2024
+        },
+        {
+          "name": "Sentry — Alerts Best Practices (docs.sentry.io/product/alerts/best-practices/)",
+          "pyramid": 3,
+          "year": 2024
+        },
+        {
+          "name": "Beyer B., Jones C., Petoff J., Murphy R.N.V. — Site Reliability Engineering: How Google Runs Production Systems (O'Reilly, 2016), Chapter 6: Monitoring Distributed Systems",
+          "pyramid": 5,
+          "year": 2016
+        },
+        {
+          "name": "DORA — 2024 Accelerate State of DevOps Report (N=39 000+)",
+          "pyramid": 4,
+          "year": 2024
+        }
+      ]
+    },
+    {
       "id": "ai-agent-multi-agent-topology",
       "domain": "ai-collaboration",
       "question": "Quelle architecture multi-agents adopter : writer/reviewer, orchestrator-worker, single-agent avec tool use ?",
@@ -1576,198 +2805,6 @@
       ]
     },
     {
-      "id": "database-migrations",
-      "domain": "reliability",
-      "question": "Comment gerer les migrations de base de donnees de maniere versionnee et reproductible ?",
-      "recommendation": "Built-in manage.py migrate — Django inclut un systeme de migrations robuste et mature. Commandes : makemigrations, migrate, showmigrations.",
-      "grade": 7,
-      "level": "RECOMMANDE",
-      "is_universal": false,
-      "sources": [
-        {},
-        {}
-      ]
-    },
-    {
-      "id": "date-time",
-      "domain": "data",
-      "question": "Comment gerer les dates et heures de maniere coherente entre backend, frontend et base de donnees ?",
-      "recommendation": "django.utils.timezone (USE_TZ = True obligatoire). datetime.datetime avec tzinfo=timezone.utc. JAMAIS de datetime naive.",
-      "grade": 6,
-      "level": "STANDARD",
-      "implementation": "settings.py : USE_TZ = True, TIME_ZONE = 'UTC'. timezone.now() pour les dates. DateTimeField stocke en UTC. DRF serialise en ISO 8601 par defaut.",
-      "is_universal": false,
-      "sources": [
-        {
-          "name": "Django docs — time zones",
-          "pyramid": 3,
-          "year": 2024
-        }
-      ]
-    },
-    {
-      "id": "dependency-scanning",
-      "domain": "security",
-      "question": "Comment detecter et gerer les vulnerabilites dans les dependances ?",
-      "recommendation": "Dependabot (GitHub) + pip-audit ou safety en CI",
-      "grade": 6,
-      "level": "STANDARD",
-      "implementation": "Configurer dependabot.yml pour pip (weekly), ajouter pip-audit dans le pipeline CI pour scanner les vulnerabilites PyPI.",
-      "is_universal": false,
-      "sources": [
-        {
-          "name": "pip-audit docs",
-          "pyramid": 3,
-          "year": 2024
-        },
-        {
-          "name": "Dependabot docs",
-          "pyramid": 3,
-          "year": 2024
-        }
-      ]
-    },
-    {
-      "id": "e2e-tests",
-      "domain": "testing",
-      "question": "Quel framework pour les tests end-to-end ?",
-      "recommendation": "Les tests E2E representent ~10% de la pyramide de tests",
-      "grade": 6,
-      "level": "STANDARD",
-      "is_universal": true,
-      "sources": []
-    },
-    {
-      "id": "encoding",
-      "domain": "data",
-      "question": "Quel encodage de caracteres utiliser a travers toutes les couches de l'application ?",
-      "recommendation": "UTF-8 partout : base de donnees, API, fichiers source, HTML. Tout autre choix cause des bugs d'affichage et des failles de securite. 98.2% du web en UTF-8 (Web Almanac 2024).",
-      "grade": 6,
-      "level": "STANDARD",
-      "is_universal": true,
-      "sources": [
-        {
-          "name": "IETF RFC 3629 — standard UTF-8",
-          "pyramid": 1,
-          "year": 2003
-        },
-        {
-          "name": "W3C — UTF-8 obligatoire pour HTML5",
-          "pyramid": 1,
-          "year": 2024
-        },
-        {
-          "name": "Web Almanac 2024",
-          "pyramid": 4,
-          "year": 2024
-        }
-      ]
-    },
-    {
-      "id": "encryption",
-      "domain": "security",
-      "question": "Comment chiffrer les donnees en transit (TLS) et au repos (at-rest) ?",
-      "recommendation": "TLS 1.3 obligatoire pour toutes les communications. HTTPS everywhere avec redirection automatique.",
-      "grade": 6,
-      "level": "STANDARD",
-      "is_universal": true,
-      "sources": [
-        {
-          "name": "NIST SP 800-52 Rev. 2",
-          "pyramid": 1,
-          "year": 2019
-        },
-        {
-          "name": "OWASP ASVS V6",
-          "pyramid": 2,
-          "year": 2021
-        },
-        {
-          "name": "Mozilla TLS Guidelines",
-          "pyramid": 5,
-          "year": 2024
-        }
-      ]
-    },
-    {
-      "id": "code-ownership",
-      "domain": "project",
-      "question": "Comment organiser l'ownership du code pour reduire les defauts tout en diffusant la connaissance ?",
-      "recommendation": "Ownership collectif avec domain experts identifies. Pas de proprietaire unique (bus factor de 1). CODEOWNERS pour auto-assign les reviewers. 1 reviewer minimum par PR.",
-      "grade": 5,
-      "level": "STANDARD",
-      "is_universal": true,
-      "sources": [
-        {
-          "name": "Bird et al. 2011 — Microsoft code ownership study (Windows Vista)",
-          "pyramid": 4,
-          "year": 2011
-        },
-        {
-          "name": "GitHub CODEOWNERS docs",
-          "pyramid": 5,
-          "year": 2024
-        }
-      ]
-    },
-    {
-      "id": "code-review",
-      "domain": "code-quality",
-      "question": "Comment organiser les code reviews pour maximiser la detection de defauts ?",
-      "recommendation": "Review obligatoire par au moins 1 pair avant merge. La code review trouve 60-70% des defauts, contre 25-30% pour les tests unitaires seuls.",
-      "grade": 5,
-      "level": "STANDARD",
-      "is_universal": true,
-      "sources": [
-        {
-          "name": "SWEBOK v4 — code inspection as verification technique",
-          "pyramid": 1,
-          "year": 2024
-        },
-        {
-          "name": "SmartBear study — 60-70% defect detection rate",
-          "pyramid": 4,
-          "year": 2015
-        }
-      ]
-    },
-    {
-      "id": "color-system",
-      "domain": "design",
-      "question": "Comment generer un systeme de couleurs coherent pour un design system ?",
-      "recommendation": "3-tier CSS custom property tokens (primitive → semantic → component), generate with HCT (@material/material-color-utilities) or OKLCH. Les primitives definissent la palette brute, les semantiques mappent l'intention (--color-primary, --color-surface), les component tokens specialisent par composant.",
-      "grade": 5,
-      "level": "STANDARD",
-      "is_universal": true,
-      "sources": [
-        {
-          "name": "Material Design 3 Color System",
-          "pyramid": 1,
-          "year": 2024
-        },
-        {
-          "name": "M3 Color Roles",
-          "pyramid": 1,
-          "year": 2024
-        },
-        {
-          "name": "W3C WCAG 1.4.11 Non-text Contrast",
-          "pyramid": 1,
-          "year": 2023
-        },
-        {
-          "name": "EightShapes Color in Design Systems",
-          "pyramid": 3,
-          "year": 2023
-        },
-        {
-          "name": "State of CSS 2024",
-          "pyramid": 4,
-          "year": 2024
-        }
-      ]
-    },
-    {
       "id": "colors",
       "domain": "design",
       "question": "Combien de couleurs dans la palette et quels ratios de contraste respecter ?",
@@ -1778,121 +2815,6 @@
       "sources": [
         {},
         {}
-      ]
-    },
-    {
-      "id": "connection-pooling",
-      "domain": "performance",
-      "question": "Comment configurer le pool de connexions a la base de donnees ?",
-      "recommendation": "Django persistent connections (CONN_MAX_AGE) + django-db-connection-pool ou pgBouncer pour le pooling avance.",
-      "grade": 5,
-      "level": "STANDARD",
-      "implementation": "DATABASES.default.CONN_MAX_AGE = 600 (10min). Pour du vrai pooling : pgBouncer devant PostgreSQL ou django-db-connection-pool.",
-      "is_universal": false,
-      "sources": [
-        {
-          "name": "Django docs — persistent connections",
-          "pyramid": 3,
-          "year": 2024
-        },
-        {
-          "name": "pgBouncer docs",
-          "pyramid": 3,
-          "year": 2024
-        }
-      ]
-    },
-    {
-      "id": "containerization",
-      "domain": "cicd",
-      "question": "Comment conteneuriser l'application (Docker, Dockerfile best practices, orchestration) ?",
-      "recommendation": "Dockerfile multi-stage : eclipse-temurin:21-jdk (build) → eclipse-temurin:21-jre (runtime). Layered JARs via java -Djarmode=tools extract --layers. USER non-root. Image finale ~200MB vs ~800MB sans multi-stage.",
-      "grade": 5,
-      "level": "RECOMMANDE",
-      "is_universal": false,
-      "sources": [
-        {
-          "name": "Spring Boot Container Images docs — layered JARs",
-          "pyramid": 3,
-          "year": 2024
-        },
-        {
-          "name": "Docker best practices docs — multi-stage, non-root",
-          "pyramid": 3,
-          "year": 2024
-        }
-      ]
-    },
-    {
-      "id": "dark-mode",
-      "domain": "design",
-      "question": "Comment implementer un dark mode dans un design system ?",
-      "recommendation": "Simultaneous light+dark avec semantic tokens. Jamais inverser le light. Tonal elevation en dark (surfaces plus claires = plus elevees). prefers-color-scheme par defaut. Chaque semantic token a une valeur light et une valeur dark, switchees via attribut data-theme ou media query.",
-      "grade": 5,
-      "level": "RECOMMANDE",
-      "is_universal": true,
-      "sources": [
-        {
-          "name": "Material Design 3 Dark Theme",
-          "pyramid": 1,
-          "year": 2024
-        },
-        {
-          "name": "Apple HIG Dark Mode",
-          "pyramid": 1,
-          "year": 2024
-        },
-        {
-          "name": "Nielsen Norman Group Dark Mode Research",
-          "pyramid": 2,
-          "year": 2020
-        },
-        {
-          "name": "WCAG 2.2 SC 1.4.3 Contrast",
-          "pyramid": 1,
-          "year": 2023
-        }
-      ]
-    },
-    {
-      "id": "database",
-      "domain": "architecture",
-      "question": "Quelle base de donnees relationnelle choisir pour un nouveau projet ?",
-      "recommendation": "PostgreSQL pour les donnees relationnelles. #1 en adoption (55.6% SO 2025) et admiration (65.5%). 13x plus rapide que MySQL en SELECT 1M records (MDPI 2024, peer-reviewed).",
-      "grade": 5,
-      "level": "STANDARD",
-      "is_universal": true,
-      "sources": [
-        {
-          "name": "SO Survey 2025",
-          "pyramid": 4,
-          "year": 2025
-        },
-        {
-          "name": "SO Survey 2024",
-          "pyramid": 4,
-          "year": 2024
-        },
-        {
-          "name": "JetBrains 2025",
-          "pyramid": 4,
-          "year": 2025
-        },
-        {
-          "name": "DB-Engines 2026",
-          "pyramid": 4,
-          "year": 2026
-        },
-        {
-          "name": "MDPI benchmark 2024",
-          "pyramid": 4,
-          "year": 2024
-        },
-        {
-          "name": "CNCF — CloudNativePG",
-          "pyramid": 2,
-          "year": 2024
-        }
       ]
     },
     {
@@ -1922,32 +2844,6 @@
       ]
     },
     {
-      "id": "destructive-confirmation",
-      "domain": "safety",
-      "question": "Comment proteger l'utilisateur contre les actions irreversibles (suppression, ecrasement) ?",
-      "recommendation": "Toute action destructive requiert une confirmation explicite via dialog modale (jamais window.confirm). Privilegier soft-delete + undo quand possible.",
-      "grade": 5,
-      "level": "STANDARD",
-      "is_universal": true,
-      "sources": [
-        {
-          "name": "Apple HIG — confirmation pour actions destructives",
-          "pyramid": 5,
-          "year": 2024
-        },
-        {
-          "name": "Material Design 3 — dialogs de confirmation",
-          "pyramid": 5,
-          "year": 2024
-        },
-        {
-          "name": "WCAG 2.2 SC 3.3.4 — prevention des erreurs, reversibilite",
-          "pyramid": 1,
-          "year": 2023
-        }
-      ]
-    },
-    {
       "id": "dev-onboarding",
       "domain": "project",
       "question": "Comment integrer efficacement un nouveau developpeur dans l'equipe pour minimiser le time-to-productivity ?",
@@ -1965,42 +2861,6 @@
           "name": "Microsoft NEET study 2022 — onboarding structure reduit time-to-productivity de 60%",
           "pyramid": 4,
           "year": 2022
-        }
-      ]
-    },
-    {
-      "id": "documentation-organization",
-      "domain": "project",
-      "question": "Comment organiser la documentation d'un projet ?",
-      "recommendation": "Split par type/audience (Diataxis): tutorials, how-to guides, reference, explanation. Chaque info a un seul endroit. Mettre a jour docs dans le meme commit que le code. Supprimer docs mortes. Le framework Diataxis evite le melange tutorial/reference qui rend la doc inutilisable.",
-      "grade": 5,
-      "level": "RECOMMANDE",
-      "is_universal": true,
-      "sources": [
-        {
-          "name": "Google SWE Book Ch.10 — Documentation",
-          "pyramid": 2,
-          "year": 2020
-        },
-        {
-          "name": "Google Style Guide — Doc Best Practices",
-          "pyramid": 2,
-          "year": 2024
-        },
-        {
-          "name": "Diataxis Framework",
-          "pyramid": 3,
-          "year": 2024
-        },
-        {
-          "name": "SWEBOK v4 — Software Engineering Management",
-          "pyramid": 1,
-          "year": 2024
-        },
-        {
-          "name": "Martin Fowler — Architecture Decision Records",
-          "pyramid": 2,
-          "year": 2023
         }
       ]
     },
@@ -2026,37 +2886,6 @@
       ]
     },
     {
-      "id": "dto-projection",
-      "domain": "architecture",
-      "question": "Comment exposer les donnees d'une entite via API ?",
-      "recommendation": "Toujours DTO explicite, jamais entite directe. Un DTO par cas d'usage (Summary, Detail, Create, Update). MapStruct pour mappings simples.",
-      "grade": 5,
-      "level": "STANDARD",
-      "is_universal": true,
-      "sources": [
-        {
-          "name": "OWASP API Security Top 10 API3:2023",
-          "pyramid": 1,
-          "year": 2023
-        },
-        {
-          "name": "Spring Data JPA Projections",
-          "pyramid": 1,
-          "year": 2024
-        },
-        {
-          "name": "SWEBOK v4 Information Hiding",
-          "pyramid": 1,
-          "year": 2024
-        },
-        {
-          "name": "Martin Fowler LocalDTO",
-          "pyramid": 2,
-          "year": 2004
-        }
-      ]
-    },
-    {
       "id": "entity-dto-mapping",
       "domain": "code-quality",
       "question": "Comment mapper les entites vers les DTOs ?",
@@ -2075,58 +2904,6 @@
           "name": "DRF Best Practices — HackSoft",
           "pyramid": 3,
           "year": 2024
-        }
-      ]
-    },
-    {
-      "id": "env-config",
-      "domain": "operations",
-      "question": "Comment gerer la configuration par environnement et les secrets ?",
-      "recommendation": "django-environ pour charger les variables d'environnement dans settings.py. Fichier .env pour le dev local (jamais commite). Variables d'env directes en production.",
-      "grade": 5,
-      "level": "RECOMMANDE",
-      "is_universal": false,
-      "sources": [
-        {
-          "name": "django-environ docs",
-          "pyramid": 3,
-          "year": 2024
-        },
-        {
-          "name": "Twelve-Factor App Factor III",
-          "pyramid": 5,
-          "year": 2012
-        },
-        {
-          "name": "Double extraction batch 10 — accord 96%",
-          "pyramid": 5,
-          "year": 2026
-        }
-      ]
-    },
-    {
-      "id": "environment-management",
-      "domain": "project",
-      "question": "Combien d'environnements maintenir et comment garantir la parite dev/staging/prod ?",
-      "recommendation": "3 environnements : dev (local Docker Compose), staging (auto-deploy miroir exact de prod), prod (CI/CD uniquement, jamais de deploy manuel).",
-      "grade": 5,
-      "level": "STANDARD",
-      "is_universal": true,
-      "sources": [
-        {
-          "name": "SWEBOK v4 ch.8",
-          "pyramid": 1,
-          "year": 2024
-        },
-        {
-          "name": "DORA/Accelerate — predictor of elite performance",
-          "pyramid": 4,
-          "year": 2019
-        },
-        {
-          "name": "Twelve-Factor App",
-          "pyramid": 5,
-          "year": 2017
         }
       ]
     },
@@ -2167,52 +2944,6 @@
       ]
     },
     {
-      "id": "error-handling",
-      "domain": "reliability",
-      "question": "Comment centraliser et securiser le traitement des erreurs ?",
-      "recommendation": "DRF exception handler personnalise pour centraliser le traitement des erreurs. Format RFC 9457 Problem Details dans les reponses. Jamais de stack trace exposee (DEBUG=False en prod).",
-      "grade": 5,
-      "level": "STANDARD",
-      "is_universal": false,
-      "sources": [
-        {},
-        {},
-        {},
-        {}
-      ]
-    },
-    {
-      "id": "ci-pipeline",
-      "domain": "cicd",
-      "question": "Quel outil CI/CD, quelles stages et quality gates pour le pipeline ?",
-      "recommendation": "GitHub Actions pour les equipes sur GitHub : 53% adoption (SO 2024), 61% equipes 2-10 devs (JetBrains), integration native, 2000 min/mois gratuit, onboarding < 1 jour.",
-      "grade": 4,
-      "level": "RECOMMANDE",
-      "is_universal": true,
-      "sources": [
-        {
-          "name": "SWEBOK v4",
-          "pyramid": 1,
-          "year": 2024
-        },
-        {
-          "name": "DORA State of DevOps 2024",
-          "pyramid": 4,
-          "year": 2024
-        },
-        {
-          "name": "Stack Overflow Survey 2024 — GitHub Actions 53%",
-          "pyramid": 4,
-          "year": 2024
-        },
-        {
-          "name": "JetBrains 2024 — GitHub Actions 52%, 61% in 2-10 dev teams",
-          "pyramid": 4,
-          "year": 2024
-        }
-      ]
-    },
-    {
       "id": "contract-tests",
       "domain": "testing",
       "question": "Comment verifier les contrats entre services (consumer-driven contract tests) ?",
@@ -2223,27 +2954,6 @@
       "sources": [
         {},
         {}
-      ]
-    },
-    {
-      "id": "dependencies",
-      "domain": "project",
-      "question": "Comment gerer les dependances pour garantir des builds reproductibles et eviter les vulnerabilites ?",
-      "recommendation": "Epingler les versions et utiliser un lockfile. En CI, utiliser npm ci (jamais npm install) pour des builds reproductibles.",
-      "grade": 4,
-      "level": "RECOMMANDE",
-      "is_universal": true,
-      "sources": [
-        {
-          "name": "Twelve-Factor App Factor II — declare dependencies explicitly",
-          "pyramid": 5,
-          "year": 2017
-        },
-        {
-          "name": "SWEBOK v4 — dependency management, supply chain",
-          "pyramid": 1,
-          "year": 2024
-        }
       ]
     },
     {
@@ -2329,6 +3039,27 @@
       "sources": [
         {},
         {}
+      ]
+    },
+    {
+      "id": "dependencies",
+      "domain": "project",
+      "question": "Comment gerer les dependances pour garantir des builds reproductibles et eviter les vulnerabilites ?",
+      "recommendation": "Epingler les versions et utiliser un lockfile. En CI, utiliser npm ci (jamais npm install) pour des builds reproductibles.",
+      "grade": 4,
+      "level": "RECOMMANDE",
+      "is_universal": true,
+      "sources": [
+        {
+          "name": "Twelve-Factor App Factor II — declare dependencies explicitly",
+          "pyramid": 5,
+          "year": 2017
+        },
+        {
+          "name": "SWEBOK v4 — dependency management, supply chain",
+          "pyramid": 1,
+          "year": 2024
+        }
       ]
     },
     {
@@ -2452,42 +3183,6 @@
       "sources": []
     },
     {
-      "id": "frontend-framework",
-      "domain": "architecture",
-      "question": "Quel framework frontend choisir pour une application web ?",
-      "recommendation": "React — #1 en adoption (44.7% SO 2025), ecosysteme de composants le plus riche (MUI, shadcn/ui, Radix, Ant Design), hiring pool le plus grand. Convergence de 5 sources independantes.",
-      "grade": 4,
-      "level": "RECOMMANDE",
-      "is_universal": true,
-      "sources": [
-        {
-          "name": "SO Survey 2025",
-          "pyramid": 4,
-          "year": 2025
-        },
-        {
-          "name": "State of JS 2025",
-          "pyramid": 4,
-          "year": 2025
-        },
-        {
-          "name": "JetBrains 2024",
-          "pyramid": 4,
-          "year": 2024
-        },
-        {
-          "name": "npm trends — React 34M dl/semaine",
-          "pyramid": 4,
-          "year": 2025
-        },
-        {
-          "name": "GitHub stars — React 266k",
-          "pyramid": 4,
-          "year": 2025
-        }
-      ]
-    },
-    {
       "id": "feature-flags",
       "domain": "operations",
       "question": "Comment activer progressivement les fonctionnalites sans redeploiement ?",
@@ -2530,37 +3225,6 @@
       ]
     },
     {
-      "id": "form-spellcheck",
-      "domain": "design",
-      "question": "Comment gerer la verification orthographique dans les formulaires web ?",
-      "recommendation": "Spellcheck natif navigateur actif par defaut (gratuit, zero maintenance). Desactiver explicitement sur champs techniques (noms scientifiques, code, identifiants). Service externe (LanguageTool) optionnel a la demande, pas en temps reel.",
-      "grade": 3,
-      "level": "BONNE_PRATIQUE",
-      "is_universal": true,
-      "sources": [
-        {
-          "name": "HTML Living Standard WHATWG spellcheck attribute",
-          "pyramid": 1,
-          "year": 2024
-        },
-        {
-          "name": "MDN Web Docs spellcheck",
-          "pyramid": 1,
-          "year": 2024
-        },
-        {
-          "name": "W3C WCAG 2.2 Input Assistance",
-          "pyramid": 1,
-          "year": 2023
-        },
-        {
-          "name": "LanguageTool API docs",
-          "pyramid": 1,
-          "year": 2024
-        }
-      ]
-    },
-    {
       "id": "feedback-collection",
       "domain": "project",
       "question": "Comment collecter et traiter efficacement les retours utilisateurs et les bug reports ?",
@@ -2582,1088 +3246,11 @@
       ]
     },
     {
-      "id": "forms",
-      "domain": "design",
-      "question": "Comment gerer les formulaires (validation, layout, accessibilite) ?",
-      "is_universal": false,
-      "sources": [
-        {}
-      ]
-    },
-    {
-      "id": "input-validation",
-      "domain": "security",
-      "question": "Comment valider les entrees utilisateur pour prevenir les injections (SQL, XSS, CSRF) ?",
-      "recommendation": "DRF Serializers (built-in) pour la validation serveur",
-      "grade": 7,
-      "level": "STANDARD",
-      "implementation": "Utiliser les Serializers DRF avec les champs types (CharField, EmailField, etc.) et les validateurs integres. L'ORM Django parametrise automatiquement les requetes.",
-      "is_universal": false,
-      "sources": [
-        {
-          "name": "Django REST Framework Serializers docs",
-          "pyramid": 3,
-          "year": 2024
-        }
-      ]
-    },
-    {
-      "id": "ui-lucide-react",
-      "domain": "ui-libraries",
-      "question": "Quel outil pour les icones ?",
-      "recommendation": "lucide-react",
-      "grade": 7,
-      "level": "STANDARD",
-      "implementation": "pnpm add lucide-react",
-      "is_universal": false,
-      "sources": [
-        {
-          "name": "npm trends",
-          "pyramid": 4,
-          "year": 2026
-        },
-        {
-          "name": "Lucide docs",
-          "pyramid": 5,
-          "year": 2026
-        }
-      ]
-    },
-    {
-      "id": "ui-tanstack-react-query",
-      "domain": "ui-libraries",
-      "question": "Quel outil pour le data fetching et le cache client ?",
-      "recommendation": "@tanstack/react-query",
-      "grade": 7,
-      "level": "STANDARD",
-      "implementation": "pnpm add @tanstack/react-query",
-      "is_universal": false,
-      "sources": [
-        {
-          "name": "npm trends",
-          "pyramid": 4,
-          "year": 2026
-        },
-        {
-          "name": "State of JS 2024",
-          "pyramid": 4,
-          "year": 2024
-        },
-        {
-          "name": "TanStack Query docs",
-          "pyramid": 5,
-          "year": 2026
-        }
-      ]
-    },
-    {
-      "id": "ui-tanstack-react-table",
-      "domain": "ui-libraries",
-      "question": "Quel outil pour les tables avec tri, filtre et pagination ?",
-      "recommendation": "@tanstack/react-table",
-      "grade": 7,
-      "level": "STANDARD",
-      "implementation": "pnpm add @tanstack/react-table",
-      "is_universal": false,
-      "sources": [
-        {
-          "name": "npm trends",
-          "pyramid": 4,
-          "year": 2026
-        },
-        {
-          "name": "TanStack Table docs",
-          "pyramid": 5,
-          "year": 2026
-        }
-      ]
-    },
-    {
-      "id": "gdpr",
-      "domain": "safety",
-      "question": "Quelles sont les exigences RGPD obligatoires pour tout traitement de donnees personnelles UE ?",
-      "recommendation": "Le RGPD est une obligation legale (amende jusqu'a 4% du CA mondial). Consentement explicite (opt-in, pas pre-coche), droit d'acces/export (Art. 15, 20), droit a l'effacement (Art. 17), minimisation des donnees (Art. 5), privacy by design (Art. 25).",
-      "grade": 6,
-      "level": "STANDARD",
-      "is_universal": true,
-      "sources": [
-        {
-          "name": "Reglement UE 2016/679 (RGPD) — Art. 5, 6, 7, 15, 17, 20, 25, 30",
-          "pyramid": 1,
-          "year": 2016
-        },
-        {
-          "name": "CNIL — Guidelines consentement, droit a l'effacement, privacy by design",
-          "pyramid": 1,
-          "year": 2024
-        }
-      ]
-    },
-    {
-      "id": "http-client",
-      "domain": "architecture",
-      "question": "Quel client HTTP utiliser cote backend et cote frontend ?",
-      "recommendation": "httpx — client HTTP async/sync moderne pour Python. Remplace requests avec support async natif.",
-      "grade": 6,
-      "level": "STANDARD",
-      "implementation": "httpx.Client() pour sync, httpx.AsyncClient() pour async. API compatible avec requests. Timeout et retry configurables.",
-      "is_universal": false,
-      "sources": [
-        {
-          "name": "httpx docs",
-          "pyramid": 3,
-          "year": 2024
-        },
-        {
-          "name": "Batch 11 — httpx accord 100%",
-          "pyramid": 5,
-          "year": 2026
-        }
-      ]
-    },
-    {
-      "id": "http-headers",
-      "domain": "security",
-      "question": "Quels headers HTTP de securite configurer et comment ?",
-      "recommendation": "SecurityMiddleware (built-in) pour les headers de securite",
-      "grade": 6,
-      "level": "STANDARD",
-      "implementation": "Activer SecurityMiddleware dans MIDDLEWARE, configurer SECURE_HSTS_SECONDS, SECURE_HSTS_INCLUDE_SUBDOMAINS, SECURE_CONTENT_TYPE_NOSNIFF, X_FRAME_OPTIONS, CSP via django-csp.",
-      "is_universal": false,
-      "sources": [
-        {
-          "name": "Django SecurityMiddleware docs",
-          "pyramid": 3,
-          "year": 2024
-        }
-      ]
-    },
-    {
-      "id": "icon-usage",
-      "domain": "design",
-      "question": "Quand et comment utiliser des icones dans une interface ?",
-      "recommendation": "Toujours pairer icone + texte visible. Icon-only uniquement pour universels (search, close, home) + tooltip. Regle 5 secondes (si pas d'icone evidente en 5s, utiliser texte seul). Icons pour actions, pas decoration. Chaque icone icon-only doit avoir un aria-label explicite.",
-      "grade": 6,
-      "level": "STANDARD",
-      "is_universal": true,
-      "sources": [
-        {
-          "name": "NNg Icon Usability",
-          "pyramid": 1,
-          "year": 2024
-        },
-        {
-          "name": "NNg Bad Icons — Why They Fail",
-          "pyramid": 1,
-          "year": 2023
-        },
-        {
-          "name": "Apple HIG Icons",
-          "pyramid": 1,
-          "year": 2024
-        },
-        {
-          "name": "WCAG 2.2 SC 1.1.1 Text Alternatives",
-          "pyramid": 1,
-          "year": 2023
-        },
-        {
-          "name": "NNg How to Test Icons",
-          "pyramid": 1,
-          "year": 2024
-        }
-      ]
-    },
-    {
-      "id": "mocking",
-      "domain": "testing",
-      "question": "Quelle strategie et quels outils pour le mocking dans les tests ?",
-      "recommendation": "unittest.mock (stdlib) + pytest-mock pour les mocks. Mocker aux frontieres (DB, HTTP, FS).",
-      "grade": 6,
-      "level": "RECOMMANDE",
-      "is_universal": false,
-      "sources": [
-        {},
-        {},
-        {}
-      ]
-    },
-    {
-      "id": "openapi",
-      "domain": "architecture",
-      "question": "Comment documenter les APIs de maniere standardisee et maintenable ?",
-      "recommendation": "drf-spectacular — generation OpenAPI 3.x depuis les serializers et views DRF. Remplace drf-yasg (deprecie).",
-      "grade": 6,
-      "level": "STANDARD",
-      "implementation": "pip install drf-spectacular. REST_FRAMEWORK = {'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema'}. SpectacularAPIView pour /api/schema/.",
-      "is_universal": false,
-      "sources": [
-        {
-          "name": "drf-spectacular docs",
-          "pyramid": 3,
-          "year": 2024
-        },
-        {
-          "name": "Batch 11 — drf-spectacular accord 100%",
-          "pyramid": 5,
-          "year": 2026
-        }
-      ]
-    },
-    {
-      "id": "password-hashing",
-      "domain": "security",
-      "question": "Quel algorithme utiliser pour le hashing des mots de passe ?",
-      "recommendation": "Utiliser Argon2id avec memory >= 19 MiB, iterations >= 2, parallelism >= 1, salt 16 bytes, hash 32 bytes. Fallback bcrypt (work factor >= 12) si Argon2id non disponible.",
-      "grade": 6,
-      "level": "STANDARD",
-      "is_universal": true,
-      "sources": [
-        {
-          "name": "OWASP Password Storage Cheat Sheet",
-          "pyramid": 2,
-          "year": 2024
-        },
-        {
-          "name": "NIST SP 800-63B",
-          "pyramid": 1,
-          "year": 2024
-        },
-        {
-          "name": "Password Hashing Competition",
-          "pyramid": 5,
-          "year": 2015
-        }
-      ]
-    },
-    {
-      "id": "safe-defaults",
-      "domain": "safety",
-      "question": "Comment appliquer le principe deny-by-default pour que tout oubli de configuration ne cree pas de faille ?",
-      "recommendation": "Tout est interdit par defaut — autoriser explicitement. Deny-by-default pour l'authorization (.anyRequest().authenticated()), whitelist > blacklist, CORS restrictif (jamais '*' en prod), feature flags off par defaut.",
-      "grade": 6,
-      "level": "STANDARD",
-      "is_universal": true,
-      "sources": [
-        {
-          "name": "OWASP A01:2021 — Broken Access Control, deny by default",
-          "pyramid": 2,
-          "year": 2021
-        },
-        {
-          "name": "SWEBOK v4 — security principles, least privilege",
-          "pyramid": 1,
-          "year": 2024
-        },
-        {
-          "name": "CWE-276 — Incorrect Default Permissions",
-          "pyramid": 2,
-          "year": 2024
-        }
-      ]
-    },
-    {
-      "id": "scaling",
-      "domain": "architecture",
-      "question": "Comment scaler une application web de maniere progressive ?",
-      "recommendation": "Monolithe modulaire d'abord (0-10k users), puis replicas horizontaux avec load balancer (10k-100k), puis read replicas PostgreSQL, puis microservices (rarement justifie avant des centaines de devs).",
-      "grade": 6,
-      "level": "STANDARD",
-      "is_universal": true,
-      "sources": [
-        {
-          "name": "Fowler — MonolithFirst",
-          "pyramid": 5,
-          "year": 2015
-        },
-        {
-          "name": "Twelve-Factor VI — stateless processes",
-          "pyramid": 5,
-          "year": 2012
-        },
-        {
-          "name": "Docker Compose deploy docs — replicas",
-          "pyramid": 3,
-          "year": 2024
-        }
-      ]
-    },
-    {
-      "id": "rewrite-strategy",
-      "domain": "architecture",
-      "question": "Comment organiser une reecriture complete de stack backend ?",
-      "recommendation": "Combinaison Strangler Fig + Spec-first + Test-driven (GRADE 5/7, 32+ sources). Jamais de big bang (20-30% succes, Netscape/Borland). Phase 0 : mapper modules + dependances, extraire contrats API (OpenAPI), ecrire tests d'integration contre l'API actuelle, trier modules du moins couple au plus couple. Phase 1 : reecrire LE module le plus simple, proxy/gateway pour router le trafic, verifier parite, mettre en prod. Phase 2 : module par module (spec → tests → implementer → verifier → basculer), chaque etape reversible (principe Stripe), BDD partagee pendant transition. Phase 3 : decommissionner ancien module par module. Regles : commencer par le plus simple PAS le plus important (SoundCloud lesson), ne jamais pauser le dev de features, garder la fenetre de migration courte par module, automatiser la verification de parite.",
-      "grade": 5,
-      "level": "STANDARD",
-      "is_universal": true,
-      "sources": [
-        {
-          "name": "Fowler — StranglerFigApplication",
-          "pyramid": 2,
-          "year": 2004
-        },
-        {
-          "name": "Spolsky — Things You Should Never Do",
-          "pyramid": 3,
-          "year": 2000
-        },
-        {
-          "name": "Google SWE Book Ch.15 — Deprecation",
-          "pyramid": 2,
-          "year": 2020
-        },
-        {
-          "name": "Stripe Engineering — Online Migrations at Scale",
-          "pyramid": 2,
-          "year": 2017
-        },
-        {
-          "name": "Slack Engineering — Rebuilding Slack on Desktop",
-          "pyramid": 2,
-          "year": 2019
-        },
-        {
-          "name": "Taibi et al. — Processes for Migrating to Microservices (IEEE)",
-          "pyramid": 4,
-          "year": 2017
-        },
-        {
-          "name": "Balalaie et al. — Microservices Migration Patterns (SPE)",
-          "pyramid": 4,
-          "year": 2016
-        },
-        {
-          "name": "Microsoft Azure — Strangler Fig Pattern",
-          "pyramid": 1,
-          "year": 2025
-        },
-        {
-          "name": "Shopify Engineering — Deconstructing the Monolith",
-          "pyramid": 2,
-          "year": 2019
-        },
-        {
-          "name": "ThoughtWorks Technology Radar",
-          "pyramid": 3,
-          "year": 2025
-        }
-      ]
-    },
-    {
       "id": "scheduled-tasks",
       "domain": "reliability",
       "question": "Comment gerer les taches planifiees dans un backend ?",
       "is_universal": false,
       "sources": []
-    },
-    {
-      "id": "test-data",
-      "domain": "testing",
-      "question": "Comment gerer les donnees de test (factories, faker, isolation) ?",
-      "recommendation": "factory_boy + Faker pour les factories de donnees de test. factory_boy est le standard Python pour les test factories, integre avec Django ORM.",
-      "grade": 6,
-      "level": "BONNE PRATIQUE",
-      "is_universal": false,
-      "sources": [
-        {},
-        {},
-        {}
-      ]
-    },
-    {
-      "id": "typescript-strict",
-      "domain": "code-quality",
-      "question": "Faut-il activer le mode strict de TypeScript ?",
-      "recommendation": "strict: true dans tsconfig.json. Active strictNullChecks, noImplicitAny, strictFunctionTypes, strictBindCallApply, strictPropertyInitialization, noImplicitThis, alwaysStrict, useUnknownInCatchVariables.",
-      "grade": 6,
-      "level": "STANDARD",
-      "is_universal": false,
-      "sources": [
-        {
-          "name": "TypeScript docs — strict compiler options",
-          "pyramid": 3,
-          "year": 2024
-        },
-        {
-          "name": "Google TypeScript Style Guide",
-          "pyramid": 5,
-          "year": 2023
-        },
-        {
-          "name": "State of JS 2024",
-          "pyramid": 4,
-          "year": 2024
-        }
-      ]
-    },
-    {
-      "id": "typography",
-      "domain": "design",
-      "question": "Quelles regles typographiques appliquer (taille, line-height, largeur de ligne, echelle) ?",
-      "recommendation": "Body text : 16px minimum. Ne jamais descendre en dessous de 14px pour du texte de contenu.",
-      "grade": 6,
-      "level": "STANDARD",
-      "is_universal": true,
-      "sources": [
-        {},
-        {},
-        {},
-        {}
-      ]
-    },
-    {
-      "id": "ui-cmdk",
-      "domain": "ui-libraries",
-      "question": "Quel outil pour la command palette ?",
-      "recommendation": "cmdk",
-      "grade": 6,
-      "level": "RECOMMANDE",
-      "implementation": "pnpm add cmdk",
-      "is_universal": false,
-      "sources": [
-        {
-          "name": "npm trends",
-          "pyramid": 4,
-          "year": 2026
-        },
-        {
-          "name": "cmdk docs",
-          "pyramid": 5,
-          "year": 2026
-        }
-      ]
-    },
-    {
-      "id": "ui-dnd-kit",
-      "domain": "ui-libraries",
-      "question": "Quel outil pour le drag and drop ?",
-      "recommendation": "@dnd-kit/core",
-      "grade": 6,
-      "level": "RECOMMANDE",
-      "implementation": "pnpm add @dnd-kit/core @dnd-kit/sortable @dnd-kit/utilities",
-      "is_universal": false,
-      "sources": [
-        {
-          "name": "npm trends",
-          "pyramid": 4,
-          "year": 2026
-        },
-        {
-          "name": "dnd-kit docs",
-          "pyramid": 5,
-          "year": 2026
-        }
-      ]
-    },
-    {
-      "id": "ui-react-dropzone",
-      "domain": "ui-libraries",
-      "question": "Quel outil pour l'upload de fichiers par drag and drop ?",
-      "recommendation": "react-dropzone",
-      "grade": 6,
-      "level": "RECOMMANDE",
-      "implementation": "pnpm add react-dropzone",
-      "is_universal": false,
-      "sources": [
-        {
-          "name": "npm trends",
-          "pyramid": 4,
-          "year": 2026
-        },
-        {
-          "name": "react-dropzone docs",
-          "pyramid": 5,
-          "year": 2026
-        }
-      ]
-    },
-    {
-      "id": "ui-react-resizable-panels",
-      "domain": "ui-libraries",
-      "question": "Quel outil pour les panels redimensionnables ?",
-      "recommendation": "react-resizable-panels",
-      "grade": 6,
-      "level": "RECOMMANDE",
-      "implementation": "pnpm add react-resizable-panels",
-      "is_universal": false,
-      "sources": [
-        {
-          "name": "npm trends",
-          "pyramid": 4,
-          "year": 2026
-        },
-        {
-          "name": "react-resizable-panels docs",
-          "pyramid": 5,
-          "year": 2026
-        }
-      ]
-    },
-    {
-      "id": "ui-tanstack-react-virtual",
-      "domain": "ui-libraries",
-      "question": "Quel outil pour la virtualisation de listes longues ?",
-      "recommendation": "@tanstack/react-virtual",
-      "grade": 6,
-      "level": "RECOMMANDE",
-      "implementation": "pnpm add @tanstack/react-virtual",
-      "is_universal": false,
-      "sources": [
-        {
-          "name": "npm trends",
-          "pyramid": 4,
-          "year": 2026
-        },
-        {
-          "name": "TanStack Virtual docs",
-          "pyramid": 5,
-          "year": 2026
-        }
-      ]
-    },
-    {
-      "id": "unit-tests",
-      "domain": "testing",
-      "question": "Quel framework et quelle strategie pour les tests unitaires ?",
-      "recommendation": "pytest + pytest-django. pytest est le standard de facto pour Python, pytest-django fournit les fixtures et integration Django.",
-      "grade": 6,
-      "level": "RECOMMANDE",
-      "is_universal": false,
-      "sources": [
-        {},
-        {},
-        {}
-      ]
-    },
-    {
-      "id": "wcag-level",
-      "domain": "accessibility",
-      "question": "Quel niveau WCAG cibler (A, AA, AAA) ?",
-      "recommendation": "WCAG 2.2 Level AA : obligatoire legalement (EU, US, Canada), contraste 4.5:1, pas de restriction de niveau de lecture (contrairement a AAA qui exige niveau college, impossible pour contenu scientifique).",
-      "grade": 6,
-      "level": "STANDARD",
-      "is_universal": true,
-      "sources": [
-        {},
-        {},
-        {},
-        {},
-        {}
-      ]
-    },
-    {
-      "id": "web-mobile-strategy",
-      "domain": "architecture",
-      "question": "Comment rendre une web app accessible sur mobile ?",
-      "grade": 6,
-      "level": "RECOMMANDE",
-      "is_universal": false,
-      "sources": [
-        {
-          "name": "web.dev PWA docs",
-          "pyramid": 3,
-          "year": 2026
-        },
-        {
-          "name": "Can I Use service worker 97%",
-          "pyramid": 4,
-          "year": 2026
-        },
-        {
-          "name": "vite-plugin-pwa 3M+ dl/sem",
-          "pyramid": 4,
-          "year": 2026
-        }
-      ]
-    },
-    {
-      "id": "graceful-shutdown",
-      "domain": "reliability",
-      "question": "Comment drainer les connexions avant l'arret pour zero requetes perdues ?",
-      "recommendation": "Gunicorn graceful-timeout pour drainer les workers. Docker stop_grace_period > graceful-timeout. Gunicorn envoie SIGTERM aux workers qui terminent leurs requetes en cours.",
-      "grade": 5,
-      "level": "STANDARD",
-      "is_universal": false,
-      "sources": [
-        {},
-        {},
-        {}
-      ]
-    },
-    {
-      "id": "guide-application-docs",
-      "domain": "project",
-      "question": "Comment un projet doit-il documenter son application d'un guide de standards ?",
-      "recommendation": "Option C unanime (12 sources, 0 dissidente) : les docs projet contiennent les choix concrets d'implementation (outils, versions, config, structure) et pointent vers le guide pour le pourquoi. Ne jamais dupliquer le guide dans les docs projet (drift garanti). Ne jamais omettre les docs projet (le guide ne peut pas contenir les valeurs specifiques au projet). Pattern : Guide = 'quoi faire et pourquoi' (principes, evidence). Docs projet = 'ce qu'on a fait et ou' (instantiation, config, pointeurs vers le guide). Modele SWEBOK : tailoring = documenter comment le projet instancie le standard organisationnel.",
-      "grade": 5,
-      "level": "STANDARD",
-      "is_universal": true,
-      "sources": [
-        {
-          "name": "Google SWE Book Ch.10 — Documentation",
-          "pyramid": 2,
-          "year": 2020
-        },
-        {
-          "name": "SWEBOK v4 — Process Tailoring",
-          "pyramid": 1,
-          "year": 2024
-        },
-        {
-          "name": "Diataxis Framework — Reference vs Explanation",
-          "pyramid": 3,
-          "year": 2024
-        },
-        {
-          "name": "NASA Software Engineering Handbook (NASA-HDBK-2203)",
-          "pyramid": 1,
-          "year": 2020
-        },
-        {
-          "name": "Nygard — Architecture Decision Records",
-          "pyramid": 3,
-          "year": 2011
-        },
-        {
-          "name": "ISO/IEC 26511:2018 — Information for users",
-          "pyramid": 1,
-          "year": 2018
-        },
-        {
-          "name": "InnerSource Commons — Standard Base Documentation",
-          "pyramid": 3,
-          "year": 2024
-        },
-        {
-          "name": "Fowler — Pattern language vs pattern application",
-          "pyramid": 2,
-          "year": 2002
-        }
-      ]
-    },
-    {
-      "id": "high-availability",
-      "domain": "reliability",
-      "question": "Comment assurer la haute disponibilite avec multi-instance et health checks ?",
-      "recommendation": "Architecture multi-instance avec applications stateless",
-      "grade": 5,
-      "level": "STANDARD",
-      "is_universal": true,
-      "sources": []
-    },
-    {
-      "id": "linting",
-      "domain": "code-quality",
-      "question": "Quels outils de linting, formatting et analyse statique par langage ?",
-      "recommendation": "ESLint (89.3% adoption, 115M dl/sem) avec @eslint/js + typescript-eslint + eslint-plugin-react-hooks (qualifie 'essentiel' par React). Prettier (87.5% adoption) pour le formatting, avec eslint-config-prettier pour separer les roles. Biome a surveiller (35x plus rapide, 7M dl/sem) mais pas encore recommande par React.",
-      "grade": 5,
-      "level": "RECOMMANDE",
-      "is_universal": false,
-      "sources": [
-        {
-          "name": "React docs — ESLint essential, Prettier recommended",
-          "pyramid": 3,
-          "year": 2024
-        },
-        {
-          "name": "State of Frontend 2024 — ESLint 89.3%, Prettier 87.5%",
-          "pyramid": 4,
-          "year": 2024
-        },
-        {
-          "name": "npm trends — ESLint 115M/sem, Biome 7M",
-          "pyramid": 4,
-          "year": 2024
-        }
-      ]
-    },
-    {
-      "id": "loading-states",
-      "domain": "design",
-      "question": "Quel pattern de chargement utiliser (skeleton, spinner, barre de progression) ?",
-      "recommendation": "Skeleton screens plutot que spinners : reduisent la perception du temps d'attente de ~35% et l'abandon de 10-20%.",
-      "grade": 5,
-      "level": "RECOMMANDE",
-      "is_universal": true,
-      "sources": [
-        {},
-        {},
-        {}
-      ]
-    },
-    {
-      "id": "meta-seo",
-      "domain": "design",
-      "question": "Quels meta tags, HTML semantique et donnees structurees implementer pour le SEO ?",
-      "recommendation": "Meta tags essentiels : title, description, OpenGraph (og:title, og:description, og:image, og:type) sur chaque page.",
-      "grade": 5,
-      "level": "RECOMMANDE",
-      "is_universal": true,
-      "sources": [
-        {},
-        {}
-      ]
-    },
-    {
-      "id": "monitoring",
-      "domain": "reliability",
-      "question": "Quoi monitorer et avec quel stack d'observabilite ?",
-      "recommendation": "Monitorer les 4 golden signals : Latency (P95 < 500ms), Traffic (req/s), Errors (5xx < 0.1%), Saturation (CPU, memoire, connexions DB)",
-      "grade": 5,
-      "level": "STANDARD",
-      "is_universal": true,
-      "sources": []
-    },
-    {
-      "id": "glass-effects",
-      "domain": "design",
-      "question": "Quand utiliser des effets de verre (backdrop-blur/glassmorphism) ?",
-      "recommendation": "UNIQUEMENT pour overlays (modals, dropdowns, command palette). Blur 8-12px max. Semi-opaque bg (alpha >= 0.7) pour WCAG AA. Max 3-5 elements blur par viewport. prefers-reduced-transparency fallback obligatoire pour les utilisateurs sensibles.",
-      "grade": 4,
-      "level": "RECOMMANDE",
-      "is_universal": true,
-      "sources": [
-        {
-          "name": "Apple HIG Materials/Vibrancy",
-          "pyramid": 1,
-          "year": 2024
-        },
-        {
-          "name": "Axess Lab Glassmorphism Accessibility",
-          "pyramid": 3,
-          "year": 2022
-        },
-        {
-          "name": "Can I Use backdrop-filter — 92% support",
-          "pyramid": 2,
-          "year": 2024
-        },
-        {
-          "name": "WCAG 2.2 SC 1.4.3 Contrast",
-          "pyramid": 1,
-          "year": 2023
-        },
-        {
-          "name": "Josh Comeau — backdrop-filter",
-          "pyramid": 3,
-          "year": 2023
-        }
-      ]
-    },
-    {
-      "id": "i18n",
-      "domain": "accessibility",
-      "question": "Quelle solution d'internationalisation (i18n) utiliser ?",
-      "is_universal": false,
-      "sources": [
-        {},
-        {}
-      ]
-    },
-    {
-      "id": "navigation",
-      "domain": "design",
-      "question": "Quel pattern de navigation utiliser (sidebar, top-nav, bottom tab bar) ?",
-      "recommendation": "Sidebar collapsible pour apps complexes (>5 sections, navigation imbriquee, dashboards). Top-nav horizontale pour sites vitrine (<7 liens). Bottom tab bar pour mobile (<5 sections).",
-      "grade": 6,
-      "level": "STANDARD",
-      "is_universal": true,
-      "sources": [
-        {},
-        {},
-        {}
-      ]
-    },
-    {
-      "id": "incident-response",
-      "domain": "operations",
-      "question": "Comment reagir aux incidents en production (runbooks, postmortems, blameless culture) ?",
-      "recommendation": "Processus en 5 etapes : Identifier (quel service, quel impact) → Contenir (rollback, feature flag off, scale up) → Resoudre (fix + deploy) → Communiquer (status page, equipe informee) → Postmortem (dans les 48h, blameless).",
-      "grade": 5,
-      "level": "STANDARD",
-      "is_universal": true,
-      "sources": [
-        {
-          "name": "Google SRE Book ch.15 — postmortem culture",
-          "pyramid": 5,
-          "year": 2016
-        },
-        {
-          "name": "PagerDuty Incident Response guide",
-          "pyramid": 3,
-          "year": 2024
-        }
-      ]
-    },
-    {
-      "id": "integration-tests",
-      "domain": "testing",
-      "question": "Comment structurer les tests d'integration avec une vraie base de donnees ?",
-      "recommendation": "Testcontainers-python pour lancer PostgreSQL/Redis reels dans Docker pendant les tests d'integration Django.",
-      "grade": 5,
-      "level": "STANDARD",
-      "is_universal": false,
-      "sources": [
-        {},
-        {}
-      ]
-    },
-    {
-      "id": "logging",
-      "domain": "operations",
-      "question": "Comment structurer, router et proteger les logs applicatifs ?",
-      "recommendation": "python-json-logger pour le logging structure JSON. Configuration via LOGGING dans settings.py avec le formatter JSON. Ecriture sur stdout, routing par l'environnement.",
-      "grade": 5,
-      "level": "RECOMMANDE",
-      "is_universal": false,
-      "sources": [
-        {
-          "name": "python-json-logger docs",
-          "pyramid": 3,
-          "year": 2024
-        },
-        {
-          "name": "Django docs — Logging",
-          "pyramid": 3,
-          "year": 2024
-        },
-        {
-          "name": "Double extraction batch 10 — accord 96%",
-          "pyramid": 5,
-          "year": 2026
-        }
-      ]
-    },
-    {
-      "id": "null-safety",
-      "domain": "code-quality",
-      "question": "Comment eliminer les null non controles (Optional en Java, strictNullChecks en TS) ?",
-      "recommendation": "Retourner Optional pour les valeurs potentiellement absentes. Ne jamais passer Optional en parametre (anti-pattern Java docs). Ne jamais appeler .get() sans .isPresent(). Utiliser .orElseThrow() pour les cas obligatoires.",
-      "grade": 5,
-      "level": "RECOMMANDE",
-      "is_universal": false,
-      "sources": [
-        {
-          "name": "Java 17+ docs — Optional API",
-          "pyramid": 3,
-          "year": 2024
-        },
-        {
-          "name": "Effective Java (Bloch) Item 55",
-          "pyramid": 5,
-          "year": 2018
-        }
-      ]
-    },
-    {
-      "id": "numeric-precision",
-      "domain": "data",
-      "question": "Comment gerer la precision numerique pour les calculs financiers et les montants ?",
-      "recommendation": "decimal.Decimal (built-in Python) pour la precision arbitraire. Django DecimalField pour les modeles. Jamais de FloatField pour les montants.",
-      "grade": 5,
-      "level": "STANDARD",
-      "implementation": "from decimal import Decimal. prix = Decimal('19.99'). Django : models.DecimalField(max_digits=10, decimal_places=2). JAMAIS models.FloatField pour les montants.",
-      "is_universal": false,
-      "sources": [
-        {
-          "name": "Python docs — decimal module",
-          "pyramid": 3,
-          "year": 2024
-        },
-        {
-          "name": "Django docs — DecimalField",
-          "pyramid": 3,
-          "year": 2024
-        }
-      ]
-    },
-    {
-      "id": "pagination",
-      "domain": "design",
-      "question": "Quel type de pagination utiliser (offset vs cursor-based) ?",
-      "recommendation": "Offset pour listes admin et tableaux triables (acces direct a page N). Cursor-based pour feeds, fils de discussion, infinite scroll et exports (performant, resultats stables).",
-      "grade": 5,
-      "level": "RECOMMANDE",
-      "is_universal": true,
-      "sources": [
-        {},
-        {},
-        {}
-      ]
-    },
-    {
-      "id": "performance-testing",
-      "domain": "performance",
-      "question": "Comment tester et mesurer la performance d'une application web (backend et frontend) ?",
-      "recommendation": "Definir des budgets de performance : LCP < 2.5s, INP < 200ms, CLS < 0.1, bundle JS < 200KB gzipped, API P95 < 500ms, TTFB < 800ms. Sans budget, la performance se degrade commit apres commit.",
-      "grade": 5,
-      "level": "STANDARD",
-      "is_universal": true,
-      "sources": [
-        {
-          "name": "web.dev Core Web Vitals — LCP, INP, CLS",
-          "pyramid": 3,
-          "year": 2024
-        },
-        {
-          "name": "Google CrUX report — Core Web Vitals impact ranking",
-          "pyramid": 4,
-          "year": 2024
-        },
-        {
-          "name": "Google SRE Book — latency SLOs, performance budgets",
-          "pyramid": 5,
-          "year": 2016
-        }
-      ]
-    },
-    {
-      "id": "rate-limiting",
-      "domain": "security",
-      "question": "Comment implementer le rate limiting et la protection DDoS ?",
-      "recommendation": "DRF throttling (built-in) pour le rate limiting",
-      "grade": 5,
-      "level": "RECOMMANDE",
-      "implementation": "Configurer DEFAULT_THROTTLE_CLASSES et DEFAULT_THROTTLE_RATES dans REST_FRAMEWORK settings (ex: 'anon': '50/minute', 'user': '200/minute').",
-      "is_universal": false,
-      "sources": [
-        {
-          "name": "DRF Throttling docs",
-          "pyramid": 3,
-          "year": 2024
-        }
-      ]
-    },
-    {
-      "id": "realtime",
-      "domain": "design",
-      "question": "Quel transport utiliser pour la communication temps reel (WebSocket, SSE, polling) ?",
-      "recommendation": "WebSocket + STOMP pour communication bidirectionnelle (chat, collaboration). SSE pour serveur-vers-client uniquement (notifications, feeds). Polling en fallback pour compatibilite legacy.",
-      "grade": 5,
-      "level": "STANDARD",
-      "is_universal": true,
-      "sources": [
-        {},
-        {},
-        {},
-        {}
-      ]
-    },
-    {
-      "id": "release-management",
-      "domain": "project",
-      "question": "Comment automatiser le processus de release pour garantir reproductibilite et tracabilite ?",
-      "recommendation": "Versionning semantique strict (MAJOR.MINOR.PATCH) avec semantic-release base sur les conventional commits. Changelog auto-genere, jamais manuel.",
-      "grade": 5,
-      "level": "STANDARD",
-      "is_universal": true,
-      "sources": [
-        {
-          "name": "semver.org",
-          "pyramid": 5,
-          "year": 2024
-        },
-        {
-          "name": "Humble & Farley 'Continuous Delivery'",
-          "pyramid": 3,
-          "year": 2010
-        },
-        {
-          "name": "semantic-release docs",
-          "pyramid": 5,
-          "year": 2024
-        }
-      ]
-    },
-    {
-      "id": "repo-standard-files",
-      "domain": "project",
-      "question": "Quels fichiers standard un repo doit-il contenir et quoi mettre dans chacun ?",
-      "recommendation": "4 fichiers obligatoires avec scopes distincts (single source of truth) : (1) README.md = landing page (description, stack, prerequis, install, commandes, quick-start). (2) CONTRIBUTING.md = process de contribution (workflow PR, branches, commits, setup dev, tests requis). (3) CONVENTIONS.md = regles de code (nommage, patterns, architecture, regles non automatisables). (4) LICENSE. Recommandes : CHANGELOG.md (par version, categories Added/Changed/Fixed), SECURITY.md, CODE_OF_CONDUCT.md. CLAUDE.md = pointeurs uniquement vers les fichiers canoniques + contraintes AI-specifiques, jamais de duplication. Regle cardinale : chaque info existe dans un seul fichier, les autres font des liens. CONTRIBUTING ≠ CONVENTIONS : process (comment contribuer, lu une fois) ≠ reference (regles de code, consulte en continu).",
-      "grade": 5,
-      "level": "STANDARD",
-      "is_universal": true,
-      "sources": [
-        {
-          "name": "GitHub Docs — Community health files",
-          "pyramid": 1,
-          "year": 2024
-        },
-        {
-          "name": "Google SWE Book Ch.10 — Documentation",
-          "pyramid": 2,
-          "year": 2020
-        },
-        {
-          "name": "InnerSource Commons — Standard Base Documentation",
-          "pyramid": 3,
-          "year": 2024
-        },
-        {
-          "name": "Open Source Guides (opensource.guide)",
-          "pyramid": 3,
-          "year": 2023
-        },
-        {
-          "name": "Linux Foundation CII Best Practices Badge",
-          "pyramid": 2,
-          "year": 2024
-        },
-        {
-          "name": "Keep a Changelog",
-          "pyramid": 4,
-          "year": 2024
-        },
-        {
-          "name": "Anthropic — CLAUDE.md documentation",
-          "pyramid": 1,
-          "year": 2025
-        }
-      ]
-    },
-    {
-      "id": "responsive",
-      "domain": "design",
-      "question": "Quelle strategie responsive adopter (breakpoints, touch targets, mobile-first) ?",
-      "recommendation": "Mobile-first : commencer par le mobile et enrichir progressivement. Breakpoints : sm 640px, md 768px, lg 1024px, xl 1280px, 2xl 1536px.",
-      "grade": 5,
-      "level": "RECOMMANDE",
-      "is_universal": true,
-      "sources": [
-        {},
-        {}
-      ]
-    },
-    {
-      "id": "secrets-management",
-      "domain": "security",
-      "question": "Comment gerer les secrets (credentials, API keys, tokens) de maniere securisee ?",
-      "recommendation": "django-environ pour la gestion des variables d'environnement",
-      "grade": 5,
-      "level": "RECOMMANDE",
-      "implementation": "Installer django-environ, initialiser env = environ.Env() dans settings.py, lire les valeurs via env('DATABASE_URL'), env('SECRET_KEY').",
-      "is_universal": false,
-      "sources": [
-        {
-          "name": "django-environ docs",
-          "pyramid": 3,
-          "year": 2024
-        }
-      ]
-    },
-    {
-      "id": "shadows",
-      "domain": "design",
-      "question": "Quel systeme d'ombres et d'elevation utiliser ?",
-      "recommendation": "Ombres diffuses sur 4 niveaux (sm/md/lg/xl), jamais de box-shadow durs. Ombres subtiles et multicouches pour hierarchie visuelle naturelle.",
-      "grade": 5,
-      "level": "RECOMMANDE",
-      "is_universal": true,
-      "sources": [
-        {},
-        {},
-        {}
-      ]
     },
     {
       "id": "slos",
@@ -3683,99 +3270,6 @@
           "name": "ISO/IEC 25023 — mesures de qualite des systemes",
           "pyramid": 1,
           "year": 2016
-        }
-      ]
-    },
-    {
-      "id": "soft-delete",
-      "domain": "architecture",
-      "question": "Quand utiliser le soft delete vs hard delete ?",
-      "recommendation": "Soft delete (deletedAt timestamp) pour entites owned restaurables. Hard delete pour donnees techniques/ephemeres. Jamais event sourcing pour du CRUD.",
-      "grade": 5,
-      "level": "STANDARD",
-      "is_universal": true,
-      "sources": [
-        {
-          "name": "Hibernate ORM @SoftDelete",
-          "pyramid": 1,
-          "year": 2024
-        },
-        {
-          "name": "JPA 3.1 Specification",
-          "pyramid": 1,
-          "year": 2023
-        },
-        {
-          "name": "SWEBOK v4 Software Maintenance",
-          "pyramid": 1,
-          "year": 2024
-        },
-        {
-          "name": "Martin Fowler Temporal Patterns",
-          "pyramid": 2,
-          "year": 2005
-        },
-        {
-          "name": "RGPD Article 17 — Droit a l'effacement",
-          "pyramid": 1,
-          "year": 2018
-        }
-      ]
-    },
-    {
-      "id": "surface-elevation",
-      "domain": "design",
-      "question": "Comment organiser la hierarchie visuelle des surfaces (elevation) ?",
-      "recommendation": "5 niveaux (0=base, 1=cards/sidebars, 2=dropdowns/popovers, 3=modals/dialogs, 4=toasts). Tonal elevation en dark mode. Semantic tokens --elevation-0 a --elevation-4. En light mode, ombre portee croissante. En dark mode, surface de plus en plus claire.",
-      "grade": 5,
-      "level": "STANDARD",
-      "is_universal": true,
-      "sources": [
-        {
-          "name": "M3 Elevation",
-          "pyramid": 1,
-          "year": 2024
-        },
-        {
-          "name": "M3 Tone-based Surfaces",
-          "pyramid": 1,
-          "year": 2024
-        },
-        {
-          "name": "Apple HIG Materials",
-          "pyramid": 1,
-          "year": 2024
-        },
-        {
-          "name": "GitLab Pajamas Elevation",
-          "pyramid": 3,
-          "year": 2024
-        },
-        {
-          "name": "designsystems.surf",
-          "pyramid": 4,
-          "year": 2024
-        }
-      ]
-    },
-    {
-      "id": "tech-debt",
-      "domain": "code-quality",
-      "question": "Comment mesurer, prioriser et reduire la dette technique ?",
-      "recommendation": "Mesurer la dette via SonarQube Technical Debt metric. Seuil : ratio dette < 5% (temps remediation / temps dev).",
-      "grade": 5,
-      "level": "STANDARD",
-      "is_universal": true,
-      "sources": [
-        {
-          "name": "SonarQube docs — technical debt metric",
-          "pyramid": 3,
-          "year": 2024
-        },
-        {
-          "name": "Fowler — TechnicalDebt",
-          "pyramid": 5,
-          "year": 2009
         }
       ]
     },
@@ -3957,241 +3451,6 @@
       "sources": [
         {},
         {}
-      ]
-    },
-    {
-      "id": "image-optimization",
-      "domain": "performance",
-      "question": "Comment optimiser les images pour reduire le poids des pages web ?",
-      "recommendation": "WebP/AVIF, lazy loading natif (loading=\"lazy\"), responsive srcset. Les images representent ~50% du poids des pages web (HTTP Archive 2025). WebP = -25 a -35% vs JPEG (97%+ support), AVIF = -40 a -50% (92%+ support).",
-      "grade": 4,
-      "level": "RECOMMANDE",
-      "is_universal": true,
-      "sources": [
-        {
-          "name": "web.dev — image optimization guide",
-          "pyramid": 3,
-          "year": 2024
-        },
-        {
-          "name": "HTTP Archive 2025",
-          "pyramid": 4,
-          "year": 2025
-        },
-        {
-          "name": "MDN — loading=\"lazy\"",
-          "pyramid": 3,
-          "year": 2024
-        },
-        {
-          "name": "Can I Use — WebP 97%, AVIF 92%",
-          "pyramid": 4,
-          "year": 2026
-        }
-      ]
-    },
-    {
-      "id": "infrastructure",
-      "domain": "cicd",
-      "question": "Comment gerer l'infrastructure de maniere declarative et reproductible (IaC) ?",
-      "recommendation": "L'infrastructure doit etre declarative, versionnee et reproductible. Jamais de config manuelle en prod.",
-      "grade": 4,
-      "level": "RECOMMANDE",
-      "is_universal": true,
-      "sources": [
-        {
-          "name": "SWEBOK v4 s2.2 — infrastructure as code",
-          "pyramid": 1,
-          "year": 2024
-        },
-        {
-          "name": "Twelve-Factor Factor X — dev/prod parity",
-          "pyramid": 5,
-          "year": 2012
-        },
-        {
-          "name": "DORA 2024 — manual changes = #1 cause of incidents",
-          "pyramid": 4,
-          "year": 2024
-        }
-      ]
-    },
-    {
-      "id": "lombok-usage",
-      "domain": "code-quality",
-      "question": "Quand utiliser Lombok vs Java Records ?",
-      "recommendation": "Lombok pour entities JPA: @Getter @Setter @Builder @NoArgsConstructor @AllArgsConstructor. JAMAIS @Data sur entities. @RequiredArgsConstructor pour injection dans services. @Slf4j pour logging. Records pour tous les DTOs simples.",
-      "grade": 4,
-      "level": "RECOMMANDE",
-      "implementation": "Configurer lombok.config a la racine: lombok.addLombokGeneratedAnnotation=true (pour exclusion Jacoco). Entities: @Getter @Setter @Builder @NoArgsConstructor @AllArgsConstructor. Services: @RequiredArgsConstructor + champs final. DTOs: Java Records avec MapStruct 1.5+.",
-      "is_universal": false,
-      "sources": [
-        {
-          "name": "JPA Buddy — Lombok Best Practices",
-          "pyramid": 3,
-          "year": 2024
-        },
-        {
-          "name": "Thorben Janssen — Lombok+Hibernate Pitfalls",
-          "pyramid": 3,
-          "year": 2023
-        },
-        {
-          "name": "JetBrains State of Java 2025",
-          "pyramid": 2,
-          "year": 2025
-        }
-      ]
-    },
-    {
-      "id": "module-structure",
-      "domain": "architecture",
-      "question": "Comment organiser les modules/packages d'une application (feature-based vs layer-based) ?",
-      "recommendation": "Organiser par feature/domaine, pas par couche technique. 40% moins de dependances inter-packages (Baxter et al., 56 projets Java), 25-30% moins de defauts (Santos et al., 12 projets), 30-50% moins d'effort de maintenance (Koziolek et al., revue systematique).",
-      "grade": 4,
-      "level": "RECOMMANDE",
-      "is_universal": true,
-      "sources": [
-        {
-          "name": "ISO 25010:2023 — Modularity sub-characteristic",
-          "pyramid": 1,
-          "year": 2023
-        },
-        {
-          "name": "SWEBOK v4 — cohesion/coupling",
-          "pyramid": 1,
-          "year": 2024
-        },
-        {
-          "name": "Clean Architecture (Martin)",
-          "pyramid": 5,
-          "year": 2017
-        },
-        {
-          "name": "DDD (Evans) — bounded contexts",
-          "pyramid": 5,
-          "year": 2003
-        },
-        {
-          "name": "Baxter et al. 2006 — 56 Java projects",
-          "pyramid": 4,
-          "year": 2006
-        },
-        {
-          "name": "Santos et al. 2019 — 12 projects",
-          "pyramid": 4,
-          "year": 2019
-        },
-        {
-          "name": "Koziolek et al. 2013 — systematic review",
-          "pyramid": 4,
-          "year": 2013
-        }
-      ]
-    },
-    {
-      "id": "mutation-testing",
-      "domain": "testing",
-      "question": "Comment valider la qualite des tests au-dela de la couverture de code ?",
-      "recommendation": "mutmut — mutation testing pour Python. Simple a configurer, integration pytest.",
-      "grade": 4,
-      "level": "BONNE PRATIQUE",
-      "is_universal": false,
-      "sources": [
-        {},
-        {}
-      ]
-    },
-    {
-      "id": "onboarding",
-      "domain": "design",
-      "question": "Comment guider les nouveaux utilisateurs (onboarding, divulgation progressive) ?",
-      "recommendation": "Divulgation progressive : montrer les fonctions avancees au fur et a mesure. Empty states comme opportunite d'onboarding. Tooltips contextuels (3-5 etapes max, skip toujours possible).",
-      "grade": 4,
-      "level": "RECOMMANDE",
-      "is_universal": true,
-      "sources": [
-        {},
-        {},
-        {}
-      ]
-    },
-    {
-      "id": "plugin-registry",
-      "domain": "architecture",
-      "question": "Comment structurer une app modulaire avec systeme de plugins/registry ?",
-      "recommendation": "Registry interne VS Code-inspired (PAS micro-frontends pour single team). Module definition declarative + lazy loading React.lazy + communication par events types. Shell fournit extension points, modules les peuplent. Chaque module declare ses contributions (routes, panels, commandes) dans un manifest statique.",
-      "grade": 4,
-      "level": "RECOMMANDE",
-      "is_universal": true,
-      "sources": [
-        {
-          "name": "VS Code Extension API — Contribution Points",
-          "pyramid": 1,
-          "year": 2024
-        },
-        {
-          "name": "Martin Fowler — Micro Frontends",
-          "pyramid": 2,
-          "year": 2019
-        },
-        {
-          "name": "Module Federation Documentation",
-          "pyramid": 3,
-          "year": 2024
-        },
-        {
-          "name": "VS Code Extensibility Principles",
-          "pyramid": 2,
-          "year": 2024
-        }
-      ]
-    },
-    {
-      "id": "requirements-format",
-      "domain": "project",
-      "question": "Quel format utiliser pour exprimer les exigences fonctionnelles de maniere structuree et testable ?",
-      "recommendation": "Formuler les exigences en user stories : En tant que [role], je veux [action], afin de [benefice]. Accompagner chaque story de criteres d'acceptation Given/When/Then.",
-      "grade": 4,
-      "level": "RECOMMANDE",
-      "is_universal": true,
-      "sources": [
-        {
-          "name": "SWEBOK v4 — Software Requirements Knowledge Area",
-          "pyramid": 1,
-          "year": 2024
-        },
-        {
-          "name": "Cohn 'User Stories Applied'",
-          "pyramid": 5,
-          "year": 2004
-        }
-      ]
-    },
-    {
-      "id": "reverse-proxy",
-      "domain": "operations",
-      "question": "Quel reverse proxy utiliser (auto-HTTPS, TLS, load balancing) ?",
-      "recommendation": "Caddy pour les petites-moyennes equipes : auto-provision Let's Encrypt, HTTP/2 par defaut, config minimale. Nginx si besoin de controle avance a tres haute charge.",
-      "grade": 4,
-      "level": "RECOMMANDE",
-      "is_universal": true,
-      "sources": [
-        {
-          "name": "Caddy docs — automatic HTTPS",
-          "pyramid": 3,
-          "year": 2024
-        },
-        {
-          "name": "Let's Encrypt stats — 300M+ certificats actifs",
-          "pyramid": 3,
-          "year": 2024
-        },
-        {
-          "name": "OWASP TLS guidelines",
-          "pyramid": 2,
-          "year": 2024
-        }
       ]
     },
     {
@@ -4392,6 +3651,890 @@
         {},
         {},
         {}
+      ]
+    },
+    {
+      "id": "form-spellcheck",
+      "domain": "design",
+      "question": "Comment gerer la verification orthographique dans les formulaires web ?",
+      "recommendation": "Spellcheck natif navigateur actif par defaut (gratuit, zero maintenance). Desactiver explicitement sur champs techniques (noms scientifiques, code, identifiants). Service externe (LanguageTool) optionnel a la demande, pas en temps reel.",
+      "grade": 3,
+      "level": "BONNE_PRATIQUE",
+      "is_universal": true,
+      "sources": [
+        {
+          "name": "HTML Living Standard WHATWG spellcheck attribute",
+          "pyramid": 1,
+          "year": 2024
+        },
+        {
+          "name": "MDN Web Docs spellcheck",
+          "pyramid": 1,
+          "year": 2024
+        },
+        {
+          "name": "W3C WCAG 2.2 Input Assistance",
+          "pyramid": 1,
+          "year": 2023
+        },
+        {
+          "name": "LanguageTool API docs",
+          "pyramid": 1,
+          "year": 2024
+        }
+      ]
+    },
+    {
+      "id": "forms",
+      "domain": "design",
+      "question": "Comment gerer les formulaires (validation, layout, accessibilite) ?",
+      "is_universal": false,
+      "sources": [
+        {}
+      ]
+    },
+    {
+      "id": "input-validation",
+      "domain": "security",
+      "question": "Comment valider les entrees utilisateur pour prevenir les injections (SQL, XSS, CSRF) ?",
+      "recommendation": "DRF Serializers (built-in) pour la validation serveur",
+      "grade": 7,
+      "level": "STANDARD",
+      "implementation": "Utiliser les Serializers DRF avec les champs types (CharField, EmailField, etc.) et les validateurs integres. L'ORM Django parametrise automatiquement les requetes.",
+      "is_universal": false,
+      "sources": [
+        {
+          "name": "Django REST Framework Serializers docs",
+          "pyramid": 3,
+          "year": 2024
+        }
+      ]
+    },
+    {
+      "id": "gdpr",
+      "domain": "safety",
+      "question": "Quelles sont les exigences RGPD obligatoires pour tout traitement de donnees personnelles UE ?",
+      "recommendation": "Le RGPD est une obligation legale (amende jusqu'a 4% du CA mondial). Consentement explicite (opt-in, pas pre-coche), droit d'acces/export (Art. 15, 20), droit a l'effacement (Art. 17), minimisation des donnees (Art. 5), privacy by design (Art. 25).",
+      "grade": 6,
+      "level": "STANDARD",
+      "is_universal": true,
+      "sources": [
+        {
+          "name": "Reglement UE 2016/679 (RGPD) — Art. 5, 6, 7, 15, 17, 20, 25, 30",
+          "pyramid": 1,
+          "year": 2016
+        },
+        {
+          "name": "CNIL — Guidelines consentement, droit a l'effacement, privacy by design",
+          "pyramid": 1,
+          "year": 2024
+        }
+      ]
+    },
+    {
+      "id": "http-client",
+      "domain": "architecture",
+      "question": "Quel client HTTP utiliser cote backend et cote frontend ?",
+      "recommendation": "httpx — client HTTP async/sync moderne pour Python. Remplace requests avec support async natif.",
+      "grade": 6,
+      "level": "STANDARD",
+      "implementation": "httpx.Client() pour sync, httpx.AsyncClient() pour async. API compatible avec requests. Timeout et retry configurables.",
+      "is_universal": false,
+      "sources": [
+        {
+          "name": "httpx docs",
+          "pyramid": 3,
+          "year": 2024
+        },
+        {
+          "name": "Batch 11 — httpx accord 100%",
+          "pyramid": 5,
+          "year": 2026
+        }
+      ]
+    },
+    {
+      "id": "http-headers",
+      "domain": "security",
+      "question": "Quels headers HTTP de securite configurer et comment ?",
+      "recommendation": "SecurityMiddleware (built-in) pour les headers de securite",
+      "grade": 6,
+      "level": "STANDARD",
+      "implementation": "Activer SecurityMiddleware dans MIDDLEWARE, configurer SECURE_HSTS_SECONDS, SECURE_HSTS_INCLUDE_SUBDOMAINS, SECURE_CONTENT_TYPE_NOSNIFF, X_FRAME_OPTIONS, CSP via django-csp.",
+      "is_universal": false,
+      "sources": [
+        {
+          "name": "Django SecurityMiddleware docs",
+          "pyramid": 3,
+          "year": 2024
+        }
+      ]
+    },
+    {
+      "id": "icon-usage",
+      "domain": "design",
+      "question": "Quand et comment utiliser des icones dans une interface ?",
+      "recommendation": "Toujours pairer icone + texte visible. Icon-only uniquement pour universels (search, close, home) + tooltip. Regle 5 secondes (si pas d'icone evidente en 5s, utiliser texte seul). Icons pour actions, pas decoration. Chaque icone icon-only doit avoir un aria-label explicite.",
+      "grade": 6,
+      "level": "STANDARD",
+      "is_universal": true,
+      "sources": [
+        {
+          "name": "NNg Icon Usability",
+          "pyramid": 1,
+          "year": 2024
+        },
+        {
+          "name": "NNg Bad Icons — Why They Fail",
+          "pyramid": 1,
+          "year": 2023
+        },
+        {
+          "name": "Apple HIG Icons",
+          "pyramid": 1,
+          "year": 2024
+        },
+        {
+          "name": "WCAG 2.2 SC 1.1.1 Text Alternatives",
+          "pyramid": 1,
+          "year": 2023
+        },
+        {
+          "name": "NNg How to Test Icons",
+          "pyramid": 1,
+          "year": 2024
+        }
+      ]
+    },
+    {
+      "id": "mocking",
+      "domain": "testing",
+      "question": "Quelle strategie et quels outils pour le mocking dans les tests ?",
+      "recommendation": "unittest.mock (stdlib) + pytest-mock pour les mocks. Mocker aux frontieres (DB, HTTP, FS).",
+      "grade": 6,
+      "level": "RECOMMANDE",
+      "is_universal": false,
+      "sources": [
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "id": "navigation",
+      "domain": "design",
+      "question": "Quel pattern de navigation utiliser (sidebar, top-nav, bottom tab bar) ?",
+      "recommendation": "Sidebar collapsible pour apps complexes (>5 sections, navigation imbriquee, dashboards). Top-nav horizontale pour sites vitrine (<7 liens). Bottom tab bar pour mobile (<5 sections).",
+      "grade": 6,
+      "level": "STANDARD",
+      "is_universal": true,
+      "sources": [
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "id": "openapi",
+      "domain": "architecture",
+      "question": "Comment documenter les APIs de maniere standardisee et maintenable ?",
+      "recommendation": "drf-spectacular — generation OpenAPI 3.x depuis les serializers et views DRF. Remplace drf-yasg (deprecie).",
+      "grade": 6,
+      "level": "STANDARD",
+      "implementation": "pip install drf-spectacular. REST_FRAMEWORK = {'DEFAULT_SCHEMA_CLASS': 'drf_spectacular.openapi.AutoSchema'}. SpectacularAPIView pour /api/schema/.",
+      "is_universal": false,
+      "sources": [
+        {
+          "name": "drf-spectacular docs",
+          "pyramid": 3,
+          "year": 2024
+        },
+        {
+          "name": "Batch 11 — drf-spectacular accord 100%",
+          "pyramid": 5,
+          "year": 2026
+        }
+      ]
+    },
+    {
+      "id": "password-hashing",
+      "domain": "security",
+      "question": "Quel algorithme utiliser pour le hashing des mots de passe ?",
+      "recommendation": "Utiliser Argon2id avec memory >= 19 MiB, iterations >= 2, parallelism >= 1, salt 16 bytes, hash 32 bytes. Fallback bcrypt (work factor >= 12) si Argon2id non disponible.",
+      "grade": 6,
+      "level": "STANDARD",
+      "is_universal": true,
+      "sources": [
+        {
+          "name": "OWASP Password Storage Cheat Sheet",
+          "pyramid": 2,
+          "year": 2024
+        },
+        {
+          "name": "NIST SP 800-63B",
+          "pyramid": 1,
+          "year": 2024
+        },
+        {
+          "name": "Password Hashing Competition",
+          "pyramid": 5,
+          "year": 2015
+        }
+      ]
+    },
+    {
+      "id": "graceful-shutdown",
+      "domain": "reliability",
+      "question": "Comment drainer les connexions avant l'arret pour zero requetes perdues ?",
+      "recommendation": "Gunicorn graceful-timeout pour drainer les workers. Docker stop_grace_period > graceful-timeout. Gunicorn envoie SIGTERM aux workers qui terminent leurs requetes en cours.",
+      "grade": 5,
+      "level": "STANDARD",
+      "is_universal": false,
+      "sources": [
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "id": "guide-application-docs",
+      "domain": "project",
+      "question": "Comment un projet doit-il documenter son application d'un guide de standards ?",
+      "recommendation": "Option C unanime (12 sources, 0 dissidente) : les docs projet contiennent les choix concrets d'implementation (outils, versions, config, structure) et pointent vers le guide pour le pourquoi. Ne jamais dupliquer le guide dans les docs projet (drift garanti). Ne jamais omettre les docs projet (le guide ne peut pas contenir les valeurs specifiques au projet). Pattern : Guide = 'quoi faire et pourquoi' (principes, evidence). Docs projet = 'ce qu'on a fait et ou' (instantiation, config, pointeurs vers le guide). Modele SWEBOK : tailoring = documenter comment le projet instancie le standard organisationnel.",
+      "grade": 5,
+      "level": "STANDARD",
+      "is_universal": true,
+      "sources": [
+        {
+          "name": "Google SWE Book Ch.10 — Documentation",
+          "pyramid": 2,
+          "year": 2020
+        },
+        {
+          "name": "SWEBOK v4 — Process Tailoring",
+          "pyramid": 1,
+          "year": 2024
+        },
+        {
+          "name": "Diataxis Framework — Reference vs Explanation",
+          "pyramid": 3,
+          "year": 2024
+        },
+        {
+          "name": "NASA Software Engineering Handbook (NASA-HDBK-2203)",
+          "pyramid": 1,
+          "year": 2020
+        },
+        {
+          "name": "Nygard — Architecture Decision Records",
+          "pyramid": 3,
+          "year": 2011
+        },
+        {
+          "name": "ISO/IEC 26511:2018 — Information for users",
+          "pyramid": 1,
+          "year": 2018
+        },
+        {
+          "name": "InnerSource Commons — Standard Base Documentation",
+          "pyramid": 3,
+          "year": 2024
+        },
+        {
+          "name": "Fowler — Pattern language vs pattern application",
+          "pyramid": 2,
+          "year": 2002
+        }
+      ]
+    },
+    {
+      "id": "high-availability",
+      "domain": "reliability",
+      "question": "Comment assurer la haute disponibilite avec multi-instance et health checks ?",
+      "recommendation": "Architecture multi-instance avec applications stateless",
+      "grade": 5,
+      "level": "STANDARD",
+      "is_universal": true,
+      "sources": []
+    },
+    {
+      "id": "incident-response",
+      "domain": "operations",
+      "question": "Comment reagir aux incidents en production (runbooks, postmortems, blameless culture) ?",
+      "recommendation": "Processus en 5 etapes : Identifier (quel service, quel impact) → Contenir (rollback, feature flag off, scale up) → Resoudre (fix + deploy) → Communiquer (status page, equipe informee) → Postmortem (dans les 48h, blameless).",
+      "grade": 5,
+      "level": "STANDARD",
+      "is_universal": true,
+      "sources": [
+        {
+          "name": "Google SRE Book ch.15 — postmortem culture",
+          "pyramid": 5,
+          "year": 2016
+        },
+        {
+          "name": "PagerDuty Incident Response guide",
+          "pyramid": 3,
+          "year": 2024
+        }
+      ]
+    },
+    {
+      "id": "logging",
+      "domain": "operations",
+      "question": "Comment structurer, router et proteger les logs applicatifs ?",
+      "recommendation": "python-json-logger pour le logging structure JSON. Configuration via LOGGING dans settings.py avec le formatter JSON. Ecriture sur stdout, routing par l'environnement.",
+      "grade": 5,
+      "level": "RECOMMANDE",
+      "is_universal": false,
+      "sources": [
+        {
+          "name": "python-json-logger docs",
+          "pyramid": 3,
+          "year": 2024
+        },
+        {
+          "name": "Django docs — Logging",
+          "pyramid": 3,
+          "year": 2024
+        },
+        {
+          "name": "Double extraction batch 10 — accord 96%",
+          "pyramid": 5,
+          "year": 2026
+        }
+      ]
+    },
+    {
+      "id": "meta-seo",
+      "domain": "design",
+      "question": "Quels meta tags, HTML semantique et donnees structurees implementer pour le SEO ?",
+      "recommendation": "Meta tags essentiels : title, description, OpenGraph (og:title, og:description, og:image, og:type) sur chaque page.",
+      "grade": 5,
+      "level": "RECOMMANDE",
+      "is_universal": true,
+      "sources": [
+        {},
+        {}
+      ]
+    },
+    {
+      "id": "null-safety",
+      "domain": "code-quality",
+      "question": "Comment eliminer les null non controles (Optional en Java, strictNullChecks en TS) ?",
+      "recommendation": "Retourner Optional pour les valeurs potentiellement absentes. Ne jamais passer Optional en parametre (anti-pattern Java docs). Ne jamais appeler .get() sans .isPresent(). Utiliser .orElseThrow() pour les cas obligatoires.",
+      "grade": 5,
+      "level": "RECOMMANDE",
+      "is_universal": false,
+      "sources": [
+        {
+          "name": "Java 17+ docs — Optional API",
+          "pyramid": 3,
+          "year": 2024
+        },
+        {
+          "name": "Effective Java (Bloch) Item 55",
+          "pyramid": 5,
+          "year": 2018
+        }
+      ]
+    },
+    {
+      "id": "numeric-precision",
+      "domain": "data",
+      "question": "Comment gerer la precision numerique pour les calculs financiers et les montants ?",
+      "recommendation": "decimal.Decimal (built-in Python) pour la precision arbitraire. Django DecimalField pour les modeles. Jamais de FloatField pour les montants.",
+      "grade": 5,
+      "level": "STANDARD",
+      "implementation": "from decimal import Decimal. prix = Decimal('19.99'). Django : models.DecimalField(max_digits=10, decimal_places=2). JAMAIS models.FloatField pour les montants.",
+      "is_universal": false,
+      "sources": [
+        {
+          "name": "Python docs — decimal module",
+          "pyramid": 3,
+          "year": 2024
+        },
+        {
+          "name": "Django docs — DecimalField",
+          "pyramid": 3,
+          "year": 2024
+        }
+      ]
+    },
+    {
+      "id": "pagination",
+      "domain": "design",
+      "question": "Quel type de pagination utiliser (offset vs cursor-based) ?",
+      "recommendation": "Offset pour listes admin et tableaux triables (acces direct a page N). Cursor-based pour feeds, fils de discussion, infinite scroll et exports (performant, resultats stables).",
+      "grade": 5,
+      "level": "RECOMMANDE",
+      "is_universal": true,
+      "sources": [
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "id": "rate-limiting",
+      "domain": "security",
+      "question": "Comment implementer le rate limiting et la protection DDoS ?",
+      "recommendation": "DRF throttling (built-in) pour le rate limiting",
+      "grade": 5,
+      "level": "RECOMMANDE",
+      "implementation": "Configurer DEFAULT_THROTTLE_CLASSES et DEFAULT_THROTTLE_RATES dans REST_FRAMEWORK settings (ex: 'anon': '50/minute', 'user': '200/minute').",
+      "is_universal": false,
+      "sources": [
+        {
+          "name": "DRF Throttling docs",
+          "pyramid": 3,
+          "year": 2024
+        }
+      ]
+    },
+    {
+      "id": "release-management",
+      "domain": "project",
+      "question": "Comment automatiser le processus de release pour garantir reproductibilite et tracabilite ?",
+      "recommendation": "Versionning semantique strict (MAJOR.MINOR.PATCH) avec semantic-release base sur les conventional commits. Changelog auto-genere, jamais manuel.",
+      "grade": 5,
+      "level": "STANDARD",
+      "is_universal": true,
+      "sources": [
+        {
+          "name": "semver.org",
+          "pyramid": 5,
+          "year": 2024
+        },
+        {
+          "name": "Humble & Farley 'Continuous Delivery'",
+          "pyramid": 3,
+          "year": 2010
+        },
+        {
+          "name": "semantic-release docs",
+          "pyramid": 5,
+          "year": 2024
+        }
+      ]
+    },
+    {
+      "id": "repo-standard-files",
+      "domain": "project",
+      "question": "Quels fichiers standard un repo doit-il contenir et quoi mettre dans chacun ?",
+      "recommendation": "4 fichiers obligatoires avec scopes distincts (single source of truth) : (1) README.md = landing page (description, stack, prerequis, install, commandes, quick-start). (2) CONTRIBUTING.md = process de contribution (workflow PR, branches, commits, setup dev, tests requis). (3) CONVENTIONS.md = regles de code (nommage, patterns, architecture, regles non automatisables). (4) LICENSE. Recommandes : CHANGELOG.md (par version, categories Added/Changed/Fixed), SECURITY.md, CODE_OF_CONDUCT.md. CLAUDE.md = pointeurs uniquement vers les fichiers canoniques + contraintes AI-specifiques, jamais de duplication. Regle cardinale : chaque info existe dans un seul fichier, les autres font des liens. CONTRIBUTING ≠ CONVENTIONS : process (comment contribuer, lu une fois) ≠ reference (regles de code, consulte en continu).",
+      "grade": 5,
+      "level": "STANDARD",
+      "is_universal": true,
+      "sources": [
+        {
+          "name": "GitHub Docs — Community health files",
+          "pyramid": 1,
+          "year": 2024
+        },
+        {
+          "name": "Google SWE Book Ch.10 — Documentation",
+          "pyramid": 2,
+          "year": 2020
+        },
+        {
+          "name": "InnerSource Commons — Standard Base Documentation",
+          "pyramid": 3,
+          "year": 2024
+        },
+        {
+          "name": "Open Source Guides (opensource.guide)",
+          "pyramid": 3,
+          "year": 2023
+        },
+        {
+          "name": "Linux Foundation CII Best Practices Badge",
+          "pyramid": 2,
+          "year": 2024
+        },
+        {
+          "name": "Keep a Changelog",
+          "pyramid": 4,
+          "year": 2024
+        },
+        {
+          "name": "Anthropic — CLAUDE.md documentation",
+          "pyramid": 1,
+          "year": 2025
+        }
+      ]
+    },
+    {
+      "id": "frontend-framework",
+      "domain": "architecture",
+      "question": "Quel framework frontend choisir pour une application web ?",
+      "recommendation": "React — #1 en adoption (44.7% SO 2025), ecosysteme de composants le plus riche (MUI, shadcn/ui, Radix, Ant Design), hiring pool le plus grand. Convergence de 5 sources independantes.",
+      "grade": 4,
+      "level": "RECOMMANDE",
+      "is_universal": true,
+      "sources": [
+        {
+          "name": "SO Survey 2025",
+          "pyramid": 4,
+          "year": 2025
+        },
+        {
+          "name": "State of JS 2025",
+          "pyramid": 4,
+          "year": 2025
+        },
+        {
+          "name": "JetBrains 2024",
+          "pyramid": 4,
+          "year": 2024
+        },
+        {
+          "name": "npm trends — React 34M dl/semaine",
+          "pyramid": 4,
+          "year": 2025
+        },
+        {
+          "name": "GitHub stars — React 266k",
+          "pyramid": 4,
+          "year": 2025
+        }
+      ]
+    },
+    {
+      "id": "glass-effects",
+      "domain": "design",
+      "question": "Quand utiliser des effets de verre (backdrop-blur/glassmorphism) ?",
+      "recommendation": "UNIQUEMENT pour overlays (modals, dropdowns, command palette). Blur 8-12px max. Semi-opaque bg (alpha >= 0.7) pour WCAG AA. Max 3-5 elements blur par viewport. prefers-reduced-transparency fallback obligatoire pour les utilisateurs sensibles.",
+      "grade": 4,
+      "level": "RECOMMANDE",
+      "is_universal": true,
+      "sources": [
+        {
+          "name": "Apple HIG Materials/Vibrancy",
+          "pyramid": 1,
+          "year": 2024
+        },
+        {
+          "name": "Axess Lab Glassmorphism Accessibility",
+          "pyramid": 3,
+          "year": 2022
+        },
+        {
+          "name": "Can I Use backdrop-filter — 92% support",
+          "pyramid": 2,
+          "year": 2024
+        },
+        {
+          "name": "WCAG 2.2 SC 1.4.3 Contrast",
+          "pyramid": 1,
+          "year": 2023
+        },
+        {
+          "name": "Josh Comeau — backdrop-filter",
+          "pyramid": 3,
+          "year": 2023
+        }
+      ]
+    },
+    {
+      "id": "i18n",
+      "domain": "accessibility",
+      "question": "Quelle solution d'internationalisation (i18n) utiliser ?",
+      "is_universal": false,
+      "sources": [
+        {},
+        {}
+      ]
+    },
+    {
+      "id": "integration-tests",
+      "domain": "testing",
+      "question": "Comment structurer les tests d'integration avec une vraie base de donnees ?",
+      "recommendation": "Testcontainers-python pour lancer PostgreSQL/Redis reels dans Docker pendant les tests d'integration Django.",
+      "grade": 5,
+      "level": "STANDARD",
+      "is_universal": false,
+      "sources": [
+        {},
+        {}
+      ]
+    },
+    {
+      "id": "linting",
+      "domain": "code-quality",
+      "question": "Quels outils de linting, formatting et analyse statique par langage ?",
+      "recommendation": "ESLint (89.3% adoption, 115M dl/sem) avec @eslint/js + typescript-eslint + eslint-plugin-react-hooks (qualifie 'essentiel' par React). Prettier (87.5% adoption) pour le formatting, avec eslint-config-prettier pour separer les roles. Biome a surveiller (35x plus rapide, 7M dl/sem) mais pas encore recommande par React.",
+      "grade": 5,
+      "level": "RECOMMANDE",
+      "is_universal": false,
+      "sources": [
+        {
+          "name": "React docs — ESLint essential, Prettier recommended",
+          "pyramid": 3,
+          "year": 2024
+        },
+        {
+          "name": "State of Frontend 2024 — ESLint 89.3%, Prettier 87.5%",
+          "pyramid": 4,
+          "year": 2024
+        },
+        {
+          "name": "npm trends — ESLint 115M/sem, Biome 7M",
+          "pyramid": 4,
+          "year": 2024
+        }
+      ]
+    },
+    {
+      "id": "loading-states",
+      "domain": "design",
+      "question": "Quel pattern de chargement utiliser (skeleton, spinner, barre de progression) ?",
+      "recommendation": "Skeleton screens plutot que spinners : reduisent la perception du temps d'attente de ~35% et l'abandon de 10-20%.",
+      "grade": 5,
+      "level": "RECOMMANDE",
+      "is_universal": true,
+      "sources": [
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "id": "monitoring",
+      "domain": "reliability",
+      "question": "Quoi monitorer et avec quel stack d'observabilite ?",
+      "recommendation": "Monitorer les 4 golden signals : Latency (P95 < 500ms), Traffic (req/s), Errors (5xx < 0.1%), Saturation (CPU, memoire, connexions DB)",
+      "grade": 5,
+      "level": "STANDARD",
+      "is_universal": true,
+      "sources": []
+    },
+    {
+      "id": "performance-testing",
+      "domain": "performance",
+      "question": "Comment tester et mesurer la performance d'une application web (backend et frontend) ?",
+      "recommendation": "Definir des budgets de performance : LCP < 2.5s, INP < 200ms, CLS < 0.1, bundle JS < 200KB gzipped, API P95 < 500ms, TTFB < 800ms. Sans budget, la performance se degrade commit apres commit.",
+      "grade": 5,
+      "level": "STANDARD",
+      "is_universal": true,
+      "sources": [
+        {
+          "name": "web.dev Core Web Vitals — LCP, INP, CLS",
+          "pyramid": 3,
+          "year": 2024
+        },
+        {
+          "name": "Google CrUX report — Core Web Vitals impact ranking",
+          "pyramid": 4,
+          "year": 2024
+        },
+        {
+          "name": "Google SRE Book — latency SLOs, performance budgets",
+          "pyramid": 5,
+          "year": 2016
+        }
+      ]
+    },
+    {
+      "id": "realtime",
+      "domain": "design",
+      "question": "Quel transport utiliser pour la communication temps reel (WebSocket, SSE, polling) ?",
+      "recommendation": "WebSocket + STOMP pour communication bidirectionnelle (chat, collaboration). SSE pour serveur-vers-client uniquement (notifications, feeds). Polling en fallback pour compatibilite legacy.",
+      "grade": 5,
+      "level": "STANDARD",
+      "is_universal": true,
+      "sources": [
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "id": "image-optimization",
+      "domain": "performance",
+      "question": "Comment optimiser les images pour reduire le poids des pages web ?",
+      "recommendation": "WebP/AVIF, lazy loading natif (loading=\"lazy\"), responsive srcset. Les images representent ~50% du poids des pages web (HTTP Archive 2025). WebP = -25 a -35% vs JPEG (97%+ support), AVIF = -40 a -50% (92%+ support).",
+      "grade": 4,
+      "level": "RECOMMANDE",
+      "is_universal": true,
+      "sources": [
+        {
+          "name": "web.dev — image optimization guide",
+          "pyramid": 3,
+          "year": 2024
+        },
+        {
+          "name": "HTTP Archive 2025",
+          "pyramid": 4,
+          "year": 2025
+        },
+        {
+          "name": "MDN — loading=\"lazy\"",
+          "pyramid": 3,
+          "year": 2024
+        },
+        {
+          "name": "Can I Use — WebP 97%, AVIF 92%",
+          "pyramid": 4,
+          "year": 2026
+        }
+      ]
+    },
+    {
+      "id": "infrastructure",
+      "domain": "cicd",
+      "question": "Comment gerer l'infrastructure de maniere declarative et reproductible (IaC) ?",
+      "recommendation": "L'infrastructure doit etre declarative, versionnee et reproductible. Jamais de config manuelle en prod.",
+      "grade": 4,
+      "level": "RECOMMANDE",
+      "is_universal": true,
+      "sources": [
+        {
+          "name": "SWEBOK v4 s2.2 — infrastructure as code",
+          "pyramid": 1,
+          "year": 2024
+        },
+        {
+          "name": "Twelve-Factor Factor X — dev/prod parity",
+          "pyramid": 5,
+          "year": 2012
+        },
+        {
+          "name": "DORA 2024 — manual changes = #1 cause of incidents",
+          "pyramid": 4,
+          "year": 2024
+        }
+      ]
+    },
+    {
+      "id": "lombok-usage",
+      "domain": "code-quality",
+      "question": "Quand utiliser Lombok vs Java Records ?",
+      "recommendation": "Lombok pour entities JPA: @Getter @Setter @Builder @NoArgsConstructor @AllArgsConstructor. JAMAIS @Data sur entities. @RequiredArgsConstructor pour injection dans services. @Slf4j pour logging. Records pour tous les DTOs simples.",
+      "grade": 4,
+      "level": "RECOMMANDE",
+      "implementation": "Configurer lombok.config a la racine: lombok.addLombokGeneratedAnnotation=true (pour exclusion Jacoco). Entities: @Getter @Setter @Builder @NoArgsConstructor @AllArgsConstructor. Services: @RequiredArgsConstructor + champs final. DTOs: Java Records avec MapStruct 1.5+.",
+      "is_universal": false,
+      "sources": [
+        {
+          "name": "JPA Buddy — Lombok Best Practices",
+          "pyramid": 3,
+          "year": 2024
+        },
+        {
+          "name": "Thorben Janssen — Lombok+Hibernate Pitfalls",
+          "pyramid": 3,
+          "year": 2023
+        },
+        {
+          "name": "JetBrains State of Java 2025",
+          "pyramid": 2,
+          "year": 2025
+        }
+      ]
+    },
+    {
+      "id": "module-structure",
+      "domain": "architecture",
+      "question": "Comment organiser les modules/packages d'une application (feature-based vs layer-based) ?",
+      "recommendation": "Organiser par feature/domaine, pas par couche technique. 40% moins de dependances inter-packages (Baxter et al., 56 projets Java), 25-30% moins de defauts (Santos et al., 12 projets), 30-50% moins d'effort de maintenance (Koziolek et al., revue systematique).",
+      "grade": 4,
+      "level": "RECOMMANDE",
+      "is_universal": true,
+      "sources": [
+        {
+          "name": "ISO 25010:2023 — Modularity sub-characteristic",
+          "pyramid": 1,
+          "year": 2023
+        },
+        {
+          "name": "SWEBOK v4 — cohesion/coupling",
+          "pyramid": 1,
+          "year": 2024
+        },
+        {
+          "name": "Clean Architecture (Martin)",
+          "pyramid": 5,
+          "year": 2017
+        },
+        {
+          "name": "DDD (Evans) — bounded contexts",
+          "pyramid": 5,
+          "year": 2003
+        },
+        {
+          "name": "Baxter et al. 2006 — 56 Java projects",
+          "pyramid": 4,
+          "year": 2006
+        },
+        {
+          "name": "Santos et al. 2019 — 12 projects",
+          "pyramid": 4,
+          "year": 2019
+        },
+        {
+          "name": "Koziolek et al. 2013 — systematic review",
+          "pyramid": 4,
+          "year": 2013
+        }
+      ]
+    },
+    {
+      "id": "mutation-testing",
+      "domain": "testing",
+      "question": "Comment valider la qualite des tests au-dela de la couverture de code ?",
+      "recommendation": "mutmut — mutation testing pour Python. Simple a configurer, integration pytest.",
+      "grade": 4,
+      "level": "BONNE PRATIQUE",
+      "is_universal": false,
+      "sources": [
+        {},
+        {}
+      ]
+    },
+    {
+      "id": "onboarding",
+      "domain": "design",
+      "question": "Comment guider les nouveaux utilisateurs (onboarding, divulgation progressive) ?",
+      "recommendation": "Divulgation progressive : montrer les fonctions avancees au fur et a mesure. Empty states comme opportunite d'onboarding. Tooltips contextuels (3-5 etapes max, skip toujours possible).",
+      "grade": 4,
+      "level": "RECOMMANDE",
+      "is_universal": true,
+      "sources": [
+        {},
+        {},
+        {}
+      ]
+    },
+    {
+      "id": "plugin-registry",
+      "domain": "architecture",
+      "question": "Comment structurer une app modulaire avec systeme de plugins/registry ?",
+      "recommendation": "Registry interne VS Code-inspired (PAS micro-frontends pour single team). Module definition declarative + lazy loading React.lazy + communication par events types. Shell fournit extension points, modules les peuplent. Chaque module declare ses contributions (routes, panels, commandes) dans un manifest statique.",
+      "grade": 4,
+      "level": "RECOMMANDE",
+      "is_universal": true,
+      "sources": [
+        {
+          "name": "VS Code Extension API — Contribution Points",
+          "pyramid": 1,
+          "year": 2024
+        },
+        {
+          "name": "Martin Fowler — Micro Frontends",
+          "pyramid": 2,
+          "year": 2019
+        },
+        {
+          "name": "Module Federation Documentation",
+          "pyramid": 3,
+          "year": 2024
+        },
+        {
+          "name": "VS Code Extensibility Principles",
+          "pyramid": 2,
+          "year": 2024
+        }
       ]
     },
     {
