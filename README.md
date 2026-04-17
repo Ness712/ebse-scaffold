@@ -59,8 +59,8 @@ ebse-scaffold/
 │   │   └── scripts/        ← Outils de maintenance du guide
 │   └── app/                ← Application web (React + Vite + TypeScript)
 └── scaffold/               ← Scaffold agent (templates operationnels)
-    ├── claude-md-autonomous-agent.md  ← Template CLAUDE.md universel
-    ├── settings-autonomous-agent.jsonc
+    ├── scaffold.md  ← Template CLAUDE.md universel
+    ├── scaffold-settings.jsonc
     ├── commands/           ← Slash commands templates
     └── ...
 ```

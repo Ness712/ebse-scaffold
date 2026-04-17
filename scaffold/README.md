@@ -10,17 +10,17 @@ Le **scaffold** configure Claude Code en agent autonome (HOTL) piloté par un **
 
 | Fichier | Destination | Commite ? | Role |
 |---------|-------------|:---------:|------|
-| `claude-md-autonomous-agent.md` | `<projet>/CLAUDE.md` | Oui (mono-repo) / Non (multi-repo racine) | Regles permanentes : role PO, plan=contrat, escalation, gates, qualite, quota, monitoring |
-| `claude-local-example.md` | `<projet>/CLAUDE.local.md` | **Jamais** | Consignes temporaires : overrides de gates, contexte de sprint, contraintes temporaires |
-| `settings-autonomous-agent.jsonc` | `<projet>/.claude/settings.json` | Oui (mono-repo) / Non (multi-repo racine) | Config agent : model opusplan, permissions allow/deny, hooks PostToolUse+Stop |
-| `settings-local-example.jsonc` | `<projet>/.claude/settings.local.json` | **Jamais** | Overrides personnels : directories supplementaires, prefs locales |
+| `scaffold.md` | `<projet>/CLAUDE.md` | Oui (mono-repo) / Non (multi-repo racine) | Regles permanentes : role PO, plan=contrat, escalation, gates, qualite, quota, monitoring |
+| `scaffold-claude-local.md` | `<projet>/CLAUDE.local.md` | **Jamais** | Consignes temporaires : overrides de gates, contexte de sprint, contraintes temporaires |
+| `scaffold-settings.jsonc` | `<projet>/.claude/settings.json` | Oui (mono-repo) / Non (multi-repo racine) | Config agent : model opusplan, permissions allow/deny, hooks PostToolUse+Stop |
+| `scaffold-settings-local.jsonc` | `<projet>/.claude/settings.local.json` | **Jamais** | Overrides personnels : directories supplementaires, prefs locales |
 
 ## Installation (5 minutes)
 
 ### 1. Copier le CLAUDE.md template
 
 ```bash
-cp scaffold/claude-md-autonomous-agent.md /chemin/vers/mon-projet/CLAUDE.md
+cp scaffold/scaffold-claude.md /chemin/vers/mon-projet/CLAUDE.md
 ```
 
 ### 2. Remplir les sections `[CONFIGURER]`
@@ -36,7 +36,7 @@ Ouvrir le CLAUDE.md copie et remplir :
 
 ```bash
 # Retirer les commentaires JSONC avant copie
-grep -v "^\s*//" scaffold/settings-autonomous-agent.jsonc > /chemin/vers/mon-projet/.claude/settings.json
+grep -v "^\s*//" scaffold/scaffold-settings.jsonc > /chemin/vers/mon-projet/.claude/settings.json
 ```
 
 Adapter :

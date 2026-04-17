@@ -163,19 +163,21 @@ Ces standards de niveau 3 sont decouverts par recherche systematique (etape 2.1)
 
 **Matrice de couverture :**
 
-Croiser les sous-caracteristiques ISO/IEC 25010:2023 + 25019:2023 avec les knowledge areas SWEBOK v4.
+Croiser les sous-caracteristiques ISO/IEC 25010:2023 + 25019:2023 avec les **sous-topics** SWEBOK v4 (pas seulement les 18 knowledge areas).
 
-Pour chaque case `[sous-caracteristique ISO] x [knowledge area SWEBOK]` :
+**Pourquoi les sous-topics et non les knowledge areas** : appliquer la matrice au niveau "Software Construction" (knowledge area) est trop grossier pour identifier des decisions comme DRY, SOLID ou KISS/YAGNI — elles apparaissent seulement quand on descend dans les sous-topics (ex: "code reuse", "minimizing complexity", "coding practices"). Kitchenham 2007 recommande une "early search of the relevant literature" iterative — descendre au niveau sous-topic en est l'operationnalisation correcte pour notre contexte. `Source: SWEBOK v4 (sous-topics de chaque knowledge area) + Kitchenham 2007 section 5.1`
+
+Pour chaque case `[sous-caracteristique ISO] x [sous-topic SWEBOK]` :
 
 1. Lire la definition ISO de la sous-caracteristique
-2. Lire la description SWEBOK du knowledge area
+2. Lire la description SWEBOK du sous-topic (pas juste le knowledge area)
 3. Determiner si l'intersection genere une decision technique :
    - **OUI** — la case entre dans le scope du guide, formuler une question PICOC
    - **NON** — marquer "N/A" avec justification (les deux ne se croisent pas)
 
 **Controle** : cette determination est soumise a double extraction (2 reviewers independants).
 
-**Taille maximale** : ~40 sous-caracteristiques x 18 knowledge areas = 720 cases. En pratique, beaucoup seront N/A.
+**Taille maximale** : ~40 sous-caracteristiques x ~80 sous-topics SWEBOK = ~3200 cases theoriques. En pratique, la grande majorite sera N/A — estimer ~300-500 cases pertinentes.
 
 **ISO/IEC 25010:2023 — 9 caracteristiques, ~40 sous-caracteristiques**
 

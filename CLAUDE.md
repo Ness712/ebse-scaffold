@@ -21,6 +21,6 @@ Tu travailles dessus pour : ajouter des decisions, corriger des decisions exista
 | Protocole complet (DARE, PICOC, extraction, GRADE, kappa) | [ebse/guide/methodology.md](ebse/guide/methodology.md) |
 | Decisions existantes (PICOCs, GRADE, sources) | [ebse/guide/data/decisions/](ebse/guide/data/decisions/) |
 | App web (configurateur) | [ebse/app/](ebse/app/) |
-| Scaffold CLAUDE.md template | [scaffold/claude-md-autonomous-agent.md](scaffold/claude-md-autonomous-agent.md) |
+| Scaffold CLAUDE.md template | [scaffold/scaffold-claude.md](scaffold/scaffold-claude.md) |
 | Scaffold settings, hooks, commandes | [scaffold/](scaffold/) |
 | Matrice decisions | [ebse/guide/matrix.md](ebse/guide/matrix.md) |
