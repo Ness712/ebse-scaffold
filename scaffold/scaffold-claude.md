@@ -87,7 +87,7 @@ Un plan approuve par le PO est un **contrat**. Tu ne peux PAS :
 
 **Violation = tu recommences depuis le plan approuve.**
 
-**Limite d'iterations** `[MANDATORY]` : si apres 5 tentatives successives une correction en genere une autre (boucle cascade), **STOP** — escalade au PO avec le format structure. Ne jamais continuer indefiniment une boucle de corrections qui cassent d'autres choses.
+**Limite d'iterations** `[MANDATORY]` : si apres 5 tentatives successives une correction en genere une autre (boucle cascade), **STOP** — escalade au PO avec le format structure. Ne jamais continuer indefiniment une boucle de corrections qui cassent d'autres choses. Ce compteur s'applique a la **boucle d'implementation** (corrections de code generant d'autres corrections) — les iterations de review sub-agent sont un cycle distinct et ne sont pas comptees dans ces 5 tentatives.
 
 `Source: Feedback PO "Never deviate from plan without asking" + Answer.AI Devin review (deviation documentee) + Anthropic BEA (checkpoints prescrits) + SDMF KAOS G22`
 
@@ -139,7 +139,7 @@ Si le hook n'est pas encore configure, ces violations restent non-detecees — c
 1. `[MANDATORY]` **Typecheck + lint** — hooks automatiques, corriger si echec AVANT de continuer
 2. `[MANDATORY]` **Tests unitaires** — lancer la suite de tests, zero regression toleree
 3. `[MANDATORY]` **Build** — verifier que le build passe. **Si Dockerfile ou docker-compose modifie** → `docker build --check` + `docker compose config` avant tout push (feedback < 1 sec vs 10-20 min pipeline CI — PICOC containerization STANDARD)
-4. `[REQUIRED]` **Attente pipeline CI** — pour surveiller un pipeline GitHub Actions apres push, utiliser `gh run watch <run-id> --exit-status` en `run_in_background: true`. **Ne jamais faire de polling manuel** (boucle sleep/until ou ScheduleWakeup repetitif) — `gh run watch` bloque et notifie a la fin en une seule fois.
+4. `[REQUIRED]` **Attente pipeline CI** — pour surveiller un pipeline GitHub Actions apres push, utiliser `gh run watch <run-id> --exit-status` en `run_in_background: true`. **Ne jamais faire de polling manuel** (boucle sleep/until ou ScheduleWakeup repetitif) — `gh run watch` bloque et notifie a la fin en une seule fois. Si le pipeline reste en etat `in_progress` au-dela de 60 min sans progression → escalade au PO (anomalie probable : runner bloque, quota epuise).
 5. `[MANDATORY]` **Dependency audit** — `npm audit --audit-level=high` / `pnpm audit` (taux hallucination 19.7% — Spracklen 2024) : bloque si vulnerabilites critiques
 6. `[REQUIRED]` **SAST** — utiliser l'outil configure pour le projet (`[CONFIGURER: ex: SonarQube deja en CI, eslint-plugin-security, Semgrep]`). Note : SAST seul detecte 55-65% des defauts — necessaire mais non suffisant (`linting.json`, Capers Jones 13k+ projets).
 7. `[REQUIRED]` **Review sub-agent** — apres feature complete, spawn un reviewer independant :
@@ -183,10 +183,12 @@ Quand tu detectes un incident en production ou un bug critique :
 | Severite | Definition | Autonomie permise | Action immediate |
 |----------|-----------|-------------------|-----------------|
 | **SEV1** | Prod down / data loss / faille securite | HOTL — agis d'abord, escalade immediatement | Rollback si possible, logger TOUT, notifier PO |
+
+> **C3 — SEV1 vs override oral** : HOTL SEV1 prevaut sur le protocole d'override oral (section CLAUDE.local.md). L'action immediate sous SEV1 est pre-autorisee par ce tableau — ce n'est pas un override verbal, c'est l'application de la regle HOTL. Documenter retroactivement toutes les actions dans `CLAUDE.local.md` apres stabilisation de l'incident.
 | **SEV2** | Fonctionnalite critique degradee | HITL — escalade PO avant action non-reversible | Escalade < 30 min |
 | **SEV3** | Bug non-critique, workaround possible | HITL normal | Escalade < 24h |
 
-**Si PO est indisponible > 4h et SEV1 detecte** : appliquer le correctif minimal (rollback de preference), logger toutes les actions dans l'audit trail, notifier via le canal alternatif configure `[CONFIGURER: slack/email/canal d'urgence]`. Ne jamais faire de changements d'architecture sous urgence.
+**Si PO est indisponible > 4h et SEV1 detecte** : appliquer le correctif minimal (rollback de preference), logger toutes les actions dans l'audit trail, notifier via le canal alternatif configure `[CONFIGURER: slack/email/canal d'urgence]`. **Fallback si aucun canal configure** : (1) ecrire un entree horodatee dans `audit.log`, (2) creer une GitHub issue titree `[SEV1] Incident YYYY-MM-DD` avec la chronologie complete des actions, (3) envoyer un email a l'adresse `git config user.email` si disponible. Ne jamais faire de changements d'architecture sous urgence.
 
 **Roles de commandement incident** `[REQUIRED]` (PICOC incident-command-roles GRADE 4 RECOMMANDE) : pour tout incident SEV1 ou SEV2 impliquant plusieurs intervenants, assigner formellement trois roles :
 - **IC (Incident Commander)** : seul autorise a prendre les decisions de remediation pendant l'incident — tout changement doit etre valide par l'IC avant execution. Ne gere pas les details techniques directement.
@@ -204,11 +206,11 @@ Regle : **un seul decideur actif a la fois**. Si l'IC est indisponible → hando
 Tu geres le git workflow **entierement seul** :
 
 1. **Branche** : cree une branche par tache — format : `[CONFIGURER: format branche, ex: feature/description-kebab-case]`
-2. **Worktree** : au debut de chaque tache, verifier `git branch -a`. Si une autre branche de travail est deja active → creer un worktree separe pour isoler le travail. Sinon → travailler directement sur la nouvelle branche. Procedure worktree : voir le CLAUDE.md projet. **NE JAMAIS utiliser `Agent(isolation: "worktree")`** si la racine du projet n'est pas elle-meme un repo git (ex: dossier parent contenant plusieurs repos) — ca echouera silencieusement. Utiliser a la place : `cd <repo> && git worktree add ../<nom> -b <branche>`.
+2. **Worktree** : au debut de chaque tache, verifier `git branch -a`. Si une autre branche de travail est deja active → creer un worktree separe pour isoler le travail. Sinon → travailler directement sur la nouvelle branche. **Definition "branche active"** : une branche non-main/staging est checkoutee ET contient des commits locaux non merges, OU des modifications uncommittees sont presentes (`git status` non-vide). Procedure worktree : voir le CLAUDE.md projet. **NE JAMAIS utiliser `Agent(isolation: "worktree")`** si la racine du projet n'est pas elle-meme un repo git (ex: dossier parent contenant plusieurs repos) — ca echouera silencieusement. Utiliser a la place : `cd <repo> && git worktree add ../<nom> -b <branche>`.
 3. **Commits** : commits incrementaux et frequents (jamais un mega-commit). Format : `[CONFIGURER: format commit, ex: type(scope): description]`
 3-bis. `[REQUIRED]` **Taille de PR** : viser 200 LOC, ne pas depasser 400 LOC par PR. Au-dela → decouper en PRs atomiques. Chaque PR = un seul objectif logique (jamais refactoring + feature dans la meme PR — separer systematiquement). Si decoupage impossible (migration atomique) : documenter dans la description pourquoi. `Source: PICOC pr-size-discipline GRADE 5 STANDARD — Cohen 2006 SmartBear/Cisco 2500+ reviews : >400 LOC degrade le taux de detection des defauts ; DORA 2023 : taille PR = indicateur predictif de la frequence de deploiement`
-4. `[REQUIRED]` **Durée de vie branche** : max 48h avant merge. Si une branche dépasse 48h → signaler au PO, proposer (a) découpage en sous-tâches plus courtes, ou (b) merge partiel derrière feature flag. Branches long-lived = +50% change failure rate (DORA 2024). Pour code incomplet sur > 48h : utiliser un Release flag (on/off statique) plutôt qu'une branche long-lived — cleanup obligatoire dès que la feature est stable en prod. `Source: PICOC branching GRADE 5 STANDARD — Forsgren/Accelerate 2018 + DORA 2024 ; PICOC feature-flags GRADE 4 RECOMMANDE`
-5. **Documentation** : quand le code change, mettre a jour la doc concernee **dans le meme commit**. Chaque information n'existe qu'a **un seul endroit** — jamais dupliquer entre fichiers. Roles des fichiers de reference :
+4. `[REQUIRED]` **Durée de vie branche** : max 48h avant merge. Si une branche dépasse 48h → signaler au PO, proposer (a) découpage en sous-tâches plus courtes, ou (b) merge partiel derrière feature flag. Branches long-lived = +50% change failure rate (DORA 2024). Pour code incomplet sur > 48h : utiliser un Release flag (on/off statique) plutôt qu'une branche long-lived — cleanup obligatoire dès que la feature est stable en prod. **Le delai de 48h est suspendu pendant une attente PO explicitement documentee (gate humaine en cours)** — noter la date de suspension dans la description de la PR et relancer le compte a la reprise. `Source: PICOC branching GRADE 5 STANDARD — Forsgren/Accelerate 2018 + DORA 2024 ; PICOC feature-flags GRADE 4 RECOMMANDE`
+5. **Documentation** : quand le code change, mettre a jour la doc concernee **dans le meme commit**. Chaque information n'existe qu'a **un seul endroit** — jamais dupliquer entre fichiers. En cas de conflit git sur un fichier de documentation entre deux worktrees → resolution standard git (merge conflict), le dernier commit valide apres resolution fait foi. Roles des fichiers de reference :
 
    | Fichier | Contient | Ne contient PAS |
    |---------|----------|-----------------|
@@ -227,7 +229,7 @@ Tu geres le git workflow **entierement seul** :
 **Distinctions staging / main** `[REQUIRED]` :
 - `staging` : tests E2E obligatoires avant merge + monitoring erreurs runtime 30 min post-deploy
 - `main` : audit pre-release complet (PICOC #29) + approbation PO explicite
-- PRs vers staging : review sub-agent suffit
+- PRs vers staging : review sub-agent suffit — les tests E2E (etape 8) restent obligatoires si des changements frontend sont inclus (complementaires, pas alternatifs)
 - PRs vers main : review sub-agent + audit pre-release + relecture PO chemins critiques
 
 **Audit trail** (PICOC #17) : chaque commit inclut `Co-Authored-By: Claude <model-version>`. Chaque PR inclut le rapport reviewer + outils utilises. Note : Co-Authored-By seul est insuffisant pour conformite SOC2/HIPAA/ISO 27001 — si contexte reglemente, escalader au PO pour audit trail structure (model+version+prompt+diff+cout).
@@ -267,7 +269,7 @@ Preference : monitoring **proactif** (alerte-driven) sur reactif (attente signal
 3. **Regulierement** — revoir la configuration des alertes ; supprimer celles non actionnables (alertes exercees moins d'une fois par trimestre = candidates a la suppression)
 4. **Apres incident** — post-mortem blameless en 7 sections (PICOC postmortem-template GRADE 3 RECOMMANDE) : (1) **Timeline** chronologique des evenements, (2) **Impact** quantifie (utilisateurs affectes, duree, perte revenus estimee), (3) **Facteurs contributifs** (conditions qui ont rendu l'incident possible — pas les personnes), (4) **Causes racines** (5 Whys ou fishbone), (5) **Lecons apprises** (ce qui a bien marche, ce qui n'a pas marche), (6) **Action items** avec owner nomme + deadline fixe + priorite (P1/P2/P3), (7) **Dissemination** : partager le post-mortem avec l'equipe dans les 5 jours. Blameless obligatoire : identifier les facteurs systemiques, pas les individus. Identifier les indicateurs predicteurs → ajouter aux alertes. `Source: PICOC postmortem-template GRADE 3 RECOMMANDE — Google SRE Book + SRE Workbook + PagerDuty`
 
-**Error budget policy** `[REQUIRED]` : si l'error budget SLO est consommé (taux d'erreurs ou downtime dépasse la cible sur la fenêtre glissante) → suspendre les déploiements de nouvelles features, signaler au PO, concentrer les efforts sur la fiabilité. Si le budget est intact → déploiements autorisés. `Source: PICOC slos GRADE 2 BONNE PRATIQUE — Google SRE Book Ch. 4 (error budget = 1 - SLO target) + SRE Workbook Ch. 2`
+**Error budget policy** `[REQUIRED]` : si l'error budget SLO est consommé (taux d'erreurs ou downtime dépasse la cible sur la fenêtre glissante) → suspendre les déploiements de nouvelles features, signaler au PO, concentrer les efforts sur la fiabilité. Si le budget est intact → déploiements autorisés. **Si aucun SLO n'est encore defini** → escalader au PO pour le definir avant le premier deploiement en production ; suspendre les deploiements features jusqu'a validation des cibles SLO. `Source: PICOC slos GRADE 2 BONNE PRATIQUE — Google SRE Book Ch. 4 (error budget = 1 - SLO target) + SRE Workbook Ch. 2`
 
 **Mecanisme de declenchement — SessionStart hook (Claude Code officiel) :** `[MANDATORY]`
 
@@ -280,7 +282,7 @@ Preference : monitoring **proactif** (alerte-driven) sur reactif (attente signal
 
 1. **CLAUDE.md hierarchique** (couche statique, chargee integralement) : instructions non-inferables du code, conventions, pointeurs vers sources de verite. Hierarchie par precedence croissante : politique org > projet > utilisateur > local. Ne pas dupliquer ce qui est dans le code ou README.
 2. **SessionStart hook** (couche dynamique, calculee au demarrage) : git log, etat CI, variables d'environnement, issues ouvertes. Garder < 100 lignes stdout pour ne pas surcharger le contexte. Voir MANDATORY ci-dessus.
-3. **MEMORY.md auto-genere** (couche memoire, chargee partiellement) : l'agent ecrit ses propres notes entre sessions (decisions, feedbacks PO, profil utilisateur). Max ~200 lignes / 25 KB charges automatiquement.
+3. **MEMORY.md auto-genere** (couche memoire, chargee partiellement) : l'agent ecrit ses propres notes entre sessions (decisions, feedbacks PO, profil utilisateur). Max ~200 lignes / 25 KB charges automatiquement. Quand l'index MEMORY.md approche 200 lignes → archiver les entrees les plus anciennes dans `memory/archive-YYYY-MM.md` (pointer depuis MEMORY.md) et maintenir l'index sous la limite.
 
 Regle d'unicite : chaque information dans une seule couche. Ne jamais dupliquer une meme info dans CLAUDE.md ET MEMORY.md. `Source: PICOC ai-agent-session-context-initialization GRADE 3 RECOMMANDE — Claude Code docs (Anthropic) + Microsoft Agent Framework + OpenAI Agents SDK + Google ADK convergent sur l'injection structuree au cold start`
 
@@ -294,7 +296,7 @@ Regle d'unicite : chaque information dans une seule couche. Ne jamais dupliquer 
 
 Si des issues sont detectees, les corriger ou escalader au PO si hors scope.
 
-**Metriques DORA pour l'agent** `[ADVISORY]` (PICOC ai-agent-dora-instrumentation GRADE 2 BONNE PRATIQUE) : instrumenter les 5 metriques DORA sur les actions de l'agent pour mesurer sa performance et detecter la degradation : (1) **Deployment Frequency** — nombre de commits/merges par jour ; (2) **Lead Time for Changes** — temps entre premier commit et merge en prod ; (3) **Change Failure Rate** — % de deployments necessitant revert/hotfix ; (4) **MTTR** — temps moyen pour restaurer le service ; (5) **Reliability** — taux d'uptime SLO. Seuils elite performers DORA 2024 : DF > 1/jour, LT < 1h, CFR < 5%, MTTR < 1h. Produit un rapport structure (JSON ou Markdown) en artefact CI accessible au PO. `Source: PICOC ai-agent-dora-instrumentation GRADE 2 — Forsgren/Accelerate 2018 + DORA State of DevOps 2019-2024 + METR 2025`
+**Metriques DORA pour l'agent** `[ADVISORY]` (PICOC ai-agent-dora-instrumentation GRADE 2 BONNE PRATIQUE) : instrumenter les 5 metriques DORA sur les actions de l'agent pour mesurer sa performance et detecter la degradation : (1) **Deployment Frequency** — nombre de commits/merges par jour ; (2) **Lead Time for Changes** — temps entre premier commit et merge en prod ; (3) **Change Failure Rate** — % de deployments necessitant revert/hotfix ; (4) **MTTR** — temps moyen pour restaurer le service ; (5) **Reliability** — taux d'uptime SLO. Seuils elite performers DORA 2024 : DF > 1/jour, LT < 1h, CFR < 5%, MTTR < 1h. **Pour le premier deploiement (pas de tag precedent)** : utiliser le premier commit comme base pour Lead Time — `git rev-list --max-parents=0 HEAD`. Produit un rapport structure (JSON ou Markdown) en artefact CI accessible au PO. `Source: PICOC ai-agent-dora-instrumentation GRADE 2 — Forsgren/Accelerate 2018 + DORA State of DevOps 2019-2024 + METR 2025`
 
 **Evaluation multi-dimensionnelle CLEAR** (PICOC #23 — GRADE 4) : evaluer l'agent sur 5 dimensions, pas seulement le task completion :
 - **Cost** — cout token/monetaire par tache
@@ -313,13 +315,13 @@ Les metriques multi-dimensionnelles correlent mieux avec la performance producti
 
 Quand le PO te donne une tache :
 
-1. **Consulte le guide EBSE** : `[CONFIGURER: chemin, ex: ebse/guide/data/decisions/ai-agent-*.json]` pour les decisions techniques couvertes
+1. **Consulte le guide EBSE** : `[CONFIGURER: chemin, ex: ebse/guide/data/decisions/ai-agent-*.json]` pour les decisions techniques couvertes. La verif de staleness EBSE (recommendations.json vs decisions/*.json) s'applique a **tous les domaines** techniques du projet — pas uniquement la securite. Si des fichiers `decisions/*.json` sont plus recents que `recommendations.json`, regenerer avant toute decision technique.
 2. **Consulte la doc officielle** du framework/outil concerne (via Context7 MCP ou web search si disponible)
-2-bis. `[REQUIRED]` **Threat modeling** si la tâche implique : un nouveau module, un nouvel endpoint, une API externe, ou un changement d'authentification → (1) DFD minimal des flux de données, (2) STRIDE sur chaque flux/trust boundary (Spoofing / Tampering / Repudiation / Information Disclosure / DoS / Elevation of Privilege), (3) documenter les mitigations dans le plan. Déclencheurs : nouveau module ✓ | nouvelle API externe ✓ | changement auth ✓ | release majeure ✓. `Source: PICOC threat-modeling GRADE 5 RECOMMANDE — SWEBOK v4 + OWASP Threat Modeling Cheat Sheet + Microsoft SDL`
+2-bis. `[REQUIRED]` **Threat modeling** si la tâche implique : un nouveau module, un nouvel endpoint, une API externe, ou un changement d'authentification → (1) DFD minimal des flux de données, (2) STRIDE sur chaque flux/trust boundary (Spoofing / Tampering / Repudiation / Information Disclosure / DoS / Elevation of Privilege), (3) documenter les mitigations dans le plan. Déclencheurs : nouveau module ✓ | nouvelle API externe ✓ | changement auth ✓ | release majeure ✓. **Composition TM + ADR** : si 2-bis et 2-qua sont tous deux declenchés, executer le TM en premier — ses findings (menaces + mitigations) alimentent directement la section "Consequences" de l'ADR. `Source: PICOC threat-modeling GRADE 5 RECOMMANDE — SWEBOK v4 + OWASP Threat Modeling Cheat Sheet + Microsoft SDL`
 2-ter. `[REQUIRED]` **Classification des donnees** si la tache introduit un nouveau type de donnee ou un nouveau modele → appliquer avant toute decision de design : (1) classer chaque donnee : Public (aucun risque si divulguee) | Interne (usage employes/agents) | Confidentielle (donnees metier sensibles, PII) | Secrete (credentials, cles de chiffrement, donnees reglementees RGPD/PCI-DSS/HIPAA) ; (2) mapper aux regulations applicables : RGPD si donnee personnelle UE, PCI-DSS si donnee de paiement, HIPAA si donnee de sante ; (3) definir les controles proportionnels : chiffrement at-rest (Secret), chiffrement in-transit (Confidentiel+), rétention minimale, acces par role. Declencheur : nouveau champ utilisateur ✓ | nouvelle API recevant des donnees ✓ | release majeure ✓. `Source: PICOC data-classification-architecture GRADE 6 STANDARD — FIPS 199 + NIST SP 800-60 + ISO 27001:2022 + RGPD Art. 5`
 2-qua. `[REQUIRED]` **Declencheur ADR** : creer un ADR (Architecture Decision Record) si la tache satisfait ≥ 1 critere : (1) impact sur ≥ 2 composants ou equipes, (2) irreversibilite elevee (cout de retour > 1 sprint), (3) nouveau pattern ou nouvelle bibliotheque structurante, (4) impact sur la securite ou la conformite, (5) alternative retenue parmi ≥ 2 options evaluees, (6) reponse a un incident ou contrainte externe. **Regle Nygard** : si tu hesites → documente. L'ADR est inclus dans la description de PR (voir §Workflow Git). `Source: PICOC adr-trigger-criteria GRADE 5 STANDARD — ISO/IEC/IEEE 42010:2011 + Nygard 2011 + Keeling 2017`
 3. **Produis un plan decompose** avec des sous-taches claires, chacune verifiable independamment
-4. **Presente le plan au PO** pour approbation (sauf si la tache est triviale : rename, dep bump, fix lint — dans ce cas execute directement)
+4. **Presente le plan au PO** pour approbation (sauf si la tache est triviale : rename, dep bump, fix lint — dans ce cas execute directement). Note : les declencheurs de 2-bis/2-ter/2-qua s'appliquent sur leurs propres criteres meme pour une tache Scaffold — un dep bump sur une librairie structurante peut declencher un ADR (2-qua critere 3).
 5. **Execute chaque sous-tache** sequentiellement avec les gates automatiques
 6. **Avant de declarer done** : relis le plan point par point, verifie chaque item, run les tests
 
@@ -350,12 +352,14 @@ Quand le PO te donne une tache :
 2. Escalader au PO avec : resultat A, resultat B, points de divergence, recommandation motivee
 3. ATTENDRE arbitrage avant de continuer
 
+**Exception taches Scaffold** : si la tache est de type Scaffold (tableau ci-dessus — pas d'approbation PO requise), l'agent principal tente de resoudre lui-meme en consultant `CONVENTIONS.md` et la doc officielle du framework. Escalade PO uniquement si la divergence reste irresolvable apres consultation de ces sources.
+
 `Source: PICOC #25 MAST failure modes (attribution causale 53.5% seulement) + SDMF Kassab D3/D4`
 
 Si une tache intermediaire surge pendant l'execution (avec sa propre methodologie, necessite un contexte independant, ou est significativement differente de la tache principale) :
 
 - **Delegue a un sous-agent dedie** — ne bloque pas la tache principale, n'escalade pas au PO
-- Le sous-agent recoit un contexte frais et peut lui-meme spawner des sous-agents si necessaire (profondeur max : 3 niveaux)
+- Le sous-agent recoit un contexte frais et peut lui-meme spawner des sous-agents si necessaire (profondeur max : 3 niveaux). **A niveau 3** : si une tache intermediaire surge, l'agent l'execute inline ou escalade au PO — il ne peut pas spawner de sous-agents supplementaires.
 - Le sous-agent rapporte son resultat a l'agent principal qui **verifie avant de continuer**
 
 **Les sous-agents demarrent avec un contexte vierge** — ils ne recoivent aucun fichier automatiquement. Le prompt doit toujours inclure explicitement :
@@ -412,7 +416,7 @@ Agent({
 
 À déclencher après toute intervention agent, en complément de la vérification sémantique. Le CI test suite seul est insuffisant — les API parameters hallucinés sont type-valid donc non détectés.
 
-1. **Package-hallucination** (base rate 19.7%, Spracklen 2024) : vérifier l'existence de tout package avant install (`npm info <pkg>` / `pip show <pkg>`). Distinct des CVE classiques (Snyk/Dependabot) — deux problèmes, deux outils.
+1. **Package-hallucination** (base rate 19.7%, Spracklen 2024) : vérifier l'existence de tout package avant install (`npm info <pkg>` / `pip show <pkg>`). Verifier aussi la depreciation de version : `npm view <pkg>@<version> deprecated` — si deprecie, utiliser la version de remplacement recommandee dans le message de depreciation. Distinct des CVE classiques (Snyk/Dependabot) — deux problèmes, deux outils.
 2. **Semantic-drift** : lancer les tests de régression sur les fonctionnalités non-modifiées — le CI seul ne détecte pas les effets de bord silencieux sur le comportement adjacent.
 3. **SAST sur diffs agent** : cibler `git diff main...HEAD` — pas l'ensemble du codebase.
 4. **Runtime observability** post-merge : monitoring erreurs (GlitchTip, Sentry), métriques infra (Grafana/Prometheus), tests E2E navigateur (Playwright MCP).
