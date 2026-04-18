@@ -1,0 +1,380 @@
+{
+  "id": "ai-agent-session-context-initialization",
+  "domain": "ai-collaboration",
+  "question": "Quelles pratiques permettent d'initialiser efficacement le contexte d'un agent IA au demarrage d'une nouvelle session et d'assurer la continuite de l'etat entre sessions ?",
+  "depends_on": ["ai-agent-context-compaction"],
+  "tags": [
+    "ai-collaboration",
+    "context-management",
+    "session-initialization",
+    "cold-start",
+    "memory",
+    "cross-session",
+    "claude-code"
+  ],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "id": "P1",
+        "text": "Maintenir un fichier de contexte statique committe dans le repo (CLAUDE.md, AGENTS.md ou equivalent) charge integralement au demarrage de chaque session, avec une hierarchie de priorite explicite (politique org > projet > utilisateur > local). Completer par une memoire auto-generee persistante et partielle (max ~200 lignes / 25 KB) mise a jour automatiquement entre sessions. Ces deux mecanismes forment le socle de continuite cross-session independamment du modele ou du vendor.",
+        "grade": 3,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "Claude Code Memory docs (Anthropic)",
+            "pyramid": 3,
+            "year": 2025,
+            "quote": "Each Claude Code session begins with a fresh context window. Two mechanisms carry knowledge across sessions: CLAUDE.md files and Auto memory. Both are loaded at the start of every conversation.",
+            "note": "Documentation normative primaire Anthropic. Decrit le fonctionnement propre (pas comparatif) — pas de -1 CoI."
+          },
+          {
+            "name": "Claude Code Hooks reference (Anthropic)",
+            "pyramid": 3,
+            "year": 2025,
+            "quote": "SessionStart runs on every session. Any text your hook script prints to stdout is added as context for Claude.",
+            "note": "Documentation normative primaire Anthropic. Confirme le chargement systematique au demarrage."
+          },
+          {
+            "name": "Claude Code SDK Sessions docs (Anthropic)",
+            "pyramid": 3,
+            "year": 2025,
+            "quote": "setting_sources:'project' charge CLAUDE.md. Sessions stored under ~/.claude/projects/<encoded-cwd>/*.jsonl.",
+            "note": "Documentation normative primaire Anthropic. Confirme le schema de persistance."
+          },
+          {
+            "name": "Microsoft Agent Framework Memory docs",
+            "pyramid": 3,
+            "year": 2025,
+            "quote": "Agents start each run without access to prior session history, resulting in agents behaving as if each session is brand new. ContextProvider.before_run() injecte contexte avant chaque run.",
+            "note": "Source independante (Microsoft). Convergence cross-vendor sur le pattern d'injection au demarrage. Indirectness partielle (framework generaliste)."
+          },
+          {
+            "name": "Google ADK — Memory and Sessions",
+            "pyramid": 3,
+            "year": 2025,
+            "quote": "Memory operates as 'long-lived, searchable knowledge that outlives a single session: user preferences, and past conversations.'",
+            "note": "Source independante (Google). Convergence cross-vendor. Indirectness partielle (framework generaliste)."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": "2 — meilleure source niveau 3 (documentation officielle)",
+          "plus": ["+1 convergence : S1+S2+S13 (Anthropic) + S9 (Microsoft) + S11 (Google) = 3 vendors independants arrivent a la meme conclusion sur l'injection de contexte au cold start"],
+          "minus": ["-0 CoI : docs normatives Anthropic decrivent leur propre fonctionnement, pas de claim comparatif — regle speciale appliquee", "-0 indirectness : le claim reste direct meme si S9/S11 couvrent d'autres frameworks"],
+          "final": 3
+        },
+        "robustness": "MODERATE",
+        "note_robustness": "Retrait des sources Anthropic (S1/S2/S13) ferait basculer en CHOIX_EQUIPE. La convergence Microsoft + Google est necessaire pour tenir le grade.",
+        "date_extraction": "2026-04-18"
+      },
+      {
+        "id": "P2",
+        "text": "Implementer un hook d'initialisation dynamique (SessionStart ou equivalent) qui injecte du contexte calcule a chaud au demarrage : etat du repo (git log, branches actives), etat CI/CD, variables d'environnement de session, issues ouvertes. Ce contexte dynamique complete le fichier statique sans l'alourdir, et permet de refleter l'etat reel du projet au moment ou l'agent demarre.",
+        "grade": 3,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "Claude Code Hooks reference (Anthropic)",
+            "pyramid": 3,
+            "year": 2025,
+            "quote": "SessionStart runs on every session. Any text your hook script prints to stdout is added as context for Claude. Useful for loading development context like existing issues or recent changes to your codebase.",
+            "note": "Documentation normative primaire Anthropic. Decrit le fonctionnement propre."
+          },
+          {
+            "name": "Microsoft Agent Framework Memory docs",
+            "pyramid": 3,
+            "year": 2025,
+            "quote": "ContextProvider.before_run() injecte contexte avant chaque run. Sessions = conteneur d'etat partage entre runs.",
+            "note": "Source independante (Microsoft). Le pattern before_run() est l'equivalent du SessionStart hook."
+          },
+          {
+            "name": "OpenAI Agents SDK Sessions",
+            "pyramid": 3,
+            "year": 2025,
+            "quote": "Before each run: The runner automatically retrieves the conversation history for the session and prepends it to the input items.",
+            "note": "Source independante (OpenAI). Pattern Retrieve-Merge-Persist confirme l'injection systematique en debut de run."
+          },
+          {
+            "name": "Anthropic Engineering — Context Engineering",
+            "pyramid": 5,
+            "year": 2025,
+            "quote": "Agents maintain persistent memory outside the context window through files or dedicated memory systems.",
+            "note": "Blog d'ingenierie Anthropic (anthropic.com/engineering, pas docs.anthropic.com) — niveau 5 (expert reconnu). Indirectness partielle : traite les agents en general, pas specifiquement le cold start. Source convergente."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": "2 — meilleure source niveau 3",
+          "plus": ["+1 convergence : S2 (Anthropic), S9 (Microsoft), S10 (OpenAI) = 3 vendors independants implementent le meme pattern d'injection dynamique au demarrage"],
+          "minus": ["-0 CoI : docs normatives propres, fonctionnement non-comparatif", "-0 indirectness : S3 a indirectness mais les sources primaires (S2/S9/S10) sont directes"],
+          "final": 3
+        },
+        "robustness": "MODERATE",
+        "note_robustness": "La convergence cross-vendor (3 implementations independantes du meme pattern) est la force de ce principe. Fragile si l'un des vendors deprecie le pattern.",
+        "date_extraction": "2026-04-18"
+      },
+      {
+        "id": "P3",
+        "text": "Adopter une architecture deux niveaux pour la memoire cross-session : (1) memoire de travail in-context (contexte actif, resumee et focalisee) + (2) store externe persistant (fichiers, base vectorielle, Redis) avec pipeline de recuperation selectif. Les benchmarks MemoryArena (Du 2026) montrent que les agents sans architecture cross-session 'plongent a 40-60%' de performance sur les taches sequentielles multi-sessions, meme quand ils performent pres de 100% en session unique.",
+        "grade": 2,
+        "level": "BONNE_PRATIQUE",
+        "sources": [
+          {
+            "name": "Wang et al. Frontiers CS 2024 — Survey agents LLM",
+            "pyramid": 4,
+            "year": 2024,
+            "quote": "The Memory Module manages short- and long-term memories. Short-term temporarily buffers recent perceptions; long-term consolidates important information over time.",
+            "note": "Survey >1000 citations. Indirectness : agents generalistes, pas specifiquement coding agents sur projet logiciel."
+          },
+          {
+            "name": "Zhang et al. ACM TOIS 2025",
+            "pyramid": 4,
+            "year": 2025,
+            "quote": "Memory represents the key component to support agent-environment interactions, enabling agents to tackle complex, long-term problems requiring extended interaction cycles. Cross-session memory explicitly treated.",
+            "note": "Peer-reviewed ACM TOIS. Indirectness moderee : agents generalistes."
+          },
+          {
+            "name": "Du 2026 — Sequential Multi-Session Agents (MemoryArena)",
+            "pyramid": 5,
+            "year": 2026,
+            "quote": "Models performing near-perfectly on single-session tests 'plummet to 40-60%' when tested across sequential sessions. Recommandation : Start with Pattern B [Context + retrieval store].",
+            "note": "Preprint unique auteur. Donnees empiriques MemoryArena. Effet important documente quantitativement."
+          },
+          {
+            "name": "Zhou et al. Carnegie Mellon/Shanghai Jiao Tong 2026",
+            "pyramid": 5,
+            "year": 2026,
+            "quote": "The file system becomes the sole authoritative record of task state. Rather than carrying lengthy history, agents read a curated snapshot of the workspace and a small number of recent actions.",
+            "note": "Preprint multi-institutionnel. 4 paradigmes architecturaux. Convergence sur le principe de separation in-context / store externe."
+          },
+          {
+            "name": "Microsoft Agent Framework Memory docs",
+            "pyramid": 3,
+            "year": 2025,
+            "quote": "Pluggable backends (Mem0, Redis, Neo4j). Sessions = conteneur d'etat partage entre runs.",
+            "note": "Source independante (Microsoft). Implementation concrete de l'architecture deux niveaux."
+          },
+          {
+            "name": "OpenAI Agents SDK Sessions",
+            "pyramid": 3,
+            "year": 2025,
+            "quote": "Pattern Retrieve-Merge-Persist.",
+            "note": "Source independante (OpenAI). Implementation concrete."
+          },
+          {
+            "name": "Google ADK — Memory and Sessions",
+            "pyramid": 3,
+            "year": 2025,
+            "quote": "Dual-layer memoire : session state + memory service.",
+            "note": "Source independante (Google). Implementation concrete."
+          },
+          {
+            "name": "Mem0 Inc. 2025 — Architecture pattern",
+            "pyramid": 3,
+            "year": 2025,
+            "quote": "A common architecture pattern includes working memory in the context window with long-term records in an external store, where a retrieval pipeline injects relevant records each step.",
+            "note": "CONFLIT D'INTERET : Mem0 Inc. evalue son propre produit. -1 applique. Converge avec sources independantes."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": "2 — meilleure source niveau 4 (Zhang et al. ACM TOIS 2025) ou niveau 3 (Microsoft/OpenAI/Google), les deux donnent 2",
+          "plus": ["+1 convergence : S4, S5, S6, S7, S9, S10, S11 = forte convergence cross-domaine (survey generaliste + empirique peer-reviewed + preprints multi-institutionnels + 3 vendors)", "+1 effet important : Du 2026 MemoryArena documente 'plummet to 40-60%' = difference majeure et quantifiee"],
+          "minus": ["-1 CoI : S14 (Mem0 Inc.) evalue son propre produit", "-1 indirectness : S4 (agents generalistes), S6 (preprint unique auteur), S7 (paradigmes generaux) — contexte P = coding agent sur projet logiciel"],
+          "final": 2
+        },
+        "robustness": "MODERATE",
+        "note_robustness": "La donnee MemoryArena (Du 2026) est un preprint unique auteur — si elle se revele incorrecte, l'effet important disparait mais la convergence des vendors reste. Grade passerait de 2 a 2 (inchange car +1 effet - 0 effet = 0 net change, les autres facteurs tiennent).",
+        "date_extraction": "2026-04-18"
+      },
+      {
+        "id": "P4",
+        "text": "Appliquer un pattern sequentiel en 4 etapes pour la gestion de la memoire cross-session : (1) accumulation (collecter les faits saillants de la session courante), (2) distillation (resumer et eliminer le bruit), (3) consolidation (deduplications et resolution de conflits avec la memoire existante), (4) injection au demarrage de la session suivante avec regles de priorite. Les memories globales sont injectees systematiquement; les notes de session ne sont promues en memoire globale que si jugees durables.",
+        "grade": 2,
+        "level": "BONNE_PRATIQUE",
+        "sources": [
+          {
+            "name": "OpenAI Cookbook Context Engineering",
+            "pyramid": 3,
+            "year": 2025,
+            "quote": "Pattern: (1) accumulation (2) distillation (3) consolidation [dedupe + conflict resolution] (4) injection at start of each run with precedence rules. Global memories injected at start of each session; session notes promoted to global memory only if durable.",
+            "note": "Source vendor OpenAI. Documentation prescriptive detaillee du pattern 4-etapes."
+          },
+          {
+            "name": "Microsoft Agent Framework Memory docs",
+            "pyramid": 3,
+            "year": 2025,
+            "quote": "ContextProvider.before_run() injecte contexte avant chaque run. Sessions = conteneur d'etat partage.",
+            "note": "Source independante (Microsoft). Confirme le pattern d'injection structuree."
+          },
+          {
+            "name": "OpenAI Agents SDK Sessions",
+            "pyramid": 3,
+            "year": 2025,
+            "quote": "Before each run: The runner automatically retrieves the conversation history for the session and prepends it to the input items.",
+            "note": "Meme vendor que S12 (OpenAI). Confirme l'etape injection. Compte pour convergence intra-vendor uniquement."
+          },
+          {
+            "name": "Google ADK — Memory and Sessions",
+            "pyramid": 3,
+            "year": 2025,
+            "quote": "ADK implements dual recall: reactive and proactive.",
+            "note": "Source independante (Google). Confirme la separation session state / memory service, convergente avec les etapes distillation/consolidation."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": "2 — meilleure source niveau 3",
+          "plus": ["+1 convergence : S12 (OpenAI), S9 (Microsoft), S11 (Google) = 3 vendors independants convergent sur le pattern d'injection structuree multi-etapes"],
+          "minus": ["-1 indirectness : S12/S10 = OpenAI SDK (vendor-specific), S9 = Microsoft framework generaliste, S11 = Google ADK — tous ont un cadre different du coding agent Claude Code autonome"],
+          "final": 2
+        },
+        "robustness": "LOW",
+        "note_robustness": "Le pattern 4-etapes exact (accumulation→distillation→consolidation→injection) n'est explicitement documente que dans S12 (OpenAI Cookbook). Les autres sources confirment l'injection mais pas la sequence complete. Retrait de S12 ferait tomber ce principe.",
+        "date_extraction": "2026-04-18"
+      },
+      {
+        "id": "P5",
+        "text": "Adopter une abstraction file-centric : traiter le filesystem comme source de verite de l'etat des taches plutot que l'historique conversationnel. Au demarrage d'une session, l'agent lit un snapshot du workspace (fichiers de config, state files, logs recents) plutot que de rejouer l'historique complet des echanges. Cette approche reduit la dependance a la continuite de la fenetre de contexte.",
+        "grade": 1,
+        "level": "CHOIX_EQUIPE",
+        "sources": [
+          {
+            "name": "Zhou et al. Carnegie Mellon/Shanghai Jiao Tong 2026",
+            "pyramid": 5,
+            "year": 2026,
+            "quote": "The file system becomes the sole authoritative record of task state. Rather than carrying lengthy history, agents read a curated snapshot of the workspace and a small number of recent actions.",
+            "note": "Preprint multi-institutionnel. 4 paradigmes architecturaux. Principal porteur de ce principe."
+          },
+          {
+            "name": "Claude Code Memory docs (Anthropic)",
+            "pyramid": 3,
+            "year": 2025,
+            "quote": "CLAUDE.md files and Auto memory. Both are loaded at the start of every conversation.",
+            "note": "Convergence partielle : Claude Code utilise des fichiers (CLAUDE.md, MEMORY.md) comme source de verite, pas l'historique conversationnel brut. Indirectness : mentionne des fichiers d'instructions, pas des state files de tache."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": "2 — meilleure source niveau 3 (S1)",
+          "plus": [],
+          "minus": ["-1 indirectness : S7 traite des agents autonomes sur taches generalistes, pas specifiquement du cold start d'un coding agent sur projet logiciel supervise par PO"],
+          "final": 1
+        },
+        "robustness": "LOW",
+        "note_robustness": "Evidence tres limitee : 1 preprint (unique auteur institutionnel) + convergence partielle avec S1. Retrait de S7 fait tomber le principe. Evidence insuffisante pour depasser CHOIX_EQUIPE.",
+        "date_extraction": "2026-04-18"
+      },
+      {
+        "id": "P6",
+        "text": "Privilegier des representations structurees de la memoire (triples semantiques, entites typees, graphe de connaissances) plutot qu'un simple agrandissement de la fenetre de contexte. Les approches structurees permettent d'atteindre des performances equivalentes avec 5% des tokens d'un contexte complet selon le benchmark LoCoMo (Borro et al. 2026). Cette approche est pertinente pour les projets avec forte volumetrie d'historique de conversation.",
+        "grade": 1,
+        "level": "CHOIX_EQUIPE",
+        "sources": [
+          {
+            "name": "Borro et al. Memori Labs 2026",
+            "pyramid": 5,
+            "year": 2026,
+            "quote": "Effective memory in LLM agents depends on structured representations instead of larger context windows. Memori: 81.95% on LoCoMo benchmark with 5% of full-context tokens.",
+            "note": "CONFLIT D'INTERET : auteurs = createurs du produit evalue. -1 applique. Benchmark LoCoMo standardise est un point positif mais insuffisant pour compenser."
+          },
+          {
+            "name": "Du 2026 — Sequential Multi-Session Agents",
+            "pyramid": 5,
+            "year": 2026,
+            "quote": "4 patterns: Context-resident compression | Retrieval-augmented stores | Hierarchical/tiered | Adaptive.",
+            "note": "Preprint unique auteur. Mentionne les representations structurees comme pattern possible (Hierarchical/tiered). Convergence partielle."
+          },
+          {
+            "name": "Mem0 Inc. 2025",
+            "pyramid": 3,
+            "year": 2025,
+            "quote": "A common architecture pattern includes working memory in the context window with long-term records in an external store.",
+            "note": "CONFLIT D'INTERET : Mem0 Inc. evalue son propre produit. -1 applique. Mentionne le store externe mais pas specifiquement les triples semantiques."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": "2 — meilleure source niveau 3 (S14), mais avec CoI",
+          "plus": [],
+          "minus": ["-1 CoI : S8 (Memori Labs) evalue son propre produit", "-1 CoI : S14 (Mem0 Inc.) evalue son propre produit — les deux principaux porteurs de ce claim sont en conflit d'interet"],
+          "final": 0,
+          "note_calcul": "Score minimal applique : max(0, 2-1-1) = 0. Cependant S6 (Du 2026, preprint independant) mentionne le pattern sans CoI, ce qui donne une evidence minimale independante. Grade retenu : 1 (CHOIX_EQUIPE) car au moins une source independante mentionne le principe."
+        },
+        "robustness": "LOW",
+        "note_robustness": "Evidence dominee par des sources avec conflit d'interet. Sans S8 et S14, il ne reste que la mention peripherique dans S6. Principe a surveiller si des etudes independantes emergent.",
+        "date_extraction": "2026-04-18"
+      }
+    ]
+  },
+  "variants": {
+    "claude-code": {
+      "recommendation": "Configuration Claude Code pour l'initialisation de contexte cross-session en 3 couches : (1) CLAUDE.md hierarchique pour les instructions statiques du projet, (2) hook SessionStart (.claude/settings.json hooks) pour l'injection dynamique de l'etat courant du repo et CI, (3) MEMORY.md auto-genere pour la memoire persistante des decisions et feedbacks PO. Ne jamais dupliquer une information dans plusieurs couches — chaque info a une source unique. Garder CLAUDE.md minimal et non-inferable du code source (ref. ai-agent-project-instructions).",
+      "grade": 3,
+      "level": "RECOMMANDE",
+      "sources": [
+        {
+          "name": "Claude Code Memory docs (Anthropic)",
+          "pyramid": 3,
+          "year": 2025
+        },
+        {
+          "name": "Claude Code Hooks reference (Anthropic)",
+          "pyramid": 3,
+          "year": 2025
+        },
+        {
+          "name": "Claude Code SDK Sessions docs (Anthropic)",
+          "pyramid": 3,
+          "year": 2025
+        }
+      ],
+      "code_example": {
+        "description": "Configuration complete 3-couches pour Claude Code",
+        "layer_1_claude_md": {
+          "path": "CLAUDE.md (ou .claude/CLAUDE.md)",
+          "purpose": "Instructions statiques non-inferables du code. Charge integralement a chaque session.",
+          "content_rules": [
+            "Stack et commandes de build/run/test",
+            "Conventions de nommage custom",
+            "Contraintes architecturales non-evidentes",
+            "Pointeurs vers les autres sources de verite (READMEs, CONVENTIONS.md)",
+            "NE PAS inclure : regles inferables du code, historique decisions, contexte temporaire"
+          ],
+          "hierarchy_order": "Managed policy > Project CLAUDE.md > User ~/.claude/CLAUDE.md > Local CLAUDE.local.md",
+          "example_structure": "## Role\n## Stack\n## Conventions Git\n## Ou trouver quoi (table de pointeurs)\n## Chemins critiques"
+        },
+        "layer_2_session_start_hook": {
+          "path": ".claude/settings.json",
+          "purpose": "Injection dynamique de contexte calcule au demarrage. La stdout du script est ajoutee au contexte.",
+          "settings_json": {
+            "hooks": {
+              "SessionStart": [
+                {
+                  "matcher": "startup",
+                  "hooks": [
+                    {
+                      "type": "command",
+                      "command": "bash .claude/hooks/session-start.sh"
+                    }
+                  ]
+                }
+              ]
+            }
+          },
+          "session_start_sh_content": "#!/bin/bash\n# .claude/hooks/session-start.sh\n# Charge les variables d'environnement de session\n[ -f ~/.ols.env ] && source ~/.ols.env\n\necho '=== CONTEXTE SESSION ==='\necho \"Date: $(date -u '+%Y-%m-%dT%H:%M:%SZ')\"\necho ''\necho '--- Git status ---'\ngit log --oneline -5 2>/dev/null || echo 'Pas de repo git'\ngit status --short 2>/dev/null\necho ''\necho '--- Branches actives ---'\ngit branch --show-current 2>/dev/null\necho ''\necho '--- CI/CD (derniers runs) ---'\ngh run list --limit 3 --json status,conclusion,name,updatedAt 2>/dev/null || echo 'gh CLI non disponible'\necho '========================='"
+        },
+        "layer_3_memory_md": {
+          "path": "~/.claude/projects/<encoded-cwd>/MEMORY.md",
+          "purpose": "Memoire auto-generee persistante. Mise a jour par Claude en fin de session. Max ~200 lignes / 25 KB. Charge partiellement.",
+          "usage": "Claude met a jour ce fichier automatiquement. Le PO peut le relire via 'cat ~/.claude/projects/.../MEMORY.md'. Ne pas editer manuellement sauf correction factuelle.",
+          "content_examples": [
+            "# Memory Index\n- [Gabriel profile](user_gabriel.md) — Role, preferences techniques\n- [OLS infra](project_ols_infra.md) — IP serveur, chemins critiques\n\n## Decisions recentes\n- 2026-04-15 : Migration Redis password obligatoire en dev\n- 2026-04-10 : Choix shadcn/ui pour composants frontend"
+          ]
+        },
+        "anti_patterns": [
+          "Dupliquer les commandes build dans CLAUDE.md ET le README — source unique",
+          "Mettre des secrets ou tokens dans CLAUDE.md — utiliser CLAUDE.local.md (non-commite) ou variables env",
+          "SessionStart hook trop verbeux (>200 lignes stdout) — surcharge le contexte",
+          "Inclure l'historique complet des conversations dans MEMORY.md — garder les decisions durables uniquement"
+        ]
+      },
+      "date_extraction": "2026-04-18"
+    }
+  }
+}

@@ -263,6 +263,14 @@ Preference : monitoring **proactif** (alerte-driven) sur reactif (attente signal
 
 `Source: Claude Code hooks documentation (docs.anthropic.com/en/docs/claude-code/hooks) + Claude Code routines documentation (research preview, avril 2026) — niveau 3 (documentation officielle outil)`
 
+**Initialisation contexte cross-session — strategie 3 couches** `[REQUIRED]` (PICOC ai-agent-session-context-initialization GRADE 3 RECOMMANDE) : chaque nouvelle session demarre a blanc (fenetre de contexte vide). Trois couches independantes assurent la continuite :
+
+1. **CLAUDE.md hierarchique** (couche statique, chargee integralement) : instructions non-inferables du code, conventions, pointeurs vers sources de verite. Hierarchie par precedence croissante : politique org > projet > utilisateur > local. Ne pas dupliquer ce qui est dans le code ou README.
+2. **SessionStart hook** (couche dynamique, calculee au demarrage) : git log, etat CI, variables d'environnement, issues ouvertes. Garder < 100 lignes stdout pour ne pas surcharger le contexte. Voir MANDATORY ci-dessus.
+3. **MEMORY.md auto-genere** (couche memoire, chargee partiellement) : l'agent ecrit ses propres notes entre sessions (decisions, feedbacks PO, profil utilisateur). Max ~200 lignes / 25 KB charges automatiquement.
+
+Regle d'unicite : chaque information dans une seule couche. Ne jamais dupliquer une meme info dans CLAUDE.md ET MEMORY.md. `Source: PICOC ai-agent-session-context-initialization GRADE 3 RECOMMANDE — Claude Code docs (Anthropic) + Microsoft Agent Framework + OpenAI Agents SDK + Google ADK convergent sur l'injection structuree au cold start`
+
 **Outils a verifier :**
 
 - **Erreurs runtime** : `[CONFIGURER: outil et commande, ex: curl GlitchTip API pour lire les erreurs recentes]`

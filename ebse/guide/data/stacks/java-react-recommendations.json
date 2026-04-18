@@ -1,13 +1,13 @@
 {
   "guide_version": "2026.04.6",
-  "generated_at": "2026-04-18T13:47:53.827Z",
+  "generated_at": "2026-04-18T14:43:41.389Z",
   "profile_id": "java-react",
   "stack": {
     "backend": "java-spring-boot",
     "frontend": "react",
     "database": "postgresql"
   },
-  "total": 260,
+  "total": 261,
   "methodology": "EBSE (Kitchenham 2004), adapted from Evidence-Based Medicine",
   "recommendations": [
     {
@@ -1237,17 +1237,44 @@
       ]
     },
     {
-      "id": "database-migrations",
-      "domain": "reliability",
-      "question": "Comment gerer les migrations de base de donnees de maniere versionnee et reproductible ?",
-      "recommendation": "Flyway — auto-configure par Spring Boot, migrations versionnees (V{n}__description.sql) et repeatables (R__description.sql). Convention de nommage stricte. Jamais JPA auto-ddl en prod (non reproductible, pas de versioning).",
+      "id": "database",
+      "domain": "architecture",
+      "question": "Quelle base de donnees relationnelle choisir pour un nouveau projet ?",
+      "recommendation": "PostgreSQL pour les donnees relationnelles. #1 en adoption (55.6% SO 2025) et admiration (65.5%). 13x plus rapide que MySQL en SELECT 1M records (MDPI 2024, peer-reviewed).",
       "grade": 5,
-      "level": "RECOMMANDE",
-      "is_universal": false,
+      "level": "STANDARD",
+      "is_universal": true,
       "sources": [
-        {},
-        {},
-        {}
+        {
+          "name": "SO Survey 2025",
+          "pyramid": 4,
+          "year": 2025
+        },
+        {
+          "name": "SO Survey 2024",
+          "pyramid": 4,
+          "year": 2024
+        },
+        {
+          "name": "JetBrains 2025",
+          "pyramid": 4,
+          "year": 2025
+        },
+        {
+          "name": "DB-Engines 2026",
+          "pyramid": 4,
+          "year": 2026
+        },
+        {
+          "name": "MDPI benchmark 2024",
+          "pyramid": 4,
+          "year": 2024
+        },
+        {
+          "name": "CNCF — CloudNativePG",
+          "pyramid": 2,
+          "year": 2024
+        }
       ]
     },
     {
@@ -1798,21 +1825,6 @@
       ]
     },
     {
-      "id": "circuit-breaker",
-      "domain": "reliability",
-      "question": "Comment proteger le systeme contre les defaillances de services externes (circuit breaker) ?",
-      "recommendation": "Resilience4j — successeur de Netflix Hystrix (deprecie 2018). Configuration YAML pour sliding-window-size, failure-rate-threshold, wait-duration-in-open-state. Annotations @CircuitBreaker + @Retry avec fallback method. Combiner avec une file d'attente pour les messages en erreur.",
-      "grade": 4,
-      "level": "RECOMMANDE",
-      "is_universal": false,
-      "sources": [
-        {},
-        {},
-        {},
-        {}
-      ]
-    },
-    {
       "id": "ai-agent-accountability",
       "domain": "ai-collaboration",
       "question": "Quels mecanismes d'accountability et de gouvernance permettent de s'assurer qu'au moins un humain est responsable des actions d'un agent IA autonome dans un contexte de developpement logiciel ?",
@@ -2183,6 +2195,42 @@
           "name": "git-ai-project/git-ai - Git extension for AI-generated code tracking",
           "pyramid": 3,
           "year": 2026
+        }
+      ]
+    },
+    {
+      "id": "ai-agent-session-context-initialization",
+      "domain": "ai-collaboration",
+      "question": "Quelles pratiques permettent d'initialiser efficacement le contexte d'un agent IA au demarrage d'une nouvelle session et d'assurer la continuite de l'etat entre sessions ?",
+      "recommendation": "Maintenir un fichier de contexte statique committe dans le repo (CLAUDE.md, AGENTS.md ou equivalent) charge integralement au demarrage de chaque session, avec une hierarchie de priorite explicite (politique org > projet > utilisateur > local). Completer par une memoire auto-generee persistante et partielle (max ~200 lignes / 25 KB) mise a jour automatiquement entre sessions. Ces deux mecanismes forment le socle de continuite cross-session independamment du modele ou du vendor.",
+      "grade": 3,
+      "level": "RECOMMANDE",
+      "is_universal": true,
+      "sources": [
+        {
+          "name": "Claude Code Memory docs (Anthropic)",
+          "pyramid": 3,
+          "year": 2025
+        },
+        {
+          "name": "Claude Code Hooks reference (Anthropic)",
+          "pyramid": 3,
+          "year": 2025
+        },
+        {
+          "name": "Claude Code SDK Sessions docs (Anthropic)",
+          "pyramid": 3,
+          "year": 2025
+        },
+        {
+          "name": "Microsoft Agent Framework Memory docs",
+          "pyramid": 3,
+          "year": 2025
+        },
+        {
+          "name": "Google ADK — Memory and Sessions",
+          "pyramid": 3,
+          "year": 2025
         }
       ]
     },
@@ -3080,6 +3128,21 @@
       ]
     },
     {
+      "id": "circuit-breaker",
+      "domain": "reliability",
+      "question": "Comment proteger le systeme contre les defaillances de services externes (circuit breaker) ?",
+      "recommendation": "Resilience4j — successeur de Netflix Hystrix (deprecie 2018). Configuration YAML pour sliding-window-size, failure-rate-threshold, wait-duration-in-open-state. Annotations @CircuitBreaker + @Retry avec fallback method. Combiner avec une file d'attente pour les messages en erreur.",
+      "grade": 4,
+      "level": "RECOMMANDE",
+      "is_universal": false,
+      "sources": [
+        {},
+        {},
+        {},
+        {}
+      ]
+    },
+    {
       "id": "commit-conventions",
       "domain": "project",
       "question": "Quelle convention de messages de commit adopter pour automatiser le versioning et maintenir un historique lisible ?",
@@ -3240,44 +3303,17 @@
       ]
     },
     {
-      "id": "database",
-      "domain": "architecture",
-      "question": "Quelle base de donnees relationnelle choisir pour un nouveau projet ?",
-      "recommendation": "PostgreSQL pour les donnees relationnelles. #1 en adoption (55.6% SO 2025) et admiration (65.5%). 13x plus rapide que MySQL en SELECT 1M records (MDPI 2024, peer-reviewed).",
+      "id": "database-migrations",
+      "domain": "reliability",
+      "question": "Comment gerer les migrations de base de donnees de maniere versionnee et reproductible ?",
+      "recommendation": "Flyway — auto-configure par Spring Boot, migrations versionnees (V{n}__description.sql) et repeatables (R__description.sql). Convention de nommage stricte. Jamais JPA auto-ddl en prod (non reproductible, pas de versioning).",
       "grade": 5,
-      "level": "STANDARD",
-      "is_universal": true,
+      "level": "RECOMMANDE",
+      "is_universal": false,
       "sources": [
-        {
-          "name": "SO Survey 2025",
-          "pyramid": 4,
-          "year": 2025
-        },
-        {
-          "name": "SO Survey 2024",
-          "pyramid": 4,
-          "year": 2024
-        },
-        {
-          "name": "JetBrains 2025",
-          "pyramid": 4,
-          "year": 2025
-        },
-        {
-          "name": "DB-Engines 2026",
-          "pyramid": 4,
-          "year": 2026
-        },
-        {
-          "name": "MDPI benchmark 2024",
-          "pyramid": 4,
-          "year": 2024
-        },
-        {
-          "name": "CNCF — CloudNativePG",
-          "pyramid": 2,
-          "year": 2024
-        }
+        {},
+        {},
+        {}
       ]
     },
     {
@@ -4050,47 +4086,6 @@
       ]
     },
     {
-      "id": "file-upload-security",
-      "domain": "security",
-      "question": "Quelles mesures de securite implementer pour les fichiers uploades par les utilisateurs dans une application NestJS avec stockage MinIO ?",
-      "recommendation": "Validation multi-couches obligatoire : whitelist extension + verification magic bytes (jamais Content-Type seul — spoofable) + UUID filename generee cote serveur + stockage hors webroot ou bucket isole sans execution. Le Content-Type HTTP est fourni par le client et ne peut pas etre fiable.",
-      "grade": 4,
-      "level": "STANDARD",
-      "is_universal": true,
-      "sources": [
-        {
-          "name": "OWASP File Upload Cheat Sheet",
-          "pyramid": 5,
-          "year": 2024
-        },
-        {
-          "name": "OWASP Unrestricted File Upload",
-          "pyramid": 5,
-          "year": 2024
-        },
-        {
-          "name": "CWE-434 — Unrestricted Upload of File with Dangerous Type",
-          "pyramid": 5,
-          "year": 2024
-        },
-        {
-          "name": "CVE-2024-29409 — NestJS MIME Type Bypass",
-          "pyramid": 6,
-          "year": 2024
-        },
-        {
-          "name": "(In)Security of File Uploads in Node.js — ACM WWW 2024",
-          "pyramid": 3,
-          "year": 2024
-        },
-        {
-          "name": "FileUploadChecker — ARES 2022",
-          "pyramid": 3,
-          "year": 2022
-        }
-      ]
-    },
-    {
       "id": "container-registry",
       "domain": "cicd",
       "question": "Quel container registry pour stocker et distribuer les images Docker ?",
@@ -4397,6 +4392,47 @@
       "question": "Comment gerer les preoccupations transversales sur les entites JPA ?",
       "is_universal": false,
       "sources": []
+    },
+    {
+      "id": "file-upload-security",
+      "domain": "security",
+      "question": "Quelles mesures de securite implementer pour les fichiers uploades par les utilisateurs dans une application NestJS avec stockage MinIO ?",
+      "recommendation": "Validation multi-couches obligatoire : whitelist extension + verification magic bytes (jamais Content-Type seul — spoofable) + UUID filename generee cote serveur + stockage hors webroot ou bucket isole sans execution. Le Content-Type HTTP est fourni par le client et ne peut pas etre fiable.",
+      "grade": 4,
+      "level": "STANDARD",
+      "is_universal": true,
+      "sources": [
+        {
+          "name": "OWASP File Upload Cheat Sheet",
+          "pyramid": 5,
+          "year": 2024
+        },
+        {
+          "name": "OWASP Unrestricted File Upload",
+          "pyramid": 5,
+          "year": 2024
+        },
+        {
+          "name": "CWE-434 — Unrestricted Upload of File with Dangerous Type",
+          "pyramid": 5,
+          "year": 2024
+        },
+        {
+          "name": "CVE-2024-29409 — NestJS MIME Type Bypass",
+          "pyramid": 6,
+          "year": 2024
+        },
+        {
+          "name": "(In)Security of File Uploads in Node.js — ACM WWW 2024",
+          "pyramid": 3,
+          "year": 2024
+        },
+        {
+          "name": "FileUploadChecker — ARES 2022",
+          "pyramid": 3,
+          "year": 2022
+        }
+      ]
     },
     {
       "id": "event-driven-architecture",
@@ -5206,79 +5242,6 @@
       ]
     },
     {
-      "id": "kiss-yagni",
-      "domain": "project",
-      "question": "Comment choisir entre une solution simple et une abstraction plus generale/extensible — quand l'abstraction anticipee est-elle legitime vs prematuree ?",
-      "recommendation": "Implementer le strict necessaire pour le besoin actuel, avere et exprime — rejeter toute abstraction non justifiee par un besoin reel present. Regle de priorite : 'Make it work → make it right → make it fast' (Beck) — dans cet ordre, jamais inverse. Un code qui generalize sans utilisateur concret est de la dette technique degui en feature. Signaux d'alerte de sur-ingenierie : (1) plus de code d'infrastructure/genericite que de code fonctionnel direct ; (2) interface ou classe abstraite nayant qu'une seule implementation effective ; (3) parametre de configuration dont la valeur ne changera jamais en pratique ; (4) couche d'indirection supplementaire sans benefice de testabilite ni de separation avere. Le 'code smell' Speculative Generality (Fowler) designe exactement ce patron : classes, methodes, parametres presents 'au cas ou' — a supprimer ou simplifier. NUANCE ARCHITECTURALE OBLIGATOIRE : YAGNI s'applique au code et aux abstractions locales, pas aux decisions architecturales majeures a fort cout de changement (choix de SGBD, protocole d'API public, structure de donnees fondamentale persistee, monorepo vs polyrepo). Pour ces decisions, une anticipation raisonnable sur 12-18 mois est justifiee car le cout de retour-en-arriere est exponentiel — Fowler (2004) distingue explicitement YAGNI applique au code vs les contraintes architecturales irréversibles. La complexite accidentelle (Brooks 1987) est evitable par discipline ; la complexite essentielle est incompressible — ne pas confondre simplification salutaire et refus de modeliser la realite du domaine.",
-      "grade": 4,
-      "level": "RECOMMANDE",
-      "is_universal": true,
-      "sources": [
-        {
-          "name": "SWEBOK v4 — Guide to the Software Engineering Body of Knowledge, ch. 2 Software Design (IEEE Computer Society, 2024)",
-          "pyramid": 1,
-          "year": 2024
-        },
-        {
-          "name": "Beck K. — Extreme Programming Explained, 2nd ed. (Addison-Wesley, 2004)",
-          "pyramid": 5,
-          "year": 2004
-        },
-        {
-          "name": "Fowler M. — Refactoring: Improving the Design of Existing Code, 2nd ed. (Addison-Wesley, 2018)",
-          "pyramid": 5,
-          "year": 2018
-        },
-        {
-          "name": "Brooks F.P. — No Silver Bullet: Essence and Accident in Software Engineering (IEEE Computer, 1987)",
-          "pyramid": 5,
-          "year": 1987
-        },
-        {
-          "name": "McConnell S. — Code Complete, 2nd ed. (Microsoft Press, 2004)",
-          "pyramid": 5,
-          "year": 2004
-        },
-        {
-          "name": "Fowler M. — Is Design Dead? (martinfowler.com, 2004)",
-          "pyramid": 5,
-          "year": 2004
-        },
-        {
-          "name": "Hunt A., Thomas D. — The Pragmatic Programmer, 20th Anniversary ed. (Addison-Wesley, 2019)",
-          "pyramid": 5,
-          "year": 2019
-        }
-      ]
-    },
-    {
-      "id": "lombok-usage",
-      "domain": "code-quality",
-      "question": "Quand utiliser Lombok vs Java Records ?",
-      "recommendation": "Lombok pour entities JPA: @Getter @Setter @Builder @NoArgsConstructor @AllArgsConstructor. JAMAIS @Data sur entities. @RequiredArgsConstructor pour injection dans services. @Slf4j pour logging. Records pour tous les DTOs simples.",
-      "grade": 4,
-      "level": "RECOMMANDE",
-      "implementation": "Configurer lombok.config a la racine: lombok.addLombokGeneratedAnnotation=true (pour exclusion Jacoco). Entities: @Getter @Setter @Builder @NoArgsConstructor @AllArgsConstructor. Services: @RequiredArgsConstructor + champs final. DTOs: Java Records avec MapStruct 1.5+.",
-      "is_universal": false,
-      "sources": [
-        {
-          "name": "JPA Buddy — Lombok Best Practices",
-          "pyramid": 3,
-          "year": 2024
-        },
-        {
-          "name": "Thorben Janssen — Lombok+Hibernate Pitfalls",
-          "pyramid": 3,
-          "year": 2023
-        },
-        {
-          "name": "JetBrains State of Java 2025",
-          "pyramid": 2,
-          "year": 2025
-        }
-      ]
-    },
-    {
       "id": "hexagonal-architecture",
       "domain": "architecture",
       "question": "Quand et comment structurer une application selon l'architecture hexagonale (Ports & Adapters) pour isoler le domaine metier de l'infrastructure et maximiser la testabilite ?",
@@ -5607,6 +5570,52 @@
           "name": "EJS — CVE-2022-29078: Template injection via options.outputFunctionName (NVD/NIST, 2022)",
           "pyramid": 4,
           "year": 2022
+        }
+      ]
+    },
+    {
+      "id": "repo-standard-files",
+      "domain": "project",
+      "question": "Quels fichiers standard un repo doit-il contenir et quoi mettre dans chacun ?",
+      "recommendation": "4 fichiers obligatoires avec scopes distincts (single source of truth) : (1) README.md = landing page (description, stack, prerequis, install, commandes, quick-start). (2) CONTRIBUTING.md = process de contribution (workflow PR, branches, commits, setup dev, tests requis). (3) CONVENTIONS.md = regles de code (nommage, patterns, architecture, regles non automatisables). (4) LICENSE. Recommandes : CHANGELOG.md (par version, categories Added/Changed/Fixed), SECURITY.md, CODE_OF_CONDUCT.md. CLAUDE.md = pointeurs uniquement vers les fichiers canoniques + contraintes AI-specifiques, jamais de duplication. Regle cardinale : chaque info existe dans un seul fichier, les autres font des liens. CONTRIBUTING ≠ CONVENTIONS : process (comment contribuer, lu une fois) ≠ reference (regles de code, consulte en continu).",
+      "grade": 5,
+      "level": "STANDARD",
+      "is_universal": true,
+      "sources": [
+        {
+          "name": "GitHub Docs — Community health files",
+          "pyramid": 1,
+          "year": 2024
+        },
+        {
+          "name": "Google SWE Book Ch.10 — Documentation",
+          "pyramid": 2,
+          "year": 2020
+        },
+        {
+          "name": "InnerSource Commons — Standard Base Documentation",
+          "pyramid": 3,
+          "year": 2024
+        },
+        {
+          "name": "Open Source Guides (opensource.guide)",
+          "pyramid": 3,
+          "year": 2023
+        },
+        {
+          "name": "Linux Foundation CII Best Practices Badge",
+          "pyramid": 2,
+          "year": 2024
+        },
+        {
+          "name": "Keep a Changelog",
+          "pyramid": 4,
+          "year": 2024
+        },
+        {
+          "name": "Anthropic — CLAUDE.md documentation",
+          "pyramid": 1,
+          "year": 2025
         }
       ]
     },
@@ -6094,6 +6103,83 @@
       ]
     },
     {
+      "id": "test-strategy",
+      "domain": "testing",
+      "question": "Comment definir et appliquer une strategie de test globale — pyramide, types de tests, ratio optimal — pour maximiser la confiance au deploiement tout en controlant le cout de maintenance des tests ?",
+      "recommendation": "Adopter une strategie de test structuree en niveaux complementaires — unit, integration, system, acceptance — ou chaque niveau detecte des defauts que les autres ne peuvent pas detecter. Implementer la pyramide des tests comme orientation (base large d'unit tests rapides et isoles, couche intermediaire d'integration sur comportements metier, sommet etroit d'E2E validant les flux utilisateur reels) sans traiter le ratio 70/20/10 comme une regle rigide : le ratio optimal depend du contexte (backend API vs UI frontend). Ajouter les tests statiques (TypeScript, linting) comme couche zero a cout quasi-nul. Principe 'shift-left' : detecter les defauts le plus tot possible dans le cycle de developpement reduit le cout de correction de facon exponentielle. Integrer les tests dans la Definition of Done plutot qu'en phase separee. Fondements : SWEBOK v4 (IEEE) structure formellement les quatre niveaux de test (unit/integration/system/acceptance) comme complementaires et non substituables — chaque niveau a un objectif distinct qui ne peut pas etre couvert par un autre ; ISO/IEC/IEEE 29119-2 definit les processus formels de test a chaque niveau (organization/management/dynamic) ; Cohn (Agile 2009) et Fowler (blogi 2012) posent la pyramide comme heuristique praticien : beaucoup plus d'unit tests que de broadstack tests, inversement a l'antipatern 'ice cream cone' ; Vocke/ThoughtWorks 2018 : plus d'UI tests = plus lents, plus fragiles, plus couteux en maintenance ; Humble & Farley (Continuous Delivery 2010) : deployment pipeline avec tests gradues par vitesse et isolation ; Dodds (Testing Trophy 2018) : variante moderne valorisant l'integration comme meilleur rapport confiance/maintenance, surtout pour le frontend React ; DORA State of DevOps 2023+2024 (N=39 000+ repondants) : CI + automated testing correle empiriquement avec la performance elite — les equipes integrant les tests dans la Definition of Done surpassent celles qui testent en phase separee ; ArXiv 2019 (ROI GUI automation) : ROI moyen ~250% apres 6 mois, valide l'investissement en tests automatises a grande echelle. Limite : le ratio exact 70/20/10 est une heuristique praticien sans etude controlee comparant les ratios — il s'agit d'une orientation, pas d'une prescription normative. La strategie definit l'architecture des tests ; les seuils de couverture et le mutation testing completent en mesurant leur qualite.",
+      "grade": 5,
+      "level": "STANDARD",
+      "is_universal": true,
+      "sources": [
+        {
+          "name": "SWEBOK v4 — Guide to the Software Engineering Body of Knowledge, Chapter 5 Software Testing (IEEE, 2024)",
+          "pyramid": 1,
+          "year": 2024
+        },
+        {
+          "name": "ISO/IEC/IEEE 29119-2:2021 — Software and Systems Engineering — Software Testing Part 2: Test Processes",
+          "pyramid": 1,
+          "year": 2021
+        },
+        {
+          "name": "DORA State of DevOps Report 2023 + 2024 (Google/DORA, N=39 000+ repondants)",
+          "pyramid": 4,
+          "year": 2024
+        },
+        {
+          "name": "Mike Cohn — Succeeding with Agile (Addison-Wesley, 2009)",
+          "pyramid": 5,
+          "year": 2009
+        },
+        {
+          "name": "Martin Fowler — TestPyramid (martinfowler.com bliki, 2012)",
+          "pyramid": 5,
+          "year": 2012
+        },
+        {
+          "name": "Ham Vocke (ThoughtWorks) — The Practical Test Pyramid (martinfowler.com, 2018)",
+          "pyramid": 5,
+          "year": 2018
+        },
+        {
+          "name": "Kent C. Dodds — The Testing Trophy (kentcdodds.com, 2018)",
+          "pyramid": 5,
+          "year": 2018
+        },
+        {
+          "name": "ArXiv 2019 — Return on Investment of GUI Test Automation (preprint)",
+          "pyramid": 3,
+          "year": 2019
+        }
+      ]
+    },
+    {
+      "id": "threat-modeling",
+      "domain": "security",
+      "question": "Comment modeliser les menaces (threat modeling) en phase de conception ?",
+      "recommendation": "Modelisation des menaces avec STRIDE en phase de conception. A realiser a chaque nouvelle fonctionnalite ou changement d'architecture.",
+      "grade": 5,
+      "level": "RECOMMANDE",
+      "is_universal": true,
+      "sources": [
+        {
+          "name": "SWEBOK v4 Security Knowledge Area",
+          "pyramid": 1,
+          "year": 2024
+        },
+        {
+          "name": "OWASP Threat Modeling Cheat Sheet",
+          "pyramid": 2,
+          "year": 2024
+        },
+        {
+          "name": "Microsoft SDL",
+          "pyramid": 5,
+          "year": 2024
+        }
+      ]
+    },
+    {
       "id": "requirements-format",
       "domain": "project",
       "question": "Quel format utiliser pour exprimer les exigences fonctionnelles de maniere structuree et testable ?",
@@ -6196,49 +6282,17 @@
       ]
     },
     {
-      "id": "solid-principles",
-      "domain": "project",
-      "question": "Quels principes SOLID appliquer systematiquement, lesquels requierent du jugement contextuel, et comment eviter que leur application stricte genere de la sur-ingenierie ?",
-      "recommendation": "Les principes SOLID s'appliquent avec des niveaux d'universalite differents — appliquer systematiquement SRP et ISP, quasi-systematiquement DIP (avec IoC), contextuellement OCP et LSP.\n\n**SRP — Single Responsibility Principle** (universellement applicable) : une classe/module a une et une seule raison de changer. En pratique : si la description d'une classe requiert le mot 'et', elle viole SRP. Decouper selon les axes de changement independants (domaine metier, persistance, presentation, logique metier). Indicateurs de violation : classe > 200-300 lignes, methodes privees nombreuses sans lien entre elles, changements frequents pour des raisons disparates.\n\n**ISP — Interface Segregation Principle** (universellement applicable, surtout en Java) : ne pas forcer un client a dependre d'interfaces qu'il n'utilise pas. Privilegier plusieurs petites interfaces specifiques a une grosse interface generique. En Java : eviter les interfaces a plus de 5-7 methodes dont le client n'utilise que 2-3. En TypeScript : eviter les types union/intersection trop larges dans les props de composants.\n\n**DIP — Dependency Inversion Principle** (quasi-universel avec Spring Boot) : dependre d'abstractions (interfaces), pas d'implementations concretes. Base de l'injection de dependances. En Spring Boot, c'est la valeur par defaut via IoC container — ne pas l'utiliser est une deviation deliberee qui doit etre justifiee. En TypeScript/React : injecter les dependances via props ou context plutot que les importer directement dans le composant.\n\n**OCP — Open/Closed Principle** (contextuel — plus pertinent pour code etendu par des tiers) : ouvert a l'extension, ferme a la modification. Critique pour les librairies et frameworks (code consomme par des utilisateurs exterieurs). Moins critique pour le code applicatif interne ou les changements de specification sont frequents et legitimes. Appliquer quand : le composant sera etendu par des equipes differentes, ou quand l'historique montre des patterns d'extension repetitifs.\n\n**LSP — Liskov Substitution Principle** (contextuel — souvent implicitement respecte si l'heritage est evite) : les sous-types doivent etre substituables a leurs types de base sans modifier le comportement observable du programme. Souvent viole avec l'heritage profond (override de methodes avec preconditions plus fortes ou postconditions plus faibles). La meilleure defense contre LSP : privilegier la composition sur l'heritage. Si l'heritage est necessite, respecter le contrat du type de base strictement.\n\n**Hierarchie d'applicabilite** :\n1. SRP : appliquer toujours, des la premiere conception\n2. ISP : appliquer toujours en Java (interfaces), adapter en TypeScript\n3. DIP : appliquer par defaut avec Spring IoC — deviation justifiee uniquement pour les value objects et les classes utilitaires stateless\n4. OCP : appliquer quand le code est consomme par des tiers ou que l'extensibilite est un critere explicite du module\n5. LSP : verifier quand de l'heritage est utilise ; eviter l'heritage profond plutot que de devoir le respecter avec minutie\n\n**Risque de sur-application ('architecture astronaut')** : l'application mecanique et systematique de tous les principes SOLID a tout le code produit une proliferation de classes, d'interfaces et de couches d'abstraction qui degradent la lisibilite et augmentent la charge cognitive sans benefice proportionnel. Indicateurs d'over-engineering : interface a implementation unique sans perspective d'evolution, classe de 5 lignes avec son propre fichier, injection de dependances pour des objets sans etat partageable. YAGNI s'applique a SOLID : n'extraire une abstraction que si l'extension est probable ou si la testabilite l'exige.\n\n**Application au stack OLS** :\n- DIP est oblige via Spring IoC container — @Service/@Repository/@Component + @Autowired/constructeur injection\n- ISP en Java : interfaces de repository Spring Data (JpaRepository specifique par entite, pas d'interface generique fourrre-tout)\n- SRP : services Spring Boot organises par domaine metier (UserService, NotificationService — pas de FacadeService)\n- En React/TypeScript : SRP via composants fonctionnels de responsabilite unique, ISP via props typees minimales, DIP via Context API ou props drilling delibere\n- OCP : moins critique pour le code applicatif OLS (pas de SDK public) — appliquer uniquement pour les modules identifies comme points d'extension (ex. systeme de plugins de notation)",
+      "id": "spacing",
+      "domain": "design",
+      "question": "Quel systeme d'espacement utiliser (grille, tokens) ?",
+      "recommendation": "Grille de base 8px, sous-unite 4px. Tous les espacements, marges et paddings doivent etre des multiples de 4px, privilegiant les multiples de 8px.",
       "grade": 4,
       "level": "RECOMMANDE",
       "is_universal": true,
       "sources": [
-        {
-          "name": "SWEBOK v4 (2024) — ch.2 Software Design, section 2.2 Software Design Principles",
-          "pyramid": 1,
-          "year": 2024
-        },
-        {
-          "name": "Martin R.C. — Agile Software Development: Principles, Patterns, and Practices (Prentice Hall, 2002)",
-          "pyramid": 5,
-          "year": 2002
-        },
-        {
-          "name": "Martin R.C. — Clean Code: A Handbook of Agile Software Craftsmanship (Prentice Hall, 2008)",
-          "pyramid": 5,
-          "year": 2008
-        },
-        {
-          "name": "Spring Framework — Reference Documentation, Core Technologies: IoC Container (spring.io, 2024)",
-          "pyramid": 3,
-          "year": 2024
-        },
-        {
-          "name": "Yamashita A. & Counsell S. — Code Smells as System-Level Indicators of Maintainability (IEEE TSE, 2013)",
-          "pyramid": 3,
-          "year": 2013
-        },
-        {
-          "name": "Palomba F. et al. — Revisiting the Impact of God Classes on Software Change-proneness (ICSME 2018 / EMSE 2019)",
-          "pyramid": 3,
-          "year": 2019
-        },
-        {
-          "name": "Bieman J.M. & Kang B-K. — Cohesion and reuse in an object-oriented system (SIGSOFT FSE, 1995)",
-          "pyramid": 3,
-          "year": 1995
-        }
+        {},
+        {},
+        {}
       ]
     },
     {
@@ -7108,129 +7162,6 @@
       ]
     },
     {
-      "id": "repo-standard-files",
-      "domain": "project",
-      "question": "Quels fichiers standard un repo doit-il contenir et quoi mettre dans chacun ?",
-      "recommendation": "4 fichiers obligatoires avec scopes distincts (single source of truth) : (1) README.md = landing page (description, stack, prerequis, install, commandes, quick-start). (2) CONTRIBUTING.md = process de contribution (workflow PR, branches, commits, setup dev, tests requis). (3) CONVENTIONS.md = regles de code (nommage, patterns, architecture, regles non automatisables). (4) LICENSE. Recommandes : CHANGELOG.md (par version, categories Added/Changed/Fixed), SECURITY.md, CODE_OF_CONDUCT.md. CLAUDE.md = pointeurs uniquement vers les fichiers canoniques + contraintes AI-specifiques, jamais de duplication. Regle cardinale : chaque info existe dans un seul fichier, les autres font des liens. CONTRIBUTING ≠ CONVENTIONS : process (comment contribuer, lu une fois) ≠ reference (regles de code, consulte en continu).",
-      "grade": 5,
-      "level": "STANDARD",
-      "is_universal": true,
-      "sources": [
-        {
-          "name": "GitHub Docs — Community health files",
-          "pyramid": 1,
-          "year": 2024
-        },
-        {
-          "name": "Google SWE Book Ch.10 — Documentation",
-          "pyramid": 2,
-          "year": 2020
-        },
-        {
-          "name": "InnerSource Commons — Standard Base Documentation",
-          "pyramid": 3,
-          "year": 2024
-        },
-        {
-          "name": "Open Source Guides (opensource.guide)",
-          "pyramid": 3,
-          "year": 2023
-        },
-        {
-          "name": "Linux Foundation CII Best Practices Badge",
-          "pyramid": 2,
-          "year": 2024
-        },
-        {
-          "name": "Keep a Changelog",
-          "pyramid": 4,
-          "year": 2024
-        },
-        {
-          "name": "Anthropic — CLAUDE.md documentation",
-          "pyramid": 1,
-          "year": 2025
-        }
-      ]
-    },
-    {
-      "id": "test-strategy",
-      "domain": "testing",
-      "question": "Comment definir et appliquer une strategie de test globale — pyramide, types de tests, ratio optimal — pour maximiser la confiance au deploiement tout en controlant le cout de maintenance des tests ?",
-      "recommendation": "Adopter une strategie de test structuree en niveaux complementaires — unit, integration, system, acceptance — ou chaque niveau detecte des defauts que les autres ne peuvent pas detecter. Implementer la pyramide des tests comme orientation (base large d'unit tests rapides et isoles, couche intermediaire d'integration sur comportements metier, sommet etroit d'E2E validant les flux utilisateur reels) sans traiter le ratio 70/20/10 comme une regle rigide : le ratio optimal depend du contexte (backend API vs UI frontend). Ajouter les tests statiques (TypeScript, linting) comme couche zero a cout quasi-nul. Principe 'shift-left' : detecter les defauts le plus tot possible dans le cycle de developpement reduit le cout de correction de facon exponentielle. Integrer les tests dans la Definition of Done plutot qu'en phase separee. Fondements : SWEBOK v4 (IEEE) structure formellement les quatre niveaux de test (unit/integration/system/acceptance) comme complementaires et non substituables — chaque niveau a un objectif distinct qui ne peut pas etre couvert par un autre ; ISO/IEC/IEEE 29119-2 definit les processus formels de test a chaque niveau (organization/management/dynamic) ; Cohn (Agile 2009) et Fowler (blogi 2012) posent la pyramide comme heuristique praticien : beaucoup plus d'unit tests que de broadstack tests, inversement a l'antipatern 'ice cream cone' ; Vocke/ThoughtWorks 2018 : plus d'UI tests = plus lents, plus fragiles, plus couteux en maintenance ; Humble & Farley (Continuous Delivery 2010) : deployment pipeline avec tests gradues par vitesse et isolation ; Dodds (Testing Trophy 2018) : variante moderne valorisant l'integration comme meilleur rapport confiance/maintenance, surtout pour le frontend React ; DORA State of DevOps 2023+2024 (N=39 000+ repondants) : CI + automated testing correle empiriquement avec la performance elite — les equipes integrant les tests dans la Definition of Done surpassent celles qui testent en phase separee ; ArXiv 2019 (ROI GUI automation) : ROI moyen ~250% apres 6 mois, valide l'investissement en tests automatises a grande echelle. Limite : le ratio exact 70/20/10 est une heuristique praticien sans etude controlee comparant les ratios — il s'agit d'une orientation, pas d'une prescription normative. La strategie definit l'architecture des tests ; les seuils de couverture et le mutation testing completent en mesurant leur qualite.",
-      "grade": 5,
-      "level": "STANDARD",
-      "is_universal": true,
-      "sources": [
-        {
-          "name": "SWEBOK v4 — Guide to the Software Engineering Body of Knowledge, Chapter 5 Software Testing (IEEE, 2024)",
-          "pyramid": 1,
-          "year": 2024
-        },
-        {
-          "name": "ISO/IEC/IEEE 29119-2:2021 — Software and Systems Engineering — Software Testing Part 2: Test Processes",
-          "pyramid": 1,
-          "year": 2021
-        },
-        {
-          "name": "DORA State of DevOps Report 2023 + 2024 (Google/DORA, N=39 000+ repondants)",
-          "pyramid": 4,
-          "year": 2024
-        },
-        {
-          "name": "Mike Cohn — Succeeding with Agile (Addison-Wesley, 2009)",
-          "pyramid": 5,
-          "year": 2009
-        },
-        {
-          "name": "Martin Fowler — TestPyramid (martinfowler.com bliki, 2012)",
-          "pyramid": 5,
-          "year": 2012
-        },
-        {
-          "name": "Ham Vocke (ThoughtWorks) — The Practical Test Pyramid (martinfowler.com, 2018)",
-          "pyramid": 5,
-          "year": 2018
-        },
-        {
-          "name": "Kent C. Dodds — The Testing Trophy (kentcdodds.com, 2018)",
-          "pyramid": 5,
-          "year": 2018
-        },
-        {
-          "name": "ArXiv 2019 — Return on Investment of GUI Test Automation (preprint)",
-          "pyramid": 3,
-          "year": 2019
-        }
-      ]
-    },
-    {
-      "id": "threat-modeling",
-      "domain": "security",
-      "question": "Comment modeliser les menaces (threat modeling) en phase de conception ?",
-      "recommendation": "Modelisation des menaces avec STRIDE en phase de conception. A realiser a chaque nouvelle fonctionnalite ou changement d'architecture.",
-      "grade": 5,
-      "level": "RECOMMANDE",
-      "is_universal": true,
-      "sources": [
-        {
-          "name": "SWEBOK v4 Security Knowledge Area",
-          "pyramid": 1,
-          "year": 2024
-        },
-        {
-          "name": "OWASP Threat Modeling Cheat Sheet",
-          "pyramid": 2,
-          "year": 2024
-        },
-        {
-          "name": "Microsoft SDL",
-          "pyramid": 5,
-          "year": 2024
-        }
-      ]
-    },
-    {
       "id": "typescript-interface-design",
       "domain": "design",
       "question": "Quand utiliser interface, type alias ou class en TypeScript pour definir des contrats de types — regles de decision par contexte (API publique, DTO, domaine, union types) ?",
@@ -7485,6 +7416,79 @@
       ]
     },
     {
+      "id": "kiss-yagni",
+      "domain": "project",
+      "question": "Comment choisir entre une solution simple et une abstraction plus generale/extensible — quand l'abstraction anticipee est-elle legitime vs prematuree ?",
+      "recommendation": "Implementer le strict necessaire pour le besoin actuel, avere et exprime — rejeter toute abstraction non justifiee par un besoin reel present. Regle de priorite : 'Make it work → make it right → make it fast' (Beck) — dans cet ordre, jamais inverse. Un code qui generalize sans utilisateur concret est de la dette technique degui en feature. Signaux d'alerte de sur-ingenierie : (1) plus de code d'infrastructure/genericite que de code fonctionnel direct ; (2) interface ou classe abstraite nayant qu'une seule implementation effective ; (3) parametre de configuration dont la valeur ne changera jamais en pratique ; (4) couche d'indirection supplementaire sans benefice de testabilite ni de separation avere. Le 'code smell' Speculative Generality (Fowler) designe exactement ce patron : classes, methodes, parametres presents 'au cas ou' — a supprimer ou simplifier. NUANCE ARCHITECTURALE OBLIGATOIRE : YAGNI s'applique au code et aux abstractions locales, pas aux decisions architecturales majeures a fort cout de changement (choix de SGBD, protocole d'API public, structure de donnees fondamentale persistee, monorepo vs polyrepo). Pour ces decisions, une anticipation raisonnable sur 12-18 mois est justifiee car le cout de retour-en-arriere est exponentiel — Fowler (2004) distingue explicitement YAGNI applique au code vs les contraintes architecturales irréversibles. La complexite accidentelle (Brooks 1987) est evitable par discipline ; la complexite essentielle est incompressible — ne pas confondre simplification salutaire et refus de modeliser la realite du domaine.",
+      "grade": 4,
+      "level": "RECOMMANDE",
+      "is_universal": true,
+      "sources": [
+        {
+          "name": "SWEBOK v4 — Guide to the Software Engineering Body of Knowledge, ch. 2 Software Design (IEEE Computer Society, 2024)",
+          "pyramid": 1,
+          "year": 2024
+        },
+        {
+          "name": "Beck K. — Extreme Programming Explained, 2nd ed. (Addison-Wesley, 2004)",
+          "pyramid": 5,
+          "year": 2004
+        },
+        {
+          "name": "Fowler M. — Refactoring: Improving the Design of Existing Code, 2nd ed. (Addison-Wesley, 2018)",
+          "pyramid": 5,
+          "year": 2018
+        },
+        {
+          "name": "Brooks F.P. — No Silver Bullet: Essence and Accident in Software Engineering (IEEE Computer, 1987)",
+          "pyramid": 5,
+          "year": 1987
+        },
+        {
+          "name": "McConnell S. — Code Complete, 2nd ed. (Microsoft Press, 2004)",
+          "pyramid": 5,
+          "year": 2004
+        },
+        {
+          "name": "Fowler M. — Is Design Dead? (martinfowler.com, 2004)",
+          "pyramid": 5,
+          "year": 2004
+        },
+        {
+          "name": "Hunt A., Thomas D. — The Pragmatic Programmer, 20th Anniversary ed. (Addison-Wesley, 2019)",
+          "pyramid": 5,
+          "year": 2019
+        }
+      ]
+    },
+    {
+      "id": "lombok-usage",
+      "domain": "code-quality",
+      "question": "Quand utiliser Lombok vs Java Records ?",
+      "recommendation": "Lombok pour entities JPA: @Getter @Setter @Builder @NoArgsConstructor @AllArgsConstructor. JAMAIS @Data sur entities. @RequiredArgsConstructor pour injection dans services. @Slf4j pour logging. Records pour tous les DTOs simples.",
+      "grade": 4,
+      "level": "RECOMMANDE",
+      "implementation": "Configurer lombok.config a la racine: lombok.addLombokGeneratedAnnotation=true (pour exclusion Jacoco). Entities: @Getter @Setter @Builder @NoArgsConstructor @AllArgsConstructor. Services: @RequiredArgsConstructor + champs final. DTOs: Java Records avec MapStruct 1.5+.",
+      "is_universal": false,
+      "sources": [
+        {
+          "name": "JPA Buddy — Lombok Best Practices",
+          "pyramid": 3,
+          "year": 2024
+        },
+        {
+          "name": "Thorben Janssen — Lombok+Hibernate Pitfalls",
+          "pyramid": 3,
+          "year": 2023
+        },
+        {
+          "name": "JetBrains State of Java 2025",
+          "pyramid": 2,
+          "year": 2025
+        }
+      ]
+    },
+    {
       "id": "mocking",
       "domain": "testing",
       "question": "Quelle strategie et quels outils pour le mocking dans les tests ?",
@@ -7684,17 +7688,49 @@
       ]
     },
     {
-      "id": "spacing",
-      "domain": "design",
-      "question": "Quel systeme d'espacement utiliser (grille, tokens) ?",
-      "recommendation": "Grille de base 8px, sous-unite 4px. Tous les espacements, marges et paddings doivent etre des multiples de 4px, privilegiant les multiples de 8px.",
+      "id": "solid-principles",
+      "domain": "project",
+      "question": "Quels principes SOLID appliquer systematiquement, lesquels requierent du jugement contextuel, et comment eviter que leur application stricte genere de la sur-ingenierie ?",
+      "recommendation": "Les principes SOLID s'appliquent avec des niveaux d'universalite differents — appliquer systematiquement SRP et ISP, quasi-systematiquement DIP (avec IoC), contextuellement OCP et LSP.\n\n**SRP — Single Responsibility Principle** (universellement applicable) : une classe/module a une et une seule raison de changer. En pratique : si la description d'une classe requiert le mot 'et', elle viole SRP. Decouper selon les axes de changement independants (domaine metier, persistance, presentation, logique metier). Indicateurs de violation : classe > 200-300 lignes, methodes privees nombreuses sans lien entre elles, changements frequents pour des raisons disparates.\n\n**ISP — Interface Segregation Principle** (universellement applicable, surtout en Java) : ne pas forcer un client a dependre d'interfaces qu'il n'utilise pas. Privilegier plusieurs petites interfaces specifiques a une grosse interface generique. En Java : eviter les interfaces a plus de 5-7 methodes dont le client n'utilise que 2-3. En TypeScript : eviter les types union/intersection trop larges dans les props de composants.\n\n**DIP — Dependency Inversion Principle** (quasi-universel avec Spring Boot) : dependre d'abstractions (interfaces), pas d'implementations concretes. Base de l'injection de dependances. En Spring Boot, c'est la valeur par defaut via IoC container — ne pas l'utiliser est une deviation deliberee qui doit etre justifiee. En TypeScript/React : injecter les dependances via props ou context plutot que les importer directement dans le composant.\n\n**OCP — Open/Closed Principle** (contextuel — plus pertinent pour code etendu par des tiers) : ouvert a l'extension, ferme a la modification. Critique pour les librairies et frameworks (code consomme par des utilisateurs exterieurs). Moins critique pour le code applicatif interne ou les changements de specification sont frequents et legitimes. Appliquer quand : le composant sera etendu par des equipes differentes, ou quand l'historique montre des patterns d'extension repetitifs.\n\n**LSP — Liskov Substitution Principle** (contextuel — souvent implicitement respecte si l'heritage est evite) : les sous-types doivent etre substituables a leurs types de base sans modifier le comportement observable du programme. Souvent viole avec l'heritage profond (override de methodes avec preconditions plus fortes ou postconditions plus faibles). La meilleure defense contre LSP : privilegier la composition sur l'heritage. Si l'heritage est necessite, respecter le contrat du type de base strictement.\n\n**Hierarchie d'applicabilite** :\n1. SRP : appliquer toujours, des la premiere conception\n2. ISP : appliquer toujours en Java (interfaces), adapter en TypeScript\n3. DIP : appliquer par defaut avec Spring IoC — deviation justifiee uniquement pour les value objects et les classes utilitaires stateless\n4. OCP : appliquer quand le code est consomme par des tiers ou que l'extensibilite est un critere explicite du module\n5. LSP : verifier quand de l'heritage est utilise ; eviter l'heritage profond plutot que de devoir le respecter avec minutie\n\n**Risque de sur-application ('architecture astronaut')** : l'application mecanique et systematique de tous les principes SOLID a tout le code produit une proliferation de classes, d'interfaces et de couches d'abstraction qui degradent la lisibilite et augmentent la charge cognitive sans benefice proportionnel. Indicateurs d'over-engineering : interface a implementation unique sans perspective d'evolution, classe de 5 lignes avec son propre fichier, injection de dependances pour des objets sans etat partageable. YAGNI s'applique a SOLID : n'extraire une abstraction que si l'extension est probable ou si la testabilite l'exige.\n\n**Application au stack OLS** :\n- DIP est oblige via Spring IoC container — @Service/@Repository/@Component + @Autowired/constructeur injection\n- ISP en Java : interfaces de repository Spring Data (JpaRepository specifique par entite, pas d'interface generique fourrre-tout)\n- SRP : services Spring Boot organises par domaine metier (UserService, NotificationService — pas de FacadeService)\n- En React/TypeScript : SRP via composants fonctionnels de responsabilite unique, ISP via props typees minimales, DIP via Context API ou props drilling delibere\n- OCP : moins critique pour le code applicatif OLS (pas de SDK public) — appliquer uniquement pour les modules identifies comme points d'extension (ex. systeme de plugins de notation)",
       "grade": 4,
       "level": "RECOMMANDE",
       "is_universal": true,
       "sources": [
-        {},
-        {},
-        {}
+        {
+          "name": "SWEBOK v4 (2024) — ch.2 Software Design, section 2.2 Software Design Principles",
+          "pyramid": 1,
+          "year": 2024
+        },
+        {
+          "name": "Martin R.C. — Agile Software Development: Principles, Patterns, and Practices (Prentice Hall, 2002)",
+          "pyramid": 5,
+          "year": 2002
+        },
+        {
+          "name": "Martin R.C. — Clean Code: A Handbook of Agile Software Craftsmanship (Prentice Hall, 2008)",
+          "pyramid": 5,
+          "year": 2008
+        },
+        {
+          "name": "Spring Framework — Reference Documentation, Core Technologies: IoC Container (spring.io, 2024)",
+          "pyramid": 3,
+          "year": 2024
+        },
+        {
+          "name": "Yamashita A. & Counsell S. — Code Smells as System-Level Indicators of Maintainability (IEEE TSE, 2013)",
+          "pyramid": 3,
+          "year": 2013
+        },
+        {
+          "name": "Palomba F. et al. — Revisiting the Impact of God Classes on Software Change-proneness (ICSME 2018 / EMSE 2019)",
+          "pyramid": 3,
+          "year": 2019
+        },
+        {
+          "name": "Bieman J.M. & Kang B-K. — Cohesion and reuse in an object-oriented system (SIGSOFT FSE, 1995)",
+          "pyramid": 3,
+          "year": 1995
+        }
       ]
     },
     {

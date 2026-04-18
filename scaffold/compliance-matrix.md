@@ -269,6 +269,8 @@ Règles ajoutées dans `scaffold-claude.md` suite à l'analyse de 5 sous-agents 
 
 16 nouveaux PICOC créés via pipeline Kitchenham complet (Agent A + B + C). Toutes les décisions intégrées dans `ols-recommendations.json` (244 → 260 recommandations).
 
+**+1 PICOC Type B (2026-04-18, batch 2) :** `ai-agent-session-context-initialization` — 261 recommandations totales.
+
 | Décision | Domaine | GRADE max | Corrections Agent C |
 |----------|---------|-----------|---------------------|
 | adr-output-citation | documentation | 6 | aucune |
@@ -287,6 +289,7 @@ Règles ajoutées dans `scaffold-claude.md` suite à l'analyse de 5 sous-agents 
 | agent-toil-reduction | ops | 4 | P1-P2 level FORT→RECOMMANDE, SRE Book pyramid 1→2 |
 | adr-trigger-criteria | documentation | 5 | Bass pyramid 1→5, source fantôme Keeling retiré |
 | breach-password-check | security | 6 | P1 -1 injustifié supprimé, P2-P3 grade 5→4 STANDARD→RECOMMANDE |
+| ai-agent-session-context-initialization | ai-collaboration | 3 | S4 pyramid 5→4, S3 pyramid 3→5 (non-bloquant, grades inchangés) |
 
 ---
 
@@ -316,6 +319,8 @@ Règles ajoutées dans `scaffold-claude.md` suite à l'analyse de 5 sous-agents 
 **Type A gap analysis (2026-04-18) — 4 règles scaffold + 1 hook :**
 branching 48h ✅ | fault-tolerance reviewer ✅ | threat-modeling ✅ | error budget policy ✅ | SBOM hook ✅
 
-**Type B SLRs (2026-04-18) — 16 nouvelles décisions EBSE :**
-Pipeline Kitchenham A/B/C complet — 16 × ✅
-Corrections Agent C : 23 corrections factuelles appliquées sur 16 fichiers (grades, levels, pyramides, venues, citations)
+**Type B SLRs (2026-04-18) — 17 nouvelles décisions EBSE :**
+Pipeline Kitchenham A/B/C complet — 17 × ✅
+Corrections Agent C : 25 corrections factuelles appliquées (23 batch 1 + 2 batch 2 : S4 pyramid, S3 pyramid)
+Batch 1 : 16 décisions (adr-output-citation → breach-password-check)
+Batch 2 : 1 décision (ai-agent-session-context-initialization, GRADE max 3)
