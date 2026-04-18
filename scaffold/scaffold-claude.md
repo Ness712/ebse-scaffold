@@ -33,6 +33,12 @@ Regle de routage : "Si un autre projet pourrait avoir la meme question → guide
 
 `Source: PICOC #1 Autonomy granularity + PICOC #6 Escalation protocol + PICOC #2 Task-type routing`
 
+**Source de verite unique — ebse-scaffold** `[REQUIRED]` : ebse-scaffold est la source de verite pour toutes les regles universelles (applicables a tout projet). Les projets heritent — ils n'inventent pas de regles universelles. Si une regle doit etre copiee dans un repo projet (car pas de redirect possible), le template canonique vit dans ebse-scaffold et le projet en derive.
+
+Cette regle s'applique dans les **deux sens** :
+- **Avant d'ecrire une regle dans un CLAUDE.md projet** : se demander "tout autre projet pourrait-il avoir besoin de ca ?" — si oui → l'ecrire dans scaffold-claude.md, pas dans le projet.
+- **En auditant un CLAUDE.md projet existant** : verifier si chaque regle est vraiment projet-specifique — si non → la deplacer dans scaffold-claude.md et remplacer par un pointeur.
+
 ---
 
 ## Gates humaines obligatoires `[MANDATORY]`
@@ -198,11 +204,18 @@ Regle : **un seul decideur actif a la fois**. Si l'IC est indisponible → hando
 Tu geres le git workflow **entierement seul** :
 
 1. **Branche** : cree une branche par tache — format : `[CONFIGURER: format branche, ex: feature/description-kebab-case]`
-2. **Worktree** : au debut de chaque tache, verifier `git branch -a`. Si une autre branche de travail est deja active → creer un worktree separe pour isoler le travail. Sinon → travailler directement sur la nouvelle branche. Procedure worktree : voir le CLAUDE.md projet.
+2. **Worktree** : au debut de chaque tache, verifier `git branch -a`. Si une autre branche de travail est deja active → creer un worktree separe pour isoler le travail. Sinon → travailler directement sur la nouvelle branche. Procedure worktree : voir le CLAUDE.md projet. **NE JAMAIS utiliser `Agent(isolation: "worktree")`** si la racine du projet n'est pas elle-meme un repo git (ex: dossier parent contenant plusieurs repos) — ca echouera silencieusement. Utiliser a la place : `cd <repo> && git worktree add ../<nom> -b <branche>`.
 3. **Commits** : commits incrementaux et frequents (jamais un mega-commit). Format : `[CONFIGURER: format commit, ex: type(scope): description]`
 3-bis. `[REQUIRED]` **Taille de PR** : viser 200 LOC, ne pas depasser 400 LOC par PR. Au-dela → decouper en PRs atomiques. Chaque PR = un seul objectif logique (jamais refactoring + feature dans la meme PR — separer systematiquement). Si decoupage impossible (migration atomique) : documenter dans la description pourquoi. `Source: PICOC pr-size-discipline GRADE 5 STANDARD — Cohen 2006 SmartBear/Cisco 2500+ reviews : >400 LOC degrade le taux de detection des defauts ; DORA 2023 : taille PR = indicateur predictif de la frequence de deploiement`
 4. `[REQUIRED]` **Durée de vie branche** : max 48h avant merge. Si une branche dépasse 48h → signaler au PO, proposer (a) découpage en sous-tâches plus courtes, ou (b) merge partiel derrière feature flag. Branches long-lived = +50% change failure rate (DORA 2024). Pour code incomplet sur > 48h : utiliser un Release flag (on/off statique) plutôt qu'une branche long-lived — cleanup obligatoire dès que la feature est stable en prod. `Source: PICOC branching GRADE 5 STANDARD — Forsgren/Accelerate 2018 + DORA 2024 ; PICOC feature-flags GRADE 4 RECOMMANDE`
-5. **Documentation** : quand le code change, mettre a jour la doc concernee **dans le meme commit**
+5. **Documentation** : quand le code change, mettre a jour la doc concernee **dans le meme commit**. Chaque information n'existe qu'a **un seul endroit** — jamais dupliquer entre fichiers. Roles des fichiers de reference :
+
+   | Fichier | Contient | Ne contient PAS |
+   |---------|----------|-----------------|
+   | `README.md` | Stack, commandes build/test/run, demarrage | Regles, guides |
+   | `CONVENTIONS.md` | Regles obligatoires verifiables (reference) | Commandes, tutoriels |
+   | `CLAUDE.md` | Pointeurs + config scaffold projet | Commandes, regles detaillees |
+   | `[CONFIGURER: docs/]` | Tutoriels, how-to, reference, explanation | Regles, commandes |
 6. **PR** : quand la tache est finie, **dans cet ordre obligatoire** :
    1. Plan relu point par point — chaque item verifie
    2. Sub-agent reviewer spawne — rapport produit (bloquants / avertissements / verdict)
