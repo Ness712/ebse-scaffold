@@ -13,7 +13,7 @@
   "universal": {
     "principles": [
       {
-        "text": "Maintenir un fichier d'instructions de projet committed dans le repo (CLAUDE.md pour Claude Code, AGENTS.md pour le standard cross-vendor stewarded par Agentic AI Foundation/Linux Foundation, .cursorrules/.cursor/rules/*.mdc pour Cursor, .clinerules/ pour Cline, .github/copilot-instructions.md pour GitHub Copilot). ATTENTION paradoxe empirique : Gloaguen et al. 2026 (arXiv:2602.11988) montre que les context files peuvent *reduire* la task success rate et augmenter le cout d'inference de 20%+. Recommendation : **keep minimal and non-inferable** — documenter uniquement ce qui ne peut pas etre devine du code source (build/run commands, conventions de nommage custom, constraints techniques non-evidentes). Eviter les listes exhaustives.",
+        "text": "Maintenir un fichier d'instructions de projet (context file) committed dans le repo (format specifique a chaque agent, ou AGENTS.md pour le standard cross-vendor stewarded par Agentic AI Foundation/Linux Foundation). ATTENTION paradoxe empirique : Gloaguen et al. 2026 (arXiv:2602.11988) montre que les context files peuvent *reduire* la task success rate et augmenter le cout d'inference de 20%+. Recommendation : **keep minimal and non-inferable** — documenter uniquement ce qui ne peut pas etre devine du code source (build/run commands, conventions de nommage custom, constraints techniques non-evidentes). Eviter les listes exhaustives.",
         "grade": 2,
         "level": "BONNE PRATIQUE",
         "sources": [

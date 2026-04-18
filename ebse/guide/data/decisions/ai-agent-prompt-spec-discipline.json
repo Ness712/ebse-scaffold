@@ -13,7 +13,7 @@
   "universal": {
     "principles": [
       {
-        "text": "Adopter une discipline spec-first : plan-then-code (Claude Code plan mode via `/plan` et `--permission-mode plan`, Aider `/architect` mode), acceptance criteria explicites dans les issues, spec-driven development avec outils formels (GitHub Spec-Kit avec constitution.md, Amazon Kiro). Les evidences empiriques (TiCoder, TGen) montrent +12 a +46pp d'amelioration en pass@1 vs freeform prompting sur benchmarks synthetiques courts (MBPP, HumanEval). Indirectness a noter : ces gains ne sont pas encore valides sur du real-world feature work longer-horizon.",
+        "text": "Adopter une discipline spec-first : plan-then-code (commande de planification de l'agent, mode architect de l'agent), acceptance criteria explicites dans les issues, spec-driven development avec outils de specification assistes par IA. Les evidences empiriques (TiCoder, TGen) montrent +12 a +46pp d'amelioration en pass@1 vs freeform prompting sur benchmarks synthetiques courts (MBPP, HumanEval). Indirectness a noter : ces gains ne sont pas encore valides sur du real-world feature work longer-horizon.",
         "grade": 3,
         "level": "RECOMMANDE",
         "sources": [

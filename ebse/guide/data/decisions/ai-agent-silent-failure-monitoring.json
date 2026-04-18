@@ -14,7 +14,7 @@
   "universal": {
     "principles": [
       {
-        "text": "Deployer un pipeline de detection specifique aux silent-failure classes : (1) package-hallucination detection via Socket, Snyk dependency audit, pip-audit/npm audit (base rate empirique 19.7% hallucination sur 576k samples, 21.7% OSS / 5.2% commercial) ; (2) semantic-drift detection via regression testing sur behavior non-touche ; (3) SAST/DAST declenches sur agent diffs specifiquement ; (4) runtime observability (GlitchTip, Sentry, OpenTelemetry) pour attraper les effets post-merge. Le CI test suite seul est insuffisant car il ne detecte pas les API parameters hallucines (Knowledge Conflicting Hallucinations) qui sont type-valid.",
+        "text": "Deployer un pipeline de detection specifique aux silent-failure classes : (1) package-hallucination detection via outil de detection de dependances malveillantes, pip-audit/npm audit (base rate empirique 19.7% hallucination sur 576k samples, 21.7% OSS / 5.2% commercial) ; (2) semantic-drift detection via regression testing sur behavior non-touche ; (3) SAST/DAST declenches sur agent diffs specifiquement ; (4) runtime observability (outil d'error tracking, OpenTelemetry) pour attraper les effets post-merge. Le CI test suite seul est insuffisant car il ne detecte pas les API parameters hallucines (Knowledge Conflicting Hallucinations) qui sont type-valid.",
         "grade": 3,
         "level": "RECOMMANDE",
         "sources": [

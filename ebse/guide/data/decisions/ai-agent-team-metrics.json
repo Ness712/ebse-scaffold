@@ -14,7 +14,7 @@
   "universal": {
     "principles": [
       {
-        "text": "Composer DORA 4-keys (Deployment Frequency, Lead Time, Change Failure Rate, MTTR) + SPACE 5-dimensions (Satisfaction, Performance, Activity, Communication, Efficiency) + metrics agent-specific (agent-authored LOC ratio, human-override rate, escalation rate, cost per merged PR). Ne JAMAIS utiliser une metrique seule — Goodhart risk. Eviter les vanity metrics type Copilot acceptance rate ou Cursor tab-accept rate. Le DORA 2025 confirme que 'AI's primary role is as an amplifier' : les AI assistants augmentent l'output individuel (21% more tasks, 98% more PRs merged) mais incrementent aussi review time (+441%) et incidents per PR (+242%) — un composite DORA+SPACE capture ce tradeoff, un single-metric le manque.",
+        "text": "Composer DORA 4-keys (Deployment Frequency, Lead Time, Change Failure Rate, MTTR) + SPACE 5-dimensions (Satisfaction, Performance, Activity, Communication, Efficiency) + metrics agent-specific (agent-authored LOC ratio, human-override rate, escalation rate, cost per merged PR). Ne JAMAIS utiliser une metrique seule — Goodhart risk. Eviter les vanity metrics type taux d'acceptation de suggestion IA ou taux de completion automatique IA. Le DORA 2025 confirme que 'AI's primary role is as an amplifier' : les AI assistants augmentent l'output individuel (21% more tasks, 98% more PRs merged) mais incrementent aussi review time (+441%) et incidents per PR (+242%) — un composite DORA+SPACE capture ce tradeoff, un single-metric le manque.",
         "grade": 3,
         "level": "RECOMMANDE",
         "sources": [

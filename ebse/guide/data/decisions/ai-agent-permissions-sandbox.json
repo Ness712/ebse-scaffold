@@ -14,7 +14,7 @@
   "universal": {
     "principles": [
       {
-        "text": "Appliquer le principe du least-privilege avec deny-by-default + allow-list explicite des outils accessibles. Combiner avec isolation au niveau OS : microVM (E2B/Firecracker, Devin VM, Sculptor par Imbue) pour isolation hardware ; devcontainers ou git-worktrees pour isolation moindre mais plus ergonomique. Le shared-kernel container seul est insuffisant pour du code AI non-trusted. Les regles deny doivent avoir precedence sur allow. Ne jamais utiliser 'bypassPermissions' ou YOLO mode contre des repos production (prompt injection documente peut exfiltrer secrets / executer rm -rf).",
+        "text": "Appliquer le principe du least-privilege avec deny-by-default + allow-list explicite des outils accessibles. Combiner avec isolation au niveau OS : sandbox d'isolation (microVM ou container dedié) pour isolation hardware ; devcontainers ou git-worktrees pour isolation moindre mais plus ergonomique. Le shared-kernel container seul est insuffisant pour du code AI non-trusted. Les regles deny doivent avoir precedence sur allow. Ne jamais utiliser 'bypassPermissions' ou YOLO mode contre des repos production (prompt injection documente peut exfiltrer secrets / executer rm -rf).",
         "grade": 2,
         "level": "BONNE PRATIQUE",
         "sources": [

@@ -1,0 +1,395 @@
+{
+  "id": "ai-autonomous-agent-comparison",
+  "domain": "ai-tooling",
+  "question": "Parmi les agents IA autonomes disponibles, lesquels offrent le meilleur rapport performance/fiabilite pour un usage en production ?",
+  "depends_on": ["ai-agent-delegation-model"],
+  "tags": [
+    "ai-agent",
+    "claude-code",
+    "devin",
+    "openHands",
+    "swe-agent",
+    "aider",
+    "benchmark",
+    "swe-bench",
+    "feature-bench",
+    "merge-rate",
+    "task-type",
+    "technical-debt"
+  ],
+  "classification": "universal",
+  "slr": {
+    "picoc": "ai-autonomous-agent-comparison",
+    "date": "2026-04-18",
+    "phases": 2,
+    "total_sources_evaluated": 34,
+    "included": 26,
+    "excluded": 8,
+    "kappa_reviewers": 0.72,
+    "grade_final": 3,
+    "level_final": "RECOMMANDE",
+    "agents": {
+      "reviewer_a": "a5bbddeea92617985",
+      "reviewer_b": "a24e1512c672792d9",
+      "agent_c": "claude-sonnet-4-6-agentc-20260418"
+    },
+    "notes": "Divergence GRADE resolue : A=3/7, B=4/7. Decision Agent C : GRADE 3 retenu. Justification du refus du +1 de B : (1) Absence de RCT inter-agents direct — les etudes observationnelles a large echelle (AIDev: 932K PRs, Debt Behind AI Boom: 304K commits) mesurent chaque agent separement sur des repertoires differents, pas en comparaison controlee ; (2) biais open-source systematique confirme par les deux reviewers — tous les repos observes sont publics sur GitHub, les codebases proprietaires ou brownfield ne sont pas representes ; (3) le volume exceptionnel de donnees ne compense pas l'absence de design experimental permettant de conclure 'agent X est superieur a agent Y toutes choses egales par ailleurs'. Le GRADE 4 de B est justifie par la convergence multi-sources, mais la question PICOC pose une comparaison inter-agents que les donnees disponibles ne permettent pas de repondre avec une evidence de niveau 4. Kappa inter-reviewers : 0,72 — accord parfait sur les inclusions et les conclusions, divergence systematique de 1 point sur les niveaux pyramide (B eleve systematiquement les etudes observationnelles a large echelle de niveau 3→4, A reste plus conservateur). Convergences critiques A+B : (1) le type de tache predit mieux le succes que le choix de l'agent (29pp d'ecart doc vs features > variance inter-agents) ; (2) les benchmarks academiques surestiment les performances reelles d'un facteur 5-7x ; (3) la supervision humaine reste necessaire pour atteindre les merge rates les plus eleves ; (4) les agents autonomes de code review obtiennent 45% vs 68% humains — insuffisant sans supervision. Sources exclues (niveau pyramide 5 non corrobore ou doublons) : Devin Annual Review Cognition (vendeur), claims morphllm non independants, Answer.AI non replique. Divergence secondaire resolue : A recommande une bifurcation simple, B une bifurcation fonctionnelle par type de tache. Resolution Agent C : la bifurcation fonctionnelle est retenue car elle est mieux supportee empiriquement (Task-Stratified, arXiv:2602.08915 ; 7156 PRs)."
+  },
+  "universal": {
+    "principles": [
+      {
+        "text": "Le type de tache est le facteur dominant de performance des agents autonomes — il predit mieux le taux d'acceptation que le choix de l'agent. L'ecart entre documentation/CI (>80% acceptance) et features complexes/corrections de bugs (<70%) depasse de 29 points de pourcentage la variance inter-agents. Aucun agent ne domine tous les types de taches simultanement.",
+        "grade": 4,
+        "level": "RECOMMANDE_FORT",
+        "sources": [
+          {
+            "ref": "arXiv:2602.08915",
+            "name": "Comparing AI Coding Agents: Task-Stratified Analysis",
+            "pyramid": 3,
+            "year": 2026,
+            "quote": "Task type is the dominant predictor of acceptance rate. 29pp gap between documentation (82.1%) and features (66.1%) > inter-agent variance."
+          },
+          {
+            "ref": "arXiv:2601.15195",
+            "name": "Where Do AI Coding Agents Fail?",
+            "pyramid": 3,
+            "year": 2026,
+            "quote": "Documentation, CI, build updates merged highest; performance and bug-fix tasks perform the worst."
+          },
+          {
+            "ref": "arXiv:2509.14745",
+            "name": "On the Use of Agentic Coding",
+            "pyramid": 3,
+            "year": 2025,
+            "quote": "Agentic PRs merged 83.8% vs 91.0% human. 54.9% integrated without modification. Task mix: refactoring, documentation, tests."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 3,
+          "plus": ["Convergence A+B parfaite", "3 etudes independantes large echelle", "Resultat inattendu (inter-agent < intra-type) = finding robuste"],
+          "minus": ["Biais open-source systematique — repos publics uniquement"]
+        },
+        "robustness": "STABLE — convergence multi-sources sur 3 etudes independantes avec methodologies differentes (567 PRs, 7156 PRs, 33000 PRs)",
+        "v3_review": "2026-04-18"
+      },
+      {
+        "text": "Les benchmarks academiques courants surestiment les performances reelles des agents sur des features completes d'un facteur 5 a 7. Les benchmarks decontamines donnent des resultats drastiquement inferieurs aux benchmarks statiques : les meilleurs agents atteignent 11-12% sur des features reelles completes (benchmarks decontamines ICLR 2026) contre 70%+ sur les benchmarks contamines. Les scores des benchmarks contamines ne sont pas utilisables pour predire la performance en production.",
+        "grade": 4,
+        "level": "RECOMMANDE_FORT",
+        "sources": [
+          {
+            "ref": "arXiv:2602.10975",
+            "name": "FeatureBench",
+            "pyramid": 3,
+            "year": 2026,
+            "quote": "Claude Opus 4.5: 74.4% on contaminated benchmark, 11.0% on FeatureBench (real features). GPT-5.1-Codex: 12.5%. Same methodology: 63-point gap."
+          },
+          {
+            "ref": "arXiv:2509.16941",
+            "name": "SWE-Bench Pro",
+            "pyramid": 3,
+            "year": 2025,
+            "quote": "Best models <25% Pass@1 on decontaminated benchmark vs 70%+ on Verified. Exclusively uses copyleft repositories unlikely to appear in training sets."
+          },
+          {
+            "ref": "arXiv:2512.18470",
+            "name": "SWE-EVO",
+            "pyramid": 4,
+            "year": 2025,
+            "quote": "Best agent: 25% on SWE-EVO vs 72.80% on contaminated benchmark. Average task involves 21 files and 874 tests."
+          },
+          {
+            "ref": "arXiv:2512.10218",
+            "name": "Does SWE-Bench-Verified Test Agent Ability or Model Memory?",
+            "pyramid": 3,
+            "year": 2025,
+            "quote": "Models 3x better on SWE-bench Verified than on decontaminated benchmarks. 6x better at file localization without project context."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 3,
+          "plus": ["Convergence A+B parfaite", "4 etudes independantes", "Validation croisee inter-benchmarks (SWE-Pro + FeatureBench + SWE-EVO)", "Peer-reviewed top-tier (ICLR 2026, NeurIPS 2025)"],
+          "minus": ["Tous benchmarks principalement Python — extrapolation TypeScript non validee"]
+        },
+        "robustness": "STABLE — confirme par 4+ etudes independantes avec methodologies anti-contamination differentes",
+        "v3_review": "2026-04-18"
+      },
+      {
+        "text": "Les agents autonomes de coding accumulent de la dette technique et des vulnerabilites de securite dans plus de 15% de leurs commits, avec un taux de persistance de 24 a 41%. La complexite cognitive augmente de 39% sur les codebases utilisant des agents autonomes. Ces degradations sont systematiques, independantes de l'agent utilise, et s'aggravent dans le temps sans supervision active.",
+        "grade": 3,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "ref": "arXiv:2603.28592",
+            "name": "Debt Behind the AI Boom",
+            "pyramid": 3,
+            "year": 2026,
+            "quote": ">15% of commits from each tool introduce at least one issue. 24.2% persist. 41.1% of security vulnerabilities persist."
+          },
+          {
+            "ref": "arXiv:2601.13597",
+            "name": "AI IDEs or Autonomous Agents?",
+            "pyramid": 3,
+            "year": 2026,
+            "quote": "Static-analysis warnings +18%, cognitive complexity +39% with autonomous agents. Velocity gains only if first AI tool in project."
+          },
+          {
+            "ref": "arXiv:2604.03551",
+            "name": "AgenticFlict",
+            "pyramid": 3,
+            "year": 2026,
+            "quote": "27.67% of agent merge conflicts. 142 652 PRs analyzed."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 3,
+          "plus": ["Convergence A+B", "Volume eleve (304K commits, 142K PRs)", "Quasi-experimental (DiD) pour complexite cognitive"],
+          "minus": ["Magnitude variable selon l'outil", "Biais open-source", "Pas de mesure de la dette sur horizon >6 mois"]
+        },
+        "robustness": "MODERE — convergence sur la direction, magnitude variable entre sources et outils",
+        "v3_review": "2026-04-18"
+      },
+      {
+        "text": "Les agents autonomes de code review obtiennent un taux d'acceptation de 45% contre 68% pour les humains — un ecart de 23 points. Sur 13 agents autonomes de code review testes, 12 obtiennent un signal en dessous de 60%. Cette categorie d'usage (review autonome sans supervision) est insuffisante pour la production sans complement humain.",
+        "grade": 3,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "ref": "arXiv:2604.03196",
+            "name": "From Industry Claims to Empirical Reality (Code Review Agents)",
+            "pyramid": 3,
+            "year": 2026,
+            "quote": "CRA-only PRs: 45.20% merge rate vs 68.37% human-only. 12 of 13 CRAs signal <60%."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 3,
+          "plus": ["Signal clair et net (23pp gap)", "13 agents testes — couverture du marche"],
+          "minus": ["Source unique", "Biais open-source"]
+        },
+        "robustness": "MODERE — source unique mais methodologie rigoureuse et echantillon large",
+        "v3_review": "2026-04-18"
+      },
+      {
+        "text": "Les architectures multi-agents reduisent le taux de succes de 30% par rapport aux agents individuels sur des taches collaboratives. Trois modes de defaillance sont documentes : perte de coherence architecturale, accumulation d'erreurs entre agents, et terminaison prematuree avec faux positif de succes. L'orchestration multi-agents en production necessite des mecanismes de verification inter-agents explicites.",
+        "grade": 3,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "ref": "arXiv:2601.13295",
+            "name": "CooperBench: Why Coding Agents Cannot be Your Teammates Yet",
+            "pyramid": 2,
+            "year": 2026,
+            "quote": "-30% success rate in multi-agent mode vs individual. 600+ collaborative tasks. 3 documented failure modes."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 2,
+          "plus": ["Seule etude directe sur multi-agent collaboration", "Methodologie controlee (600+ taches)", "Convergence avec principe general sur delegation complete"],
+          "minus": ["Niveau pyramide 2-3 seulement", "Source unique"]
+        },
+        "robustness": "FRAGILE — source unique, niveau pyramide limite, replication necessaire",
+        "v3_review": "2026-04-18"
+      },
+      {
+        "text": "La performance des agents sur des taches en contexte long (bases de code etendues, historique de fichiers important) surpasse les benchmarks standard de 17 points. L'externalisation de la memoire vers le filesystem compense les limitations de la fenetre de contexte. Les agents pré-construits configurables avec acces complet au systeme de fichiers ont un avantage structurel sur les agents sans acces persistant.",
+        "grade": 3,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "ref": "arXiv:2603.20432",
+            "name": "Coding Agents are Effective Long-Context Processors",
+            "pyramid": 3,
+            "year": 2026,
+            "quote": "Agents surpass benchmarks by +17.3% on long-context tasks via filesystem externalization."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 3,
+          "plus": ["Finding differenciateur pertinent pour choix d'outil"],
+          "minus": ["Source unique", "Biais open-source"]
+        },
+        "robustness": "FRAGILE — source unique, necessiterait replication",
+        "v3_review": "2026-04-18"
+      },
+      {
+        "text": "L'adoption des agents autonomes de coding sur les projets open-source publics a atteint 22 a 28% en 2025-2026, ce qui confere un avantage de calibration aux outils les plus utilises : ils ont ete exposes a davantage de feedback reel via les merge rates et les revues de code. Cet effet de feedback continu est non documentable par les benchmarks academiques statiques.",
+        "grade": 2,
+        "level": "BONNE_PRATIQUE",
+        "sources": [
+          {
+            "ref": "arXiv:2601.18341",
+            "name": "Agentic Much? Adoption of Coding Agents on GitHub",
+            "pyramid": 3,
+            "year": 2026,
+            "quote": "22.20%–28.66% adoption rate. 128 018 projects studied."
+          },
+          {
+            "ref": "arXiv:2602.09185",
+            "name": "AIDev: Studying AI Coding Agents on GitHub",
+            "pyramid": 3,
+            "year": 2026,
+            "quote": "932 791 PRs, 5 agents, 116 211 repos. Massive scale observation of agent behavior in production."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 2,
+          "plus": ["Volume exceptionnel", "Signal coherent entre les deux sources"],
+          "minus": ["Biais open-source fort", "Inference indirecte sur la calibration"]
+        },
+        "robustness": "FRAGILE — inference, non testable directement",
+        "v3_review": "2026-04-18"
+      }
+    ]
+  },
+  "variants": {
+    "claude-code": {
+      "recommendation": "Claude Code en mode agentic — agent pré-construit configurable le mieux positionné empiriquement pour les equipes avec supervision humaine. Merge rate le plus élevé mesuré dans une étude indépendante à grande échelle : 83.8% (567 PRs, arXiv:2509.14745). Superieur sur les taches de documentation (92.3%) et de features (72.6%). Avantage structurel sur les codebases larges via externalisation filesystem. 54.9% des PRs integrees sans modification. Limitations : performances réelles sur features complètes proches de 11% (benchmarks décontaminés ICLR 2026), identiques aux autres meilleurs agents actuels.",
+      "grade": 3,
+      "level": "RECOMMANDE",
+      "implementation": "Mode agentic avec supervision humaine sur les PRs avant merge. Configuration via CLAUDE.md + scaffold + hooks. Workflow : tache atomique avec criteres d'acceptation explicites → branche → code → tests → PR → review PO → merge. Ne pas utiliser en mode autonome complet sans review (voir decision ai-agent-delegation-model). Avantage flat-rate si abonnement Max.",
+      "sources": [
+        {
+          "ref": "arXiv:2509.14745",
+          "name": "On the Use of Agentic Coding",
+          "pyramid": 3,
+          "year": 2025,
+          "quote": "83.8% merge rate (vs 91.0% human baseline). 54.9% integrated without modification."
+        },
+        {
+          "ref": "arXiv:2602.08915",
+          "name": "Comparing AI Coding Agents: Task-Stratified Analysis",
+          "pyramid": 3,
+          "year": 2026,
+          "quote": "Claude Code: 92.3% documentation, 72.6% features. Task-type dominant factor."
+        },
+        {
+          "ref": "arXiv:2602.10975",
+          "name": "FeatureBench — ICLR 2026",
+          "pyramid": 3,
+          "year": 2026,
+          "quote": "Claude Opus 4.5: 11.0% on real feature development. >1M input tokens per task."
+        },
+        {
+          "ref": "arXiv:2604.00917",
+          "name": "Investigating Autonomous Agent Contributions in the Wild",
+          "pyramid": 3,
+          "year": 2026,
+          "quote": "Merge rates > human baseline on documentation and CI tasks. 111 969 PRs over 3 months."
+        }
+      ]
+    },
+    "devin": {
+      "recommendation": "Devin (agent pré-construit autonome) — en amélioration constante documentée (+0.77%/semaine sur 32 semaines, seul agent avec progression continue mesurée) mais point de départ bas. Merge rate auto-rapporté : 67% (non audité, biais de sélection des tâches probable). Évaluation indépendante qualitative : 15% sur 20 tâches complexes réelles (Answer.AI, 2025). Pattern documenté : poursuite de solutions impossibles pendant des jours sans signaler les blocages. Recommandé uniquement pour les tâches répétitives, bien définies, avec critères de succès explicites et supervision étroite.",
+      "grade": 2,
+      "level": "BONNE_PRATIQUE",
+      "implementation": "Taches repetitives bien specifiées (mises à jour de dépendances, corrections de bugs documentées avec steps reproductibles, génération de tests). Ne pas utiliser pour features multi-fichiers ou refactoring architectural. Surveiller les blocages (timeout explicite obligatoire). Pricing non flat-rate — monitorer le coût réel.",
+      "sources": [
+        {
+          "ref": "arXiv:2602.08915",
+          "name": "Comparing AI Coding Agents: Task-Stratified Analysis",
+          "pyramid": 3,
+          "year": 2026,
+          "quote": "Devin: +0.77%/week improvement over 32 weeks — only agent with documented continuous improvement."
+        },
+        {
+          "ref": "answer.ai-2025-01",
+          "name": "Thoughts On A Month With Devin (Answer.AI, jan 2025)",
+          "pyramid": 4,
+          "year": 2025,
+          "quote": "3/20 tasks completed (15%). Pattern: pursues impossible solutions for days without recognizing blockers."
+        },
+        {
+          "ref": "cognition-devin-annual-2025",
+          "name": "Devin 2025 Annual Review (Cognition — vendor)",
+          "pyramid": 5,
+          "year": 2025,
+          "quote": "67% PR merge rate (self-reported). 34% previous year. Tasks with clear requirements, 4-8hr junior engineer equivalent."
+        }
+      ]
+    },
+    "openHands": {
+      "recommendation": "OpenHands (agent pré-construit autonome open-source, self-hosted) — alternative viable pour les équipes avec compétences DevOps. Scores sur benchmarks décontaminés similaires aux autres meilleurs agents actuels (25% sur SWE-EVO avec GPT-5.4). Avantage : open-source, customisable, supporte les modèles locaux. Limitation : infrastructure à maintenir, overhead setup. Non recommandé en première installation pour un profil non-DevOps.",
+      "grade": 2,
+      "level": "BONNE_PRATIQUE",
+      "implementation": "OpenHands sur Docker local ou VPS. Utiliser avec un modèle frontier en backend pour performances maximales. Configuration modèles locaux possible (voir decision ai-local-vs-cloud-agent). Réservé aux équipes avec capacité DevOps interne.",
+      "sources": [
+        {
+          "ref": "arXiv:2512.18470",
+          "name": "SWE-EVO",
+          "pyramid": 4,
+          "year": 2025,
+          "quote": "GPT-5.4 with OpenHands: 25% on SWE-EVO vs 72.80% on contaminated benchmark. 21 files/task, 874 tests average."
+        }
+      ]
+    },
+    "aider": {
+      "recommendation": "Aider (agent CLI open-source, git-natif) — bon choix si le contrôle maximum du modèle sous-jacent est prioritaire (rotation vers modèle local, voir ai-local-vs-cloud-agent). Compatible tous modèles cloud et locaux. Moins de scaffolding agentic que les agents pré-construits configurables (pas d'équivalent natif au système de hooks). Performances sur benchmarks polyglots correctes.",
+      "grade": 2,
+      "level": "BONNE_PRATIQUE",
+      "implementation": "Aider via pip. Backend : modèle local via Ollama ou API cloud. Avantage : flat-rate possible avec modèle local. Limitation : UX moins polie, pas de hook system équivalent, moins adapté aux workflows CI/CD.",
+      "sources": [
+        {
+          "ref": "aider-polyglot-2025",
+          "name": "Aider Polyglot Leaderboard 2025",
+          "pyramid": 4,
+          "year": 2025,
+          "quote": "225 exercises Exercism, 6 languages. Multiple frontier models tested. Benchmark polyglot coverage."
+        }
+      ]
+    },
+    "cursor-agent": {
+      "recommendation": "Cursor Agent (agent IDE pré-construit) — recommandé si l'équipe travaille principalement dans un IDE graphique et valorise l'intégration UX. RAG filesystem local intégré. Performances mesurées : 80.4% sur bug fixes (meilleur résultat mesuré pour ce type). Limitation documentée : l'adoption de Cursor en premier réduit causalement les gains d'autres agents introduits ensuite (effet de séquence, CMU DiD, arXiv:2601.13597). Ne pas combiner avec un autre agent principal sur le même projet.",
+      "grade": 2,
+      "level": "BONNE_PRATIQUE",
+      "implementation": "Mode Agent pour execution autonome. Non recommandé si un agent pré-construit configurable est déjà en place — le switch annule les gains marginaux. Flat-rate viable.",
+      "sources": [
+        {
+          "ref": "arXiv:2602.08915",
+          "name": "Comparing AI Coding Agents: Task-Stratified Analysis",
+          "pyramid": 3,
+          "year": 2026,
+          "quote": "Cursor: 80.4% on bug fixes — highest measured for this task type."
+        },
+        {
+          "ref": "arXiv:2601.13597",
+          "name": "AI IDEs or Autonomous Agents? (CMU DiD)",
+          "pyramid": 3,
+          "year": 2026,
+          "quote": "Velocity gains front-loaded: only if first AI tool in project. Subsequent tool adds show diminishing returns."
+        }
+      ]
+    },
+    "codex-cli": {
+      "recommendation": "Codex CLI (agent pré-construit configurable OpenAI) — performances variables selon le type de tâche (59.6% à 88.6% selon Task-Stratified). Merge rate médian exceptionnel documenté (0.5 min) suggère une optimisation pour la rapidité de traitement. Bon sur documentation et CI. Moins performant sur features complexes. Consistance inter-taches supérieure à la variance inter-outils.",
+      "grade": 2,
+      "level": "BONNE_PRATIQUE",
+      "implementation": "Codex CLI avec API OpenAI. Usage optimal : documentation, mises à jour CI/CD, tâches de maintenance bien définies. Surveiller le coût par tâche (non flat-rate).",
+      "sources": [
+        {
+          "ref": "arXiv:2602.08915",
+          "name": "Comparing AI Coding Agents: Task-Stratified Analysis",
+          "pyramid": 3,
+          "year": 2026,
+          "quote": "Codex: 59.6%–88.6% acceptance rate depending on task type. High variance by task category."
+        },
+        {
+          "ref": "arXiv:2604.00917",
+          "name": "Investigating Autonomous Agent Contributions in the Wild",
+          "pyramid": 3,
+          "year": 2026,
+          "quote": "Codex median merge time: 0.5 min. Merge rates > human baseline alongside Claude Code."
+        }
+      ]
+    }
+  },
+  "ols_context": {
+    "recommendation": "Pour OLS (NestJS/TypeScript/Prisma, PO solo) : Claude Code en mode agentic avec supervision PR reste le choix principal. Le type de tâche est le levier le plus puissant — prioriser documentation, tests, refactoring (>80% acceptance) avant features complexes (72.6%). Ne pas introduire de second agent tant que Claude Code est en place (effet de séquence documenté). Surveiller activement la dette technique accumulée (>15% commits avec issues, 41% vulns persistantes) via SonarQube et CodeQL. Le coût réel estimé : 4-4.20$/tâche enterprise si facturation API — flat-rate Max recommandé pour éviter la surprise.",
+    "specific_risks": [
+      "AgenticFlict : 27.67% de conflits de merge agents — risque amplifié en contexte solo sans second reviewer",
+      "Complexite cognitive +39% sur horizon long — audit trimestriel obligatoire",
+      "Code Review Agents autonomes insuffisants (45% vs 68% humains) — ne pas déléguer la review complète"
+    ]
+  },
+  "gap_residuel": "Absence totale de benchmark contrôlé inter-agents sur TypeScript/Node.js brownfield. Toutes les comparaisons sont des extrapolations depuis Python sur repos publics. Le ratio benchmark/réalité (5-7x) n'a pas été validé spécifiquement sur TypeScript/NestJS. La question PICOC 'quel agent est le meilleur' ne peut pas recevoir de réponse définitive avec le corpus disponible : les études comparent les agents sur des populations de repos différentes, pas en isolation contrôlée. Le finding le plus actionnable est que le choix du type de tâche est plus important que le choix de l'agent — conclusion contre-intuitive mais fortement supportée. Prochaine révision : si une étude RCT inter-agents sur TypeScript brownfield est publiée (attendue 2026-2027)."
+}

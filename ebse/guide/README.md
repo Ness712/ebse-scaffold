@@ -5,6 +5,16 @@
 **Methode** : Evidence-Based Software Engineering (EBSE)
 **Couverture** : 123 recommandations techniques organisees par domaine
 
+## Trois methodologies complementaires
+
+| Methodologie | Role |
+|---|---|
+| **EBSE** | Dit **QUOI** mettre dans les regles (quel choix technique, source par l'evidence) |
+| **SDMF** | Dit **COMMENT** trouver **TOUTES** les regles necessaires (exhaustivite — ne rien oublier) |
+| **BSAF** | Dit **COMMENT** structurer, valider et auditer ces regles (fiabilite — Mandatory / Required / Advisory) |
+
+---
+
 ## Comment utiliser ce guide
 
 1. **Tu commences un projet ?** → Va dans [01-stack-profiles/](01-stack-profiles/) pour une stack complete recommandee

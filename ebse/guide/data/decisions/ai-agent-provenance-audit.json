@@ -14,7 +14,7 @@
   "universal": {
     "principles": [
       {
-        "text": "Maintenir un audit trail structure par session d'agent : model name + version, prompt, tool calls, cost, final diff, lie au git commit via trailer metadata (ex: Agent-Logs-Url style GitHub Copilot). Le simple Co-Authored-By trailer est insuffisant pour compliance (pas de cryptographic signature, pas de contenu queryable). Pour contextes regles (SOC2, ISO 27001, HIPAA, ISO 42001 certification), escalade obligatoire vers **STANDARD** : audit trail structured + queryable + immutable. Full session replay est CHOIX d'equipe (storage cost tradeoff). Outils emergents : git-ai (OSS) + GitHub Copilot Agent-Logs-Url + CodeSlick (vendor).",
+        "text": "Maintenir un audit trail structure par session d'agent : model name + version, prompt, tool calls, cost, final diff, lie au git commit via trailer metadata de lien vers journal de session de l'outil agent. Le simple Co-Authored-By trailer est insuffisant pour compliance (pas de cryptographic signature, pas de contenu queryable). Pour contextes regles (SOC2, ISO 27001, HIPAA, ISO 42001 certification), escalade obligatoire vers **STANDARD** : audit trail structured + queryable + immutable. Full session replay est CHOIX d'equipe (storage cost tradeoff). Outils emergents : extension git de tracabilite IA (OSS) + metadata de lien session integree a l'outil agent IA + solution vendor d'audit de code IA.",
         "grade": 3,
         "level": "RECOMMANDE",
         "sources": [

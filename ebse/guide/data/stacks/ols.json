@@ -2,7 +2,7 @@
   "id": "ols",
   "name": "OLS (Odin La Science)",
   "description": "Plateforme d'apprentissage en sciences avec messagerie temps-reel. Stack NestJS + React, PWA, open-source.",
-  "guide_version": "2026.04.5",
+  "guide_version": "2026.04.6",
   "created": "2026-04-16",
   "choices": {
     "approach": "constrained",

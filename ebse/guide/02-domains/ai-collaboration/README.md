@@ -2,6 +2,8 @@
 
 **Sujet** : Deleguer du travail d'ingenierie logicielle a un agent de codage IA (Claude Code, Cursor, Devin, Copilot, SWE-agent, Aider, Cline) avec des checkpoints humains explicites — modele "manager delegue a une equipe de dev".
 
+**Objectif** : Maximiser l'autonomie des agents IA de developpement logiciel — quel que soit le profil de l'equipe. Quelles decisions techniques, pratiques et outils permettent a des agents IA de developper du logiciel avec le moins d'interventions humaines possibles, au plus haut niveau de qualite possible ? Le standard vise est universel : les recommandations sont applicables d'un solo founder jusqu'a une grande equipe d'ingenierie.
+
 **Statut** : construit via protocole EBSE Kitchenham 2007 complet (Phases 1.1 → 3).
 
 ## Fondement methodologique

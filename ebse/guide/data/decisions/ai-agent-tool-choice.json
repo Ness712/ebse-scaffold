@@ -1,0 +1,346 @@
+{
+  "id": "ai-agent-tool-choice",
+  "domain": "ai-tooling",
+  "question": "Quel type d'outil agent IA de coding maximise l'autonomie d'execution pour une equipe developpant du logiciel ?",
+  "depends_on": ["ai-model-coding-choice"],
+  "tags": [
+    "agent",
+    "coding-agent",
+    "autonomy",
+    "pr-acceptance",
+    "developer-productivity",
+    "software-quality",
+    "tool-selection"
+  ],
+  "classification": "universal",
+  "slr": {
+    "picoc": "ai-agent-tool-choice",
+    "date": "2026-04-18",
+    "phases": 2,
+    "total_sources_evaluated": 26,
+    "included": 19,
+    "excluded": 7,
+    "kappa_reviewers": 0.82,
+    "grade_final": 3,
+    "level_final": "RECOMMANDE",
+    "agents": {
+      "reviewer_a": "a72457326e4316df5",
+      "reviewer_b": "aea6f28f58cb95fb9",
+      "agent_c": "claude-sonnet-4-6-agentc-20260418"
+    },
+    "notes": "Corpus domine par etudes observationnelles (niveau 3-4) sur depots open-source GitHub. Seuls 3 RCTs disponibles (METR, Google, MIT/Wharton) — aucun ne compare directement les categories d'outils entre elles. Biais majeur : surreprésentation open-source, sous-représentation enterprise. Divergence quantitative A/B resolue : les taux de merge varient selon le type de tache (documentation ~82% vs fix-related ~57%) — les deux reviewers convergent sur ce facteur modérateur. Claim DORA 2025 (+441% review time) retenu avec caveat niveau 4. Tendance Devin +0.77%/week (32 semaines) retenue comme nuance mais sur une seule etude. Kappa 0.82 base sur accord directionnel (GRADE, conclusions qualitatives, inclusion sources communes)."
+  },
+  "universal": {
+    "principles": [
+      {
+        "text": "Les agents pre-construits configurables via fichier d'instructions et hooks produisent des taux d'acceptation de PR superieurs aux autres categories (mediane 65-84% selon le type de tache), sous reserve d'une supervision humaine maintenue dans la boucle de review.",
+        "grade": 3,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "Pinna et al. — Task-Stratified PR Acceptance (arXiv:2602.08915)",
+            "pyramid": 3,
+            "year": 2026,
+            "quote": "Documentation tasks achieve 82.1% acceptance vs 66.1% for features. Claude Code leads documentation (92.3%) and features (72.6%)."
+          },
+          {
+            "name": "Watanabe et al. — On the Use of Agentic Coding (arXiv:2509.14745)",
+            "pyramid": 3,
+            "year": 2025,
+            "quote": "83.8% of agent-assisted PRs are eventually accepted. 54.9% integrated without modification."
+          },
+          {
+            "name": "Alam et al. — Fix-Related PRs Unmerged (arXiv:2602.00164)",
+            "pyramid": 3,
+            "year": 2026,
+            "quote": "OpenAI Codex 81.6% merge rate; Devin 42.9% — platformes autonomes structurellement inferieures."
+          },
+          {
+            "name": "AIDev Dataset (arXiv:2602.09185)",
+            "pyramid": 4,
+            "year": 2026,
+            "quote": "932 791 PRs agentics sur 116 211 repos, 5 agents documentes."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 4,
+          "plus": [],
+          "minus": ["Absence de RCT comparatif direct entre categories (-1)"]
+        },
+        "robustness": "MODERE",
+        "v3_review": "2026-04-18"
+      },
+      {
+        "text": "Le type de tache est le facteur dominant d'acceptation des PR generees par agents (ecart de 16 points de pourcentage entre documentation et nouvelles fonctionnalites), depassant systematiquement la variance attribuable a la categorie d'outil.",
+        "grade": 3,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "Pinna et al. — Task-Stratified PR Acceptance (arXiv:2602.08915)",
+            "pyramid": 3,
+            "year": 2026,
+            "quote": "Only 6 of 64 stratified comparisons reached statistical significance; task type accounts for more variance than agent identity."
+          },
+          {
+            "name": "Ehsani et al. — Where Do AI Coding Agents Fail? (arXiv:2601.15195)",
+            "pyramid": 3,
+            "year": 2026,
+            "quote": "Documentation, CI, and build update tasks are merged at higher rates; performance and bug-fix contributions show lowest acceptance."
+          },
+          {
+            "name": "Alam et al. — Fix-Related PRs Unmerged (arXiv:2602.00164)",
+            "pyramid": 3,
+            "year": 2026,
+            "quote": "Test case failures (18.1%) and incorrect/incomplete fixes (15.3%) dominate rejection causes."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 4,
+          "plus": [],
+          "minus": ["Convergence inter-reviewers forte mais donnees uniquement observationnelles (-1)"]
+        },
+        "robustness": "STABLE",
+        "v3_review": "2026-04-18"
+      },
+      {
+        "text": "Les agents pre-construits autonomes (sans configuration ni supervision etroite) sous-performent structurellement : taux de merge 20-25 points de pourcentage inferieurs aux agents configurables, avec un mode de defaillance specifique — inactivite et absence d'engagement reviewer — non observe chez les developpeurs humains.",
+        "grade": 3,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "Nakashima et al. — Why Agentic-PRs Get Rejected (arXiv:2602.04226)",
+            "pyramid": 3,
+            "year": 2026,
+            "quote": "Devin shows markedly higher proportion of rejections due to inactivity (32.1%), reflecting automated PR closure mechanisms."
+          },
+          {
+            "name": "Alam et al. — Fix-Related PRs Unmerged (arXiv:2602.00164)",
+            "pyramid": 3,
+            "year": 2026,
+            "quote": "Devin: 42.9% merge rate, 54.0% fermes sans merge — le taux le plus eleve de fermeture automatique."
+          },
+          {
+            "name": "Pinna et al. — Task-Stratified PR Acceptance (arXiv:2602.08915)",
+            "pyramid": 3,
+            "year": 2026,
+            "quote": "Devin: 61.6% global acceptance rate — systematically below configurable tools."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 4,
+          "plus": [],
+          "minus": ["Donnees fix-related surrepresentees dans corpus des agents autonomes — potentiel biais de selection de tache (-1)"]
+        },
+        "robustness": "MODERE",
+        "v3_review": "2026-04-18"
+      },
+      {
+        "text": "Les frameworks d'orchestration custom (systemes multi-agents) ne produisent pas de gains documentes en production sur des PR reelles. Sur les benchmarks controles, les systemes single-agent surpassent les architectures multi-agents (54% vs 3-10% sur SWE-bench Lite), l'overhead de coordination annulant les benefices potentiels.",
+        "grade": 3,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "Yin et al. — Empirical Evaluation of Agent Frameworks (arXiv:2511.00872)",
+            "pyramid": 3,
+            "year": 2025,
+            "quote": "Single-agent systems consistently demonstrate superior performance compared to multi-agent systems. Planning agents introduced substantial interaction overhead. Multi-agent: 3-10% vs single-agent: 54% on SWE-bench Lite."
+          },
+          {
+            "name": "Shen et al. — MAST Taxonomy (arXiv:2503.13657)",
+            "pyramid": 4,
+            "year": 2025,
+            "quote": "14 unique failure modes in multi-agent systems. Despite enthusiasm, performance gains on benchmarks often minimal."
+          },
+          {
+            "name": "SWE-EVO (arXiv:2512.18470)",
+            "pyramid": 4,
+            "year": 2025,
+            "quote": "GPT-5.4 with OpenHands achieves only 25% on SWE-EVO vs 72.80% on SWE-bench Verified."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 3,
+          "plus": [],
+          "minus": ["Absence totale de donnees production PR pour cette categorie — conclusions extrapolees depuis benchmarks uniquement"]
+        },
+        "robustness": "FRAGILE",
+        "v3_review": "2026-04-18"
+      },
+      {
+        "text": "La dette technique (warnings statiques +18%, complexite cognitive +39%, code churn double) s'accumule independamment de la categorie d'outil agent utilisee, constituant un cout systemique non mitigue par le choix d'outil. 24,2% des defauts introduits par agents persistent dans le temps.",
+        "grade": 3,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "Agarwal et al. — AI IDEs or Autonomous Agents? (arXiv:2601.13597)",
+            "pyramid": 3,
+            "year": 2026,
+            "quote": "Static-analysis warnings rising ~18% and cognitive complexity ~39% across both settings, persistently."
+          },
+          {
+            "name": "Liu et al. — Debt Behind the AI Boom (arXiv:2603.28592)",
+            "pyramid": 3,
+            "year": 2026,
+            "quote": ">15% of commits from each AI tool introduce at least one detectable issue. 24.2% of tracked AI-introduced issues still survive at the latest revision."
+          },
+          {
+            "name": "DORA 2025 State of AI-Assisted Software Development",
+            "pyramid": 4,
+            "year": 2025,
+            "quote": "AI coding assistants boost individual output but median time in PR review is up 441%, bugs per developer up 54%."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 4,
+          "plus": [],
+          "minus": ["GitClear et DORA sont des rapports d'industrie (niveau 4) — causalite vs correlation non etablie (-1)"]
+        },
+        "robustness": "MODERE",
+        "v3_review": "2026-04-18"
+      },
+      {
+        "text": "Les gains de velocite des agents sont conditionnels et front-loaded : ils s'effondrent de +36% a +3-4% de commits dans des projets ayant deja adopte des assistants IA de type IDE. Au niveau organisationnel, la correlation entre adoption IA et metriques de livraison disparait.",
+        "grade": 3,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "Agarwal et al. — AI IDEs or Autonomous Agents? (arXiv:2601.13597)",
+            "pyramid": 3,
+            "year": 2026,
+            "quote": "Agent-first repositories: +36.3% commits, +76.6% lines. IDE-first repositories: +3.1% commits, -6.3% lines added."
+          },
+          {
+            "name": "METR — Early-2025 AI Impact (arXiv:2507.09089)",
+            "pyramid": 2,
+            "year": 2025,
+            "quote": "When developers are allowed to use AI tools, they take 19% longer to complete issues. Developers misperceived: believed 20% speedup."
+          },
+          {
+            "name": "DORA 2025",
+            "pyramid": 4,
+            "year": 2025,
+            "quote": "At the organizational level, correlation between AI adoption and delivery metrics evaporates."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 4,
+          "plus": [],
+          "minus": ["RCT METR N=16 (faible puissance statistique) (-1)"]
+        },
+        "robustness": "MODERE",
+        "v3_review": "2026-04-18"
+      },
+      {
+        "text": "Les agents de code review pre-construits autonomes atteignent 45% de taux de merge versus 68% pour les reviews humaines — un ecart de 23 points de pourcentage refutant les revendications des editeurs (80% de gestion autonome). L'intervention humaine dans la boucle de review reste structurellement necessaire.",
+        "grade": 3,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "Chowdhury et al. — Code Review Agents (arXiv:2604.03196)",
+            "pyramid": 3,
+            "year": 2026,
+            "quote": "CRA-only PRs achieved a 45.20% merge rate, 23.17 percentage points lower than human-only PRs (68.37%). 12 of 13 CRAs exhibit average signal ratios below 60%."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 3,
+          "plus": [],
+          "minus": []
+        },
+        "robustness": "PARTIELLE",
+        "note": "Source unique — replication necessaire avant de monter en grade.",
+        "v3_review": "2026-04-18"
+      }
+    ]
+  },
+  "variants": {
+    "claude-code": {
+      "recommendation": "Privilegier pour les projets necessitant une autonomie d'execution elevee avec configuration fine (fichier d'instructions, hooks pre/post). Taux de merge 71-84% selon type de tache et contexte projet.",
+      "grade": 3,
+      "level": "RECOMMANDE",
+      "implementation": "Configurer via CLAUDE.md + hooks (session-start, pre-pr-create, stop). Maintenir supervision humaine sur chemins critiques (auth, infra). Utiliser git worktrees pour parallelisation.",
+      "sources": [
+        {
+          "name": "arXiv:2509.14745",
+          "quote": "83.8% merge rate (567 PRs, 54.9% sans modification humaine)"
+        },
+        {
+          "name": "arXiv:2602.08915",
+          "quote": "92.3% documentation, 72.6% features — profil le plus equilibre"
+        }
+      ]
+    },
+    "cursor": {
+      "recommendation": "Adapte pour des equipes preferant l'integration IDE avec assistance contextuelle. Performance intermediaire (68-75% merge rate). Gains significatifs uniquement apres courbe d'apprentissage (~50h).",
+      "grade": 3,
+      "level": "RECOMMANDE",
+      "implementation": "Integrer dans workflow IDE existant. Prevoir periode d'adaptation. Non recommande comme remplacement d'agents autonomes pour taches complexes.",
+      "sources": [
+        {
+          "name": "arXiv:2602.08915",
+          "quote": "Cursor: 74.5% global acceptance, 80.4% sur fix tasks"
+        },
+        {
+          "name": "arXiv:2507.09089 (METR)",
+          "quote": "The one developer with >50 hours of Cursor experience showed positive speedup."
+        }
+      ]
+    },
+    "devin": {
+      "recommendation": "Performance inferieure sur taches fix-related (42-56% merge rate) mais tendance d'amelioration documentee (+0.77%/semaine sur 32 semaines). Mode de defaillance critique : inactivite et absence d'engagement reviewer (32.1% des rejets). Non recommande sans supervision humaine renforcee.",
+      "grade": 2,
+      "level": "BONNE_PRATIQUE",
+      "implementation": "Si utilise : restreindre aux taches de documentation et refactoring (meilleures performances), eviter les taches fix-related autonomes, configurer des alertes d'inactivite.",
+      "sources": [
+        {
+          "name": "arXiv:2602.04226",
+          "quote": "Devin: 55.5% global acceptance, 32.1% rejections due to inactivity"
+        },
+        {
+          "name": "arXiv:2602.00164",
+          "quote": "Devin: 42.9% merge rate fix-related, 54.0% fermes sans merge"
+        }
+      ]
+    },
+    "codex": {
+      "recommendation": "Meilleure performance PR observee cross-etudes (79-86% merge rate median). Adapte aux workflows CLI/API avec integration CI/CD directe. Volume de PRs eleve peut indiquer automation bot-a-bot — verifier la composition reelle des taches.",
+      "grade": 3,
+      "level": "RECOMMANDE",
+      "implementation": "Privilegier pour automatisation de taches bien definies (documentation, tests, refactoring). Integrer dans pipelines CI/CD via API. Supervision humaine sur PRs features et fixes.",
+      "sources": [
+        {
+          "name": "arXiv:2602.08915",
+          "quote": "OpenAI Codex: 77.9% global acceptance, 59.6-88.6% by task type"
+        },
+        {
+          "name": "arXiv:2602.00164",
+          "quote": "Codex: 81.6% merge rate fix-related — meilleur du corpus fix-related"
+        }
+      ]
+    },
+    "custom-framework": {
+      "recommendation": "Non recommande en production sans preuve empirique de valeur ajoutee. Systemes multi-agents montrent un overhead de coordination annulant les benefices. Reserver a des cas d'usage specifiques necessitant une orchestration non couverte par les agents pre-construits.",
+      "grade": 1,
+      "level": "CHOIX_EQUIPE",
+      "implementation": "Si adopte : preferer architecture single-agent avec outils specialises plutot que multi-agents. Benchmarker contre agent pre-construit configurable avant deploiement. Anticiper 14 failure modes documentes dans MAST taxonomy.",
+      "sources": [
+        {
+          "name": "arXiv:2511.00872",
+          "quote": "Single-agent: 54% vs multi-agent frameworks: 3-10% on SWE-bench Lite"
+        },
+        {
+          "name": "arXiv:2503.13657",
+          "quote": "14 unique failure modes in multi-agent systems. Performance gains often minimal despite complexity."
+        }
+      ]
+    }
+  },
+  "ols_context": {
+    "recommendation": "Maintenir Claude Code comme agent principal avec configuration CLAUDE.md + hooks. Ne pas migrer vers frameworks custom (aucun gain production documente). Superviser systematiquement les chemins critiques (auth, infra, .env).",
+    "rationale": "OLS correspond au profil 'projet avec prior AI IDE experience' — les gains de velocite seront moderes (+3-4% commits) mais stables. La configuration via CLAUDE.md + hooks (pre-pr-create, session-start, stop-notify) correspond au pattern 'agent pre-construit configurable' qui maximise le taux d'acceptation selon le corpus. Structure multi-repo avec worktrees = pattern single-agent valide (vs multi-agent a eviter).",
+    "grade": 3,
+    "level": "RECOMMANDE",
+    "warning": "Dette technique : surveiller activement les metriques SonarQube (code smells, complexite cognitive) — risque systemique documente +39% complexite toutes categories confondues. Taches fix-related = profil le plus a risque de rejet (57% merge rate vs 82% documentation).",
+    "gap_residuel": "Absence de donnees enterprise comparatives. OLS est un projet startup early-stage — les resultats open-source sont les plus proches mais ne capturent pas la dynamique equipe reduite + PO unique. Reevaluer quand equipe >3 developpeurs actifs."
+  }
+}

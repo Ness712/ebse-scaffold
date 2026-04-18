@@ -1,0 +1,295 @@
+{
+  "id": "ai-model-coding-choice",
+  "domain": "ai-tooling",
+  "question": "Quel modele LLM choisir pour un agent de coding autonome ?",
+  "depends_on": [],
+  "tags": ["llm", "model-selection", "swe-bench", "cost-optimization", "context-window", "routing"],
+  "classification": "universal",
+  "slr": {
+    "picoc": "ai-model-coding-choice",
+    "date": "2026-04-18",
+    "phases": 2,
+    "total_sources_evaluated": 29,
+    "included": 22,
+    "excluded": 7,
+    "kappa_reviewers": 0.72,
+    "grade_final": 3,
+    "level_final": "RECOMMANDE",
+    "agents": {
+      "reviewer_a": "ac465c7fa79fa1fc0",
+      "reviewer_b": "ad99f78a35d5e2ff9",
+      "agent_c": "claude-sonnet-4-6-agentc-20260418"
+    },
+    "notes": "Divergences resolues : (1) niveau pyramide sur arXiv:2512.10218 et arXiv:2506.12286 harmonise a 3 (etudes empiriques avec protocole explicite) ; (2) axe modes defaillance agentique (B uniquement) retenu car directement pertinent au PICOC ; (3) 'Reasoning Trap' OpenReview retenu avec reserve — absence d'identifiant arXiv, claim fort non corrobore par A, a verifier avant v4. Biais identifies : CoI fort (Scale AI, OpenAI, Google, Microsoft evaluent leurs propres modeles ou modeles concurrents). Resultats contradictoires non resolus : METR (agents ralentissent experts sur code mature, N=16) vs Microsoft RCT (agents accelerent, N=4867) — populations differentes, non reconciliables sans meta-analyse. Fabrication suspectee : aucune — tous les identifiants arXiv verifies coherents avec les dates et domaines, sauf 'Reasoning Trap' (pas d'identifiant fourni)."
+  },
+  "universal": {
+    "principles": [
+      {
+        "text": "Les scores de benchmarks publics de coding surestiment systematiquement les performances reelles en production en raison de la contamination des donnees d'entrainement. Utiliser exclusivement des benchmarks a renouvellement continu ou prospectifs comme signal de selection de modele.",
+        "grade": 3,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "Prathifkumar et al. — SWE-Bench Contamination Study (arXiv:2512.10218)",
+            "pyramid": 3,
+            "year": 2025,
+            "quote": "Models perform 3x better on SWE-Bench-Verified than on decontaminated benchmarks, and 6x better at file localization without repository context."
+          },
+          {
+            "name": "Liang et al. — Out-of-Distribution SWE-bench (arXiv:2506.12286)",
+            "pyramid": 3,
+            "year": 2025,
+            "quote": "Performance drops from 76% to 53% on files outside SWE-bench; verbatim 5-gram overlap 35% on SWE-bench vs 18% on other benchmarks."
+          },
+          {
+            "name": "OpenAI — SWE-bench Pro announcement",
+            "pyramid": 5,
+            "year": 2025,
+            "quote": "All frontier models are contaminated on SWE-Bench Verified. 59.4% of hard tasks have flawed tests."
+          },
+          {
+            "name": "SWE-bench Live — NeurIPS 2025 D&B (arXiv:2505.23419)",
+            "pyramid": 3,
+            "year": 2025,
+            "quote": "Substantial gap between static benchmarks and prospective benchmarks on real-world coding tasks."
+          },
+          {
+            "name": "SWE-rebench — pipeline anti-contamination (arXiv:2505.20411)",
+            "pyramid": 3,
+            "year": 2025,
+            "quote": "Continuous pipeline of >21,000 tasks; models show larger drops at decontamination than on static benchmarks."
+          },
+          {
+            "name": "Gu et al. — EMNLP 2025 SLR on LLM evaluation",
+            "pyramid": 1,
+            "year": 2025,
+            "quote": "ITD reduces inflated scores by 22.9% on GSM8K and 19.0% on MMLU."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 3,
+          "plus": ["convergence forte A+B sur sources independantes"],
+          "minus": ["indirectness — benchmarks restent la seule mesure disponible a grande echelle"]
+        },
+        "robustness": "STABLE",
+        "v3_review": "2026-04-18"
+      },
+      {
+        "text": "Les modeles de langage degradent leurs performances de facon universelle et non lineaire quand l'information pertinente est positionnee en milieu de contexte ou quand le contexte depasse 50% de sa capacite nominale. Maintenir les artefacts critiques en debut ou fin de fenetre de contexte et limiter la taille des trajectoires agentiques a moins de 30 000 tokens effectifs.",
+        "grade": 3,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "Liu et al. — Lost in the Middle, TACL 2024 (arXiv:2307.03172)",
+            "pyramid": 3,
+            "year": 2024,
+            "quote": "30%+ drop in precision when relevant information is at median position. U-shaped accuracy curve across context positions."
+          },
+          {
+            "name": "Chroma Research — Context Rot",
+            "pyramid": 4,
+            "year": 2025,
+            "quote": "18 frontier models tested, universal degradation. Degradation threshold at 50% context fill."
+          },
+          {
+            "name": "Paulsen et al. — MCW vs MECW",
+            "pyramid": 4,
+            "year": 2025,
+            "quote": "Gap between MCW and MECW can reach 99%. Most models degrade severely from 1000 tokens."
+          },
+          {
+            "name": "Limits of Long-Context Reasoning in Bug Fixing (arXiv:2602.16069)",
+            "pyramid": 3,
+            "year": 2026,
+            "quote": "Successful trajectories remain below 20-30k tokens. At 64k tokens: leading lightweight model reaches 0% resolution, mid-size open model reaches 7%."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 3,
+          "plus": ["convergence forte A+B", "replication sur 18 modeles independants"],
+          "minus": ["etudes principalement observationnelles, pas de RCT sur cet axe"]
+        },
+        "robustness": "STABLE",
+        "v3_review": "2026-04-18"
+      },
+      {
+        "text": "Le routage dynamique des requetes entre modeles de capacites differentes reduit le cout operationnel de 50 a 85% sans degradation mesurable de la qualite globale. Un routeur entraine sur des donnees de preference est transferable entre familles de modeles.",
+        "grade": 3,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "Chen et al. — FrugalGPT, TMLR 2023",
+            "pyramid": 3,
+            "year": 2023,
+            "quote": "98% cost reduction or +4% quality improvement vs GPT-4 alone through cascade routing."
+          },
+          {
+            "name": "Ong et al. — RouteLLM, ICLR 2025 (arXiv:2406.18665)",
+            "pyramid": 3,
+            "year": 2025,
+            "quote": "85% cost reduction on MT Bench, 95% GPT-4 quality maintained. Transfer learning across model families validated."
+          },
+          {
+            "name": "Survey on LLM Routing approaches (arXiv:2502.00409)",
+            "pyramid": 2,
+            "year": 2025,
+            "quote": "Taxonomy of routing approaches: similarity-based, supervised, RL, generative. RL most promising, supervised most deployable."
+          },
+          {
+            "name": "MasRouter — ACL 2025 (arXiv:2502.11133)",
+            "pyramid": 3,
+            "year": 2025,
+            "quote": "First router for multi-agent systems. 1.8-8.2% improvement on MBPP, 52% overhead reduction on HumanEval."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 3,
+          "plus": ["survey taxonomique pyramide 2 corroborant", "resultats convergents sur plusieurs benchmarks"],
+          "minus": ["CoI potentiel — evaluation sur benchmarks publics", "indirectness — MT Bench et HumanEval != production coding agentic"]
+        },
+        "robustness": "MODERE",
+        "v3_review": "2026-04-18"
+      },
+      {
+        "text": "Les agents de coding autonomes echouent selon des modes de defaillance stables et categorisables independants de la taille du modele. Le post-entrainement par renforcement predit mieux la robustesse agentique que la taille du modele ou l'architecture. Les defaillances de niveau processus (execution) representent environ 72% des echecs, les defaillances de niveau conception (planification) environ 28%.",
+        "grade": 3,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "Agentless Failure Modes Study — 900 traces (arXiv:2512.07497)",
+            "pyramid": 3,
+            "year": 2025,
+            "quote": "4 failure modes identified. Model scale alone does not predict agentic robustness. RL post-training > architecture or size."
+          },
+          {
+            "name": "Long-Horizon Task Mirage — 3100+ trajectories (arXiv:2604.11978)",
+            "pyramid": 3,
+            "year": 2026,
+            "quote": "72.5% failures are process-level (execution), 27.5% are design-level (planning). 7 failure categories identified."
+          },
+          {
+            "name": "Formal Taxonomy of Agentic Faults (arXiv:2603.06847)",
+            "pyramid": 3,
+            "year": 2026,
+            "quote": "Formal taxonomic classification of agentic failure modes across coding tasks."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 3,
+          "plus": ["volume de trajectoires analysees (>4000 au total)", "coherence interne entre les 3 sources"],
+          "minus": ["axe non couvert par Reviewer A — validation inter-reviewer partielle seulement"]
+        },
+        "robustness": "MODERE",
+        "v3_review": "2026-04-18"
+      },
+      {
+        "text": "L'impact d'un agent de coding sur la productivite individuelle varie selon l'experience du developpeur et la maturite de la base de code. Les developpeurs juniors et les bases de code nouvelles beneficient d'un gain mesurable ; les developpeurs experts sur code mature existant peuvent subir une regression de productivite.",
+        "grade": 4,
+        "level": "RECOMMANDE_FORT",
+        "sources": [
+          {
+            "name": "Peng et al. — Microsoft RCT, N=4867 (arXiv:2302.06590)",
+            "pyramid": 2,
+            "year": 2023,
+            "quote": "+26% PRs/week overall; +35-39% for junior developers, +8-16% for senior developers."
+          },
+          {
+            "name": "Google RCT — Internal Coding Assistant, N=96 (arXiv:2410.12944)",
+            "pyramid": 2,
+            "year": 2024,
+            "quote": "-21% task completion time. Wide confidence interval."
+          },
+          {
+            "name": "METR — Quasi-RCT Expert Developers, N=16, 246 tasks (arXiv:2507.09089)",
+            "pyramid": 2,
+            "year": 2025,
+            "quote": "+19% task completion time with AI agents for expert developers on mature codebases."
+          },
+          {
+            "name": "SLR on AI-assisted software development — 37 studies",
+            "pyramid": 1,
+            "year": 2025,
+            "quote": "41% of studies in laboratory settings, lack of longitudinal field data."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 3,
+          "plus": ["+1 RCT peer-reviewed N>100 (Microsoft N=4867)"],
+          "minus": ["resultats contradictoires non resolus entre etudes (METR vs Microsoft)", "CoI Microsoft sur son propre produit"]
+        },
+        "robustness": "MODERE",
+        "v3_review": "2026-04-18"
+      }
+    ]
+  },
+  "variants": {
+    "frontier-model-only": {
+      "recommendation": "Performances reelles en production (code commercial prive) : 14-23% de resolution sur taches complexes pour les meilleurs modeles frontier (SWE-bench Pro, Scale AI). Utiliser uniquement si le probleme exige le raisonnement le plus avance disponible et que le budget est non-contraignant.",
+      "grade": 3,
+      "level": "RECOMMANDE",
+      "implementation": "Selectionner le modele par score SWE-bench Pro Commercial ou SWE-rebench (benchmarks decontamines), jamais par score SWE-bench Verified. Surveiller Context Rot : limiter les trajectoires a <30k tokens effectifs. Reevaluer trimestriellement — les classements sont instables. Modeles actuels (2026) : Claude Sonnet/Opus, GPT-5 selon classement decontamine.",
+      "sources": [
+        {
+          "name": "Scale AI — SWE-bench Pro evaluation (arXiv:2509.16941)",
+          "pyramid": 4,
+          "year": 2025,
+          "quote": "Best frontier models at 23% on SWE-bench Pro vs 70%+ on Verified. On private commercial code: best model falls to 17.8%."
+        },
+        {
+          "name": "ArtificialAnalysis.ai — Independent Evaluation",
+          "pyramid": 4,
+          "year": 2025,
+          "quote": "Mystery shopper methodology anti-gaming. LiveCodeBench as primary coding signal."
+        }
+      ]
+    },
+    "routing-frontier-plus-intermediate": {
+      "recommendation": "Architecture recommandee pour equipes avec volume de requetes significatif. Combiner un modele frontier pour les taches complexes (planification, debugging multi-fichiers) et un modele intermediaire pour les taches routinieres (completion, refactoring simple). Reduction de cout attendue : 50-85%.",
+      "grade": 3,
+      "level": "RECOMMANDE",
+      "implementation": "Deployer un routeur supervise (le plus deployable selon la taxonomie arXiv:2502.00409) entraine sur des donnees de preference internes. Seuils de routage calibres sur la distribution de taches reelle du projet. Monitorer la derive de distribution mensuellement. Modeles specifiques : choisir par benchmark decontamine au moment du deploiement. Dans Claude Code : specifier le modele par defaut pour les sous-agents simples (taches read-only, grep, classification) vs le modele principal pour le coding.",
+      "sources": [
+        {
+          "name": "Ong et al. — RouteLLM, ICLR 2025",
+          "pyramid": 3,
+          "year": 2025,
+          "quote": "More than 2x cost reduction, quality maintained. Transfer learning across model families validated."
+        },
+        {
+          "name": "Survey on LLM Routing approaches (arXiv:2502.00409)",
+          "pyramid": 2,
+          "year": 2025,
+          "quote": "Supervised routing most deployable for production; RL routing most performant but requires more infrastructure."
+        }
+      ]
+    },
+    "lightweight-model-constrained-context": {
+      "recommendation": "Les modeles legers (<=30B parametres) atteignent 0-7% de resolution sur des trajectoires longues (64k tokens). Ne pas utiliser pour des taches agentiques multi-fichiers complexes. Usage legitime : taches atomiques courtes, completion inline, generation de tests unitaires isoles, grep et lecture de fichiers.",
+      "grade": 3,
+      "level": "RECOMMANDE",
+      "implementation": "Limiter strictement les trajectoires a <10k tokens. Ne pas utiliser en mode fully-autonomous sur des taches multi-fichiers. Combiner avec un routeur qui escalade vers un modele plus puissant des que la complexite depasse le seuil calibre.",
+      "sources": [
+        {
+          "name": "Limits of Long-Context Reasoning in Bug Fixing (arXiv:2602.16069)",
+          "pyramid": 3,
+          "year": 2026,
+          "quote": "At 64k tokens: lightweight leading model reaches 0% resolution, mid-size open model reaches 7%."
+        }
+      ]
+    }
+  },
+  "ols_context": {
+    "recommendation": "Modele frontier avec RL post-training documente par defaut (Claude Sonnet en 2026), routage vers modele leger pour sous-agents simples (Haiku pour taches read-only/grep/classification), escalade vers modele frontier superieur si echec 2+ fois sur la meme tache",
+    "rationale": "Stack OLS (NestJS/TypeScript/React) n'est couverte par aucune source specifique du corpus. Les recommendations sont extrapolees depuis les benchmarks generaux. Appliquer Context Rot : limiter les contextes a <30k tokens effectifs par trajectoire. Decouper les taches qui depassent ce seuil en sous-taches.",
+    "grade": 3,
+    "level": "RECOMMANDE",
+    "routing_strategy": {
+      "simple_tasks": "claude-haiku-4-5-20251001 — sous-agents read-only, grep, classification (taches sans ecriture de code)",
+      "standard_tasks": "claude-sonnet-4-6 — coding, revue de code, refactoring, tests",
+      "complex_blocking": "claude-opus-4-7 — seulement si Sonnet echoue 2+ fois sur la meme tache"
+    },
+    "context_management": "Limiter les contextes a <30k tokens effectifs par trajectoire (seuil Context Rot). Si le contexte depasse : decouper la tache en sous-taches ou utiliser grep cible au lieu de lire les fichiers entiers.",
+    "benchmark_selection": "Selectionner les modeles par SWE-bench Pro ou SWE-rebench (benchmarks decontamines), jamais par SWE-bench Verified. Reevaluer trimestriellement.",
+    "gap_residuel": "Aucune etude sur le TCO reel d'un agent de coding semi-autonome sur 6-12 mois en petite equipe. Les resultats contradictoires METR vs Microsoft ne sont pas reconciliables sans meta-analyse : calibrer les attentes selon le profil du developpeur (expert sur codebase mature = gains potentiellement negatifs en vitesse, mais gains en couverture de tests et detection bugs)."
+  }
+}

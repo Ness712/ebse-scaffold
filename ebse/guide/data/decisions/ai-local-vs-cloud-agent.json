@@ -1,0 +1,210 @@
+{
+  "id": "ai-local-vs-cloud-agent",
+  "domain": "ai-tooling",
+  "question": "Pour un agent IA autonome de coding : modeles locaux auto-heberges ou modeles cloud ? Quelle architecture ?",
+  "depends_on": ["ai-autonomous-agent-comparison"],
+  "tags": [
+    "local-llm",
+    "ollama",
+    "qwen-coder",
+    "devstral",
+    "cloud-api",
+    "rgpd",
+    "gdpr",
+    "tco",
+    "hybrid-architecture",
+    "self-hosted"
+  ],
+  "classification": "recommended",
+  "slr": {
+    "picoc": "ai-local-vs-cloud-agent",
+    "date": "2026-04-18",
+    "phases": 1,
+    "total_sources_evaluated": 20,
+    "included": 20,
+    "excluded": 0,
+    "kappa_reviewers": 0.78,
+    "grade_final": 3,
+    "level_final": "RECOMMANDE",
+    "agents": {
+      "reviewer_a": "a36b4e84ec77de057",
+      "reviewer_b": "a5b1a40ff5a145401",
+      "agent_c": "claude-sonnet-4-6 (session principale 2026-04-18)"
+    },
+    "notes": "Divergence GRADE : A=3/7, B=4/7. Resolution Agent C : GRADE 3/7 retenu. B a inclus EDPB Opinion 28/2024 (niveau pyramide 1, source normative) qui justifie un GRADE plus eleve sur la sous-question RGPD, mais le PICOC global sur la performance technique reste niveau 3 (absence de RCT, domaine en evolution rapide, limitations Ollama documentees mais peu quantifiees rigoureusement). GRADE 5/7 specifiquement pour la sous-question RGPD/conformite (source normative EDPB au niveau 1). Convergence forte A+B : architecture hybride recommandee, gap qualite 10-15 points SWE-bench, TCO local rentable a 8-18 mois selon usage, Qwen3-Coder-Next (MoE 80B/3B actifs) comme premier modele local viable pour agents autonomes."
+  },
+  "universal": {
+    "principles": [
+      {
+        "text": "Le gap de qualite entre modeles locaux et frontier cloud sur les taches d'autonomie complete (SWE-bench Verified) est de 10-15 points en avril 2026. Ce gap etait de 30-40 points il y a 18 mois — reduction de ~13 points absolus par an. Les modeles locaux de 32B quantifies atteignent la parite avec GPT-4o sur les taches de completion simple (Aider Polyglot ~73%). Sur SWE-bench Verified (autonomie reelle multi-fichiers), meilleur local : Qwen3-Coder-Next 70.6%, Devstral 2 72.2% vs Claude Code (Opus 4.6) 80.9%.",
+        "grade": 3,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "Qwen3-Coder-Next Technical Report (arXiv:2603.00729)",
+            "pyramid": 4,
+            "year": 2026,
+            "quote": "70.6% SWE-bench Verified, 256K context, 80B MoE 3B active params, Apache 2.0, 24GB VRAM Q4"
+          },
+          {
+            "name": "Devstral — Mistral AI (mai 2025)",
+            "pyramid": 4,
+            "year": 2025,
+            "quote": "Devstral 2: 72.2% SWE-bench Verified (123B). Devstral Small: 46.8% (24B, 16GB VRAM). Concu pour OpenHands."
+          },
+          {
+            "name": "Qwen2.5-Coder Technical Report (arXiv:2409.12186)",
+            "pyramid": 4,
+            "year": 2024,
+            "quote": "32B: 92.9% HumanEval, 73.7% Aider Polyglot (parity GPT-4o). 128K context. 24GB VRAM Q4_K_M."
+          }
+        ],
+        "v3_review": "2026-04-18",
+        "robustness": "MODERE — benchmarks partiellement auto-rapportes par fabricants, SWE-bench Verified contamine"
+      },
+      {
+        "text": "L'usage d'un LLM cloud (API Anthropic, OpenAI, Google) pour du code contenant des donnees personnelles constitue un transfert de donnees au sens du RGPD necessitant une base legale (Art. 46) si le provider est hors UE. Un modele local auto-heberge elimine ce risque de transfert et simplifie la conformite par design. Applicable a tout contexte traitant des donnees d'utilisateurs dans le code source (schemas de base de donnees, fixtures de tests avec donnees reelles, logs).",
+        "grade": 5,
+        "level": "CONFIRME_PRATIQUE",
+        "sources": [
+          {
+            "name": "EDPB Opinion 28/2024 sur les modeles IA et le RGPD (decembre 2024)",
+            "pyramid": 1,
+            "year": 2024,
+            "quote": "Prompts sent to cloud LLMs constitute personal data processing if code contains user data. Local deployment = compliance by design, no transfer mechanism required."
+          }
+        ],
+        "v3_review": "2026-04-18",
+        "robustness": "STABLE — source normative EDPB niveau 1, directement applicable"
+      },
+      {
+        "text": "Ollama presente des limitations specifiques pour les agents autonomes qui doivent etre configurees explicitement : (1) contexte par defaut 2K-4K tokens (insuffisant pour sessions agentiques qui necessitent 22K+) — configurer `num_ctx` explicitement ; (2) OpenHands applique un plafond hardcode de 65 336 tokens independamment de la configuration ; (3) throughput : 41 TPS Ollama vs 793 TPS vLLM (non bloquant pour usage solo sequentiel). Ces limitations sont documentees et corrigeables mais non-triviales pour un solo founder.",
+        "grade": 3,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "OpenHands GitHub Issues — #6918, #9573, #7445",
+            "pyramid": 4,
+            "year": 2025,
+            "quote": "Ollama default context 2K-4K insufficient for agentic sessions. OpenHands hardcoded 65,336 token limit ignores custom num_ctx. Linux: host.docker.internal not supported natively."
+          },
+          {
+            "name": "Red Hat Developer — Ollama vs vLLM Benchmarking (aout 2025)",
+            "pyramid": 4,
+            "year": 2025,
+            "quote": "Ollama: 41 TPS. vLLM: 793 TPS. Sequential solo usage: Ollama sufficient."
+          }
+        ],
+        "v3_review": "2026-04-18",
+        "robustness": "STABLE — limitations documentees dans issues publiques, reproductibles"
+      },
+      {
+        "text": "Le TCO (cout total possession) du local devient inferieur au cloud pour un usage agentic regulier. Break-even : 8-18 mois selon l'intensite d'usage. A 100 $/mois d'API : break-even a 18-24 mois (RTX 4090). A 300 $/mois : break-even a 6-8 mois. A 500+ $/mois : break-even a 3-4 mois. Sous 50K tokens/jour, le cloud reste moins cher (pas de CapEx). Le modele hybride (local pour 70% des taches, cloud pour 30%) divise la facture cloud par 3-5 sans sacrifier la qualite sur les taches critiques.",
+        "grade": 3,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "Kunal Ganglani — Local LLM vs Claude Benchmark (2026)",
+            "pyramid": 4,
+            "year": 2026,
+            "quote": "RTX 4090 ($1800-2000) breaks even at ~6 months vs $300/month API spend"
+          },
+          {
+            "name": "SitePoint — Local vs Cloud AI Coding TCO (2026)",
+            "pyramid": 5,
+            "year": 2026,
+            "quote": "Cloud intensive usage: $18,000-54,000/year. Local RTX 4090: $2,100-2,400/year (all-in)"
+          }
+        ],
+        "v3_review": "2026-04-18",
+        "robustness": "MODERE — modelisations TCO avec hypotheses non empiriquement validees, cout de maintenance local sous-estime"
+      }
+    ]
+  },
+  "variants": {
+    "cloud-only": {
+      "recommendation": "Cloud uniquement (Anthropic Claude Max / API) — recommande si : usage < 100 $/mois, donnees non-sensibles, pas de GPU disponible, setup minimal prioritaire. Non recommande si donnees RGPD-sensibles dans les prompts ou budget d'API > 200 $/mois de facon reguliere.",
+      "grade": 3,
+      "level": "RECOMMANDE",
+      "implementation": "Claude Code avec Max subscription. Limiter les prompts a 100K tokens effectifs (RULER : fenetre effective = 50-65% de la fenetre annoncee). Ne jamais inclure de donnees personnelles reelles dans les prompts — utiliser des donnees anonymisees ou synthetiques.",
+      "sources": [
+        {
+          "name": "RULER — NVIDIA, ICLR 2025",
+          "pyramid": 2,
+          "year": 2025,
+          "quote": "Effective context window ≈ 50-65% of advertised. >30% performance drop at middle positions."
+        }
+      ]
+    },
+    "local-only": {
+      "recommendation": "Local uniquement (Ollama + Qwen3-Coder-Next) — recommande si : donnees RGPD-sensibles dans les prompts, usage API > 300 $/mois, GPU 24 GB disponible, tolerance a une qualite legerement inferieure sur les taches d'autonomie complexe. Gap actuel : 10 points SWE-bench vs frontier cloud. Non recommande pour les taches d'architecture ou de refactoring codebase entiere.",
+      "grade": 2,
+      "level": "BONNE_PRATIQUE",
+      "implementation": "Ollama + Qwen3-Coder-Next (80B MoE, 3B actifs, Apache 2.0) sur RTX 4090 24GB. Configurer explicitement `OLLAMA_NUM_CTX=32768` minimum. Utiliser avec Aider ou OpenHands (non Claude Code, incompatible avec Ollama nativement). Modele specialise agent recommande : OpenHands-LM (fine-tune specifique agent).",
+      "sources": [
+        {
+          "name": "Qwen3-Coder-Next (arXiv:2603.00729)",
+          "pyramid": 4,
+          "year": 2026,
+          "quote": "70.6% SWE-bench Verified, 256K context, MoE 3B active, 24GB VRAM Q4. First local model viable for autonomous delegation."
+        }
+      ]
+    },
+    "hybrid": {
+      "recommendation": "Hybride (local pour taches simples + cloud frontier pour taches complexes) — recommande comme strategie principale pour usage moyen a intensif. Permet de diviser la facture cloud par 3-5 sans sacrifier la qualite sur les taches critiques. Architecture : local pour 60-70% des interactions (completion, taches fichier unique, donnees RGPD), cloud pour 30-40% (architecture, refactoring codebase, debugging cross-context).",
+      "grade": 3,
+      "level": "RECOMMANDE",
+      "implementation": "Tableau de routing par type de tache (voir ci-dessous). Hardware minimum : RTX 4090 24GB. Modele local : Qwen3-Coder-Next (ou Devstral Small 16GB si budget contraint). Cloud : Claude Sonnet/Opus via Max ou API selon usage.",
+      "routing": {
+        "local": [
+          "Completion de code, suggestions in-editor",
+          "Generation de tests unitaires sur composants isoles",
+          "Refactoring fichier unique",
+          "Toute tache avec donnees RGPD-sensibles dans le prompt",
+          "Explication de code, documentation",
+          "Features < 3 fichiers bien delimites"
+        ],
+        "cloud_frontier": [
+          "Architecture, conception systeme, nouveaux modules",
+          "Refactoring codebase entiere (> 5 fichiers)",
+          "Debugging cross-context (bug traversant plusieurs couches)",
+          "Sessions agent > 1h sur codebase complete",
+          "Decisions de securite (auth, permissions, migrations)"
+        ]
+      },
+      "sources": [
+        {
+          "name": "Tom Ron — State of Coding Agents with Local LLMs (fev. 2026, Medium)",
+          "pyramid": 4,
+          "year": 2026,
+          "quote": "Hybrid approach validated: local for 70-80% daily tasks, frontier cloud for complex tasks. Practical consensus in 2026."
+        },
+        {
+          "name": "Jethro Carr — Experiments with Local LLMs for Agentic Coding (aout 2025)",
+          "pyramid": 5,
+          "year": 2025,
+          "quote": "Qwen2.5-Coder 32B: satisfactory on simple tasks, frequent failures on complex multi-file tasks (>4-6 files edited)."
+        }
+      ]
+    }
+  },
+  "hardware_minimum": {
+    "entry": {
+      "gpu": "RTX 4090 (24 GB VRAM)",
+      "model": "Qwen2.5-Coder-32B Q4_K_M ou Qwen3-Coder-Next MoE Q4",
+      "tokens_per_second": "20-45 t/s",
+      "cost_hardware": "1 800-2 200 EUR neuf, 900-1 100 EUR occasion RTX 3090"
+    },
+    "optimal": {
+      "gpu": "RTX 5090 (32 GB VRAM)",
+      "model": "Qwen3-Coder-Next MoE sans compromis de quantification",
+      "tokens_per_second": "45-60 t/s",
+      "cost_hardware": "2 500-3 800 EUR"
+    },
+    "not_recommended": {
+      "gpu": "< 16 GB VRAM",
+      "reason": "Seuls les 7B-13B tournent — insuffisant pour usage agentic serieux sur codebase entiere"
+    }
+  },
+  "gap_residuel": "Aucune etude empirique sur la degradation de qualite due a la quantification Q4 sur les taches agentiques complexes (benchmarks officiels utilisent FP16/BF16). Le cout de maintenance operationnelle du setup local (temps debug Ollama, mises a jour modeles, gestion contexte) n'est pas chiffre — sous-estime dans toutes les analyses TCO disponibles. Le domaine evolue a ~13 points SWE-bench par an : cette decision doit etre reevaluee tous les 6 mois."
+}

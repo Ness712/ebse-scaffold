@@ -13,7 +13,7 @@
   "universal": {
     "principles": [
       {
-        "text": "Imposer un dual cap (iterations + dollar budget) par session d'agent, avec hard-stop (HTTP 429 ou equivalent) et escalation sur breach. Implementations : LiteLLM max_iterations + max_budget_per_session ; Claude Code maxTurns en headless mode ; Cursor usage limits. NOTE TECHNIQUE : LiteLLM ne supporte PAS nativement un wall-clock cap — un 'triple cap' complet (iterations + tokens + wall-clock) necessite une implementation custom au niveau orchestrator (timeout wrapper, systemd timer, ou custom agent code). Incidents publics documentent des runaway loops 10x le cout normal ($0.90 → $9+ par session). ISO/IEC 42001 §8.1 (Operational planning and control) mandate des controls operationnels pour les AI systems.",
+        "text": "Imposer un dual cap (iterations + dollar budget) par session d'agent, avec hard-stop (HTTP 429 ou equivalent) et escalation sur breach. Implementations : proxy de gestion de budget API (limite d'iterations + budget par session) ; parametre de limite d'iterations de l'agent en mode headless ; limites de l'outil agent IA. NOTE TECHNIQUE : le proxy de gestion de budget API ne supporte PAS nativement un wall-clock cap — un 'triple cap' complet (iterations + tokens + wall-clock) necessite une implementation custom au niveau orchestrator (timeout wrapper, systemd timer, ou custom agent code). Incidents publics documentent des runaway loops 10x le cout normal ($0.90 → $9+ par session). ISO/IEC 42001 §8.1 (Operational planning and control) mandate des controls operationnels pour les AI systems.",
         "grade": 2,
         "level": "BONNE PRATIQUE",
         "sources": [

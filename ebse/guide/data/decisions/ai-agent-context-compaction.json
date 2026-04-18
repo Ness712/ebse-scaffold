@@ -13,7 +13,7 @@
   "universal": {
     "principles": [
       {
-        "text": "Utiliser une compaction active (summarize-and-restart avec handoff note) plutot que la truncation naive (drop oldest) ou l'extended-context seul. Les benchmarks recents (Context-Folding, ACON, ReSum) montrent des gains de 26-54% reduction memory avec preservation de la task performance. Claude Code `/compact` et equivalents implementent ce pattern. La degradation 'lost in the middle' des long contextes (Liu et al. TACL 2023) reste un probleme meme avec des modeles 1M-token : la compaction contourne ce probleme en gardant l'active context focused.",
+        "text": "Utiliser une compaction active (summarize-and-restart avec handoff note) plutot que la truncation naive (drop oldest) ou l'extended-context seul. Les benchmarks recents (Context-Folding, ACON, ReSum) montrent des gains de 26-54% reduction memory avec preservation de la task performance. La commande de compaction de l'agent et ses equivalents implementent ce pattern. La degradation 'lost in the middle' des long contextes (Liu et al. TACL 2023) reste un probleme meme avec des modeles 1M-token : la compaction contourne ce probleme en gardant l'active context focused.",
         "grade": 2,
         "level": "BONNE PRATIQUE",
         "sources": [

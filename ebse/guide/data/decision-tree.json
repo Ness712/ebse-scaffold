@@ -1,5 +1,5 @@
 {
-  "version": "2026.04.5",
+  "version": "2026.04.6",
   "methodology_note": "L'arbre pose UNIQUEMENT des questions metier (que l'utilisateur connait). Le guide DEDUIT les choix techniques. L'utilisateur ne voit jamais 'React' ou 'PWA' dans les questions — il voit 'tes utilisateurs telecharment depuis le store ?'. Chaque question a une option 'je ne sais pas' avec reco par defaut EBSE.",
   "nodes": {
     "start": {

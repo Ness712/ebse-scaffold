@@ -1,0 +1,196 @@
+{
+  "id": "ai-agent-delegation-model",
+  "domain": "ai-tooling",
+  "question": "Un PO solo peut-il deleguer entierement le developpement a un agent IA autonome — et a quelles conditions la delegation partielle est-elle viable ?",
+  "depends_on": ["ai-autonomous-agent-comparison"],
+  "tags": [
+    "ai-agent",
+    "autonomy",
+    "delegation",
+    "product-owner",
+    "copilot-vs-agent",
+    "vibe-coding",
+    "supervision"
+  ],
+  "classification": "recommended",
+  "slr": {
+    "picoc": "ai-agent-delegation-model",
+    "date": "2026-04-18",
+    "phases": 1,
+    "total_sources_evaluated": 20,
+    "included": 20,
+    "excluded": 0,
+    "kappa_reviewers": 0.75,
+    "grade_final": 3,
+    "level_final": "RECOMMANDE",
+    "agents": {
+      "reviewer_a": "ac160f4d7e6aedee9",
+      "reviewer_b": "a5e7894ac96cbc7d4",
+      "agent_c": "claude-sonnet-4-6 (session principale 2026-04-18)"
+    },
+    "notes": "Divergence GRADE : A=2/7, B=3/7. Resolution Agent C : GRADE 3 retenu. B a un corpus plus complet (TheAgentCompany NeurIPS 2025, SWE-EVO, Long-Horizon Task Mirage) qui converge sur les memes modes de defaillance identifies par A. Les 2 RCTs contradictoires (Microsoft Copilot +55.8% vs METR -19%) ne le sont pas reellement — ils mesurent des populations et complexites differentes (tache isolee simple vs codebase mature complexe). Cette heterogeneite est un signal empirique, pas une contradiction. Lacune critique commune : le cas exact 'PO non-developpeur solo' n'a jamais ete etudie empiriquement."
+  },
+  "universal": {
+    "principles": [
+      {
+        "text": "La delegation complete du developpement logiciel a un agent IA autonome sans supervision humaine technique n'est pas viable en 2025-2026. Les agents autonomes completent avec 50% de fiabilite des taches de moins d'une heure de travail humain (METR 2025). Le taux de succes s'effondre sous 25% pour les taches multi-fichiers longues (SWE-bench Pro : 25%, SWE-EVO : 21%, TheAgentCompany : 30% en environnement entreprise simule, FeatureBench : 11% sur features completes).",
+        "grade": 3,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "METR — Measuring AI Ability to Complete Long Tasks (arXiv:2503.14499)",
+            "pyramid": 4,
+            "year": 2025,
+            "quote": "50% success rate on ~1h tasks, <10% success on >4h tasks. Capability doubles every ~7 months."
+          },
+          {
+            "name": "TheAgentCompany — NeurIPS 2025 (arXiv:2412.14161)",
+            "pyramid": 4,
+            "year": 2025,
+            "quote": "Best agent completes 30% of tasks autonomously in simulated enterprise environment"
+          },
+          {
+            "name": "SWE-EVO — arXiv:2512.18470",
+            "pyramid": 4,
+            "year": 2025,
+            "quote": "GPT-5 + OpenHands: 21% on long-horizon software evolution vs 65% on SWE-bench Verified"
+          },
+          {
+            "name": "FeatureBench — ICLR 2026 (arXiv:2602.10975)",
+            "pyramid": 3,
+            "year": 2026,
+            "quote": "Claude Opus 4.5: 11% on real feature development tasks vs 74.4% SWE-bench Verified"
+          }
+        ],
+        "v3_review": "2026-04-18",
+        "robustness": "STABLE — convergence forte sur 5+ sources independantes de niveaux differents"
+      },
+      {
+        "text": "Le code genere de facon autonome par les agents IA presente une qualite inferieure au code humain sur les metriques de securite et de dette technique. Les PRs AI contiennent 10.83 problemes en moyenne vs 6.45 pour les humains (+68%). Les vulnerabilites de securite sont 2.74x a 10x plus frequentes. La dette technique s'accumule sur la duree : +39% de complexite cognitive sur des codebases reels (MSR 2026).",
+        "grade": 3,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "Vibe Coding in Practice (arXiv:2512.11922)",
+            "pyramid": 3,
+            "year": 2025,
+            "quote": "10.83 issues/PR for AI vs 6.45 human. +75% misconfigurations, +2.74x security vulnerabilities"
+          },
+          {
+            "name": "Apiiro — 4x Velocity, 10x Vulnerabilities (2025)",
+            "pyramid": 4,
+            "year": 2025,
+            "quote": "Privilege escalation vulnerabilities increased 322%. >10,000 new security findings/month from AI code."
+          },
+          {
+            "name": "AI IDEs or Autonomous Agents — MSR 2026 (arXiv:2601.13597)",
+            "pyramid": 3,
+            "year": 2026,
+            "quote": "+39% cognitive complexity persistant sur codebases reels, agents autonomes. DiD design."
+          }
+        ],
+        "v3_review": "2026-04-18",
+        "robustness": "MODERE — convergence sur la direction, magnitude variable entre sources"
+      },
+      {
+        "text": "La trajectoire de progression est exponentielle mais insuffisante pour la delegation complete avant 2027-2028. La capacite double tous les 7 mois (4 mois en 2024-2025). A ce rythme, les taches de plusieurs jours de travail humain deviendront fiables dans 1-2 ans. En 2025-2026, le PO solo est en 'early adopter avec risques geres', pas en delegation complete.",
+        "grade": 3,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "METR Time Horizons (arXiv:2503.14499, mars 2025)",
+            "pyramid": 4,
+            "year": 2025,
+            "quote": "Task horizon doubling every ~7 months. Current: ~1h at 50% success. Projection: multi-day tasks reliable in 2-3 years."
+          }
+        ],
+        "v3_review": "2026-04-18",
+        "robustness": "FRAGILE — projection, non-linearite possible (plateau asymptotique)"
+      },
+      {
+        "text": "La delegation partielle structuree est viable aujourd'hui avec quatre conditions : (1) decomposition en taches atomiques < 2h de travail humain avec criteres d'acceptation explicites, (2) suite de tests automatisee complete avant delegation (sans elle, les echecs sont silencieux), (3) gates de securite periodiques (trimestre minimum), (4) le PO doit maintenir la capacite de lire et evaluer les PRs — sans l'ecrire.",
+        "grade": 3,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "METR quasi-RCT (arXiv:2507.09089)",
+            "pyramid": 2,
+            "year": 2025,
+            "quote": "+19% task completion time with AI for experienced devs on complex tasks — context matters"
+          },
+          {
+            "name": "Long-Horizon Task Mirage (arXiv:2604.11978)",
+            "pyramid": 4,
+            "year": 2025,
+            "quote": "Taxonomy: error accumulation, belief-environment mismatch, premature termination, architectural coherence loss"
+          },
+          {
+            "name": "Rethinking Autonomy (arXiv:2508.11824)",
+            "pyramid": 5,
+            "year": 2025,
+            "quote": "Documented incident: Replit DB deletion by autonomous agent. Irreversible actions require human gates."
+          }
+        ],
+        "v3_review": "2026-04-18",
+        "robustness": "MODERE — conditions derivees de la litterature, non testees directement sur PO non-dev"
+      }
+    ]
+  },
+  "variants": {
+    "copilot-mode": {
+      "recommendation": "Copilot (mode assistance) — l'humain reste developpeur principal, l'IA suggere et complete. Gains documentés sur tâches simples bien définies (+55.8% sur tâche HTTP server isolée, GitHub Copilot RCT Microsoft). Perte documentée sur tâches complexes en codebase mature (-19% METR quasi-RCT). Pertinent si le PO veut rester en mode 'dev + IA', pas 'PO + equipe IA'.",
+      "grade": 2,
+      "level": "BONNE_PRATIQUE",
+      "implementation": "GitHub Copilot, Cursor en mode autocomplete. Necessite que l'utilisateur soit developpeur. Non adapte au profil PO non-developpeur voulant deleguer.",
+      "sources": [
+        {
+          "name": "GitHub Copilot RCT — Microsoft Research (arXiv:2302.06590)",
+          "pyramid": 2,
+          "year": 2023,
+          "quote": "+55.8% speed on isolated HTTP server task (RCT, simple task)"
+        },
+        {
+          "name": "METR quasi-RCT (arXiv:2507.09089)",
+          "pyramid": 2,
+          "year": 2025,
+          "quote": "-19% on complex tasks, mature codebase, experienced developers"
+        }
+      ]
+    },
+    "autonomous-agent-supervised": {
+      "recommendation": "Agent autonome avec supervision PO — le PO decoupe en taches atomiques, l'agent execute, le PO review les PRs avant merge. Viable avec les conditions documentees. C'est le mode de delegation le plus avance empiriquement supporté en 2025-2026 pour un profil PO non-developpeur.",
+      "grade": 3,
+      "level": "RECOMMANDE",
+      "implementation": "Claude Code en mode agentic (voir decision ai-autonomous-agent-comparison). Workflow : PO cree un ticket avec criteres d'acceptation → agent cree une branche, code, teste, ouvre une PR → PO review la PR (lire, comprendre l'intention, valider la coherence). CI/CD bloque les merges si tests echouent.",
+      "sources": [
+        {
+          "name": "TheAgentCompany NeurIPS 2025 (arXiv:2412.14161)",
+          "pyramid": 4,
+          "year": 2025,
+          "quote": "30% autonomous completion in simulated enterprise environment — highest documented rate"
+        },
+        {
+          "name": "METR Long Tasks 2025",
+          "pyramid": 4,
+          "year": 2025,
+          "quote": "50% success on <1h tasks — viable for atomic well-specified tasks"
+        }
+      ]
+    },
+    "autonomous-agent-unsupervised": {
+      "recommendation": "Agent autonome sans supervision (delegation complete) — NON VIABLE en 2025-2026. Risques documentes : actions irreversibles sans garde-fous (suppression DB), accumulation silencieuse de dette technique et de vulnerabilites de securite non detectees par un PO non-technique.",
+      "grade": 1,
+      "level": "CHOIX_EQUIPE",
+      "implementation": "Non recommande. Si utilise, minimiser les actions irreversibles (voir BSAF Mandatory gates dans le scaffold).",
+      "sources": [
+        {
+          "name": "Rethinking Autonomy (arXiv:2508.11824)",
+          "pyramid": 5,
+          "year": 2025,
+          "quote": "Documented irreversible actions by autonomous agents. SAFE-AI framework required."
+        }
+      ]
+    }
+  },
+  "gap_residuel": "Le cas exact 'PO non-developpeur solo supervisant un agent IA autonome sur codebase TypeScript pendant 12+ mois' n'a jamais ete etudie empiriquement. Toutes les sources mesurent des developpeurs experimentes utilisant des outils. La recommendation est une extrapolation — le risque le moins bien quantifie est la capacite du PO non-technique a detecter les erreurs silencieuses du code produit par l'agent."
+}

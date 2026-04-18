@@ -5,11 +5,17 @@
 **Methode** : double extraction (A + B) + verification outils (Agent C) + reconciliation
 **Tracability** : [`verification/extractions/phase-1-3-ai-collaboration-picoc.md`](../extractions/phase-1-3-ai-collaboration-picoc.md)
 
+## Objectif du domaine
+
+**Maximiser l'autonomie des agents IA de developpement logiciel — quel que soit le profil de l'equipe.**
+
+Les PICOCs de ce domaine repondent a : quelles decisions techniques, pratiques et outils permettent a des agents IA de developper du logiciel avec le moins d'interventions humaines possibles, au plus haut niveau de qualite possible ?
+
+Le standard vise est universel : les recommandations doivent etre applicables d'un solo founder jusqu'a une grande equipe d'ingenierie.
+
 ## Population P (commune a toutes les PICOCs)
 
-Sauf precision differente, **P = "Equipe d'ingenierie logicielle, 1-10 devs, developpant une application web backend+frontend, utilisant quotidiennement un agent de codage IA (Claude Code, Cursor, Devin, Copilot, Aider, Cline, Continue, ou equivalent), dans un contexte pre-production ou production"**.
-
-Cette population herite des hypotheses scope du guide EBSE existant (web app, equipes petites-moyennes) et ajoute la contrainte *"utilise un agent de codage IA"*.
+Sauf precision differente, **P = "Toute equipe (1 personne a grande organisation) developpant une application logicielle avec des agents IA autonomes comme acteurs principaux du developpement, cherchant a maximiser leur autonomie d'execution"**.
 
 ## Liste finale — 27 PICOCs
 

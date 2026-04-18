@@ -1,0 +1,258 @@
+{
+  "id": "ai-agent-scaffold-methodology",
+  "domain": "ai-collaboration",
+  "question": "Comment concevoir et valider un scaffold d'agent IA codeur de maniere fiable, complete et auditable ? Existe-t-il une methodologie formelle equivalente applicable a ce contexte ?",
+  "depends_on": ["ai-agent-accountability", "ai-agent-agentic-security", "ai-agent-deterministic-gates", "ai-agent-project-instructions", "ai-agent-provenance-audit"],
+  "tags": [
+    "ai-collaboration",
+    "scaffold",
+    "auditability",
+    "reliability",
+    "configuration",
+    "traceability",
+    "methodology",
+    "safety-critical",
+    "bsaf",
+    "claude-md"
+  ],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "Concevoir un scaffold d'agent IA codeur selon le Behavioral Specification and Assurance Framework (BSAF) — methodologie adaptee des standards safety-critical (IEC 61508, DO-178C, MISRA, UL 4600, STPA) et des approches formelles pour agents IA (AgentSpec ICSE 2026, Assurance 2.0). Le BSAF comprend 4 couches ordonnees : (1) SPECIFICATION — classifier chaque regle du scaffold en trois niveaux de criticite inspires de MISRA Compliance : Mandatory (regles absolues implementees par des hooks deterministes — ex. ne jamais merger vers main, ne jamais committer de secrets), Required (regles importantes implementees dans le fichier d'instructions de l'agent mais pouvant faire l'objet d'un Deviation Record signe PO — ex. format de commit, protocole de PR), Advisory (recommandations — ex. style de commentaire) ; specifier pour chaque regle une High-Level Rule (HLR : quel comportement elle gouverne) et une Low-Level Rule (LLR : comment elle est implementee) en s'inspirant de la distinction HLR/LLR de DO-178C ; identifier les Unsafe Control Actions (UCAs) correspondantes via STPA — les cas ou l'agent donnerait une action de controle dangereuse (ex. commit direct sur main sans approbation PO) ; (2) VALIDATION — valider chaque regle Mandatory par test d'enforcement deterministe (le hook bloque-t-il effectivement ?), chaque regle Required par test de robustesse sur >=5 reformulations semantiquement equivalentes (risque documente : -61,8% sur reformulations, Source: PICOC ai-agent-instruction-compliance), chaque regle Advisory par revue editoriale ; (3) AUDIT — produire une Compliance Matrix (inspire de NASA NPR 7150.2 SWE-084) : pour chaque regle, documenter la regle, son niveau, sa source PICOC, son implementation, la preuve d'application (log de session ou test), les deviations approuvees (fichier d'overrides = Deviation Permits) ; conduire une revue independante periodique (Reviewer A + Reviewer B analogues a l'IV&V safety-critical) ; (4) TRACABILITE — chaque regle tracee bidirectionnellement vers (a) son besoin PICOC source, (b) son implementation dans le scaffold, (c) les sessions de validation ; les derogations (fichier d'overrides PO) documentees avec rationnel et date d'expiration. Fondements : SLR EBSE etendu 2026-04-17 (deux phases) — Phase 1 (litterature IA) : kappa=1.0, aucune methodologie unifiee dans la litterature agentique ; Phase 2 (domaines safety-critical) : kappa=1.0 sur corpus commun A'+B', methodologie EXISTE dans les domaines safety-critical. Sources convergentes (17 sources totales) : IEC 61508-3 (cycle de vie 16 phases, SIL 1-4, traçabilite bidirectionnelle) ; DO-178C/ED-12C (HLR/LLR, DAL A-E, 71 objectifs tabulés) ; MISRA Compliance 2020 (Mandatory/Required/Advisory + Deviation Records/Permits + GCS — directement transposable) ; UL 4600 (safety case outcomes-based, audit par prompt-elements, spreadsheet de traçabilite) ; STPA/STAMP Leveson MIT (UCAs comme specification formelle des violations comportementales, formalisable en LTL) ; Assurance 2.0 Bloomfield&Rushby arXiv:2205.04522 (claim/argument/evidence tripartite, defeaters pour contrer le biais de confirmation) ; AgentSpec ICSE 2026 arXiv:2503.18666 (DSL triggers/predicats/mecanismes, >90% unsafe executions prevented) ; ABC arXiv:2602.22302 (contrats C=(P,I,G,R), bornes de derive D*<0.27) ; VeriGuard arXiv:2510.05156 (dual offline+online, specification-first) ; NASA NPR 7150.2 (SWE-084 configuration audit, compliance matrix) ; Assurance AI arXiv:2407.13948 (enveloppes de securite, guard conventionnel autour du composant ML) ; NASA-GB-8719.13 (Requirements State Machine pour specification comportementale) ; ISO 26262-6 (audit tripartite : review + audit + assessment) ; ASPICE v4.0 (niveaux capacite 0-5, traçabilite comme critere d'evaluation) ; MIL-STD-882E (Hazard Tracking System comme audit trail des decisions de risque) ; ECSS-E-ST-40C Rev.1 (tailoring process : adapter la rigueur a la criticite) ; adaptation DO-178C/IEC 61508 a l'IA arXiv:2409.08666 (lacunes documentees : determinisme assume, adaptation necessaire pour LLM probabilistes). GRADE 4 : convergence forte (kappa=1.0 inter-reviewers sur corpus commun, 5 patterns metho convergents sur 15+ sources independantes), standards de niveau 1-2 multiples (IEC 61508, ISO 26262, NASA NPR, MIL-STD-882E, DO-178C, UL 4600), litterature de transition validee (Assurance 2.0, AgentSpec ICSE 2026 A*). Facteur de declassement : aucun standard n'est concu nativamente pour les scaffolds d'agents IA codeurs en langage naturel (tous issus de contextes deterministes) — adaptation du modele de risque necessaire. Phase 3 etendue (methodologie de conception exhaustive du scaffold) — SLR EBSE 2026-04-17 — Agents A'' (a227d0a986efc966d) + B'' (ad797e90584e0c66d), 20 sources, 15 incluses, kappa=1.0 sur STRIDE (source commune). Le SDMF (Scaffold Design Methodology Framework) synthese en 6 phases : Phase 1 Definition ODD (taxonomie hierarchique des contextes d'operation — critere risk-based d'inclusion) ; Phase 2 Decomposition FMEA (Boundary Diagram + P-Diagram + modes de defaillance par capacite de l'agent — MIL-STD-1629A) ; Phase 3 Obstacle analysis KAOS (critere formel unique : domain-completeness = Dom UNION {O} |= NOT G, van Lamsweerde IEEE TSE 2000) ; Phase 4 STRIDE + Misuse Cases (partition MECE 6 categories + inversion use→misuse) ; Phase 5 Validation RE multi-dimensionnelle (Kassab 2025 : syntaxique + semantique + comportemental + couverture) ; Phase 6 Meta-synthese AI Risk Repository (43 frameworks, couverture moyenne ad hoc = 34%). Preuve empirique de la necessite : stress-test sur 12 modeles frontier (arXiv:2510.07686) : 70 000+ cas de divergence, taux violation 5-13x plus eleve en zones d'ambiguite — l'approche ad hoc est documentairement insuffisante. GRADE 5 (eleve depuis Phase 2 = 4) : 3 revues systematiques (Horkoff 2019 GORE mapping PMC, Kassab 2025 SEAA RE completeness, AI Risk Repository MIT meta-analyse 43 frameworks), standard militaire directement transposable (FMEA MIL-STD-1629A), critere formel mathematique de completude unique dans la litterature (KAOS domain-completeness), etude empirique sur 12 modeles frontier (arXiv:2510.07686). Facteur de declassement residuel : integration KAOS+FMEA+STRIDE proposee pour la premiere fois — non encore implementee nativement pour un scaffold d'agent IA codeur.",
+        "grade": 5,
+        "level": "CONFIRME",
+        "sources": [
+          {
+            "name": "IEC 61508-3 — Functional Safety: Software Requirements (IEC, 2010)",
+            "pyramid": 1,
+            "year": 2010,
+            "quote": "The software safety lifecycle shall produce documents providing a complete record of the software safety activities undertaken and the results achieved.",
+            "note": "Standard international niveau 1. Cycle de vie 16 phases, SIL 1-4, traçabilite bidirectionnelle obligatoire, Functional Safety Assessment par evaluateur independant. PDF payant — analyse via sources secondaires (CASS-GUIDE, papers academiques). INCLUS A' et B'. Quote APPROXIMATIVE (extraction via sources secondaires)."
+          },
+          {
+            "name": "DO-178C / ED-12C — Software Considerations in Airborne Systems (RTCA/EUROCAE, 2012)",
+            "pyramid": 1,
+            "year": 2012,
+            "quote": "The software development processes shall produce software that satisfies its allocated system requirements and that minimizes the likelihood that errors introduced during the software development processes remain in the software product.",
+            "note": "Standard de certification avionique (DAL A-E, 71 objectifs, traçabilite HLR/LLR). INCLUS A' et B'. Lacune ML documentee (arXiv:2409.08666) : assume le determinisme — adaptation necessaire pour LLM. Quote APPROXIMATIVE."
+          },
+          {
+            "name": "MISRA Compliance:2020 — Achieving compliance with MISRA Coding Guidelines (MISRA Consortium, 2020)",
+            "pyramid": 2,
+            "year": 2020,
+            "quote": "A deviation is a documented decision to allow a specific situation where a guideline is not complied with. A Deviation Record shall state the guideline deviated from, the situation, the rationale, and the risk analysis.",
+            "note": "PDF public disponible. Architecture de compliance Mandatory/Required/Advisory + Deviation Records/Permits + Guideline Compliance Summary est le modele le plus directement transposable aux regles d'un scaffold CLAUDE.md. INCLUS A' uniquement. Quote DIRECTE."
+          },
+          {
+            "name": "UL 4600 — Standard for Safety for the Evaluation of Autonomous Products (UL/Koopman CMU, 2023)",
+            "pyramid": 2,
+            "year": 2023,
+            "quote": "For each prompt element, the evaluator asks: show me where in your safety case the information responding to this prompt is located.",
+            "note": "Standard outcomes-based (claim/argument/evidence) avec audit par prompt-elements et spreadsheet de traçabilite. Conçu pour tout produit autonome (pas seulement vehicules). INCLUS B' uniquement. Quote APPROXIMATIVE via article Koopman IEEE Computer 2023."
+          },
+          {
+            "name": "STPA (System-Theoretic Process Analysis) — Leveson, MIT. Applications IA : arXiv:2506.01782 (Mylius 2025)",
+            "pyramid": 4,
+            "year": 2025,
+            "quote": "Controllers may be people, teams, computer programs, LLM agents, etc. — the control structure is agnostic to the type of controller.",
+            "note": "STPA : methode academique (MIT/Leveson) appliquee aux agents LLM frontiere (arXiv:2506.01782). UCAs identifient formellement les violations comportementales du scaffold (ex. 'agent donne commit sur main sans gate humaine'). Formalisable en LTL. Adoptee par Google SRE. INCLUS B' uniquement. Quote APPROXIMATIVE."
+          },
+          {
+            "name": "Assurance 2.0 — Bloomfield & Rushby (arXiv:2205.04522, 2022-2024)",
+            "pyramid": 4,
+            "year": 2022,
+            "quote": "A complete assurance case includes a positive case (argument for safety), a negative case (documentation of defeaters against confirmation bias), and an expression of residual doubt.",
+            "note": "Framework claim/argument/evidence tripartite avec counter-arguments (defeaters) pour eviter le biais de confirmation. Conçu explicitement pour l'IA (arXiv:2407.13948). Le corpus le plus directement applicable pour formaliser un scaffold comme assurance case. INCLUS A' et B'. Quote APPROXIMATIVE."
+          },
+          {
+            "name": "AgentSpec — Wang, Poskitt, Sun (arXiv:2503.18666, ICSE 2026 A*)",
+            "pyramid": 4,
+            "year": 2025,
+            "quote": "AgentSpec prevents over 90% of unsafe executions for coding agents using lightweight DSL rules: (trigger, predicate, enforcement mechanism).",
+            "note": "ICSE 2026 A* (peer-review rigoureux). Singapore Management University. DSL triggers/predicats/mecanismes avec enforcement runtime. Generation automatique de regles via o1. INCLUS A' (SLR precedent) et B'. Rappel 70,96% = limite connue. Quote APPROXIMATIVE."
+          },
+          {
+            "name": "Agent Behavioral Contracts (ABC) — Bhardwaj (arXiv:2602.22302, 2026)",
+            "pyramid": 4,
+            "year": 2026,
+            "quote": "A behavioral contract C = (P, I, G, R) formalizes Preconditions, Invariants, Governance policies, and Recovery mechanisms. Behavioral drift is bounded: D* < 0.27.",
+            "note": "2026. Formalise les contrats comportementaux d'agents IA avec mesure de conformite probabiliste. AgentAssert detecte 5.2-6.8 violations soft par session non vues par les baselines. INCLUS B' uniquement. Quote APPROXIMATIVE."
+          },
+          {
+            "name": "VeriGuard — Miculicich et al., Google (arXiv:2510.05156, ICLR 2026)",
+            "pyramid": 4,
+            "year": 2025,
+            "quote": "VeriGuard combines offline specification-first policy design with formal verification, and online action-by-action runtime monitoring for agents in sensitive domains.",
+            "note": "ICLR 2026. Architecture duale : specification formelle pre-deploiement + monitoring runtime. Source Google avec niveau institutionnel eleve. INCLUS B' uniquement. Quote APPROXIMATIVE."
+          },
+          {
+            "name": "NASA NPR 7150.2D — NASA Software Engineering Requirements (NASA)",
+            "pyramid": 1,
+            "year": 2019,
+            "quote": "SWE-084: Software configuration audits shall verify that the software configuration is consistent with the documented configuration specifications.",
+            "note": "Standard gouvernemental NASA (niveau 1). SWE-084 Configuration Audit = concept le plus proche d'un 'audit de scaffold'. Compliance matrix tracant regles vers evidence. NODIS library publique. INCLUS B' uniquement. Quote DIRECTE (extrait SWE-084)."
+          },
+          {
+            "name": "NASA-GB-8719.13 — NASA Software Safety Guidebook (NASA, 2004)",
+            "pyramid": 1,
+            "year": 2004,
+            "quote": "Software Requirements State Machine Analysis: formal technique for specifying and analyzing the behavioral requirements of safety-critical software.",
+            "note": "Guidebook NASA (non normatif mais officiel). Requirements State Machine Analysis directement applicable a la specification des etats comportementaux d'un scaffold d'agent IA. INCLUS A'. Quote APPROXIMATIVE."
+          },
+          {
+            "name": "ISO 26262-6 — Road Vehicles: Functional Safety, Software Level (ISO, 2018)",
+            "pyramid": 1,
+            "year": 2018,
+            "quote": "Confirmation measures comprise: (1) software safety requirements verification, (2) functional safety audit, (3) functional safety assessment.",
+            "note": "Standard ISO niveau 1. Audit tripartite (review interne, audit processus, assessment independant). SRS avec notation prescrite selon ASIL. INCLUS A'. Quote APPROXIMATIVE."
+          },
+          {
+            "name": "MIL-STD-882E — System Safety (DoD, 2012/2023)",
+            "pyramid": 1,
+            "year": 2012,
+            "quote": "Hazard Tracking System shall record: hazard, system, causal factor, effects, initial/current/target risk, mitigation measures, hazard status, V&V method, responsible person, risk acceptance records.",
+            "note": "Standard DoD niveau 1. Hazard Tracking System = audit trail des decisions de risque directement transposable : chaque regle du scaffold est une mesure de mitigation documentee. INCLUS A'. Quote APPROXIMATIVE."
+          },
+          {
+            "name": "ASPICE v4.0 PAM — Automotive SPICE (VDA QMC, 2023)",
+            "pyramid": 2,
+            "year": 2023,
+            "quote": "Traceability is a required criterion at capability level 2: bidirectional links between requirements, design, implementation, and tests must be demonstrable.",
+            "note": "PDF public sur vda-qmc.de. 6 niveaux de capacite, traçabilite bidirectionnelle comme critere d'evaluation. Tailoring explicite selon criticite. INCLUS A'. Quote APPROXIMATIVE."
+          },
+          {
+            "name": "ECSS-E-ST-40C Rev.1 — Space Engineering Software (ECSS, 2025)",
+            "pyramid": 1,
+            "year": 2025,
+            "quote": "The tailoring process allows adaptation of requirements to the specific project context, ensuring the level of rigor is proportional to the criticality of the software.",
+            "note": "PDF public ecss.nl. Tailoring process = adaptation de la rigueur a la criticite — directement applicable au scaffold (regles auth/infra > regles style). INCLUS A'. Quote APPROXIMATIVE."
+          },
+          {
+            "name": "Adaptation DO-178C/IEC 61508 a l'IA — Bello et al. (arXiv:2409.08666, 2024) + Lopez-Miguel et al. (arXiv:2502.19150, 2025)",
+            "pyramid": 4,
+            "year": 2024,
+            "quote": "The fundamental challenge in certifying AI-based systems under DO-178C is that the standard assumes deterministic behavior, which is incompatible with ML models that change behavior after training.",
+            "note": "Corpus academique documentant les lacunes des standards safety-critical face a l'IA/ML. Confirme que la transposition est possible mais necessite adaptation du modele de risque (probabiliste → comportemental). INCLUS A'. Quote APPROXIMATIVE."
+          },
+          {
+            "name": "Assurance of AI Systems From a Dependability Perspective — Bloomfield & Rushby (arXiv:2407.13948, 2024)",
+            "pyramid": 4,
+            "year": 2024,
+            "quote": "Safety envelopes formed by conventional assured systems act as guards around AI components, minimizing reliance on the ML component for safety-critical decisions.",
+            "note": "Concept d'enveloppes de securite directement analogue aux deny-lists et gates humains du scaffold. Strategia defensive : minimiser la confiance dans le composant ML probabiliste via des gardiens deterministes. INCLUS A' et B'."
+          },
+          {
+            "name": "KAOS/GORE — van Lamsweerde & Letier (IEEE Transactions on Software Engineering, 2000) + Horkoff et al. Systematic Mapping Study (PMC, 2019)",
+            "pyramid": 3,
+            "year": 2000,
+            "quote": "An obstacle O to goal G in domain Dom is formally: O is consistent with Dom AND (Dom UNION {O}) entails NOT G. Domain-completeness holds iff the disjunction of all identified obstacles implies NOT G.",
+            "note": "Phase 3 A''. Seul mecanisme du corpus fournissant un critere mathematiquement testable de completude. Passe 1 : raffinement AND/OR (completude structurelle) ; Passe 2 : obstacle analysis (domain-completeness). Directement transposable : objectifs du scaffold → obstacles → regles du scaffold. Horkoff 2019 (PMC) = systematic mapping study niveau 2 EBSE. Quote DIRECTE (formalisation obstacle analysis van Lamsweerde)."
+          },
+          {
+            "name": "FMEA/FMECA — MIL-STD-1629A (U.S. Military, 1980) + IEC 60812:2018 (IEC) + SAE J1739:2021 (SAE International)",
+            "pyramid": 1,
+            "year": 2018,
+            "quote": "For each component, all significant failure modes shall be identified and documented. The analysis shall define: failure mode, effect, severity, occurrence, detection, and risk priority number.",
+            "note": "Phase 3 A''. Standard militaire (origine 1949, standard IEC 2018). Mecanisme d'exhaustivite : Boundary Diagram (frontieres explicites) + P-Diagram (entrees/sorties/bruits) + decomposition fonctionnelle (tous les composants) + tous les modes de defaillance par composant. Transposition directe au scaffold : composant = capacite de l'agent, mode de defaillance = comportement interdit. INCLUS Phase 3. Quote APPROXIMATIVE."
+          },
+          {
+            "name": "Misuse Cases — Sindre & Opdahl (Requirements Engineering Journal, Springer, 2005)",
+            "pyramid": 4,
+            "year": 2005,
+            "quote": "For every use case describing desired system behavior, there exists a corresponding misuse case describing how an adversary can exploit or misuse that behavior.",
+            "note": "Phase 3 A''. Principe de dualite systematique use case → misuse case. Transposable au scaffold : use cases de l'agent (ecrire code, committer, deployer) → misuse cases systematiques (ecrire code malveillant, committer sans validation PO, deployer en prod sans gate). Complement de STRIDE pour la dimension comportements interdits. INCLUS Phase 3. Quote APPROXIMATIVE."
+          },
+          {
+            "name": "Operational Design Domain (ODD) — IEEE ICCVE 2024 + ISO 21448:2022 (SOTIF)",
+            "pyramid": 3,
+            "year": 2024,
+            "quote": "The operational design domain defines the specific conditions under which a given driving automation system is designed to function, including but not limited to environmental, geographical, and time-of-day restrictions.",
+            "note": "Phase 3 A''. Mecanisme taxonomique d'exhaustivite : taxonomie hierarchique fermee des dimensions du domaine operationnel + critere risk-based d'inclusion (une dimension est incluse si sa variation peut creer un risque). Transposition au scaffold : ODD de l'agent = liste exhaustive des contextes d'operation (type de tache, etat du depot, presence humaine, phase projet). Phase 1 de la methodologie SDMF. INCLUS Phase 3. Quote DIRECTE (ISO 21448:2022). Note : transposition vehicules → agents logiciels = hypothese non encore validee empiriquement."
+          },
+          {
+            "name": "Requirements Completeness — Kassab & AbdElhameed (SEAA 2025, Springer, doi:10.1007/978-3-032-04200-2_26)",
+            "pyramid": 2,
+            "year": 2025,
+            "quote": "Completeness in requirements engineering is multi-dimensional: syntactic completeness (all template sections filled), semantic completeness (all domain entities referenced), behavioral completeness (all state transitions specified), and coverage completeness (all scenarios traced to requirements).",
+            "note": "Phase 3 B''. Revue systematique sur 25 ans de litterature RE (2000-2024). La completude est multi-dimensionnelle — aucune technique unique ne garantit toutes les dimensions. Conclusion principale applicable au scaffold : valider separement completude syntaxique, semantique, comportementale, couverture. Le point sur l'usage des LLMs pour detecter les gaps est directement pertinent. Source prioritaire pour la Phase 5 de la methodologie SDMF. INCLUS Phase 3. Quote APPROXIMATIVE (synthese de la revue)."
+          },
+          {
+            "name": "MIT AI Risk Repository — Slattery et al. (arXiv:2408.12622v2, 2024-2025, MIT FutureTech)",
+            "pyramid": 2,
+            "year": 2024,
+            "quote": "No single document covers all 23 risk sub-domains: the maximum coverage observed is 16/23 (70%), the average is 7/23 (34%). The repository demonstrates that ad hoc frameworks systematically underperform compared to systematic meta-synthesis.",
+            "note": "Phase 3 B''. Meta-analyse de 43 frameworks existants, extraction de 1612+ risques classifies. Taxonomie causale (Entite x Intentionnalite x Timing) + taxonomie domaine (7 domaines, 23 sous-domaines). Revue systematique niveau 2 EBSE. Valeur principale pour le SDMF : demontrer que la couverture moyenne des frameworks ad hoc est de 34% — preuve empirique de l'insuffisance de l'approche ad hoc. Phase 6 de la methodologie SDMF : meta-synthese comparative. INCLUS Phase 3. Quote APPROXIMATIVE (synthese des resultats publie)."
+          },
+          {
+            "name": "Stress-Testing Model Specs — Zhang et al. (arXiv:2510.07686, Anthropic + Thinking Machines Lab, 2025)",
+            "pyramid": 3,
+            "year": 2025,
+            "quote": "Generating 300,000+ requests to test trade-offs between principles, we found 70,000+ cases of significant behavioral divergence between models, with violation rates 5-13x higher in high-ambiguity scenarios.",
+            "note": "Phase 3 A'' et B'' (cas negatif). Etude empirique sur 12 modeles frontier. Preuve directe que l'approche ad hoc (aggregation de sources heterogenes sans methode de completude) produit des gaps systematiques mesurables : contradictions directes entre principes + ambiguites interpretatives dans les zones non couvertes. Cas negatif le plus fort du corpus pour motiver SDMF. INCLUS Phase 3 (resolu par Agent C : A'' excluait comme mecanisme, B'' incluait comme cas negatif). Quote DIRECTE (abstract)."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 3,
+          "plus": [
+            "Phase 2 : convergence kappa=1.0 sur corpus commun A'+B', 5 patterns metho convergents sur 15+ sources independantes",
+            "Phase 2 : standards niveau 1 multiples : IEC 61508, ISO 26262, NASA NPR 7150.2, MIL-STD-882E, ECSS-E-ST-40C, NASA-GB-8719.13 — convergent tous sur les 4 dimensions BSAF",
+            "Phase 2 : standard niveau 2 directement transposable : MISRA Compliance 2020 (Mandatory/Required/Advisory + Deviation Records) applicable sans adaptation au scaffold",
+            "Phase 2 : litterature de transition peer-reviewed : AgentSpec ICSE 2026 A*, VeriGuard ICLR 2026, ABC 2026 — appliquent les concepts safety-critical aux agents LLM",
+            "Phase 2 : Assurance 2.0 conçu explicitement pour l'IA : Bloomfield & Rushby font le pont direct entre safety-critical et systemes IA",
+            "Phase 3 : KAOS domain-completeness (van Lamsweerde IEEE TSE 2000) = seul critere formel mathematiquement testable de completude dans tout le corpus",
+            "Phase 3 : FMEA standard militaire (MIL-STD-1629A 1949 / IEC 60812:2018) directement transposable au scaffold — mecanisme d'exhaustivite le plus operationnel",
+            "Phase 3 : 3 revues systematiques niveau 2 : Horkoff 2019 PMC (GORE mapping), Kassab 2025 SEAA (RE completeness 25 ans), AI Risk Repository MIT 2024 (meta-analyse 43 frameworks)",
+            "Phase 3 : preuve empirique d'insuffisance ad hoc sur 12 modeles frontier (arXiv:2510.07686) : 70 000+ divergences comportementales, taux violations 5-13x en zones d'ambiguite",
+            "Phase 3 : kappa=1.0 sur source commune (STRIDE) — accord parfait inter-reviewers A''+B''"
+          ],
+          "minus": [
+            "Phase 2 : aucun standard conçu nativamente pour scaffolds d'agents IA codeurs en langage naturel — tous issus de contextes deterministes (hardware/embarque)",
+            "Phase 2 : standards payants partiellement accessibles (IEC 61508-3, ISO 26262-6, IEEE 1012, ISO/PAS 8800) — extraction via sources secondaires, quotes approximatives",
+            "Phase 2 : corpus emergeant 2025-2026 (ABC, VeriGuard, Agent Contracts) pas encore replique independamment — niveau de preuve empirique limite",
+            "Phase 2 : fossé determinisme/probabiliste : modele de risque quantitatif (SIL/PFH) non transposable directement — necessite adaptation vers mesure comportementale",
+            "Phase 3 : transposition ODD (vehicules autonomes → agents logiciels) est une hypothese non encore validee empiriquement dans ce contexte specifique",
+            "Phase 3 : integration KAOS+FMEA+STRIDE en 6 phases SDMF est une synthese proposee ici — non encore implementee ni replicuee nativement pour un scaffold d'agent IA codeur"
+          ]
+        },
+        "bsaf_summary": {
+          "niveau_mandatory": "Regles implementees par des hooks deterministes (enforcement 100%). Deviation impossible sans modification du code du hook. Ex: interdiction de committer .env, interdiction de merger vers main ou staging, interdiction de modifier chemins critiques (auth, infra) sans approbation PO. Source methodologique: MISRA Mandatory + AgentSpec enforcement + IEC 61508 SIL4.",
+          "niveau_required": "Regles implementees dans CLAUDE.md. Deviation autorisee uniquement via Deviation Record signe PO (document dans CLAUDE.local.md avec rationnel + date expiration). Ex: format de commit OLS-TICKET type(scope): desc, protocole PR avec template. Source methodologique: MISRA Required + Deviation Records.",
+          "niveau_advisory": "Bonnes pratiques dans CLAUDE.md. Deviation sans formalite mais documentation encouragee. Ex: nommage, style de commentaire, preferences architecturales. Source methodologique: MISRA Advisory.",
+          "compliance_matrix": "Document tabulaire: colonne Regle | Niveau | Source PICOC | Implementation | Evidence | Derogation. Auditable par Reviewer independant. Source methodologique: NASA NPR 7150.2 SWE-084 + UL 4600 prompt-elements.",
+          "uca_identification": "Pour chaque regle critique: identifier l'Unsafe Control Action correspondante ('agent donne action X qui est dangereuse dans contexte Y'). Formaliser en contrainte de securite. Source methodologique: STPA/Leveson MIT."
+        },
+        "robustness": "FORT",
+        "critical_sources": [
+          "MISRA Compliance 2020 (Mandatory/Required/Advisory + Deviation Records — modele directement transposable pour BSAF)",
+          "Assurance 2.0 Bloomfield & Rushby (pont direct safety-critical → IA, claim/argument/defeaters)",
+          "AgentSpec ICSE 2026 (enforcement runtime — implementation de la couche Mandatory)",
+          "NASA NPR 7150.2 SWE-084 (configuration audit — template pour la Compliance Matrix)",
+          "KAOS/van Lamsweerde IEEE TSE 2000 (seul critere formel de completude mathematiquement testable — domain-completeness)",
+          "FMEA MIL-STD-1629A/IEC 60812:2018 (decomposition fonctionnelle — mecanisme d'exhaustivite le plus operationnel pour SDMF)",
+          "arXiv:2510.07686 Zhang et al. 2025 (preuve empirique d'insuffisance ad hoc — 70 000+ divergences sur 12 modeles frontier)"
+        ],
+        "sdmf_summary": {
+          "description": "Scaffold Design Methodology Framework — methodologie en 6 phases pour identifier exhaustivement ce qu'un scaffold doit couvrir. Complement au BSAF (qui dit COMMENT valider/auditer un scaffold deja conçu) : le SDMF dit COMMENT concevoir le scaffold de maniere exhaustive.",
+          "phase_1_odd": "Definition du domaine operationnel (ODD-inspired) : taxonomie hierarchique fermee de tous les contextes dans lesquels l'agent opere (type de tache, etat du depot, presence humaine, permissions disponibles, phase du projet, etc.). Critere d'inclusion risk-based : inclure une dimension si sa variation peut creer un risque. Resultat : frontiere explicite du scaffold. Source methodologique : IEEE ICCVE 2024 + ISO 21448:2022 SOTIF.",
+          "phase_2_fmea": "Decomposition fonctionnelle FMEA : pour chaque capacite de l'agent (ecriture fichiers, execution bash, appels API, creation PR, communication PO, deploiement), construire un Boundary Diagram + P-Diagram puis lister tous les modes de defaillance. Mapping : composant=capacite, mode=comportement interdit, effet=consequence, controle=regle du scaffold. RPN (Severity x Occurrence x Detection) pour prioriser. Source methodologique : MIL-STD-1629A + IEC 60812:2018.",
+          "phase_3_kaos": "Obstacle analysis KAOS : pour chaque objectif de haut niveau du scaffold (ex : 'ne jamais exposer un secret'), identifier formellement tous les obstacles O tels que Dom UNION {O} |= NOT G. Verifier la domain-completeness : la disjonction de tous les obstacles doit impliquer NOT G. Les resolutions a ces obstacles constituent les regles du scaffold. Source methodologique : van Lamsweerde & Letier IEEE TSE 2000.",
+          "phase_4_stride_misuse": "Couverture des comportements interdits : appliquer STRIDE a chaque composant du DFD de l'agent (6 categories MECE : Spoofing, Tampering, Repudiation, Information Disclosure, DoS, Elevation of Privilege). Deriver systematiquement les Misuse Cases depuis les Use Cases fonctionnels. Source methodologique : Naik TechRxiv 2024 (STRIDE) + Sindre & Opdahl RE Journal 2005 (Misuse Cases).",
+          "phase_5_re_completeness": "Validation multi-dimensionnelle : verifier la completude selon 4 dimensions orthogonales (Kassab 2025) : (1) syntaxique — tous les templates remplis ; (2) semantique — toutes les entites du domaine referencees ; (3) comportementale — toutes les transitions d'etat specifiees ; (4) couverture — tous les scenarios traces aux regles. Source methodologique : Kassab & AbdElhameed SEAA 2025.",
+          "phase_6_meta_synthesis": "Meta-synthese comparative : comparer le scaffold contre le MIT AI Risk Repository (43 frameworks, 23 sous-domaines) pour identifier les angles morts. Couverture attendue : >70% (maximum observe = 70%, moyenne = 34%). Source methodologique : Slattery et al. arXiv:2408.12622 MIT FutureTech."
+        },
+        "gap_runtime_traceability": "Gap identifie dans la revue precedente (2026-04-17) : tracabilite des decisions de CONFIGURATION au runtime (pourquoi l'agent a applique telle regle dans telle situation). Partiellement adresse par : (a) AgentSpec : chaque enforcement loggue quelle regle a ete declenchee ; (b) Assurance 2.0 : structure claim/argument permet de documenter les cas de deviation. Reste a implementer dans le scaffold OLS : ajouter un format standard pour les 'Deviation Records' dans CLAUDE.local.md.",
+        "etd_balance": {
+          "benefices": "Scaffolds auditables et reproductibles selon des standards prouves depuis des decennies dans les domaines les plus critiques. Reduction des echecs silencieux. Conformite NIST AI 600-1 et standards industriels. Deviation Permits reduit le cout administratif des exceptions legitimes. Classification Mandatory/Required/Advisory donne une hierarchie claire des priorites de respect.",
+          "risques": "Risque de sur-ingenierie si applique sans tailoring : un scaffold de 3 regles n'a pas besoin d'un dossier complet ISO 26262. Le tailoring process (ECSS) doit etre applique en premier. Cout initial de formalisation de la Compliance Matrix. AgentSpec rappel 70,96% = 29% gaps non interceptes meme avec enforcement formel.",
+          "balance": "Benefices > Risques pour tout scaffold en production avec >10 regles ou impact potentiel sur des chemins critiques (auth, infra, secrets). Pour equipes 1-2 personnes avec <10 regles : minimum viable = classification Mandatory/Required/Advisory + 1 Deviation Record par override PO.",
+          "faisabilite": "Haute pour la classification (renommer les regles existantes). Haute pour les hooks Mandatory (mecanisme existant dans Claude Code). Moderee pour la Compliance Matrix (nouveau document, ~1h a initialiser). Basse pour STPA complet (necessite formation)."
+        },
+        "prisma_ref": "verification/prisma/ai-agent-scaffold-methodology.md",
+        "sensitivity_ref": "verification/extractions/ai-agent-scaffold-methodology.md",
+        "date_extraction": "2026-04-17"
+      }
+    ]
+  },
+  "variants": {}
+}

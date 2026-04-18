@@ -1029,8 +1029,8 @@
     {
       "id": "ai-agent-framework-vs-prebuilt",
       "domain": "ai-collaboration",
-      "question": "Pour un PO qui delegue tout le developpement logiciel a l'IA, quel type d'outil agentique est le plus adapte : framework custom (LangChain, AutoGen, CrewAI), systeme pre-construit concu pour l'autonomie (Devin, OpenHands), ou systeme pre-construit configurable (Claude Code + CLAUDE.md) ?",
-      "recommendation": "Pour un PO delegant tout le developpement a l'IA : (1) les frameworks custom (LangChain, AutoGen, CrewAI) sont inadaptes — concus pour des developpeurs qui construisent des agents, pas pour un operateur non-technique ; pas de donnees de production en mode autonome ; performance multi-step mediocre en laboratoire (LangChain 13.3%, AutoGen 0% avec Qwen, arXiv:2504.04650) ; (2) les outils pre-construits concus pour l'autonomie (Devin, OpenHands) sont mieux alignes par design intent mais montrent des taux d'acceptation inferieurs en production reelle (Devin : 42.9-49%, arXiv:2602.00164 MSR '26 N=8106) ; (3) Claude Code configure (CLAUDE.md + hooks + auto mode), bien que concu pour des developpeurs (Anthropic docs officiels : 'decisions about what code ships remain with the human'), atteint 83.8% d'acceptation PRs en production reelle (arXiv:2509.14745, N=567, peer-reviewed) — depassant les outils concus pour l'autonomie. PARADOXE NON EXPLIQUE : outil developeur > outil autonome en production — l'ecart peut refleter une selection de taches plus simples dans les projets utilisant Claude Code plutot qu'une superiorite intrinseque. ROBUSTESSE FRAGILE : les populations de taches ne sont pas identiques entre etudes ; le cas PO-only sans developpeur humain n'a jamais ete etudie directement.",
+      "question": "Pour une equipe qui delegue tout ou partie du developpement logiciel a l'IA, quel type d'outil agentique maximise l'autonomie d'execution : framework d'orchestration custom, systeme pre-construit autonome, ou systeme pre-construit configurable ?",
+      "recommendation": "Les frameworks d'orchestration custom sont inadaptes pour une equipe delegante — concus pour des developpeurs qui construisent des agents ; performance multi-step mediocre en laboratoire (13.3% pour un framework leader, 0% pour un autre, arXiv:2504.04650). Les outils pre-construits concus pour l'autonomie montrent des taux d'acceptation de 42.9-49% en production reelle (arXiv:2602.00164 MSR '26 N=8106). Les outils pre-construits configurables via fichier d'instructions et hooks atteignent 83.8% d'acceptation PRs en production reelle (arXiv:2509.14745, N=567, peer-reviewed) — depassant les outils concus pour l'autonomie. PARADOXE : outil configurable > outil autonome en production — peut refleter une selection de taches. FRAGILE : le cas delegation totale sans developpeur humain n'a jamais ete etudie directement.",
       "grade": 3,
       "level": "RECOMMANDE_FRAGILE",
       "is_universal": true,
@@ -7272,6 +7272,222 @@
           "name": "Fowler 'MonolithFirst'",
           "pyramid": 5,
           "year": 2015
+        }
+      ]
+    },
+    {
+      "id": "ai-agent-delegation-model",
+      "domain": "ai-tooling",
+      "question": "Un PO solo peut-il deleguer entierement le developpement a un agent IA autonome — et a quelles conditions la delegation partielle est-elle viable ?",
+      "recommendation": "La delegation complete du developpement a un agent IA autonome n'est pas viable en 2025-2026 : taux de succes < 50% sur taches < 1h, < 25% sur taches multi-fichiers (FeatureBench 11% sur features reelles). La delegation partielle structuree est viable avec 4 conditions : (1) taches atomiques < 2h avec criteres d'acceptation explicites, (2) suite de tests automatisee complete avant delegation, (3) gates de securite periodiques (trimestre minimum), (4) le superviseur maintient la capacite de lire et evaluer les PRs — sans les ecrire. Le code autonome accumule +39% de complexite cognitive et 2.74x de vulnerabilites de securite — les gates de review sont obligatoires. La trajectoire est exponentielle : doublement tous les 7 mois, delegation complete fiable estimee dans 1-2 ans.",
+      "grade": 3,
+      "level": "RECOMMANDE",
+      "is_universal": true,
+      "sources": [
+        {
+          "name": "METR — Measuring AI Ability to Complete Long Tasks (arXiv:2503.14499)",
+          "pyramid": 4,
+          "year": 2025
+        },
+        {
+          "name": "FeatureBench — ICLR 2026 (arXiv:2602.10975)",
+          "pyramid": 3,
+          "year": 2026
+        },
+        {
+          "name": "TheAgentCompany — NeurIPS 2025 (arXiv:2412.14161)",
+          "pyramid": 4,
+          "year": 2025
+        },
+        {
+          "name": "Vibe Coding in Practice (arXiv:2512.11922)",
+          "pyramid": 3,
+          "year": 2025
+        },
+        {
+          "name": "METR quasi-RCT (arXiv:2507.09089)",
+          "pyramid": 2,
+          "year": 2025
+        }
+      ]
+    },
+    {
+      "id": "ai-agent-scaffold-methodology",
+      "domain": "ai-collaboration",
+      "question": "Comment concevoir et valider un scaffold d'agent IA codeur de maniere fiable, complete et auditable ?",
+      "recommendation": "Concevoir selon le BSAF (Behavioral Specification and Assurance Framework) inspire des standards safety-critical (IEC 61508, DO-178C, MISRA, UL 4600) : 4 couches ordonnees — (1) SPECIFICATION : classifier chaque regle en Mandatory (hooks deterministes, non-derogeable), Required (fichier d'instructions de l'agent, derogeable via Deviation Record signe PO), Advisory (recommandations) ; specifier HLR/LLR inspire DO-178C ; identifier les Unsafe Control Actions via STPA ; (2) VALIDATION : test d'enforcement deterministe pour Mandatory, test sur >= 5 reformulations equivalentes pour Required (risque -61,8% sur reformulations), revue editoriale pour Advisory ; (3) AUDIT : Compliance Matrix (regle, niveau, source, implementation, evidence, derogations) inspire NASA NPR 7150.2 SWE-084 ; (4) TRACABILITE : liens bidirectionnels entre regles, implementations et sessions de validation. Complement SDMF en 6 phases pour la conception exhaustive : ODD (taxonomie contextes), FMEA (decomposition fonctionnelle, MIL-STD-1629A), KAOS (obstacle analysis — seul critere formel de completude), STRIDE + Misuse Cases, RE completeness multi-dimensionnelle (Kassab 2025), meta-synthese MIT AI Risk Repository.",
+      "grade": 5,
+      "level": "CONFIRME",
+      "is_universal": true,
+      "sources": [
+        {
+          "name": "IEC 61508-3 — Functional Safety: Software Requirements",
+          "pyramid": 1,
+          "year": 2010
+        },
+        {
+          "name": "DO-178C / ED-12C — Software Considerations in Airborne Systems",
+          "pyramid": 1,
+          "year": 2012
+        },
+        {
+          "name": "MISRA Compliance:2020 — Mandatory/Required/Advisory + Deviation Records",
+          "pyramid": 2,
+          "year": 2020
+        },
+        {
+          "name": "AgentSpec — ICSE 2026 A* (arXiv:2503.18666) — >90% unsafe executions prevented",
+          "pyramid": 4,
+          "year": 2025
+        },
+        {
+          "name": "KAOS/GORE — van Lamsweerde & Letier IEEE TSE 2000 — critere domain-completeness",
+          "pyramid": 3,
+          "year": 2000
+        },
+        {
+          "name": "NASA NPR 7150.2D SWE-084 — configuration audit + compliance matrix",
+          "pyramid": 1,
+          "year": 2019
+        },
+        {
+          "name": "MIT AI Risk Repository — Slattery et al. (arXiv:2408.12622) — 43 frameworks, couverture ad hoc = 34%",
+          "pyramid": 2,
+          "year": 2024
+        }
+      ]
+    },
+    {
+      "id": "ai-agent-tool-choice",
+      "domain": "ai-tooling",
+      "question": "Quel type d'outil agent IA de coding maximise l'autonomie d'execution pour une equipe developpant du logiciel ?",
+      "recommendation": "Les gains de productivite des agents IA codeurs sont faibles ou absents en contexte RCT pour les developpeurs experimentes : +19% de temps de completion avec agents (METR 2025, N=16, 246 taches). L'adoption prealable d'un IDE AI reduit causalement les gains marginaux des agents autonomes (CMU DiD, arXiv:2601.13597). Les metriques organisationnelles (DORA) sont principalement determinees par des facteurs culturels et de process, pas par le choix de l'outil. Choisir un outil en fonction du workflow existant et du type de taches prioritaires. En termes de PR merge rate comparatif en production reelle : 83.8% pour les outils pre-construits configurables (N=567), 42.9-49% pour les outils autonomes specialises (N=8106, MSR 2026).",
+      "grade": 2,
+      "level": "BONNE_PRATIQUE",
+      "is_universal": true,
+      "sources": [
+        {
+          "name": "METR RCT — arXiv:2507.09089",
+          "pyramid": 2,
+          "year": 2025
+        },
+        {
+          "name": "MSR 2026 — arXiv:2601.15195 — 33K PRs, 47K developers",
+          "pyramid": 3,
+          "year": 2026
+        },
+        {
+          "name": "CMU DiD — arXiv:2601.13597 — causal reduction of marginal gains",
+          "pyramid": 3,
+          "year": 2026
+        },
+        {
+          "name": "DORA Report 2025 — cultural factors dominate",
+          "pyramid": 4,
+          "year": 2025
+        }
+      ]
+    },
+    {
+      "id": "ai-autonomous-agent-comparison",
+      "domain": "ai-tooling",
+      "question": "Parmi les agents IA autonomes disponibles, lesquels offrent le meilleur rapport performance/fiabilite pour un usage en production ?",
+      "recommendation": "SWE-bench Verified est compromis pour comparer les agents : contamination confirmee (32.67% successes from solution leak, taux strict 3.97% vs 12.47% brut). Le ratio benchmark/realite est de 7:1 (FeatureBench ICLR 2026) : un agent a 74% sur Verified atteint 11% sur features reelles completes. Sur SWE-bench Pro (contamination-resistant), plafond a 46% pour les meilleurs agents. TypeScript surestime de +53.8% dans les benchmarks actuels. Aucun benchmark TypeScript/Node.js brownfield independant n'existe. Pour comparer les agents : utiliser SWE-bench Pro et FeatureBench uniquement. Les outils pre-construits configurables montrent les meilleurs taux d'acceptation en production reelle (83.8%, N=567). Les outils autonomes specialises : 42.9-49% (Devin, N=8106). Les frameworks open-source self-hosted (OpenHands) : 60.6% SWE-bench Verified (auto-rapporte).",
+      "grade": 4,
+      "level": "RECOMMANDE_FORT",
+      "is_universal": true,
+      "sources": [
+        {
+          "name": "FeatureBench — ICLR 2026 (arXiv:2602.10975) — 7:1 ratio benchmark/realite",
+          "pyramid": 3,
+          "year": 2026
+        },
+        {
+          "name": "SWE-bench Deep Dive — Runloop AI / CodeAnt AI — contamination 32.67%",
+          "pyramid": 5,
+          "year": 2025
+        },
+        {
+          "name": "SWE-bench Pro — arXiv:2509.16941 (Scale AI) — plafond 46%",
+          "pyramid": 3,
+          "year": 2025
+        },
+        {
+          "name": "Chen et al. arXiv:2509.14745 — 83.8% PR acceptance, N=567",
+          "pyramid": 2,
+          "year": 2025
+        },
+        {
+          "name": "Ehsani et al. arXiv:2602.00164 MSR 2026 — Devin 42.9-49%, N=8106",
+          "pyramid": 2,
+          "year": 2026
+        }
+      ]
+    },
+    {
+      "id": "ai-local-vs-cloud-agent",
+      "domain": "ai-tooling",
+      "question": "Pour un agent IA autonome de coding : modeles locaux auto-heberges ou modeles cloud ? Quelle architecture ?",
+      "recommendation": "Architecture hybride recommandee : local pour 60-70% des taches (completion, fichier unique, donnees RGPD), cloud frontier pour 30-40% des taches complexes (architecture, refactoring codebase, debugging cross-context). Gap qualite local vs frontier cloud : 10-15 points SWE-bench (en reduction rapide, ~13 pts/an — gap etait 30-40 points il y a 18 mois). RGPD : les prompts contenant des donnees personnelles envoyes a des API cloud hors-UE constituent un transfert de donnees au sens du RGPD (Art. 46) — le local elimine ce risque par design (EDPB Opinion 28/2024, niveau normatif 1). Hardware minimum viable : RTX 4090 24GB, modele : Qwen3-Coder-Next (MoE 80B/3B actifs, 70.6% SWE-bench Verified, Apache 2.0). TCO break-even : 6-18 mois selon intensite d'usage (> 300 $/mois API : 6-8 mois). Limitations Ollama a configurer : num_ctx >= 32768, throughput 41 TPS (suffisant pour usage solo sequentiel).",
+      "grade": 3,
+      "level": "RECOMMANDE",
+      "is_universal": true,
+      "sources": [
+        {
+          "name": "EDPB Opinion 28/2024 sur les modeles IA et le RGPD",
+          "pyramid": 1,
+          "year": 2024
+        },
+        {
+          "name": "Qwen3-Coder-Next Technical Report (arXiv:2603.00729)",
+          "pyramid": 4,
+          "year": 2026
+        },
+        {
+          "name": "Tom Ron — State of Coding Agents with Local LLMs (fev. 2026)",
+          "pyramid": 4,
+          "year": 2026
+        },
+        {
+          "name": "Red Hat Developer — Ollama vs vLLM Benchmarking (aout 2025)",
+          "pyramid": 4,
+          "year": 2025
+        },
+        {
+          "name": "SitePoint — Local vs Cloud AI Coding TCO (2026)",
+          "pyramid": 5,
+          "year": 2026
+        }
+      ]
+    },
+    {
+      "id": "ai-model-coding-choice",
+      "domain": "ai-tooling",
+      "question": "Quel modele LLM choisir pour un agent de coding autonome ?",
+      "recommendation": "SWE-bench Verified surestime systematiquement les performances : un meme modele obtient 80.9% sur Verified vs 45.9% sur SWE-bench Pro (arXiv:2509.16941). Utiliser SWE-bench Pro pour comparer les modeles — c'est le benchmark le plus resistance a la contamination en 2026. La fenetre de contexte effective est 50-65% de la fenetre annoncee : degradation > 30% quand l'information cible est en position mediane (RULER, NVIDIA, ICLR 2025). Le routing intelligent modele fort/faible reduit les couts de 85% en maintenant 95% de la performance du modele fort (ICLR 2025). Les agents IA ralentissent les developpeurs experimentes de +19% en contexte RCT — les gains sont davantage en qualite qu'en vitesse brute. Strategy de routing recommandee : modele leger pour taches simples (recherche, classification, read-only), modele fort pour taches complexes (coding, architecture, securite) ; modele de raisonnement fort uniquement si modele leger echoue 2+ fois.",
+      "grade": 3,
+      "level": "RECOMMANDE",
+      "is_universal": true,
+      "sources": [
+        {
+          "name": "SWE-bench Pro — arXiv:2509.16941 (Scale AI) — contamination-resistant",
+          "pyramid": 3,
+          "year": 2025
+        },
+        {
+          "name": "RULER — NVIDIA, ICLR 2025 — effective context 50-65%",
+          "pyramid": 2,
+          "year": 2025
+        },
+        {
+          "name": "RouteLLM — UC Berkeley, ICLR 2025 — -85% cost, 95% performance",
+          "pyramid": 2,
+          "year": 2025
+        },
+        {
+          "name": "METR RCT — arXiv:2507.09089 — +19% task completion time",
+          "pyramid": 2,
+          "year": 2025
         }
       ]
     }

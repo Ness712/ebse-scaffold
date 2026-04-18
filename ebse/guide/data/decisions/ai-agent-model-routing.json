@@ -13,7 +13,7 @@
   "universal": {
     "principles": [
       {
-        "text": "Utiliser un router task-aware pour selectionner le modele par tache : model cheap/fast (Haiku, Sonnet, GPT-4o-mini) pour scaffolding/renames/documentation ; model strong reasoning (Opus, o1) pour architecture/debug/security-sensitive. Les benchmarks (RouteLLM ICLR 2025, LLMRouterBench EMNLP 2025) montrent >2x cost savings vs single-strong-model sans degradation substantielle de qualite. Le pattern architect+editor (Aider 2024) demontre empiriquement +3-10pp gain sur SWE-Bench Lite en separant reasoning et execution. ATTENTION : RouteLLM '75% cost reduction' est vs random router baseline, pas absolute.",
+        "text": "Utiliser un routeur task-aware pour selectionner le modele par tache : modele leger/rapide pour scaffolding/renames/documentation ; modele a raisonnement fort pour architecture/debug/security-sensitive. Les benchmarks (routeur de modeles ICLR 2025, LLMRouterBench EMNLP 2025) montrent >2x cost savings vs single-strong-model sans degradation substantielle de qualite. Le pattern mode architect+editor de l'agent demontre empiriquement +3-10pp gain sur SWE-Bench Lite en separant reasoning et execution. ATTENTION : le chiffre '75% cost reduction' cite dans les benchmarks est vs random router baseline, pas absolu.",
         "grade": 4,
         "level": "RECOMMANDE",
         "sources": [
