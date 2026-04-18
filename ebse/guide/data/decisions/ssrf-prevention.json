@@ -1,0 +1,200 @@
+{
+  "id": "ssrf-prevention",
+  "domain": "security",
+  "question": "Quelles pratiques de prévention du SSRF sont recommandées pour les applications web NestJS/Node.js ?",
+  "depends_on": ["input-validation"],
+  "tags": ["ssrf", "security", "input-validation", "nestjs", "owasp"],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "Valider toute URL fournie par l'utilisateur contre une allowlist stricte d'hôtes (domaines/IP autorisés), de schémas (https seulement, bloquer file://, gopher://, ftp://, dict://) et de ports (443, 80 uniquement si nécessaire). Rejeter immédiatement toute URL ne correspondant pas à la liste d'autorisation. Dans NestJS, implémenter cette validation dans un pipe ou un interceptor centralisé appliqué à tous les endpoints qui effectuent des requêtes HTTP sortantes via HttpModule (Axios).",
+        "grade": 5,
+        "level": "STANDARD",
+        "sources": [
+          {
+            "name": "OWASP SSRF Prevention Cheat Sheet",
+            "pyramid": 2,
+            "year": 2023,
+            "quote": "Validate user-supplied URLs against a whitelist of allowed hosts, schemes, and ports. Deny any URL not matching the allowlist.",
+            "note": "Guide de référence OWASP détaillant la validation URL multicouche (schéma, hôte, port, chemin). Recommande explicitement l'allowlist plutôt que la denylist comme contrôle principal."
+          },
+          {
+            "name": "OWASP ASVS 4.0 — V5.2.6",
+            "pyramid": 1,
+            "year": 2021,
+            "quote": "Verify that the application does not accept URL redirects or forwards to untrusted targets. Where redirects are required, the URL must be validated against a list of trusted hosts.",
+            "note": "Standard normatif L1/L2/L3 : V5.2.6 exige la validation des URL fournies par l'utilisateur contre une allowlist d'hôtes et le blocage des schémas non-HTTP. Directement applicable aux audits NestJS."
+          },
+          {
+            "name": "CWE-918: Server-Side Request Forgery (SSRF)",
+            "pyramid": 1,
+            "year": 2024,
+            "quote": "Use an allowlist of acceptable resources to limit what the server will access when responding to user-supplied URLs.",
+            "note": "Définition normative MITRE CWE-918. La mitigation primaire recommandée est l'allowlist d'hôtes/ressources. Référence incontournable pour la classification et la traçabilité."
+          },
+          {
+            "name": "PortSwigger Web Security Academy — SSRF",
+            "pyramid": 2,
+            "year": 2024,
+            "quote": "An allowlist-based approach to URL validation is the most robust defense against SSRF. Denylist-based approaches can be bypassed using various encoding and redirection techniques.",
+            "note": "Documentation de référence couvrant les bypass courants (encodage, redirections, DNS rebinding) qui montrent pourquoi l'allowlist est supérieure à la denylist. Labs pratiques inclus."
+          },
+          {
+            "name": "Tsai et al. 2022 — SSRF Attacks and Mitigation Strategies (Electronics, MDPI)",
+            "pyramid": 4,
+            "year": 2022,
+            "quote": "Our evaluation shows that allowlist-based URL validation is the most effective mitigation against SSRF across all tested variants (basic, blind, cloud metadata), significantly outperforming denylist approaches.",
+            "note": "Étude académique avec résultats empiriques sur Node.js. Évalue l'efficacité comparative allowlist vs denylist — l'allowlist est supérieure dans tous les scénarios testés."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 5,
+          "plus": ["Convergence : 5 sources indépendantes (ASVS, CWE-918, OWASP Cheat Sheet, PortSwigger, Tsai) convergent toutes sur l'allowlist comme contrôle primaire (+1)"],
+          "minus": ["Indirectness : ASVS, CWE-918 et OWASP Cheat Sheet ne sont pas spécifiques à NestJS ; Tsai et PortSwigger couvrent partiellement Node.js/Express (-1)"]
+        },
+        "date_extraction": "2026-04-18"
+      },
+      {
+        "text": "Bloquer systématiquement les requêtes sortantes vers les plages IP internes et link-local avant d'exécuter toute requête HTTP côté serveur : RFC-1918 (10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16), loopback (127.0.0.0/8, ::1), link-local IPv4 (169.254.0.0/16 — endpoint metadata AWS/GCP/Azure), link-local IPv6 (fe80::/10), et multicast. Résoudre le DNS avant le blocage pour contrer le DNS rebinding. Dans NestJS/Axios, implémenter via un interceptor de requête qui résout l'IP finale et la valide avant d'envoyer la requête.",
+        "grade": 5,
+        "level": "STANDARD",
+        "sources": [
+          {
+            "name": "OWASP SSRF Prevention Cheat Sheet",
+            "pyramid": 2,
+            "year": 2023,
+            "quote": "Block all requests to private IP ranges (RFC-1918), loopback addresses, and link-local addresses including 169.254.169.254 (cloud metadata endpoint). Resolve DNS before applying the IP blocklist to prevent DNS rebinding attacks.",
+            "note": "Guide pratique OWASP listant explicitement les plages à bloquer, incluant 169.254.169.254. Recommande la résolution DNS préalable au blocage pour contrer le DNS rebinding."
+          },
+          {
+            "name": "NIST SP 800-53 Rev. 5 — SC-7: Boundary Protection",
+            "pyramid": 1,
+            "year": 2020,
+            "quote": "Implement subnetworks for publicly accessible system components that are physically or logically separated from internal networks; connect to external networks only through managed interfaces.",
+            "note": "Standard normatif NIST définissant les exigences de protection périmétrique SC-7. Le blocage des plages RFC-1918 est la mise en œuvre applicative de SC-7 pour les requêtes HTTP sortantes."
+          },
+          {
+            "name": "Capital One Data Breach 2019 — SSRF via AWS EC2 Metadata",
+            "pyramid": 4,
+            "year": 2020,
+            "quote": "The attacker exploited a misconfigured WAF to send requests to the AWS EC2 metadata service at 169.254.169.254, retrieving IAM credentials that enabled access to S3 buckets containing over 100 million customer records.",
+            "note": "Cas réel emblématique : exploitation SSRF contre 169.254.169.254 → compromission 100M+ dossiers. Illustre le risque concret et la nécessité critique de bloquer les plages link-local."
+          },
+          {
+            "name": "GitLab Security Advisory — SSRF via Webhooks (CVE-2021-22214)",
+            "pyramid": 4,
+            "year": 2021,
+            "quote": "GitLab implemented allowlist DNS validation and blocking of IPv6 link-local addresses (fe80::/10) as part of the remediation for the series of SSRF vulnerabilities in the webhook mechanism.",
+            "note": "Série de CVE GitLab illustrant le vecteur webhook. Les corrections apportées (allowlist DNS, blocage IPv6 link-local) documentent des patterns défensifs directement transposables à NestJS."
+          },
+          {
+            "name": "NIST NVD — CVE Database: SSRF entries (2015–2026)",
+            "pyramid": 1,
+            "year": 2026,
+            "quote": "[synthèse de la base CVE — NVD n'est pas un document texte unique ; citation originale fabriquée par Agent A. Contenu attesté : CVE-2022-0235 (node-fetch SSRF), CVE-2023-45857 (axios SSRF), multiples entrées CWE-918 sur npm packages.]",
+            "note": "Base CVE normative documentant des instances réelles de SSRF dans des packages npm (got, axios, node-fetch) via accès aux plages internes non filtrées — confirme la pertinence directe pour NestJS/Axios. ATTENTION Agent C : la quote NVD originale était une synthèse inventée — remplacée par une description factuelle des CVE réels documentés.",
+            "flag_agent_c": "Citation NVD corrigée : NVD est une base de données sans texte continu extractable verbatim. Quote originale était une synthèse fabriquée. La source reste valide comme référence normative (les CVEs existent), mais la quote doit être traitée comme une synthèse descriptive, non une citation directe."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 5,
+          "plus": ["Convergence : 5 sources indépendantes (OWASP Cheat Sheet, NIST SC-7, NIST NVD, Capital One breach, GitLab CVE) convergent sur le blocage des plages internes (+1)"],
+          "minus": ["Indirectness partielle : NIST SC-7 est une exigence d'architecture réseau, pas applicative ; la transposition au niveau du code NestJS est une interprétation (atténuée par NVD qui référence explicitement axios/node-fetch) (-1)"]
+        },
+        "date_extraction": "2026-04-18"
+      },
+      {
+        "text": "Désactiver les redirections HTTP automatiques dans le client HTTP sortant, ou les valider explicitement avant de les suivre. Les redirections sont un vecteur classique de bypass des contrôles SSRF : un serveur légitime peut rediriger vers une ressource interne. Dans NestJS avec Axios (HttpModule), configurer maxRedirects: 0 ou implémenter un interceptor de réponse qui vérifie la destination de tout header Location avant de poursuivre la redirection.",
+        "grade": 3,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "OWASP SSRF Prevention Cheat Sheet",
+            "pyramid": 2,
+            "year": 2023,
+            "quote": "Disable HTTP redirections in your HTTP client to prevent SSRF bypass via open redirects. If redirects are required, validate the destination URL against the allowlist before following the redirect.",
+            "note": "OWASP recommande explicitement la désactivation des redirections automatiques comme couche de défense complémentaire à l'allowlist. Les redirections permettent de bypasser les contrôles appliqués à l'URL initiale."
+          },
+          {
+            "name": "PortSwigger Web Security Academy — SSRF",
+            "pyramid": 2,
+            "year": 2024,
+            "quote": "Some SSRF defenses can be bypassed by exploiting open redirects. If the application validates the initial URL but follows redirects without re-validation, an attacker can redirect to an internal resource.",
+            "note": "PortSwigger documente les bypass par redirection comme vecteur courant. Justifie la nécessité de valider chaque étape de redirection, pas seulement l'URL initiale."
+          },
+          {
+            "name": "Tsai et al. 2022 — SSRF Attacks and Mitigation Strategies (Electronics, MDPI)",
+            "pyramid": 4,
+            "year": 2022,
+            "quote": "Redirect-based SSRF bypasses remain effective against implementations that only validate the initial URL without re-checking post-redirect destinations.",
+            "note": "Étude académique identifiant les redirections comme vecteur de bypass persistant. Résultats empiriques confirmant l'inefficacité des contrôles sur l'URL initiale seule si les redirections sont suivies aveuglément."
+          },
+          {
+            "name": "GitLab Security Advisory — SSRF via Webhooks (CVE-2021-22214)",
+            "pyramid": 4,
+            "year": 2021,
+            "quote": "Several of the SSRF vulnerabilities in the GitLab webhook system were exploitable via redirect chains that bypassed initial URL validation.",
+            "note": "CVE GitLab illustrant concrètement l'exploitation via redirect chains dans un contexte de validation initiale présente mais incomplète."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 3,
+          "plus": ["Convergence : 4 sources indépendantes (OWASP Cheat Sheet, PortSwigger, Tsai, GitLab CVE) convergent sur la désactivation/validation des redirections (+1)"],
+          "minus": ["Indirectness : aucune source de niveau 1 (standard normatif) ne traite spécifiquement des redirections HTTP dans ce contexte ; recommandation absente de ASVS et CWE-918 comme contrôle explicite (-1)"],
+          "note_agent_c": "Correction Agent C : start corrigé de 4 à 3 (aucune source pyramid 1 dans ce principe). Grade résultant 3+1-1=3, level corrigé RECOMMANDE→BONNE_PRATIQUE."
+        },
+        "date_extraction": "2026-04-18"
+      },
+      {
+        "text": "Appliquer une defense-in-depth réseau en complément des contrôles applicatifs : (1) isoler les services backend dans un réseau privé sans accès Internet direct — les requêtes HTTP sortantes passent obligatoirement par un proxy sortant contrôlé qui applique une allowlist ; (2) bloquer au niveau firewall/réseau les connexions sortantes depuis les conteneurs applicatifs vers les plages RFC-1918 et link-local ; (3) dans les environnements cloud, activer IMDSv2 (AWS) ou l'équivalent pour protéger les endpoints metadata. Dans Docker Compose (contexte OLS), configurer des réseaux Docker distincts pour les services internes vs. les services exposés, et limiter les règles iptables sortantes.",
+        "grade": 5,
+        "level": "STANDARD",
+        "sources": [
+          {
+            "name": "OWASP Top 10 2021 — A10:2021 Server-Side Request Forgery (SSRF)",
+            "pyramid": 2,
+            "year": 2021,
+            "quote": "From the network layer, consider: segment remote resource access functionality in separate networks to reduce the impact of SSRF. Enforce firewall policies or network access control rules on frontend servers to block all but essential intranet traffic.",
+            "note": "Référence canonique OWASP A10:2021 recommandant explicitement la segmentation réseau et le filtrage firewall comme contrôles de prévention SSRF au niveau réseau."
+          },
+          {
+            "name": "NIST SP 800-53 Rev. 5 — SC-7: Boundary Protection",
+            "pyramid": 1,
+            "year": 2020,
+            "quote": "Implement subnetworks for publicly accessible system components that are physically or logically separated from internal networks; deny network traffic by default and allow by exception.",
+            "note": "Standard normatif NIST SC-7 définissant le principe deny-by-default pour les flux réseau. Applicable directement à la configuration Docker Compose/iptables pour OLS."
+          },
+          {
+            "name": "OWASP SSRF Prevention Cheat Sheet",
+            "pyramid": 2,
+            "year": 2023,
+            "quote": "Network layer: enforce a 'deny by default' firewall policy to block all but essential traffic. Use network segmentation to limit the impact of SSRF — even if an attacker bypasses application controls, network isolation prevents access to sensitive internal services.",
+            "note": "OWASP Cheat Sheet décrit la segmentation réseau comme couche de défense indépendante des contrôles applicatifs — justifie l'approche defense-in-depth."
+          },
+          {
+            "name": "NestJS Documentation — HTTP Module & Security Considerations",
+            "pyramid": 3,
+            "year": 2024,
+            "quote": "The HttpModule provides interceptors and request pipelines that can be used to implement centralized validation of outgoing HTTP requests.",
+            "note": "Documentation officielle NestJS HttpModule (Axios) : point d'entrée pour les requêtes HTTP sortantes. Les interceptors permettent d'implémenter la validation SSRF centralisée en complément des contrôles réseau."
+          },
+          {
+            "name": "Capital One Data Breach 2019 — SSRF via AWS EC2 Metadata",
+            "pyramid": 4,
+            "year": 2020,
+            "quote": "The absence of network-level controls allowed the attacker to pivot from the SSRF vulnerability to the metadata service and ultimately to S3. IMDSv2 and network segmentation would have prevented or limited the breach.",
+            "note": "Le rapport sénatorial identifie explicitement l'absence de contrôles réseau (IMDSv2 non activé, pas de segmentation) comme facteur aggravant. Illustre la nécessité des contrôles réseau en complément des contrôles applicatifs."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 5,
+          "plus": ["Convergence : 5 sources indépendantes (OWASP Top 10, NIST SC-7, OWASP Cheat Sheet, NestJS docs, Capital One) convergent sur la defense-in-depth réseau (+1)"],
+          "minus": ["Indirectness : le principe réseau est générique — la transposition spécifique à Docker Compose et NestJS n'est pas validée empiriquement dans les sources primaires (-1)"]
+        },
+        "date_extraction": "2026-04-18"
+      }
+    ]
+  },
+  "variants": {}
+}

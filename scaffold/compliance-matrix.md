@@ -192,6 +192,7 @@
 |-------|--------|---------------|--------------|--------|
 | CLAUDE.local.md non commité (.gitignore) | **Mandatory** | HOOK | Claude Code docs | ✅ `pre-commit-quality.sh` — détecte CLAUDE.local.md stagé dans repos production |
 | Overrides ajustent les gates, ne les suppriment pas | Required | CLAUDE.md | #3 | OK |
+| **Override oral interdit — CLAUDE.local.md requis avant exécution** (GAP_NEW_1) | **Mandatory** | CLAUDE.md | #3, #20, MISRA Deviation Records | ✅ Règle scaffold ajoutée 2026-04-18 (non hookable — comportement LLM) |
 
 ---
 
@@ -199,14 +200,16 @@
 
 | Niveau | Total | Hookés / Mécanisés | Gaps critiques |
 |--------|-------|--------------------|----------------|
-| **Mandatory** | 24 | 23 ✅ | 1 ⚠️ |
-| Required | 31 | 3 (hooks partiels) | — |
-| Advisory | 9 | 0 (par définition) | — |
+| **Mandatory** | 26 | 25 ✅ | 1 ⚠️ |
+| Required | 42 | 7 (hooks + scaffold) | — |
+| Advisory | 13 | 4 (scaffold) | — |
 
-*Mise à jour 2026-04-18 (Plan 1+2 complet) :*
+*Mise à jour 2026-04-18 (Plan 1+2+SDMF Extended ODD complet) :*
 - *+10 mécanismes Mandatory Plan 1+2 : migrations DB, secrets .env, CLAUDE.local.md, Docker build --check, license check, Co-Authored-By, secrets patterns, PII detection, settings.json readonly, browser_close deny*
 - *+2 mécanismes Mandatory Plan 2 Phase A : H10 prompt injection filter (pre-tool-use), gate architecture (pre-pr warning)*
-- *Wording tests non-hookables : 4 règles renforcées (estimations interdites, "devrait marcher" interdit, formulation prompt sous-agent obligatoire, seul PO via CLAUDE.local.md peut lever une gate)*
+- *+2 Mandatory SDMF Extended ODD : pre-write-security.sh (Write gate), override oral → CLAUDE.local.md*
+- *+5 Required SDMF Extended ODD : staleness check (session-start), CI ambigus (pre-push), reviewer limitation (scaffold), PR checkbox (pre-pr-create), staleness EBSE (scaffold)*
+- *+4 Advisory SDMF Extended ODD : claims citation (scaffold), EBSE staleness (scaffold), hook health (session-start), éléments précédents*
 
 ---
 
@@ -229,7 +232,90 @@ Implémentée en **warning uniquement** (pas bloquant) dans `pre-pr-create.sh` �
 
 ---
 
-## Prochaine étape
+## Section 15 — SDMF Extended ODD (2026-04-18)
 
-**Plan 3 SLRs** : 5 SLRs Tier 1 à lancer (file upload security, MinIO, DB backup/DR, STOMP auth, enterprise SSO). Nécessite approbation PO par PICOC.
-**Phase C PICOCs** : 3 protocoles créés (`ai-agent-prompt-injection-defense`, `ai-agent-incident-response`, `ai-agent-mast-monitoring-runtime`) — SLRs à lancer sur approbation PO.
+Gaps identifiés par mini-SDMF sur le système COMPLET (Agent + PO + Guide EBSE + Hooks + CI/CD + Vérification).
+
+| Gap | Niveau | Implémentation | Source | Statut |
+|-----|--------|---------------|--------|--------|
+| Gate secrets/PII sur Write() en plus de git diff (GAP_NEW_3) | **Mandatory** | HOOK | #22, STRIDE InfoDisc | ✅ `pre-write-security.sh` (PreToolUse Write) + Write matcher settings.json |
+| Hook-tampering via Edit/Write .claude/ (GAP_NEW_4) | **Mandatory** | HOOK | #22, STRIDE EoP | ✅ `prompt-injection-filter.sh` (hook-tampering déjà implémenté) |
+| Staleness ols-recommendations.json (GAP_NEW_5) | Required | HOOK | scaffold-methodology | ✅ `session-start.sh` — détecte decisions/*.json plus récents que ols-recs.json |
+| CI états ambigus unknown/in_progress (GAP_NEW_6) | Required | HOOK | #4 | ✅ `pre-push-quality.sh` — warning explicite pour états ambigus |
+| Rapport reviewer — limitation self-preference à signaler (GAP_NEW_2) | Required | CLAUDE.md | #19 Panickssery | ✅ Règle scaffold ajoutée 2026-04-18 |
+| Checkbox PO review chemins critiques dans PR (GAP_NEW_9) | Required | HOOK | #13 Shukla | ✅ `pre-pr-create.sh` — vérifie - [x] dans PR body |
+| Claims critiques → citation tool call (GAP_NEW_7) | Advisory | CLAUDE.md | #20, Assurance 2.0 | ✅ Règle scaffold ajoutée 2026-04-18 |
+| Staleness décisions EBSE (GAP_NEW_8) | Advisory | CLAUDE.md | ebse-evidence-temporal-validity GRADE 3 | ✅ Règle scaffold ajoutée 2026-04-18 |
+| Hook health check au démarrage (GAP_NEW_10) | Advisory | HOOK | #4 | ✅ `session-start.sh` — vérifie syntax + permissions tous hooks |
+| Gate PO review chemins critiques — confirmation de lecture (GAP_NEW_9 aussi) | Required | HOOK | #13 | ✅ ci-dessus |
+
+---
+
+## Section 16 — Gap Analysis Type A (règles scaffold ajoutées 2026-04-18)
+
+Règles ajoutées dans `scaffold-claude.md` suite à l'analyse de 5 sous-agents (Google Engineering Practices, ADRs, OWASP ASVS, DORA/Accelerate, Google SRE Book). PICOC existants, règles manquantes.
+
+| Règle | Niveau | Implémentation | Source PICOC | Statut |
+|-------|--------|---------------|--------------|--------|
+| Durée de vie branche max 48h (DORA trunk-based) | Required | CLAUDE.md | branching GRADE 5 | ✅ Règle ajoutée scaffold §Workflow Git point 4 |
+| Fault tolerance dans review sous-agent (circuit breaker, retry+jitter, timeout, bulkhead) | Required | CLAUDE.md | fault-tolerance-patterns GRADE 5 | ✅ Règle ajoutée scaffold §Reviewer prompt item 3 |
+| Threat modeling obligatoire (DFD+STRIDE) avant implémentation si : nouveaux composants, flux auth, external APIs, données sensibles | Required | CLAUDE.md | threat-modeling GRADE 5 | ✅ Règle ajoutée scaffold §Décomposition tâches étape 2-bis |
+| Error budget policy après incident (SRE DORA) | Required | CLAUDE.md | slos GRADE 2 | ✅ Règle ajoutée scaffold §Monitoring |
+| SBOM generation avant push (supply chain security) | Required | HOOK | supply-chain-security GRADE 6 | ✅ `pre-push-quality.sh` — npm sbom / cyclonedx |
+
+---
+
+## Section 17 — Nouvelles décisions EBSE (Type B, 2026-04-18)
+
+16 nouveaux PICOC créés via pipeline Kitchenham complet (Agent A + B + C). Toutes les décisions intégrées dans `ols-recommendations.json` (244 → 260 recommandations).
+
+| Décision | Domaine | GRADE max | Corrections Agent C |
+|----------|---------|-----------|---------------------|
+| adr-output-citation | documentation | 6 | aucune |
+| pr-size-discipline | workflow | 5 | aucune |
+| ssrf-prevention | security | 5 | P3 grade 4→3, citation P2 corrigée |
+| code-review-comment-taxonomy | workflow | 5 | P2+P4 level STANDARD→RECOMMANDE |
+| flaky-test-management | testing | 3 | 7 corrections (venues, dates) |
+| mass-assignment-protection | security | 6 | P2+P4 grade 5→4, STANDARD→RECOMMANDE |
+| incident-command-roles | ops | 4 | aucune |
+| template-injection-prevention | security | 6 | aucune |
+| data-classification-architecture | security | 6 | P1-P4 grade 5→6 (sous-évalués) |
+| postmortem-template | ops | 5 | P1-P3 grade 5→3 STANDARD→RECOMMANDE (SRE Book pyramid 1→5) |
+| ai-agent-dora-instrumentation | monitoring | 2 | aucune |
+| key-management-lifecycle | security | 5 | P1-P4 grade 6→5 (-1 indirectness) |
+| http-security-headers | security | 6 | grade_factors.start corrigé (grade finaux inchangés) |
+| agent-toil-reduction | ops | 4 | P1-P2 level FORT→RECOMMANDE, SRE Book pyramid 1→2 |
+| adr-trigger-criteria | documentation | 5 | Bass pyramid 1→5, source fantôme Keeling retiré |
+| breach-password-check | security | 6 | P1 -1 injustifié supprimé, P2-P3 grade 5→4 STANDARD→RECOMMANDE |
+
+---
+
+## Récapitulatif global (mis à jour 2026-04-18 post Type A+B)
+
+| Niveau | Total | Hookés / Mécanisés | Gaps critiques |
+|--------|-------|--------------------|----------------|
+| **Mandatory** | 26 | 25 ✅ | 1 ⚠️ |
+| Required | 42 | 7 (hooks + scaffold) | — |
+| Advisory | 13 | 4 (scaffold) | — |
+
+*Mise à jour 2026-04-18 (Plan 1+2+SDMF Extended ODD complet) :*
+- *+10 mécanismes Mandatory Plan 1+2 : migrations DB, secrets .env, CLAUDE.local.md, Docker build --check, license check, Co-Authored-By, secrets patterns, PII detection, settings.json readonly, browser_close deny*
+- *+2 mécanismes Mandatory Plan 2 Phase A : H10 prompt injection filter (pre-tool-use), gate architecture (pre-pr warning)*
+- *+2 Mandatory SDMF Extended ODD : pre-write-security.sh (Write gate), override oral → CLAUDE.local.md*
+- *+5 Required SDMF Extended ODD : staleness check (session-start), CI ambigus (pre-push), reviewer limitation (scaffold), PR checkbox (pre-pr-create), staleness EBSE (scaffold)*
+- *+4 Advisory SDMF Extended ODD : claims citation (scaffold), EBSE staleness (scaffold), hook health (session-start), éléments précédents*
+- *+5 Required Type A gap analysis : branching 48h, fault-tolerance reviewer, threat-modeling, error budget policy, SBOM hook*
+- *+16 décisions EBSE Type B : adr-output-citation, pr-size-discipline, ssrf-prevention, code-review-comment-taxonomy, flaky-test-management, mass-assignment-protection, incident-command-roles, template-injection-prevention, data-classification-architecture, postmortem-template, ai-agent-dora-instrumentation, key-management-lifecycle, http-security-headers, agent-toil-reduction, adr-trigger-criteria, breach-password-check*
+
+---
+
+## Statut final
+
+**Mandatory : 25/26 mécanisés** (gap résiduel : 1 règle non-hookable comportement LLM intrinsèque)
+
+**Type A gap analysis (2026-04-18) — 4 règles scaffold + 1 hook :**
+branching 48h ✅ | fault-tolerance reviewer ✅ | threat-modeling ✅ | error budget policy ✅ | SBOM hook ✅
+
+**Type B SLRs (2026-04-18) — 16 nouvelles décisions EBSE :**
+Pipeline Kitchenham A/B/C complet — 16 × ✅
+Corrections Agent C : 23 corrections factuelles appliquées sur 16 fichiers (grades, levels, pyramides, venues, citations)

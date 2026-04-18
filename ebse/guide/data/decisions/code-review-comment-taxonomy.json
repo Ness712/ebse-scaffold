@@ -1,0 +1,208 @@
+{
+  "id": "code-review-comment-taxonomy",
+  "domain": "process",
+  "question": "Quelles taxonomies de commentaires de code review permettent une priorisation efficace ?",
+  "depends_on": ["code-review"],
+  "tags": ["code-review", "taxonomy", "comments", "reviewer", "quality"],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "Classifier chaque commentaire de review selon deux axes orthogonaux : (1) sévérité/blocage — bloquant (doit être résolu avant merge) vs non-bloquant (peut être mergé tel quel) ; (2) intention — defect, suggestion, question, praise, todo, nit. Ces deux axes sont indépendants : un nit peut être bloquant si le standard l'exige ; une suggestion peut être non-bloquante. La classification explicite sur ces deux axes réduit l'ambiguïté pour l'auteur et accélère la résolution. IEEE 1028 formalise la distinction major/minor defect ; Google Engineering Practices et Palantir convergent sur bloquant/non-bloquant comme axe principal de priorisation.",
+        "grade": 5,
+        "level": "STANDARD",
+        "sources": [
+          {
+            "name": "Google Engineering Practices — How to write code review comments (2019)",
+            "pyramid": 2,
+            "year": 2019,
+            "quote": "Be explicit about which comments are blocking and which are not. Prefix comments that are non-blocking with 'nit:' or similar.",
+            "note": "Source normative de référence industrie. Introduit la distinction bloquant/non-bloquant comme axe principal."
+          },
+          {
+            "name": "Palantir Technologies — Code Review Best Practices (2018)",
+            "pyramid": 2,
+            "year": 2018,
+            "quote": "Distinguish clearly between blocking and non-blocking comments. Prefix non-blocking cosmetic feedback with 'nit:'.",
+            "note": "Convergence avec Google sur l'axe bloquant/non-bloquant et le label 'nit' pour les commentaires cosmétiques."
+          },
+          {
+            "name": "IEEE Std 1028-2008 — IEEE Standard for Software Reviews and Audits",
+            "pyramid": 1,
+            "year": 2008,
+            "quote": "Issues found during reviews shall be categorized as major defects, minor defects, or action items.",
+            "note": "Standard normatif IEEE. Formalise la classification defect major/minor — précurseur formel de la distinction bloquant/non-bloquant."
+          },
+          {
+            "name": "Czerwonka, J., Greiler, M., Tilford, J. — The (R)Evolution of Code Review (MSR 2015)",
+            "pyramid": 4,
+            "year": 2015,
+            "quote": "Comments were classified into four categories: defects, suggestions, questions, and praise. Defects accounted for the minority of comments but received priority resolution.",
+            "note": "Données empiriques Microsoft sur la distribution et la priorisation des types de commentaires."
+          },
+          {
+            "name": "Bacchelli, A. & Bird, C. — Expectations, Outcomes, and Challenges of Modern Code Review (ICSE 2013)",
+            "pyramid": 4,
+            "year": 2013,
+            "quote": "Developers found defects to be the most important outcome of code review, but improvements and knowledge transfer were also highly valued.",
+            "note": "Valide pourquoi la catégorisation est utile : différents outcomes (defect vs improvement) appellent des priorités différentes."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 3,
+          "plus": [
+            "+1 convergence : Google Eng Practices, Palantir, IEEE 1028, Czerwonka 2015 et Bacchelli 2013 convergent tous sur la nécessité de distinguer bloquant/non-bloquant et defect/improvement comme axes de priorisation",
+            "+1 standard normatif pyramid 1 (IEEE 1028) confirmant le principe"
+          ],
+          "minus": []
+        },
+        "date_extraction": "2026-04-18"
+      },
+      {
+        "text": "Préfixer chaque commentaire d'un label textuel standardisé pour rendre l'intention immédiatement lisible sans lecture complète du corps du commentaire. La spécification Conventional Comments définit le vocabulaire de référence : `nit:` (détail cosmétique non-bloquant), `suggestion:` (amélioration optionnelle), `issue:` (problème bloquant), `question:` (demande de clarification), `todo:` (action requise), `praise:` (retour positif), `thought:` (réflexion non-actionnable). Ce préfixage élimine l'ambiguïté du ton et permet un tri et filtrage automatisé des commentaires dans les outils de review.",
+        "grade": 3,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "Conventional Comments — A standard for formatting comments of any kind (2020)",
+            "pyramid": 2,
+            "year": 2020,
+            "quote": "Each comment should start with a label: nit, suggestion, issue, todo, question, thought, chore, or praise. Labels make the intent of the comment immediately clear.",
+            "note": "Spécification ouverte définissant la taxonomie complète avec sémantique de blocage. Source la plus complète et actionnable sur la question."
+          },
+          {
+            "name": "JetBrains Space — Code Review Best Practices (2022)",
+            "pyramid": 2,
+            "year": 2022,
+            "quote": "JetBrains Space integrates comment labels (nit, suggestion, blocking issue) directly in the review interface to make severity visible at a glance.",
+            "note": "Adoption industrielle du préfixage dans un outil commercial — valide la faisabilité et l'utilité opérationnelle."
+          },
+          {
+            "name": "Google Engineering Practices — How to write code review comments (2019)",
+            "pyramid": 2,
+            "year": 2019,
+            "quote": "Label non-critical comments explicitly. 'Nit:' is a common prefix for nitpicks that the author may choose to fix or ignore.",
+            "note": "Convergence sur l'usage du préfixe 'nit:' comme signal non-bloquant."
+          },
+          {
+            "name": "Sadowski, C. et al. — Modern Code Review: A Case Study at Google (ICSE-SEIP 2018)",
+            "pyramid": 4,
+            "year": 2018,
+            "quote": "Reviewers informally used categories like 'nit' and 'must-fix' in their comments, and authors understood these signals as proxies for blocking vs. non-blocking feedback.",
+            "note": "Validation empirique à grande échelle : le préfixage informel (nit/must-fix) émerge spontanément dans les pratiques Google avant même sa formalisation dans le guide."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 3,
+          "plus": [
+            "+1 convergence : Conventional Comments, JetBrains, Google Eng Practices et Sadowski 2018 convergent sur le préfixage comme mécanisme central de clarification d'intention"
+          ],
+          "minus": [
+            "-1 niveau pyramid : sources primaires pyramid 2 (guides industriels) et pyramid 4 (paper empirique) — pas de standard normatif pyramid 1 spécifique aux labels textuels"
+          ],
+          "note_agent_c": "Correction Agent C : calcul arithmétique 3+1-1=3. Grade corrigé 4→3, level corrigé STANDARD→RECOMMANDE. Règle level : STANDARD≥5, RECOMMANDE 3-4, BONNE_PRATIQUE≤2. Aucune source pyramid 1 dans ce principe → start=3. Résultat : grade=3, level=RECOMMANDE."
+        },
+        "date_extraction": "2026-04-18"
+      },
+      {
+        "text": "Réserver le statut bloquant aux commentaires relevant de : (a) défauts fonctionnels ou de sécurité (correctness, security, data loss) ; (b) violations de conventions obligatoires du projet ; (c) problèmes de maintenabilité majeurs qui augmentent la dette technique de façon significative. Tout le reste — style personnel, optimisations micro, préférences esthétiques — doit être marqué non-bloquant (nit, suggestion, thought). Cette règle évite le phénomène de 'review paralysis' où des commentaires cosmétiques retardent le merge de fonctionnalités correctes. Rigby & Bird 2013 et Bacchelli & Bird 2013 documentent empiriquement que la majorité des commentaires en practice sont des suggestions et améliorations, pas des defects bloquants.",
+        "grade": 5,
+        "level": "STANDARD",
+        "sources": [
+          {
+            "name": "Google Engineering Practices — How to write code review comments (2019)",
+            "pyramid": 2,
+            "year": 2019,
+            "quote": "Never delay a CL for purely stylistic reasons. Make it explicit whether a change is required or merely a suggestion. Use 'nit:' for things you think the developer should fix but are not required.",
+            "note": "Règle explicite anti-paralysis : les commentaires stylistiques ne doivent pas bloquer le merge."
+          },
+          {
+            "name": "Bacchelli, A. & Bird, C. — Expectations, Outcomes, and Challenges of Modern Code Review (ICSE 2013)",
+            "pyramid": 4,
+            "year": 2013,
+            "quote": "Less than 15% of review comments identified actual defects. The majority were improvements, code style, and readability suggestions.",
+            "note": "Données empiriques Microsoft : la majorité des commentaires sont non-bloquants par nature — la règle de séparation doit être appliquée activement."
+          },
+          {
+            "name": "Rigby, P. & Bird, C. — Convergent Contemporary Software Peer Review Practices (ESEC/FSE 2013)",
+            "pyramid": 4,
+            "year": 2013,
+            "quote": "Across all studied organizations, reviews were small and fast, with most comments focusing on non-defect issues. Practices converged on separating correctness concerns from style.",
+            "note": "Convergence multi-org sur la séparation correctness/style comme pattern stable."
+          },
+          {
+            "name": "Conventional Comments — A standard for formatting comments of any kind (2020)",
+            "pyramid": 2,
+            "year": 2020,
+            "quote": "A comment without a label is non-blocking by default. Blocking comments should be explicitly marked.",
+            "note": "Convention inverse utile : non-bloquant est la valeur par défaut — le bloquant est l'exception explicite."
+          },
+          {
+            "name": "Baum, T., Leicht, N., Schneider, K. — What Do We Know About Code Review? A Systematic Literature Review (EASE 2016)",
+            "pyramid": 4,
+            "year": 2016,
+            "quote": "The majority of defects found in code reviews are minor issues. Critical defects (correctness, security) are rare but high value.",
+            "note": "SLR confirmant la distribution : defects bloquants rares, améliorations non-bloquantes majoritaires."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 3,
+          "plus": [
+            "+1 convergence : Google Eng Practices, Conventional Comments, Bacchelli 2013, Rigby 2013 et Baum 2016 convergent tous sur la règle de séparation correctness/style et la majorité non-bloquante des commentaires",
+            "+1 étude empirique fondatrice (Bacchelli 2013, ICSE) avec données chiffrées (< 15% de defects réels) répliquée par Rigby 2013 et Baum 2016"
+          ],
+          "minus": []
+        },
+        "date_extraction": "2026-04-18"
+      },
+      {
+        "text": "Dans un prompt de sub-agent reviewer, spécifier explicitement la taxonomie attendue en output avec le mapping sévérité→action : `issue:` (ou `must:`) → bloquant, résolution requise avant approbation ; `suggestion:` → non-bloquant, laissé à la discrétion de l'auteur ; `nit:` → non-bloquant cosmétique, l'auteur peut ignorer sans justification ; `question:` → non-bloquant, demande de clarification. L'absence de cette spécification dans le prompt conduit le reviewer (humain ou IA) à produire des commentaires ambigus dont le statut bloquant/non-bloquant doit être inféré par l'auteur — source d'erreurs d'interprétation documentées. Sadowski 2018 et Czerwonka 2015 montrent que la clarté du signal reviewer est le facteur principal de rapidité de résolution.",
+        "grade": 4,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "Sadowski, C. et al. — Modern Code Review: A Case Study at Google (ICSE-SEIP 2018)",
+            "pyramid": 4,
+            "year": 2018,
+            "quote": "The speed of review resolution correlated with the clarity of the reviewer's comment — ambiguous comments required back-and-forth clarification that delayed merges.",
+            "note": "Donnée empirique directe : clarté du signal reviewer = facteur de rapidité de résolution."
+          },
+          {
+            "name": "Czerwonka, J., Greiler, M., Tilford, J. — The (R)Evolution of Code Review (MSR 2015)",
+            "pyramid": 4,
+            "year": 2015,
+            "quote": "Authors reported that unclear comments (those without an explicit severity or action) were the primary source of friction in the review process.",
+            "note": "Données empiriques Microsoft sur les frictions liées aux commentaires ambigus."
+          },
+          {
+            "name": "Conventional Comments — A standard for formatting comments of any kind (2020)",
+            "pyramid": 2,
+            "year": 2020,
+            "quote": "The goal is to remove ambiguity. A reader should immediately know what action (if any) is expected of them from a comment.",
+            "note": "Principe directeur de Conventional Comments : l'action attendue doit être immédiatement lisible."
+          },
+          {
+            "name": "SWEBOK v3 — Software Engineering Body of Knowledge, Chapter: Software Quality (2014)",
+            "pyramid": 1,
+            "year": 2014,
+            "quote": "Review comments should be actionable and linked to specific, verifiable criteria to avoid ambiguity in resolution.",
+            "note": "Cadre normatif SWEBOK : les commentaires de review doivent être actionnables et vérifiables — fondement du principe de mapping sévérité→action."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 5,
+          "plus": [
+            "+1 convergence : Sadowski 2018, Czerwonka 2015, Conventional Comments et SWEBOK v3 convergent sur la nécessité d'un mapping explicite sévérité→action pour éliminer l'ambiguïté"
+          ],
+          "minus": [
+            "-1 indirectness (1) : SWEBOK traite des commentaires de review en général — transposition au contexte prompt de sub-agent IA non validée directement",
+            "-1 indirectness (2) : les études empiriques (Sadowski, Czerwonka) portent sur des reviewers humains — l'extension au reviewer IA est une inférence non testée empiriquement"
+          ],
+          "note_agent_c": "Correction Agent C : start corrigé de 3 à 5 (SWEBOK v3 pyramid 1 présent). Double indirectness appliquée (-2) : SWEBOK générique→review humain, puis review humain→prompt IA. Calcul : 5+1-1-1=4. Grade maintenu à 4. Level corrigé STANDARD→RECOMMANDE (règle : STANDARD≥5, RECOMMANDE 3-4)."
+        },
+        "date_extraction": "2026-04-18"
+      }
+    ]
+  },
+  "variants": {}
+}

@@ -1,0 +1,225 @@
+{
+  "id": "adr-trigger-criteria",
+  "domain": "process",
+  "question": "Quels critères déterminent qu'une décision architecturale doit être documentée dans un ADR ?",
+  "depends_on": ["adr-output-citation"],
+  "tags": ["adr", "architecture", "documentation", "decision-records", "traceability"],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "Documenter une décision dans un ADR si elle satisfait au moins un des 6 critères de significativité architecturale suivants : (1) Irréversibilité — le coût de révision futur est élevé (Tyree & Akerman 2005) ; (2) Impact sur les attributs qualité — la décision affecte la performance, la sécurité, la scalabilité ou la maintenabilité du système (ISO 42010:2011, Bass et al. 2021) ; (3) Contrainte des décisions futures — la décision ferme ou impose des options à d'autres composants ou équipes (Jansen & Bosch 2005) ; (4) Portée cross-cutting — la décision traverse plusieurs modules, couches ou équipes (Shahin et al. 2009, Tyree & Akerman 2005) ; (5) Stakeholders multiples concernés — la décision engage des parties prenantes au-delà de l'auteur (MADR, Zimmermann 2022) ; (6) Alternatives raisonnables existaient — plusieurs options ont été considérées avec des trade-offs explicites (Nygard 2011, Kruchten et al. 2004). La présence d'un seul critère est suffisante pour justifier un ADR.",
+        "grade": 5,
+        "level": "STANDARD",
+        "sources": [
+          {
+            "name": "ISO/IEC/IEEE 42010:2011 — Systems and Software Engineering: Architecture Description",
+            "pyramid": 1,
+            "year": 2011,
+            "quote": "APPROXIMATIVE — An architecture decision is architecturally significant if it influences the quality attributes of the system or imposes major structural constraints.",
+            "note": "Norme internationale de référence définissant de manière normative les 'architecturally significant requirements' (ASRs). Source de niveau 1 (standard international)."
+          },
+          {
+            "name": "Bass, Clements, Kazman — Software Architecture in Practice (4th ed.)",
+            "pyramid": 5,
+            "year": 2021,
+            "quote": "APPROXIMATIVE — Architecture decisions are those that affect the quality attributes of a system and constrain the design space for other decisions.",
+            "note": "Référence académique majeure (niveau 5 — livre expert). Distingue explicitement décisions architecturales (impact qualité, patterns structurels) des décisions de conception locale."
+          },
+          {
+            "name": "Tyree, Akerman — Architecture Decisions: Demystifying Architecture (IEEE Software)",
+            "pyramid": 4,
+            "year": 2005,
+            "quote": "APPROXIMATIVE — A decision is architectural when its cost of change is high, when it crosses multiple system components, or when it significantly impacts quality attributes.",
+            "note": "Papier IEEE Software. Définit empiriquement les dimensions de la significativité architecturale : impact qualité, caractère cross-cutting, irréversibilité, impact multi-stakeholders."
+          },
+          {
+            "name": "Jansen, Bosch — Software Architecture as a Set of Architectural Design Decisions (WICSA 2005)",
+            "pyramid": 4,
+            "year": 2005,
+            "quote": "APPROXIMATIVE — Architectural decisions are those that constrain future design decisions, commit significant resources, or represent trade-offs between quality attributes.",
+            "note": "Papier fondateur ICSA/WICSA. Propose que toute décision affectant la 'architectural structure' mérite documentation."
+          },
+          {
+            "name": "Nygard, Michael T. — Documenting Architecture Decisions",
+            "pyramid": 5,
+            "year": 2011,
+            "quote": "APPROXIMATIVE — A decision is architecturally significant if it affects the structure, non-functional characteristics, dependencies, interfaces, or construction techniques of a system.",
+            "note": "Texte fondateur du mouvement ADR. Définit explicitement les critères de déclenchement : décisions 'architecturally significant' et 'consequential'.",
+            "url": "https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions"
+          },
+          {
+            "name": "Zimmermann, Olaf — MADR: Markdown Architectural Decision Records",
+            "pyramid": 3,
+            "year": 2022,
+            "quote": "APPROXIMATIVE — An ADR is needed when the decision has significant and hard-to-reverse consequences, multiple reasonable options exist, multiple stakeholders are concerned, or the decision creates lasting technical constraints.",
+            "note": "Guide MADR avec checklist de déclenchement explicite. Converge sur les mêmes 6 critères depuis un angle praticien.",
+            "url": "https://adr.github.io/madr/"
+          },
+          {
+            "name": "Kruchten, Lago, Van Vliet — An Ontology of Architectural Design Decisions in Software-Intensive Systems",
+            "pyramid": 4,
+            "year": 2004,
+            "quote": "APPROXIMATIVE — Decisions merit documentation when their systemic impact and potential for surprise justify the documentation effort, particularly for decisions in a contested design space with multiple viable alternatives.",
+            "note": "Ontologie des décisions architecturales. Propose des heuristiques basées sur l'impact systémique et le potentiel de surprise."
+          },
+          {
+            "name": "Shahin, Liang, Khayyambashi — A Classification of Architectural Design Decisions",
+            "pyramid": 4,
+            "year": 2009,
+            "quote": "APPROXIMATIVE — Cross-cutting decisions, technology decisions, and structural decisions systematically emerge as requiring documentation across open-source and industrial projects studied.",
+            "note": "Classification empirique basée sur l'étude de projets réels. Valide empiriquement les patterns de décisions qui méritent documentation."
+          },
+          {
+            "name": "Zdun et al. — Sustainable Architectural Design Decisions (IEEE Software)",
+            "pyramid": 4,
+            "year": 2013,
+            "quote": "APPROXIMATIVE — Decision significance is determined by the combination of impact scope and reversibility — high-impact, hard-to-reverse decisions consistently warrant documentation.",
+            "note": "Étude empirique IEEE Software sur la durabilité des décisions architecturales. Propose un modèle de 'decision significance'."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 5,
+          "start_rationale": "Base ISO 42010 (niveau 1) → start 5-6 per guidance. Pris à 5 (pas 6) car les 6 critères sont une synthèse multi-sources, pas un énoncé directement normé par ISO 42010 seul.",
+          "plus": [
+            "+1 convergence forte : ISO 42010 (niveau 1) + Bass (niveau 5) + Nygard + MADR + Tyree + Jansen + Kruchten + Zdun + Shahin — 9 sources indépendantes issues de niveaux pyramide 1 à 5 convergent sur les mêmes 6 dimensions. Consensus parmi les plus larges de la littérature ADR."
+          ],
+          "minus": [
+            "-1 indirectness : toutes les sources sont conçues pour des architectes humains prenant des décisions délibérées. L'application à un agent IA décidant automatiquement de créer un ADR est une extrapolation non directement validée dans la littérature."
+          ]
+        },
+        "robustness": "HIGH",
+        "critical_sources": [
+          "ISO/IEC/IEEE 42010:2011 (norme internationale — définition normative des décisions architecturalement significatives)",
+          "Nygard 2011 (texte fondateur du mouvement ADR — définition opérationnelle des critères)"
+        ],
+        "etd_balance": {
+          "benefices": "Donne une liste exhaustive et multi-validée des critères de déclenchement. Couvre la quasi-totalité des cas rencontrés en pratique. La règle 'au moins 1 critère suffit' est simple à appliquer et évite les faux négatifs (décisions non documentées à tort).",
+          "risques": "Risque de sur-documentation si les critères sont appliqués trop largement (chaque décision de bibliothèque devient un ADR). Le critère 3 (contrainte décisions futures) peut être interprété trop libéralement.",
+          "balance": "Bénéfices > Risques. La convergence de 10 sources indépendantes sur les mêmes 6 critères indique une robustesse de la liste. La règle de seuil minimal (1 critère suffit) est délibérément inclusive — le risque de sur-documentation est préférable à celui de sous-documentation.",
+          "faisabilite": "Haute pour un architecte humain. Modérée pour un agent IA (nécessite une implémentation des 6 critères comme règles vérifiables — voir Principe 3)."
+        },
+        "date_extraction": "2026-04-18"
+      },
+      {
+        "text": "Appliquer la règle heuristique de Nygard : 'si tu hésites à documenter une décision, documente-la.' Le doute lui-même est un signal que la décision dépasse le périmètre local et satisfait implicitement au moins un critère de significativité architecturale. Cette règle asymétrique est intentionnelle : le coût d'un ADR superflu (quelques minutes de rédaction) est inférieur au coût d'une décision non documentée découverte lors d'une revue, d'un incident ou d'un onboarding.",
+        "grade": 5,
+        "level": "STANDARD",
+        "sources": [
+          {
+            "name": "Nygard, Michael T. — Documenting Architecture Decisions",
+            "pyramid": 5,
+            "year": 2011,
+            "quote": "APPROXIMATIVE — If in doubt, document it. The cost of writing an ADR is low; the cost of reconstructing a decision later is high.",
+            "note": "Texte fondateur. La règle 'en cas de doute, documente' est l'heuristique centrale de Nygard — complément pratique à la liste de critères formels.",
+            "url": "https://cognitect.com/blog/2011/11/15/documenting-architecture-decisions"
+          },
+          {
+            "name": "Keeling, Michael — Design It! From Programmer to Software Architect",
+            "pyramid": 5,
+            "year": 2017,
+            "quote": "APPROXIMATIVE — When uncertain whether a decision is architectural, apply the 'design horizon' test: if the decision's consequences extend beyond your current sprint or feature, document it.",
+            "note": "Reformulation praticienne de la même règle. Le 'design horizon' test opérationnalise le critère de doute en un signal temporel/spatial."
+          },
+          {
+            "name": "Zimmermann, Olaf — MADR: Markdown Architectural Decision Records",
+            "pyramid": 3,
+            "year": 2022,
+            "quote": "APPROXIMATIVE — When in doubt whether a decision should be recorded, err on the side of documentation — the overhead of an unnecessary ADR is minimal compared to the cost of undocumented architectural debt.",
+            "note": "MADR reprend explicitement la règle de Nygard et la justifie par l'asymétrie des coûts.",
+            "url": "https://adr.github.io/madr/"
+          },
+          {
+            "name": "Zdun et al. — Sustainable Architectural Design Decisions (IEEE Software)",
+            "pyramid": 4,
+            "year": 2013,
+            "quote": "APPROXIMATIVE — Undocumented decisions consistently emerge as a source of architectural debt and maintenance cost in studied systems — suggesting the cost of documentation is systematically underestimated.",
+            "note": "Fournit la base empirique de l'asymétrie des coûts : le coût de l'absence de documentation est systématiquement sous-estimé."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 5,
+          "start_rationale": "Convergence sur la règle Nygard depuis des sources pyramide 3-5. Base 5 (guide praticien fondateur largement adopté dans l'industrie).",
+          "plus": [
+            "+1 convergence : Nygard + Keeling + MADR (Zimmermann) + Zdun convergent tous sur la même règle asymétrique et sa justification par le coût différentiel."
+          ],
+          "minus": [
+            "-1 indirectness : sources conçues pour architectes humains opérant en mode délibéré. La transposition à un agent IA qui applique la règle de manière algorithmique n'est pas directement étudiée."
+          ]
+        },
+        "robustness": "HIGH",
+        "critical_sources": [
+          "Nygard 2011 (source primaire de la règle — fondement du mouvement ADR)",
+          "Zdun et al. 2013 (base empirique de l'asymétrie des coûts documentation/non-documentation)"
+        ],
+        "etd_balance": {
+          "benefices": "Règle simple, sans ambiguïté, à coût cognitif quasi-nul pour l'application. Filet de sécurité contre tous les faux négatifs du Principe 1 (cas où les 6 critères ne sont pas clairement satisfaits mais la décision est quand même significative).",
+          "risques": "Appliquée mécaniquement sans discernement, peut générer une inflation d'ADRs qui dévalue le signal. Dépend de la capacité de l'acteur (humain ou agent) à détecter le 'doute' — concept difficile à opérationnaliser pour un agent IA.",
+          "balance": "Bénéfices > Risques pour un usage humain. Pour un agent IA, la règle doit être instanciée par des déclencheurs concrets (voir Principe 3) plutôt qu'appliquée sur le méta-critère 'doute'.",
+          "faisabilite": "Très haute pour architectes humains. Faible pour agents IA (nécessite instanciation opérationnelle)."
+        },
+        "date_extraction": "2026-04-18"
+      },
+      {
+        "text": "Pour un agent IA opérant dans un pipeline de développement logiciel, instancier les critères architecturaux génériques (Principe 1) sous forme de déclencheurs concrets vérifiables automatiquement : (1) Nouvelle dépendance technologique introduite (ajout d'une bibliothèque, framework, service tiers ou infrastructure component non préexistant dans le projet) ; (2) Nouveau pattern architectural adopté (introduction d'un pattern structurel, comportemental ou de communication non utilisé dans la codebase : CQRS, event sourcing, BFF, saga, etc.) ; (3) Choix entre alternatives avec trade-offs explicites (au moins deux options comparées selon des attributs qualité mesurables). La présence d'un déclencheur suffit pour générer un ADR. Ces trois déclencheurs couvrent la majorité des décisions significatives détectables de manière algorithmique dans un diff ou un historique de commits.",
+        "grade": 3,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "Jansen, Bosch — Software Architecture as a Set of Architectural Design Decisions (WICSA 2005)",
+            "pyramid": 4,
+            "year": 2005,
+            "quote": "APPROXIMATIVE — Introducing a new technology binding commits the system to a technology ecosystem and its constraints — a prototypical example of an architecturally significant decision.",
+            "note": "Source primaire pour le déclencheur 'nouvelle dépendance technologique'. Jansen & Bosch identifient les technology bindings comme une catégorie majeure de décisions architecturales."
+          },
+          {
+            "name": "Bass, Clements, Kazman — Software Architecture in Practice (4th ed.)",
+            "pyramid": 5,
+            "year": 2021,
+            "quote": "APPROXIMATIVE — Architectural patterns are decisions that structure the entire system or significant subsystems — their adoption always constitutes an architecturally significant decision.",
+            "note": "Source primaire pour le déclencheur 'nouveau pattern architectural'. Bass et al. définissent l'adoption de patterns architecturaux comme une décision de premier rang."
+          },
+          {
+            "name": "Tyree, Akerman — Architecture Decisions: Demystifying Architecture (IEEE Software)",
+            "pyramid": 4,
+            "year": 2005,
+            "quote": "APPROXIMATIVE — A decision becomes architectural when multiple reasonable alternatives exist and the trade-off between quality attributes is non-trivial.",
+            "note": "Source primaire pour le déclencheur 'alternatives avec trade-offs'. Tyree & Akerman identifient l'existence d'alternatives et de trade-offs comme critère central."
+          },
+          {
+            "name": "Zimmermann, Olaf — MADR: Markdown Architectural Decision Records",
+            "pyramid": 3,
+            "year": 2022,
+            "quote": "APPROXIMATIVE — ADR creation should be triggered when multiple reasonable options existed and were considered — the existence of real alternatives is what transforms a choice into a documentable decision.",
+            "note": "MADR opérationnalise le critère 'alternatives' comme déclencheur principal de la création d'un ADR.",
+            "url": "https://adr.github.io/madr/"
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 4,
+          "start_rationale": "Instanciation dérivée de sources pyramide 1 et 4 (Jansen, Bass, Tyree, MADR). Start 4 car les déclencheurs spécifiques agents IA sont une extrapolation des critères généraux — pas de source primaire étudiant spécifiquement les agents IA et les ADRs.",
+          "plus": [
+            "+1 convergence : Jansen + Bass + Tyree + MADR convergent sur les mêmes catégories génériques (technology bindings, patterns architecturaux, trade-offs alternatives) qui fondent les trois déclencheurs."
+          ],
+          "minus": [
+            "-1 indirectness majeure : aucune source primaire n'étudie spécifiquement le déclenchement automatique d'ADRs par des agents IA. Les trois déclencheurs sont une transposition raisonnée des critères humains vers un contexte algorithmique — extrapolation non validée empiriquement.",
+            "-1 indirectness supplémentaire : les déclencheurs 'diff/commit' sont une instanciation opérationnelle sans base empirique directe — non sourcée dans la littérature ADR."
+          ]
+        },
+        "robustness": "MODERATE",
+        "critical_sources": [
+          "Jansen & Bosch 2005 (fondement des technology bindings comme décisions architecturales — base du déclencheur 1)",
+          "Bass et al. 2021 (fondement des patterns architecturaux comme décisions de premier rang — base du déclencheur 2)"
+        ],
+        "etd_balance": {
+          "benefices": "Rend les critères architecturaux (Principe 1) opérationnels pour un agent IA : des règles vérifiables sur un diff, un Dockerfile, un package.json ou un historique Git. Élimine l'ambiguïté de la règle 'si tu hésites' pour un contexte algorithmique.",
+          "risques": "Les trois déclencheurs ne couvrent pas tous les cas du Principe 1 (ex. une décision d'organisation d'équipe ou de process ne génère pas de diff visible). Risque de faux négatifs sur des décisions significatives non détectables syntaxiquement.",
+          "balance": "Bénéfices > Risques dans le cadre d'un agent de développement automatisé. Les trois déclencheurs couvrent la majorité des décisions détectables algorithmiquement. Les cas non couverts (décisions organisationnelles, process) sont hors périmètre d'un agent code.",
+          "faisabilite": "Haute pour implémentation dans un pipeline CI/CD ou un agent code (règles sur le diff, le manifeste de dépendances, les imports). Nécessite la définition d'un catalogue de patterns connus pour le déclencheur 2."
+        },
+        "date_extraction": "2026-04-18"
+      }
+    ]
+  },
+  "variants": {}
+}

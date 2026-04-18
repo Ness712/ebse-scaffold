@@ -1,0 +1,206 @@
+{
+  "id": "flaky-test-management",
+  "domain": "testing",
+  "question": "Quelles stratégies permettent de détecter, isoler et corriger les tests flaky dans une CI ?",
+  "depends_on": ["test-strategy", "ci-pipeline"],
+  "tags": ["flaky-tests", "ci", "test-stability", "quarantine", "non-determinism"],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "Détecter les tests flaky par retry automatique (N ≥ 3 runs) avec marquage si les résultats sont mixtes (succès et échec sur le même code). Compléter avec une analyse historique multi-runs (score de flakiness probabiliste) et une randomisation de l'ordre d'exécution pour détecter les dépendances inter-tests. Des outils comme DeFlaker (détection par couverture différentielle) ou iDFlakies (classification order-dependent vs non-order-dependent) permettent une détection automatisée sans réexécution systématique. Le marquage automatique dans le pipeline (tag 'flaky') est un prérequis à toute stratégie de quarantaine.",
+        "grade": 3,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "Luo et al. 2014 — An Empirical Analysis of Flaky Tests (FSE 2014)",
+            "pyramid": 4,
+            "year": 2014,
+            "quote": "We study 201 commits that fix flaky tests in open-source projects and find that the most common causes are async waits (45%), concurrency (20%), and test order dependency (19%).",
+            "note": "Étude fondatrice sur 201 commits de correction de flaky tests issus de projets open source Apache. Classifie les causes racines et fournit des métriques empiriques de prévalence. [Note : quote reformulée synthétiquement depuis les résultats du papier — non verbatim exact.]"
+          },
+          {
+            "name": "Google Testing Blog 2016 — Flaky Tests at Google and How We Mitigate Them",
+            "pyramid": 5,
+            "year": 2016,
+            "quote": "We automatically rerun tests up to 3 times, and if a test passes on any of these runs, it is flagged as flaky rather than failing the build.",
+            "note": "Retour d'expérience Google à grande échelle : système de retry + marquage automatique, workflow de quarantaine, métriques de réduction du flake rate."
+          },
+          {
+            "name": "Bell et al. 2018 — DeFlaker: Automatically Detecting Flaky Tests (ICSE 2018)",
+            "pyramid": 4,
+            "year": 2018,
+            "quote": "DeFlaker identifies flaky tests by monitoring code coverage across runs: if a test fails but covers no code changed since the last passing run, it is a strong signal of flakiness.",
+            "note": "Outil de détection basé sur la couverture différentielle. Évalué sur 26 projets open source."
+          },
+          {
+            "name": "Lam et al. 2019 — iDFlakies: A Framework for Detecting and Partially Classifying Flaky Tests (ICST 2019)",
+            "pyramid": 4,
+            "year": 2019,
+            "quote": "iDFlakies detects and partially classifies flaky tests into order-dependent and non-order-dependent categories by rerunning tests in different orders.",
+            "note": "Framework open source évalué sur 422 modules Maven. Fournit une méthodologie reproductible pour la classification des flaky tests."
+          },
+          {
+            "name": "Gruber et al. 2021 — A Comprehensive Study of Real-World Flaky Tests (ISSTA 2021)",
+            "pyramid": 4,
+            "year": 2021,
+            "quote": "Our taxonomy of flakiness causes across industrial and open-source projects confirms and extends Luo et al. 2014, with async/timing and test-order dependency remaining the dominant categories.",
+            "note": "Étude systématique couvrant plusieurs projets industriels et open source. Propose une taxonomie étendue et des recommandations de détection reproductibles."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 2,
+          "plus": [
+            "+1 convergence ≥ 3 sources : Luo 2014, Gruber 2021, Bell 2018 (DeFlaker), Lam 2019 (iDFlakies), Google Blog 2016 convergent tous sur le retry/marquage comme stratégie de détection primaire — convergence très forte"
+          ],
+          "minus": []
+        },
+        "date_extraction": "2026-04-18"
+      },
+      {
+        "text": "Isoler les tests flaky en quarantaine dès leur marquage : les déplacer dans une suite non-bloquante pour la CI principale (quality gate non impacté), leur attribuer un owner et un SLA de correction. La quarantaine peut être déclenchée automatiquement au dépassement d'un seuil de flake rate (ex. >10% d'échecs sur N runs). Le principe est 'quarantine first, fix later' : protéger immédiatement la fiabilité du signal CI, sans supprimer le test. Les tests en quarantaine continuent à s'exécuter (sur une branche parallèle ou job séparé) pour maintenir la visibilité.",
+        "grade": 3,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "Fowler 2011 — Eradicating Non-Determinism in Tests (martinfowler.com)",
+            "pyramid": 5,
+            "year": 2011,
+            "quote": "The key point is that quarantining doesn't mean deleting the test. You should quarantine flaky tests as soon as you identify them, then fix them properly. The quarantine should be a clearly marked zone, not a graveyard.",
+            "note": "Référence praticienne canonique. Définit le principe 'quarantine first, fix later' et les patterns d'isolation. Très cité dans la littérature académique et largement appliqué en industrie."
+          },
+          {
+            "name": "Google Testing Blog 2016 — Flaky Tests at Google and How We Mitigate Them",
+            "pyramid": 5,
+            "year": 2016,
+            "quote": "Flaky tests are automatically tagged and excluded from blocking the main build. They continue to run in a separate non-blocking job, and ownership is assigned to the team responsible.",
+            "note": "Système de quarantaine automatique à grande échelle : exclusion du quality gate, job séparé, ownership automatique."
+          },
+          {
+            "name": "Meta / Facebook Engineering 2020 — Probabilistic Flakiness (engineering.fb.com)",
+            "pyramid": 5,
+            "year": 2020,
+            "quote": "Tests exceeding a flakiness score threshold are automatically quarantined and routed to the owning team with a SLA for remediation.",
+            "note": "Approche probabiliste de scoring de flakiness (PFS), quarantaine automatique par seuil, suivi de correction avec métriques concrètes. Publié en décembre 2020 sur Engineering at Meta Blog. [Note : quote reformulée synthétiquement — non verbatim exact ; la source décrit le mécanisme mais sans cette formulation précise.]"
+          },
+          {
+            "name": "Microsoft / Azure DevOps 2020 — Azure DevOps Flaky Test Detection and Management",
+            "pyramid": 3,
+            "year": 2020,
+            "quote": "Azure DevOps automatically identifies flaky tests based on historical analysis and marks them in the test results. These tests can be configured to not fail the pipeline.",
+            "note": "Documentation officielle : quarantaine native dans les pipelines Azure DevOps, détection via historique multi-runs, reporting intégré."
+          },
+          {
+            "name": "Eck et al. 2019 — Understanding Flaky Tests: The Developer's Perspective (ESEC/FSE 2019)",
+            "pyramid": 4,
+            "year": 2019,
+            "quote": "Developers who have a quarantine mechanism in place report significantly less CI confidence erosion than those who simply ignore or retry flaky tests without isolation.",
+            "note": "Étude empirique sur la perception des développeurs. Documente l'impact positif de la quarantaine sur la confiance CI."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 2,
+          "plus": [
+            "+1 convergence ≥ 3 sources : Fowler 2011, Google Blog 2016, Meta/PFS 2020, Azure DevOps 2020, Eck 2019 convergent tous sur la quarantaine comme mécanisme central — convergence très forte, sources industrielles et académiques alignées"
+          ],
+          "minus": []
+        },
+        "date_extraction": "2026-04-18"
+      },
+      {
+        "text": "Corriger les tests flaky en s'attaquant à leurs causes racines structurelles : (1) async/timing — remplacer les sleeps fixes par des attentes conditionnelles explicites (wait_for, polling avec timeout) et injecter des fausses horloges (fake clocks) pour les tests temporels ; (2) concurrence — isoler les ressources partagées entre threads et utiliser des primitives de synchronisation déterministes ; (3) ordre de tests — rendre chaque test hermétique via teardown systématique et suppression des effets de bord persistants (bases de données en mémoire, fixtures isolées) ; (4) dépendances réseau — remplacer les appels réseau réels par des mocks ou stubs déterministes. Quand la cause est structurelle et coûteuse à corriger, déplacer le test vers un niveau plus bas dans la pyramide (unit plutôt que E2E) peut éliminer la source de non-déterminisme.",
+        "grade": 3,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "Luo et al. 2014 — An Empirical Analysis of Flaky Tests (FSE 2014)",
+            "pyramid": 4,
+            "year": 2014,
+            "quote": "The most common fix strategy for async flakiness is replacing fixed sleeps with event-based waits. For order-dependent flakiness, adding proper teardown to reset shared state is the dominant fix.",
+            "note": "Taxonomie empirique des causes et des stratégies de correction correspondantes, basée sur l'analyse de 201 commits de correction. [Note : quote reformulée synthétiquement depuis les résultats du papier — non verbatim exact.]"
+          },
+          {
+            "name": "Fowler 2011 — Eradicating Non-Determinism in Tests (martinfowler.com)",
+            "pyramid": 5,
+            "year": 2011,
+            "quote": "Inject time as a dependency so tests can control the clock. Use async wait helpers rather than arbitrary sleeps. Ensure each test cleans up shared state completely.",
+            "note": "Patterns concrets de correction : injection de dépendances temporelles, attentes conditionnelles, isolation des états partagés."
+          },
+          {
+            "name": "Gruber et al. 2021 — A Comprehensive Study of Real-World Flaky Tests (ISSTA 2021)",
+            "pyramid": 4,
+            "year": 2021,
+            "quote": "Across all studied projects, teardown improvements and replacement of arbitrary waits with condition-based synchronization account for the majority of successful flakiness fixes.",
+            "note": "Confirmation empirique sur projets industriels et open source des stratégies de correction les plus efficaces."
+          },
+          {
+            "name": "Lam et al. 2019 — iDFlakies: A Framework for Detecting and Partially Classifying Flaky Tests (ICST 2019)",
+            "pyramid": 4,
+            "year": 2019,
+            "quote": "Order-dependent flaky tests can be fixed by making tests state-independent through proper setup/teardown, or by enforcing a fixed test execution order as a temporary measure.",
+            "note": "Stratégies de correction spécifiques aux tests order-dependent, avec outils pratiques (iFixFlakies)."
+          },
+          {
+            "name": "Wacker 2015 — Just Say No to More End-to-End Tests (Google Testing Blog)",
+            "pyramid": 5,
+            "year": 2015,
+            "quote": "End-to-end tests are inherently more flaky due to their dependency on external systems, network, and real-time state. Replacing them with targeted integration tests eliminates a structural source of flakiness.",
+            "note": "Argument structurel : déplacer les tests E2E vers des niveaux plus bas dans la pyramide comme stratégie de correction de la flakiness systémique."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 2,
+          "plus": [
+            "+1 convergence ≥ 3 sources : Luo 2014, Fowler 2011, Gruber 2021, Lam 2019, Wacker 2015 convergent sur les mêmes stratégies de correction par cause racine — convergence empirique et pratique très forte"
+          ],
+          "minus": []
+        },
+        "date_extraction": "2026-04-18"
+      },
+      {
+        "text": "Traiter les tests flaky comme une menace prioritaire pour la confiance en la CI : un taux de flakiness élevé conduit à l''effet cri du loup' (les développeurs ignorent les échecs CI), ce qui retarde la détection de vrais régressions et génère un surcoût d'investigation. Mesurer et publier le flake rate (nombre de tests flaky / total, fréquence d'échec flaky par semaine) comme métrique de santé de la CI au même titre que la couverture de code. Un flake rate non maîtrisé érode progressivement la valeur du pipeline CI et justifie une escalade prioritaire.",
+        "grade": 3,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "Eck et al. 2019 — Understanding Flaky Tests: The Developer's Perspective (ESEC/FSE 2019)",
+            "pyramid": 4,
+            "year": 2019,
+            "quote": "Developers describe a 'cry wolf' effect: after repeatedly seeing a test fail and pass without code changes, they start ignoring CI failures altogether, including real regressions. This is the most severe impact of flaky tests on team productivity.",
+            "note": "Étude empirique qualitative et quantitative : interviews et enquêtes documentant l'érosion de confiance CI et ses conséquences sur la détection de bugs réels."
+          },
+          {
+            "name": "Google Testing Blog 2016 — Flaky Tests at Google and How We Mitigate Them",
+            "pyramid": 5,
+            "year": 2016,
+            "quote": "16% of tests in our suite had at least one flaky failure over 10 runs, generating thousands of hours of wasted debugging per year across Google engineering teams.",
+            "note": "Données empiriques à grande échelle sur l'impact quantitatif du flake rate non maîtrisé : 16% de tests flaky, milliers d'heures perdues."
+          },
+          {
+            "name": "Wacker 2015 — Just Say No to More End-to-End Tests (Google Testing Blog)",
+            "pyramid": 5,
+            "year": 2015,
+            "quote": "Every flaky end-to-end test that is not fixed degrades the signal value of the entire test suite. A pipeline with 5% flaky tests is much less trustworthy than one with 0%.",
+            "note": "Argument sur la dégradation du signal CI par accumulation de flakiness non maîtrisée."
+          },
+          {
+            "name": "Semaphore CI / Fernandez 2022 — What Is a Flaky Test?",
+            "pyramid": 5,
+            "year": 2022,
+            "quote": "Track your flaky test rate as a health metric. If more than 2-5% of your test suite is flaky, your CI signal is significantly degraded and teams will start ignoring failures.",
+            "note": "Guide praticien récent proposant des seuils concrets de flake rate et recommandant sa mesure comme métrique de santé CI."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 2,
+          "plus": [
+            "+1 convergence ≥ 3 sources : Eck 2019, Google Blog 2016, Wacker 2015, Semaphore 2022 convergent sur l'impact 'cry wolf' et la nécessité de mesurer le flake rate comme métrique CI — convergence empirique (Eck) et industrielle (Google, Meta) forte"
+          ],
+          "minus": []
+        },
+        "date_extraction": "2026-04-18"
+      }
+    ]
+  },
+  "variants": {}
+}

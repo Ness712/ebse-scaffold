@@ -1,0 +1,249 @@
+{
+  "id": "key-management-lifecycle",
+  "domain": "security",
+  "question": "Quelles pratiques de gestion du cycle de vie des clés cryptographiques permettent d'assurer une politique de clés robuste ?",
+  "depends_on": ["secrets-management", "encryption"],
+  "tags": ["key-management", "cryptography", "secrets", "rotation", "vault", "owasp"],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "Gérer chaque clé cryptographique à travers ses états formels de cycle de vie : pre-activation (générée, non encore en service), active (en cours d'utilisation pour chiffrer/signer), deactivated (n'est plus utilisée pour produire mais peut encore déchiffrer/vérifier), compromised (compromission détectée ou suspectée), destroyed (matériau de clé effacé de façon irréversible). Chaque transition d'état doit être consignée dans un audit trail horodaté. Une clé ne doit jamais être réutilisée après destruction.",
+        "grade": 5,
+        "level": "STANDARD",
+        "sources": [
+          {
+            "name": "NIST SP 800-57 Part 1 Rev. 5 — Recommendation for Key Management: General (Barker, 2020)",
+            "pyramid": 1,
+            "year": 2020,
+            "quote": "The key management life cycle includes the following states for a cryptographic key: pre-activation, active, deactivated, compromised, and destroyed. The key management system should support these states and the transitions between them.",
+            "note": "Source normative principale définissant formellement les états du cycle de vie des clés. Les transitions entre états doivent être traçées et horodatées. Standard de référence adopté mondialement."
+          },
+          {
+            "name": "OWASP Key Management Cheat Sheet (OWASP Foundation, 2024)",
+            "pyramid": 2,
+            "year": 2024,
+            "quote": "Keys should be managed through well-defined lifecycle states: generation, distribution, storage, use, rotation, revocation, and destruction. Each transition must be logged.",
+            "note": "Guide pratique adaptant les états NIST au contexte applicatif moderne (cloud, microservices). Recommande explicitement l'audit trail de chaque transition d'état."
+          },
+          {
+            "name": "NIST SP 800-130 — A Framework for Designing Cryptographic Key Management Systems (Barker et al., 2013)",
+            "pyramid": 1,
+            "year": 2013,
+            "quote": "The CKMS design shall address the key management life cycle, including key generation, distribution, storage, use, backup/recovery, revocation, and destruction, along with the metadata associated with each key.",
+            "note": "Framework structurant les exigences fonctionnelles d'un CKMS, incluant les métadonnées par état de clé. Complément architectural essentiel à NIST SP 800-57 Part 1."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": "5-6 (NIST SP 800-57 niveau 1 pyramide)",
+          "plus": [
+            "+1 convergence : NIST 800-57 (level 1) + NIST 800-130 (level 1) + OWASP Key Management Cheat Sheet (level 2) convergent sur les mêmes états et la nécessité d'un audit trail"
+          ],
+          "minus": [
+            "-1 indirectness partielle : standards conçus pour des systèmes généraux, pas spécifiques aux agents IA ou aux microservices cloud-native modernes"
+          ],
+          "note_agent_c": "CORRECTION grade 6→5 : base pyramid 1 = 6, +1 convergence (plafonné à 6), -1 indirectness = 5. Grade 6 était incorrect."
+        },
+        "robustness": "HIGH",
+        "critical_sources": [
+          "NIST SP 800-57 Part 1 Rev. 5 (référence normative mondiale sur le cycle de vie des clés)",
+          "NIST SP 800-130 (framework CKMS — exigences architecturales)"
+        ],
+        "etd_balance": {
+          "benefices": "Définir des états formels rend le cycle de vie des clés auditable, automatisable et conforme aux réglementations (RGPD, PCI-DSS, FedRAMP). Évite les clés zombies (actives au-delà de leur durée de vie) et les clés fantômes (non traçables).",
+          "risques": "Complexité opérationnelle : maintenir les transitions d'état requiert une infrastructure de key management dédiée (key vault). Coût d'implémentation élevé pour les petites équipes sans outillage KMS.",
+          "balance": "Bénéfices >> Risques. Les incidents Heartbleed (2014) et OCSP Cloudflare (2024) illustrent le coût d'une gestion d'état absente. Les key vaults modernes (HashiCorp Vault, AWS KMS, Azure Key Vault) automatisent la gestion des états à coût marginal.",
+          "faisabilite": "Haute avec un key vault. Faible sans infrastructure KMS dédiée — ce qui justifie le principe P3 (key vault obligatoire en production)."
+        },
+        "date_extraction": "2026-04-18"
+      },
+      {
+        "text": "Appliquer des durées de vie (cryptopériodes) adaptées au type de clé : clés de signature de code ≤ 1 an ; clés de chiffrement de données au repos ≤ 2 ans ; clés TLS/transport ≤ 90 jours (idéalement via ACME/Let's Encrypt) ; clés symétriques de session ≤ durée de la session ; secrets API et tokens JWT ≤ 24 h en production (ou rotation dynamique via TTL de bail). Les clés de chiffrement de clés (KEK) peuvent avoir une durée de vie plus longue (3-5 ans) mais exigent une protection hardware (HSM). Une clé ne doit jamais être utilisée au-delà de sa cryptopériode sans rotation explicitement approuvée.",
+        "grade": 5,
+        "level": "STANDARD",
+        "sources": [
+          {
+            "name": "NIST SP 800-57 Part 1 Rev. 5 — Recommendation for Key Management: General (Barker, 2020)",
+            "pyramid": 1,
+            "year": 2020,
+            "quote": "The cryptoperiod for a key depends on the strength of the algorithm, the amount of information encrypted, the exposure of the key, and the value of the information protected. In general, a shorter cryptoperiod is preferred.",
+            "note": "NIST SP 800-57 Table 1 donne les cryptopériodes recommandées par type de clé. Référence normative mondiale."
+          },
+          {
+            "name": "ENISA — Algorithms, Key Sizes and Parameters Report (ENISA, 2022)",
+            "pyramid": 2,
+            "year": 2022,
+            "quote": "Key lifetimes should be limited according to the sensitivity of the data protected and the risk of key compromise. Keys protecting long-term data should have cryptoperiods aligned with the sensitivity period of the data.",
+            "note": "Recommandations européennes complémentant NIST SP 800-57 pour la conformité RGPD. Donne des fourchettes de durée de vie par algorithme et par type de clé."
+          },
+          {
+            "name": "OWASP Application Security Verification Standard (ASVS) 4.0 — V1.6 Cryptographic Architecture (OWASP Foundation, 2021)",
+            "pyramid": 2,
+            "year": 2021,
+            "quote": "Verify that cryptographic keys are rotated at a defined interval and that keys are revoked when they are no longer needed or compromised.",
+            "note": "Critères ASVS L2/L3 directement applicables en audit d'application web. La rotation à intervalle défini est un critère de vérification explicite."
+          },
+          {
+            "name": "HashiCorp Vault — Official Documentation (Dynamic Secrets, Lease TTL) (HashiCorp, 2024)",
+            "pyramid": 3,
+            "year": 2024,
+            "quote": "Dynamic secrets are generated on demand and have a configurable lease duration (TTL). After the lease expires, Vault will automatically revoke the secret.",
+            "note": "HashiCorp Vault implémente les cryptopériodes courtes via le mécanisme de bail (lease TTL) pour les dynamic secrets. Concrétisation opérationnelle des recommandations NIST."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": "5-6 (NIST SP 800-57 niveau 1 pyramide)",
+          "plus": [
+            "+1 convergence : NIST 800-57 (level 1) + ENISA 2022 (level 2) + OWASP ASVS (level 2) + HashiCorp Vault (level 3) convergent sur la nécessité de cryptopériodes courtes et adaptées au type de clé"
+          ],
+          "minus": [
+            "-1 indirectness partielle : les durées recommandées sont issues de contextes généraux — des contextes spécifiques (ex. IoT embedded, agents IA autonomes) peuvent nécessiter des adaptations"
+          ],
+          "note_agent_c": "CORRECTION grade 6→5 : base pyramid 1 = 6, +1 convergence (plafonné à 6), -1 indirectness = 5. Grade 6 était incorrect."
+        },
+        "robustness": "HIGH",
+        "critical_sources": [
+          "NIST SP 800-57 Part 1 Rev. 5 (Table 1 — cryptopériodes par type de clé)",
+          "ENISA 2022 (perspective réglementaire européenne, conformité RGPD)"
+        ],
+        "etd_balance": {
+          "benefices": "Limiter la durée de vie des clés réduit mécaniquement la fenêtre d'exposition en cas de compromission. L'analyse post-Heartbleed (2014) montre que des cryptopériodes courtes auraient réduit drastiquement l'impact : les clés TLS de nombreux serveurs n'avaient pas été renouvelées depuis plusieurs années.",
+          "risques": "Cryptopériodes trop courtes sans automatisation génèrent de la friction opérationnelle et des incidents de rotation (cf. Cloudflare OCSP 2024). Le bon équilibre est : cryptopériodes courtes + rotation automatique.",
+          "balance": "Bénéfices >> Risques si la rotation est automatisée. La combinaison cryptopériode courte + rotation automatique (P4) est le standard de l'industrie.",
+          "faisabilite": "Haute pour TLS (ACME/Let's Encrypt automatise les 90 jours). Modérée pour les secrets applicatifs sans key vault. Requiert HashiCorp Vault, AWS KMS ou Azure Key Vault pour les dynamic secrets."
+        },
+        "date_extraction": "2026-04-18"
+      },
+      {
+        "text": "Utiliser un key vault (HashiCorp Vault, AWS KMS, Azure Key Vault, GCP Cloud KMS) comme point centralisé obligatoire pour stocker et accéder à tout secret de production (clés API, certificats, clés de chiffrement). Ne jamais stocker de secrets en clair dans : le code source, les variables d'environnement non chiffrées, les fichiers de configuration commitées, les logs. Les secrets doivent être injectés à l'exécution via des références au vault, pas copiés. Les key vaults de production doivent être protégés par FIPS 140-2 Level 2 minimum (ou HSM pour les KEK sensibles).",
+        "grade": 5,
+        "level": "STANDARD",
+        "sources": [
+          {
+            "name": "NIST SP 800-152 — A Profile for U.S. Federal Cryptographic Key Management Systems (Barker, Smid, 2015)",
+            "pyramid": 1,
+            "year": 2015,
+            "quote": "The CKMS shall provide controlled access to cryptographic keys through a well-defined interface, ensuring that keys are not exposed in plaintext outside the cryptographic module boundary.",
+            "note": "Exigences minimales pour un key vault fédéral : accès contrôlé, pas d'exposition en clair, séparation des fonctions, audit complet. Applicable à tout key vault de production."
+          },
+          {
+            "name": "FIPS 140-3 — Security Requirements for Cryptographic Modules (NIST/CMVP, 2019)",
+            "pyramid": 1,
+            "year": 2019,
+            "quote": "Level 2 adds physical security mechanisms to the basic security requirements of Level 1, including tamper-evidence requirements using coatings or seals on production-grade modules.",
+            "note": "Standard normé définissant les 4 niveaux de sécurité pour les modules cryptographiques. Level 2 minimum pour les key vaults de production. AWS KMS et Azure Key Vault sont certifiés FIPS 140-2 Level 2."
+          },
+          {
+            "name": "OWASP Application Security Verification Standard (ASVS) 4.0 — V1.6 Cryptographic Architecture (OWASP Foundation, 2021)",
+            "pyramid": 2,
+            "year": 2021,
+            "quote": "Verify that all cryptographic keys and secrets are stored outside the application, in a key management system or equivalent key store, and are not stored in the codebase or in environment variables.",
+            "note": "Critère ASVS L2 explicite : les clés doivent être hors du code source et des variables d'environnement non chiffrées. Directement auditable."
+          },
+          {
+            "name": "HashiCorp Vault — Official Documentation (Secrets Engines, Transit, ACL Policies) (HashiCorp, 2024)",
+            "pyramid": 3,
+            "year": 2024,
+            "quote": "The Transit secrets engine handles cryptographic functions on data in-transit. The key is never exposed to the caller; only the result of the cryptographic operation is returned.",
+            "note": "Le transit secrets engine de Vault implémente le principe de séparation des clés et des données : les clés restent dans le vault, seuls les résultats cryptographiques sont retournés. Concrétisation optimale du principe key-vault-only."
+          },
+          {
+            "name": "AWS Key Management Service (KMS) — Best Practices (Amazon Web Services, 2024)",
+            "pyramid": 3,
+            "year": 2024,
+            "quote": "Use separate KMS keys for different applications, environments, and data classifications. Never allow the plaintext export of key material for symmetric encryption keys used in production.",
+            "note": "Bonnes pratiques AWS KMS : séparation des clés par environnement, interdiction d'export du matériau de clé pour les CMK symétriques. Référence cloud FIPS 140-2 Level 2."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": "5-6 (NIST SP 800-57/152 niveau 1 pyramide)",
+          "plus": [
+            "+1 convergence : NIST 800-152 (level 1) + FIPS 140-3 (level 1) + OWASP ASVS (level 2) + HashiCorp Vault (level 3) + AWS KMS (level 3) + Azure Key Vault (level 3) convergent unanimement sur le key vault comme point centralisé obligatoire"
+          ],
+          "minus": [
+            "-1 indirectness partielle : standards conçus pour des contextes fédéraux ou cloud génériques — les micro-environnements (edge, embedded, agents IA autonomes hors cloud) peuvent ne pas avoir accès à un KMS standard"
+          ],
+          "note_agent_c": "CORRECTION grade 6→5 : base pyramid 1 = 6, +1 convergence (plafonné à 6), -1 indirectness = 5. Grade 6 était incorrect."
+        },
+        "robustness": "HIGH",
+        "critical_sources": [
+          "OWASP ASVS V1.6 (critère de vérification L2 directement auditable — clés hors code source)",
+          "NIST SP 800-152 (exigences minimales formelles pour un key vault de production)"
+        ],
+        "etd_balance": {
+          "benefices": "Centraliser les secrets dans un vault élimine la classe entière des incidents de type 'secret hardcodé dans le code source'. Les audits de conformité (SOC 2, PCI-DSS, ISO 27001) exigent un KMS centralisé. La séparation cryptographique (transit engine) garantit que les clés ne sont jamais exposées en clair.",
+          "risques": "Le key vault devient un single point of failure critique — sa disponibilité conditionne celle de toutes les applications. Requiert une architecture haute disponibilité du vault lui-même.",
+          "balance": "Bénéfices >> Risques. Le risque de disponibilité est géré par la réplication du vault (Vault HA, AWS KMS multi-région). Le risque de compromission d'un secret hardcodé (irréversible une fois commité) est bien supérieur au risque de disponibilité.",
+          "faisabilite": "Haute avec les solutions cloud managées (AWS KMS, Azure Key Vault, GCP Cloud KMS) — pas d'infrastructure à maintenir. Modérée avec HashiCorp Vault self-hosted — requiert expertise opérationnelle."
+        },
+        "date_extraction": "2026-04-18"
+      },
+      {
+        "text": "Implémenter la rotation automatique des clés et maintenir un audit trail complet de tous les accès aux clés. La rotation doit être : déclenchée automatiquement à l'expiration de la cryptopériode (sans intervention manuelle), testée en environnement de staging avant toute mise en production, réversible (conservation de l'ancienne clé en état deactivated pour déchiffrer les données existantes pendant la période de transition), et immédiate en cas de compromission suspectée (rotation d'urgence + révocation). L'audit trail doit consigner : qui a accédé à quelle clé, quand, depuis quelle source (IP, service, identité), et quel résultat (succès/échec). Conserver les logs d'audit au minimum 1 an.",
+        "grade": 5,
+        "level": "STANDARD",
+        "sources": [
+          {
+            "name": "NIST SP 800-57 Part 2 Rev. 1 — Recommendation for Key Management: Best Practices for Key Management Organizations (Barker, Barker, 2019)",
+            "pyramid": 1,
+            "year": 2019,
+            "quote": "Key management facilities shall maintain audit records for all key management activities, including key generation, distribution, use, rotation, revocation, and destruction. These records shall be protected against unauthorized access and modification.",
+            "note": "Exigences organisationnelles pour l'audit trail : couverture exhaustive du cycle de vie, protection de l'intégrité des logs. Complément opérationnel essentiel à NIST SP 800-57 Part 1."
+          },
+          {
+            "name": "HashiCorp Vault — Official Documentation (Audit Devices, Transit Key Rotation) (HashiCorp, 2024)",
+            "pyramid": 3,
+            "year": 2024,
+            "quote": "Vault's audit devices log all requests and responses. The transit secrets engine supports automatic key rotation; when rotated, the new key version is used for new encrypt operations while older versions can still decrypt.",
+            "note": "Implémentation concrète : audit log de toutes les opérations + rotation transparente avec conservation des versions anciennes pour déchiffrement. Démontre la faisabilité opérationnelle du principe."
+          },
+          {
+            "name": "Heartbleed (CVE-2014-0160) — Post-Mortem and Key Rotation Response Analysis (Durumeric et al., USENIX Security 2014)",
+            "pyramid": 4,
+            "year": 2014,
+            "quote": "Our analysis shows that the majority of affected servers failed to complete key rotation within weeks of the Heartbleed disclosure, and many continued to use potentially compromised keys months later.",
+            "note": "Cas d'école empirique : sans infrastructure de rotation automatique, la réponse à une compromission massive est chaotique et incomplète. Heartbleed a exposé les limites d'une rotation manuelle à l'échelle."
+          },
+          {
+            "name": "Cloudflare — Incident Post-Mortem: OCSP Certificate Rotation Failure (Cloudflare Security Team, 2024)",
+            "pyramid": 4,
+            "year": 2024,
+            "quote": "The rotation failure was caused by an untested certificate renewal path that had not been exercised in staging. A rollback procedure was executed to restore service using the previous certificate.",
+            "note": "Post-mortem illustrant l'importance de tester la rotation en staging et d'avoir une procédure de rollback. Contrepoint opérationnel : la rotation automatique sans test préalable peut provoquer des incidents."
+          },
+          {
+            "name": "AWS Key Management Service (KMS) — Best Practices (Amazon Web Services, 2024)",
+            "pyramid": 3,
+            "year": 2024,
+            "quote": "Enable automatic key rotation for symmetric encryption keys. AWS KMS retains all previous key material so that data encrypted under an older version can still be decrypted.",
+            "note": "AWS KMS implémente la rotation automatique annuelle avec conservation des versions pour déchiffrement rétroactif — conformément aux recommandations NIST SP 800-57."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": "5-6 (NIST SP 800-57 niveau 1 pyramide)",
+          "plus": [
+            "+1 convergence : NIST 800-57 Part 2 (level 1) + HashiCorp Vault (level 3) + AWS KMS (level 3) + Azure Key Vault (level 3) convergent sur rotation automatique + audit trail exhaustif",
+            "Heartbleed (level 4) et Cloudflare OCSP (level 4) apportent une validation empirique par l'échec : les deux incidents illustrent les conséquences d'une rotation non automatisée ou non testée"
+          ],
+          "minus": [
+            "-1 indirectness partielle : les recommandations sont issues de contextes web/cloud — pas spécifiques aux agents IA autonomes ni aux systèmes embarqués"
+          ],
+          "note_agent_c": "CORRECTION grade 6→5 : base pyramid 1 = 6, +1 convergence (plafonné à 6), -1 indirectness = 5. Grade 6 était incorrect."
+        },
+        "robustness": "HIGH",
+        "critical_sources": [
+          "NIST SP 800-57 Part 2 Rev. 1 (exigences organisationnelles pour l'audit trail)",
+          "Heartbleed post-mortem (validation empirique de l'échec de la rotation manuelle à l'échelle)"
+        ],
+        "etd_balance": {
+          "benefices": "La rotation automatique réduit la fenêtre d'exposition sans friction opérationnelle. L'audit trail permet la détection d'accès anormaux (clé accédée depuis une IP inconnue = indicator of compromise) et la traçabilité réglementaire (PCI-DSS 3.6.x, SOC 2 CC6.7).",
+          "risques": "La rotation automatique sans test en staging peut provoquer des interruptions de service (cf. Cloudflare 2024). La conservation des anciennes versions de clés (pour déchiffrement rétroactif) requiert une politique de rétention explicite pour éviter l'accumulation indéfinie.",
+          "balance": "Bénéfices >> Risques si la rotation est testée en staging et si une procédure de rollback existe. Les bénéfices sécuritaires (réduction de la fenêtre d'exposition) et réglementaires (audit trail) sont supérieurs aux risques opérationnels maîtrisables.",
+          "faisabilite": "Haute avec les solutions KMS managées (AWS KMS rotation annuelle automatique, Azure Key Vault rotation configurable). Modérée avec HashiCorp Vault — requiert configuration explicite des politiques de rotation et des audit devices."
+        },
+        "date_extraction": "2026-04-18"
+      }
+    ]
+  },
+  "variants": {}
+}

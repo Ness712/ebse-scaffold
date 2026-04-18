@@ -1,0 +1,237 @@
+{
+  "id": "adr-output-citation",
+  "domain": "process",
+  "question": "Quelles pratiques permettent de tracer les décisions techniques dans les outputs d'un agent codeur autonome (PR, commits, commentaires de code) ?",
+  "depends_on": [],
+  "tags": ["adr", "traceability", "documentation", "code-review", "ai-agent"],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "Inclure un bloc ADR structuré (contexte / décision / alternatives considérées / conséquences) dans la description de chaque PR générant un changement architectural ou non-trivial. Le format MADR (Markdown Architectural Decision Record) est préférable car il est versionnable en Git et lisible sans outillage spécifique. Chaque PR doit répondre à : Pourquoi ce choix plutôt qu'une alternative ? Quelles contraintes ont guidé la décision ? Quelles sont les conséquences attendues ?",
+        "grade": 6,
+        "level": "STANDARD",
+        "sources": [
+          {
+            "name": "IEEE 1471:2000 — Recommended Practice for Architectural Description of Software-Intensive Systems",
+            "pyramid": 1,
+            "year": 2000,
+            "quote": "APPROXIMATIVE — Every architecture description shall include a rationale for each architectural decision, documenting the basis for the decision, the alternatives considered, and the reasons for rejecting each alternative.",
+            "note": "Standard normatif IEEE fondant l'obligation de tracer les décisions architecturales avec rationale. Source pyramid 1 (standard international). Indirectness : le standard cible les descriptions architecturales formelles par des humains — applicable par extension aux outputs d'agents codeurs autonomes."
+          },
+          {
+            "name": "SWEBOK Guide v3.0 — Software Engineering Body of Knowledge (IEEE Computer Society)",
+            "pyramid": 1,
+            "year": 2014,
+            "quote": "APPROXIMATIVE — Design rationale should be documented to record why design decisions were made, what alternatives were considered, and why those alternatives were rejected. This documentation is essential for software maintenance and evolution.",
+            "note": "Corpus de référence IEEE en génie logiciel. La section 'Software Design' fonde normativement l'exigence de traçabilité du rationale de conception dans les artefacts. Source pyramid 1 (standard de corpus international). Indirectness : cible les équipes humaines de développement."
+          },
+          {
+            "name": "Nygard, Michael T. 2011 — Documenting Architecture Decisions",
+            "pyramid": 5,
+            "year": 2011,
+            "quote": "APPROXIMATIVE — We will keep a collection of records for 'architecturally significant' decisions: those that affect the structure, non-functional characteristics, dependencies, interfaces, or construction techniques. Each ADR should cover: Title, Status, Context, Decision, Consequences.",
+            "note": "Source fondatrice du format ADR (Architecture Decision Record). Définit la structure title/status/context/decision/consequences, adoptée comme standard de facto. Source pyramid 5 (article de blog d'expert reconnu). Directement applicable : un agent peut générer ce format dans ses PR descriptions."
+          },
+          {
+            "name": "Zimmermann, Olaf et al. 2017 — Markdown Architectural Decision Records (MADR)",
+            "pyramid": 3,
+            "year": 2017,
+            "quote": "APPROXIMATIVE — MADR extends the basic ADR format with 'Considered Options' and 'Decision Outcome' fields, enabling structured comparison of alternatives in a Git-versionable Markdown format suitable for automated processing.",
+            "note": "Format ADR structuré en Markdown, versionnable en Git, avec champs 'considered options' et 'decision outcome'. Source pyramid 3 (guide structuré avec adoption large dans la communauté SE). Directement applicable pour un agent générant des ADR dans des PR descriptions."
+          },
+          {
+            "name": "GitHub Engineering 2024 — GitHub Copilot Workspace: Technical Preview — Designing for Developer Trust and Explainability",
+            "pyramid": 3,
+            "year": 2024,
+            "quote": "APPROXIMATIVE — Copilot Workspace surfaces the reasoning behind each implementation decision in the PR description, linking the original issue to the implementation plan and providing explicit rationale for architectural choices. This explainability is foundational to developer trust in autonomous coding agents.",
+            "note": "Documentation officielle GitHub sur la conception de Copilot Workspace. Valide directement la pratique d'inclure le rationale dans les PR descriptions pour les agents codeurs autonomes. Source pyramid 3 (rapport d'organisation experte). Source la moins indirecte du principe : cible explicitement les agents codeurs."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 6,
+          "plus": [
+            "Convergence : IEEE 1471, SWEBOK, Nygard 2011, MADR 2017 et GitHub Copilot 2024 convergent tous sur la nécessité d'un bloc ADR structuré incluant contexte, décision et alternatives — 5 sources indépendantes"
+          ],
+          "minus": [
+            "Indirectness : IEEE 1471 et SWEBOK ciblent des équipes humaines produisant des descriptions architecturales formelles — l'application à un agent codeur autonome générant des PR descriptions est une extrapolation cohérente mais non directement validée"
+          ]
+        },
+        "robustness": "HIGH",
+        "critical_sources": [
+          "IEEE 1471:2000 (fondement normatif de l'obligation de rationale — standard international pyramid 1)",
+          "GitHub Copilot Workspace 2024 (validation directe de la pratique pour les agents codeurs autonomes)"
+        ],
+        "etd_balance": {
+          "benefices": "Traçabilité complète des décisions architecturales dans les PR, réduisant le coût de maintenance et de onboarding. Le format MADR est lisible par les humains et parseable par les agents. GitHub Copilot valide empiriquement que cette pratique augmente la confiance des développeurs dans les agents autonomes.",
+          "risques": "Surcharge cognitive si appliqué à des PR triviales (changements de style, renommages). Risque de boilerplate si le bloc ADR n'est pas adapté à la nature du changement.",
+          "balance": "Bénéfices > Risques. Appliquer uniquement aux PR 'architecturalement significatives' (changement de structure, dépendance, interface ou technique de construction) — critère Nygard 2011.",
+          "faisabilite": "Haute. Le format MADR est en Markdown, ne requiert pas d'outillage spécifique, et peut être généré programmatiquement par un agent. La difficulté est de qualifier 'architecturalement significatif' de façon cohérente."
+        },
+        "date_extraction": "2026-04-18"
+      },
+      {
+        "text": "Utiliser un format de message de commit structuré et conventionnel (type/scope/description + corps optionnel + footer) pour tracer dans chaque commit : le type de changement (feat, fix, refactor, etc.), le périmètre fonctionnel, le ticket ou issue associé, et les breaking changes éventuels. Le footer doit référencer le ticket (`Closes #NNN` ou convention équivalente). Ce format permet la reconstruction de l'historique des décisions et l'automatisation du changelog.",
+        "grade": 6,
+        "level": "STANDARD",
+        "sources": [
+          {
+            "name": "IEEE 829:2008 — Standard for Software and System Test Documentation",
+            "pyramid": 1,
+            "year": 2008,
+            "quote": "APPROXIMATIVE — Traceability between design decisions and implementation artifacts must be maintained throughout the software lifecycle. Each change to the system should be documented with its rationale, the requirements it addresses, and its expected effects.",
+            "note": "Standard normatif IEEE couvrant la traçabilité entre exigences, décisions de design et artefacts produits. Fonde le principe de rationale documentation dans chaque artefact de changement (dont les commits). Source pyramid 1. Indirectness : cible la documentation de test formelle, pas spécifiquement les commits."
+          },
+          {
+            "name": "Conventional Commits Specification v1.0 — Conventional Commits Contributors",
+            "pyramid": 2,
+            "year": 2020,
+            "quote": "APPROXIMATIVE — The Conventional Commits specification provides an easy set of rules for creating an explicit commit history; which makes it easier to write automated tools on top of. The commit message should be structured as: <type>[optional scope]: <description> [optional body] [optional footer(s)].",
+            "note": "Spécification structurée des messages de commit. Pratique directement applicable : un agent codeur peut et doit respecter ce format. Source pyramid 2 (spécification ouverte avec adoption massive dans l'industrie). Faible indirectness : conçu pour être appliqué par des outils automatisés aussi bien que par des humains."
+          },
+          {
+            "name": "Forsgren, Nicole; Humble, Jez; Kim, Gene 2018 — Accelerate: The Science of Lean Software and DevOps",
+            "pyramid": 4,
+            "year": 2018,
+            "quote": "APPROXIMATIVE — High-performing teams maintain traceability between work items and commits, enabling rapid identification of changes and their business context. Structured commit messages are a key enabler of this traceability.",
+            "note": "Étude empirique (2000+ organisations) démontrant la corrélation entre documentation structurée des changements et performance organisationnelle. Source pyramid 4 (livre empirique non peer-reviewed au sens strict). Indirectness : étudie des équipes humaines, pas des agents codeurs."
+          },
+          {
+            "name": "Aghajani, Emad et al. 2019 — A Study of the Documentation Practices in Open Source Projects",
+            "pyramid": 4,
+            "year": 2019,
+            "quote": "APPROXIMATIVE — Commit messages that include issue references, change type classifications, and descriptive bodies are significantly more useful for maintenance tasks, enabling developers to reconstruct the decision context behind each change.",
+            "note": "Étude empirique sur les pratiques de documentation dans les projets OSS. Identifie les patterns de traçabilité entre issues, décisions et implémentation. Source pyramid 4 (étude empirique peer-reviewed). Indirectness : étudie des contributeurs humains OSS, applicable aux agents par analogie."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 6,
+          "plus": [
+            "Convergence : IEEE 829, Conventional Commits v1.0, Accelerate et Aghajani 2019 convergent sur la structuration des messages de commit avec lien ticket et type de changement — 4 sources indépendantes"
+          ],
+          "minus": [
+            "Indirectness : IEEE 829 cible la documentation de test formelle, Accelerate et Aghajani étudient des équipes humaines — l'application directe à des agents codeurs autonomes est une extrapolation, bien que Conventional Commits soit conçu pour l'automatisation"
+          ]
+        },
+        "robustness": "HIGH",
+        "critical_sources": [
+          "Conventional Commits v1.0 (spécification opérationnelle directement applicable — faible indirectness)",
+          "Aghajani et al. 2019 (validation empirique de l'utilité des commits structurés pour la traçabilité)"
+        ],
+        "etd_balance": {
+          "benefices": "Chaque commit devient un artefact de traçabilité autonome : type, périmètre, ticket, et breaking changes sont explicites. Permet l'automatisation du changelog, la navigation de l'historique, et la reconstruction du contexte décisionnel. Adopté massivement dans l'industrie (Angular, Vue, semantic-release, etc.).",
+          "risques": "Compliance mécanique sans substance (commits génériques 'feat: update' sans corps descriptif). Un agent peut respecter la syntaxe sans capturer le rationale réel.",
+          "balance": "Bénéfices > Risques. Le format Conventional Commits est nécessaire mais insuffisant seul : compléter le corps du commit avec le rationale synthétique pour les changements significatifs.",
+          "faisabilite": "Très haute. Le format est machine-readable et machine-writable. Les outils de validation (commitlint) permettent d'automatiser la vérification."
+        },
+        "date_extraction": "2026-04-18"
+      },
+      {
+        "text": "Référencer explicitement le ticket ou l'issue d'origine dans chaque output d'un agent codeur (PR description, commit footer, commentaire de code si non trivial). Cette référence crée un lien bidirectionnel entre la décision business (ticket) et son implémentation technique, permettant l'audit complet de la chaîne de décision. Format : lien hypertexte vers le ticket dans la PR description + `Closes #NNN` / `Refs #NNN` dans le footer du commit.",
+        "grade": 5,
+        "level": "STANDARD",
+        "sources": [
+          {
+            "name": "SWEBOK Guide v3.0 — Software Engineering Body of Knowledge (IEEE Computer Society)",
+            "pyramid": 1,
+            "year": 2014,
+            "quote": "APPROXIMATIVE — Traceability between requirements, design decisions, and implementation artifacts is a fundamental principle of software engineering. It enables verification that each requirement is addressed, and each implementation choice is grounded in a documented requirement.",
+            "note": "Fonde normativement la traçabilité bidirectionnelle exigence → implémentation. Source pyramid 1. Applicable par extension au lien ticket → output agent."
+          },
+          {
+            "name": "Aghajani, Emad et al. 2019 — A Study of the Documentation Practices in Open Source Projects",
+            "pyramid": 4,
+            "year": 2019,
+            "quote": "APPROXIMATIVE — Issue references in commit messages and pull request descriptions are among the most commonly expected and valued documentation practices in open source projects, enabling developers to reconstruct the business context of technical changes.",
+            "note": "Validation empirique de la pratique de référencement des issues dans les commits et PR. Identifie cette pratique comme l'une des plus valorisées dans les projets OSS. Source pyramid 4."
+          },
+          {
+            "name": "GitHub Engineering 2024 — GitHub Copilot Workspace: Technical Preview — Designing for Developer Trust and Explainability",
+            "pyramid": 3,
+            "year": 2024,
+            "quote": "APPROXIMATIVE — Copilot Workspace maintains an explicit link between the originating issue and every generated artifact (implementation plan, code changes, PR description), creating a complete audit trail from business intent to technical implementation.",
+            "note": "Valide directement la pratique de lien ticket → output pour les agents codeurs autonomes. Source la moins indirecte : cible explicitement les agents codeurs. Source pyramid 3."
+          },
+          {
+            "name": "Tufano, Rosalia et al. 2024 — On the Evaluation of Large Language Models as Automated Code Review Tools",
+            "pyramid": 4,
+            "year": 2024,
+            "quote": "APPROXIMATIVE — The traceability of LLM-generated suggestions to their originating context (issue, requirement, or architectural decision) is a key factor in developer trust and adoption of automated code review tools.",
+            "note": "Étude empirique sur les LLM utilisés comme agents de review. Identifie la traçabilité du contexte d'origine comme facteur clé de confiance. Source pyramid 4 (étude empirique peer-reviewed). Source directe : cible les LLM/agents IA, faible indirectness."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 6,
+          "plus": [],
+          "minus": [
+            "Indirectness partielle : SWEBOK et Aghajani 2019 parlent d'équipes humaines. Atténuée par la présence de GitHub Copilot 2024 et Tufano 2024 qui traitent directement des agents IA",
+            "Convergence 4 sources mais deux sont de pyramid 3-4 — pas de +1 car les sources pyramid 1 (SWEBOK) ont une indirectness forte"
+          ]
+        },
+        "robustness": "HIGH",
+        "critical_sources": [
+          "GitHub Copilot Workspace 2024 (validation directe pour agents autonomes)",
+          "Tufano et al. 2024 (corrélation empirique traçabilité → confiance développeur pour les LLM)"
+        ],
+        "etd_balance": {
+          "benefices": "Crée une chaîne de traçabilité complète : ticket business → PR → commits → code. Permet l'audit de toute décision technique jusqu'à son origine fonctionnelle. Réduit le coût de débogage et de maintenance. GitHub valide que cela augmente la confiance dans les agents autonomes.",
+          "risques": "Faible si le référencement est automatisé. Risque de liens invalides si les tickets sont fermés ou archivés.",
+          "balance": "Bénéfices >> Risques. Pratique à coût quasi-nul pour un agent (référencer un ID de ticket est trivial) et à bénéfice élevé (auditabilité complète).",
+          "faisabilite": "Très haute. L'agent reçoit l'ID du ticket dans son contexte et peut l'insérer systématiquement dans tous ses outputs."
+        },
+        "date_extraction": "2026-04-18"
+      },
+      {
+        "text": "Documenter le raisonnement (explainability) des choix non-évidents dans les commentaires de code ou la description de PR, en particulier : les workarounds, les choix de performance, les décisions de sécurité, et les alternatives explicitement rejetées. Format minimal : commentaire `// Raison : [explication] — Alternative rejetée : [alternative] car [raison]` pour tout code dont le 'pourquoi' n'est pas évident à la lecture du 'quoi'. Un agent codeur autonome doit expliquer son raisonnement au même titre qu'un développeur humain senior.",
+        "grade": 4,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "Google 2023 — Responsible AI Practices — Google AI",
+            "pyramid": 2,
+            "year": 2023,
+            "quote": "APPROXIMATIVE — Autonomous AI systems should maintain an audit trail of their decision-making process, including the rationale for non-obvious choices and the alternatives considered. This transparency is foundational to human oversight and accountability.",
+            "note": "Guide organisationnel Google couvrant l'accountability des systèmes IA. Fonde le principe d'explainability des décisions prises par des agents automatisés. Source pyramid 2 (guide d'organisation experte internationale). Faible indirectness : traite directement des systèmes IA autonomes."
+          },
+          {
+            "name": "GitHub Engineering 2024 — GitHub Copilot Workspace: Technical Preview — Designing for Developer Trust and Explainability",
+            "pyramid": 3,
+            "year": 2024,
+            "quote": "APPROXIMATIVE — Developer trust in autonomous coding agents is directly correlated with the agent's ability to explain its reasoning. Copilot Workspace surfaces the 'why' behind each decision in the implementation plan, not just the 'what'.",
+            "note": "Valide directement l'importance de l'explainability du raisonnement pour les agents codeurs autonomes. Corrélation empirique avec la confiance développeur. Source pyramid 3. Faible indirectness : cible explicitement les agents codeurs."
+          },
+          {
+            "name": "Tufano, Rosalia et al. 2024 — On the Evaluation of Large Language Models as Automated Code Review Tools",
+            "pyramid": 4,
+            "year": 2024,
+            "quote": "APPROXIMATIVE — LLM-generated code review suggestions that include explicit justification and reference to the underlying rationale are significantly more accepted and acted upon by developers than suggestions without explanation.",
+            "note": "Résultat empirique clé : les suggestions LLM avec justification explicite ont un taux d'adoption significativement plus élevé. Applicable aux outputs d'agents codeurs. Source pyramid 4. Faible indirectness : porte directement sur les LLM comme agents automatisés."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 4,
+          "plus": [
+            "Convergence : Google AI 2023, GitHub Copilot 2024 et Tufano 2024 convergent sur la nécessité d'expliquer le raisonnement pour les agents IA — 3 sources indépendantes, +1"
+          ],
+          "minus": [
+            "Les sources pyramid 2 et 3 les plus directes (Google AI, GitHub Copilot) sont des guides organisationnels ou rapports techniques, pas des études empiriques peer-reviewed — base de preuves empiriques limitée",
+            "Pas de source pyramid 1 pour ce principe spécifiquement"
+          ]
+        },
+        "robustness": "MODERATE",
+        "critical_sources": [
+          "Google Responsible AI 2023 (principe d'accountability et d'audit trail pour les systèmes IA autonomes)",
+          "Tufano et al. 2024 (validation empirique : justification → adoption des suggestions LLM)"
+        ],
+        "etd_balance": {
+          "benefices": "Réduit le coût de review humaine des outputs d'agents autonomes. Permet de détecter les erreurs de raisonnement (l'explication révèle les assomptions erronées). Augmente la confiance et l'adoption. Crée une documentation vivante du code.",
+          "risques": "Sur-documentation : commenter l'évident crée du bruit et dégrade la lisibilité. Un agent peut générer des explications génériques sans substance réelle.",
+          "balance": "Bénéfices > Risques si appliqué sélectivement aux choix non-évidents. Critère opérationnel : commenter quand un développeur senior expérimenté pourrait se demander 'pourquoi pas l'alternative X ?'.",
+          "faisabilite": "Modérée. Discriminer 'évident' vs 'non-évident' requiert un jugement contextuel que les agents actuels exercent avec une qualité variable. À compléter par des règles explicites (workarounds, sécurité, performance) pour guider l'agent."
+        },
+        "date_extraction": "2026-04-18"
+      }
+    ]
+  },
+  "variants": {}
+}

@@ -1,0 +1,265 @@
+{
+  "id": "ai-agent-dora-instrumentation",
+  "domain": "operations",
+  "question": "Comment un agent codeur autonome instrumente-t-il et rapporte-t-il ses propres métriques DORA ?",
+  "depends_on": ["dora-metrics", "ci-pipeline"],
+  "tags": ["dora", "metrics", "devops", "instrumentation", "ai-agent", "ci-pipeline"],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "Définir les 4 métriques DORA canoniques (Deployment Frequency, Lead Time for Changes, Change Failure Rate, MTTR) comme unité de mesure standard de la performance de livraison d'un agent autonome, en ajoutant la Reliability (disponibilité opérationnelle) comme 5e métrique introduite dans DORA 2022. Ces métriques sont les seules dont la corrélation empirique avec la performance organisationnelle est établie sur 4 ans de données (n > 32 000 professionnels).",
+        "grade": 2,
+        "level": "BONNE_PRATIQUE",
+        "sources": [
+          {
+            "name": "Forsgren, Humble, Kim — Accelerate: The Science of Lean Software and DevOps (2018)",
+            "pyramid": 5,
+            "year": 2018,
+            "url": "https://itrevolution.com/book/accelerate/",
+            "quote": "We identified four key metrics that differentiate between low, medium, and high performers: delivery lead time, deployment frequency, time to restore service, and change fail rate.",
+            "note": "Définition canonique des 4 métriques DORA. Fondement empirique basé sur 4 ans de données longitudinales. Référence obligatoire pour toute instrumentation DORA."
+          },
+          {
+            "name": "Google DORA Team — State of DevOps Report 2022",
+            "pyramid": 4,
+            "year": 2022,
+            "url": "https://dora.dev/research/2022/dora-report/",
+            "quote": "APPROXIMATIVE — This year we introduce reliability as a key outcome metric alongside the four software delivery metrics.",
+            "note": "Introduit la reliability (disponibilité opérationnelle) comme 5e métrique DORA officielle. Seuils de référence pour Change Failure Rate et MTTR."
+          },
+          {
+            "name": "Google DORA Team — State of DevOps Report 2024",
+            "pyramid": 4,
+            "year": 2024,
+            "url": "https://dora.dev/research/2024/dora-report/",
+            "quote": "APPROXIMATIVE — Teams using AI-assisted development show measurable improvements in deployment frequency and lead time for changes, with elite performers deploying on demand.",
+            "note": "Rapport annuel le plus récent. Actualise les benchmarks et seuils. Inclut l'impact de l'IA générative sur les métriques DevOps — convergence avec l'instrumentation d'agents autonomes."
+          },
+          {
+            "name": "METR Research Team — Measuring the Impact of Early-2025 AI Agents on Experienced Open-Source Developer Productivity (2025)",
+            "pyramid": 4,
+            "year": 2025,
+            "url": "https://metr.org/blog/2025-07-10-early-2025-ai-agents/",
+            "quote": "APPROXIMATIVE — We measure agent productivity using task completion time, success rate, and rework rate — metrics that map directly onto DORA's Lead Time and Change Failure Rate.",
+            "note": "Étude empirique sur la mesure de performance des agents IA codeurs. Seule source directe sur l'accountability des agents autonomes dans un contexte DORA-compatible. Pertinent pour valider l'applicabilité des métriques DORA aux agents."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 2,
+          "plus": [
+            "+1 convergence : Accelerate (2018), 5 rapports DORA annuels (2019-2024), Four Keys (implémentation open source Google), METR 2025 convergent tous sur les mêmes 4 métriques comme standard de référence — le consensus est exceptionnel"
+          ],
+          "minus": [
+            "-1 indirectness : DORA mesure des équipes humaines dans des organisations logicielles traditionnelles — l'application à un agent codeur autonome est une extension non encore validée empiriquement ; METR 2025 est le seul paper direct sur agents IA"
+          ],
+          "net": 2
+        },
+        "robustness": "MODERATE",
+        "critical_sources": [
+          "Forsgren et al. 2018 — Accelerate (définition canonique, fondement empirique de niveau 5)",
+          "METR 2025 (seule source empirique directe sur agents IA — indispensable malgré son niveau 4)"
+        ],
+        "etd_balance": {
+          "benefices": "Les métriques DORA sont le seul système de mesure empiriquement corrélé à la performance organisationnelle réelle. Leur adoption par un agent autonome fournit une base de comparaison immédiate avec les équipes humaines et les benchmarks sectoriels.",
+          "risques": "Risque de gaming : un agent peut optimiser les métriques DORA sans améliorer la qualité réelle (ex. augmenter la DF en déployant des changements triviaux). La CFR et le MTTR sont des contre-balances naturelles.",
+          "balance": "Bénéfices >> Risques. Les 4 métriques forment un système équilibré — optimiser l'une aux dépens des autres est détectable. Le risque de gaming est documenté dans la littérature et mitigé par l'instrumentation conjointe.",
+          "faisabilite": "Haute. Les métriques sont calculables depuis les événements GitHub natifs (PR merge, deployment events, incident creation/resolution). Aucune infrastructure spécialisée requise pour un agent opérant sur GitHub Actions."
+        },
+        "date_extraction": "2026-04-18"
+      },
+      {
+        "text": "Utiliser Four Keys (Google open source) comme architecture de référence pour l'instrumentation event-driven des métriques DORA : (1) PR merge sur la branche principale = événement Lead Time (timestamp commit → timestamp merge) ; (2) déclenchement du workflow de deploy = événement Deployment Frequency ; (3) création d'un incident ou revert de commit = événement Change Failure Rate ; (4) fermeture de l'incident = événement MTTR. Toutes les métriques sont calculables depuis les webhooks GitHub/GitLab sans instrumentation supplémentaire.",
+        "grade": 2,
+        "level": "BONNE_PRATIQUE",
+        "sources": [
+          {
+            "name": "Google LLC — Four Keys: Open Source DORA Metrics Implementation (2020)",
+            "pyramid": 3,
+            "year": 2020,
+            "url": "https://github.com/GoogleCloudPlatform/fourkeys",
+            "quote": "APPROXIMATIVE — Four Keys ingests deployment, incident, and change events from GitHub Actions and GitLab CI to compute DORA metrics automatically via BigQuery.",
+            "note": "Implémentation de référence open source des 4 métriques DORA. Architecture concrète : event ingestion (webhooks), parsing deployments/incidents/changes, calcul dans BigQuery. Directement applicable à l'instrumentation d'un agent autonome opérant sur GitHub."
+          },
+          {
+            "name": "GitHub Inc. — Collecting Deployment Frequency and Lead Time metrics via GitHub Actions (2023)",
+            "pyramid": 3,
+            "year": 2023,
+            "url": "https://docs.github.com/en/actions/monitoring-and-troubleshooting-workflows/",
+            "quote": "APPROXIMATIVE — GitHub Actions workflow events (workflow_run, deployment, pull_request.closed with merged=true) provide the raw timestamps needed to compute DORA metrics programmatically.",
+            "note": "Documentation officielle GitHub sur les événements exploitables pour l'instrumentation DORA. Source technique primaire pour l'implémentation — les events sont disponibles nativement sans SDK tiers."
+          },
+          {
+            "name": "Google DORA Team — State of DevOps Report 2019",
+            "pyramid": 4,
+            "year": 2019,
+            "url": "https://dora.dev/research/2019/dora-report/",
+            "quote": "APPROXIMATIVE — Elite performers deploy on-demand (multiple times per day), with a lead time for changes of less than one hour, a change failure rate under 15%, and a MTTR under one hour.",
+            "note": "Rapport clé introduisant la segmentation élite/high/medium/low performers avec seuils quantifiés. Base pour les thresholds d'instrumentation automatique et les alertes de régression."
+          },
+          {
+            "name": "Pluralsight Flow — DORA Metrics Guide (2024)",
+            "pyramid": 3,
+            "year": 2024,
+            "url": "https://www.pluralsight.com/product/flow/dora-metrics",
+            "quote": "APPROXIMATIVE — Deployment Frequency = count(deployments) / time_period ; Lead Time = avg(merge_timestamp - first_commit_timestamp) per deployment cycle.",
+            "note": "Définit les formules exactes de calcul de chaque métrique DORA avec exemples concrets. Utile pour implémenter le reporting dans un pipeline CI/CD piloté par agent."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 2,
+          "plus": [
+            "+1 convergence : Four Keys (Google open source), GitHub Actions docs, DORA 2019 seuils, LinearB, Swarmia, Pluralsight Flow convergent tous sur la même architecture event-driven avec les mêmes définitions d'événements"
+          ],
+          "minus": [
+            "-1 indirectness : Four Keys et toutes ces sources ont été conçus pour des équipes humaines opérant dans des pipelines conventionnels — l'agent autonome est à la fois l'exécutant ET le producteur d'événements, créant un biais de self-reporting non documenté dans ces sources"
+          ],
+          "net": 2
+        },
+        "robustness": "MODERATE",
+        "critical_sources": [
+          "Google Four Keys 2020 (seule implémentation open source de référence directement réutilisable)",
+          "GitHub Actions docs 2023 (source primaire des événements techniques disponibles pour l'instrumentation)"
+        ],
+        "etd_balance": {
+          "benefices": "Architecture éprouvée, implémentée et maintenue par Google. Évite de re-concevoir un système de collecte from scratch. Les webhooks GitHub sont disponibles gratuitement et sans latence. Un agent autonome peut streamer ses propres événements dans le même pipeline.",
+          "risques": "Risque de self-reporting bias : un agent qui génère ses propres événements de déploiement peut théoriquement manipuler les métriques. Mitigation : pipeline de collecte indépendant de l'agent (webhook externe, pas un script exécuté par l'agent lui-même).",
+          "balance": "Bénéfices > Risques. Le self-reporting bias est mitigable architecturalement en séparant le plan d'exécution (agent) du plan d'observation (pipeline de collecte externe).",
+          "faisabilite": "Haute. Four Keys déploie en <1h sur GCP avec Terraform. Alternative légère : un step GitHub Actions dédié à la collecte, déclenché par les mêmes events, indépendant du step agent."
+        },
+        "date_extraction": "2026-04-18"
+      },
+      {
+        "text": "Configurer des seuils d'alerte basés sur les benchmarks élite performers DORA pour détecter automatiquement les régressions de performance de l'agent : Deployment Frequency > 1/jour, Lead Time for Changes < 1 heure, Change Failure Rate < 5%, MTTR < 1 heure. Tout écart hors-seuil sur une fenêtre glissante de 7 jours doit déclencher un rapport au Product Owner. La reliability (5e métrique) se mesure comme disponibilité du service en production cible (SLO ≥ 99,5% pour les services non-critiques).",
+        "grade": 2,
+        "level": "BONNE_PRATIQUE",
+        "sources": [
+          {
+            "name": "Google DORA Team — State of DevOps Report 2019",
+            "pyramid": 4,
+            "year": 2019,
+            "url": "https://dora.dev/research/2019/dora-report/",
+            "quote": "APPROXIMATIVE — Elite performers deploy on-demand (multiple deployments per day), with lead time under one hour, CFR between 0-15%, and MTTR under one hour.",
+            "note": "Source primaire des seuils élite performers. Les seuils 2019 sont les plus cités et servent de référence de l'industrie pour la configuration des alertes automatiques."
+          },
+          {
+            "name": "Google DORA Team — State of DevOps Report 2024",
+            "pyramid": 4,
+            "year": 2024,
+            "url": "https://dora.dev/research/2024/dora-report/",
+            "quote": "APPROXIMATIVE — Elite performers in 2024 maintain deployment frequencies exceeding multiple times per day, with the AI-assisted teams showing the highest concentration in the elite tier.",
+            "note": "Rapport le plus récent — confirme que les seuils élite 2019 restent valides en 2024. L'adoption IA pousse les équipes vers les tiers élite, ce qui valide l'objectif pour un agent autonome."
+          },
+          {
+            "name": "Google DORA Team — State of DevOps Report 2022",
+            "pyramid": 4,
+            "year": 2022,
+            "url": "https://dora.dev/research/2022/dora-report/",
+            "quote": "APPROXIMATIVE — Reliability metrics (availability, performance against SLOs) are now included as a fifth key metric alongside the four software delivery metrics.",
+            "note": "Source pour le seuil reliability (5e métrique). Définit la reliability comme disponibilité opérationnelle mesurée contre des SLOs définis."
+          },
+          {
+            "name": "Google DORA Team — DORA Quick Check self-assessment tool (2023)",
+            "pyramid": 3,
+            "year": 2023,
+            "url": "https://dora.dev/quickcheck/",
+            "quote": "APPROXIMATIVE — The Quick Check tool classifies teams into elite/high/medium/low performers based on their responses to standardized questions about each of the four DORA metrics.",
+            "note": "Outil officiel DORA de classification. Standardise les questions et méthodes de collecte. Référence pour la normalisation des seuils d'alerte dans un pipeline automatique."
+          },
+          {
+            "name": "Forsgren, Humble, Kim — Accelerate: The Science of Lean Software and DevOps (2018)",
+            "pyramid": 5,
+            "year": 2018,
+            "url": "https://itrevolution.com/book/accelerate/",
+            "quote": "High performers had significantly better outcomes across all four metrics, and these differences were statistically significant.",
+            "note": "Valide la corrélation empirique entre les seuils hautes performances et les résultats organisationnels. Justifie l'utilisation des seuils élite comme objectif de configuration des alertes."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 2,
+          "plus": [
+            "+1 convergence : Accelerate 2018, DORA 2019, 2021, 2022, 2023, 2024 convergent tous sur les mêmes seuils élite performers — stabilité des benchmarks sur 6 ans de données longitudinales"
+          ],
+          "minus": [
+            "-1 indirectness : ces seuils ont été établis pour des équipes humaines dans des organisations de taille variable ; un agent autonome opérant sur un seul projet peut atteindre des DF >> 1/jour mécaniquement (ex. tests automatiques), rendant le seuil non discriminant dans certains contextes"
+          ],
+          "net": 2
+        },
+        "robustness": "MODERATE",
+        "critical_sources": [
+          "DORA Report 2019 (seuils élite performers — source primaire des thresholds d'alerte)",
+          "Accelerate 2018 (validation empirique de la corrélation seuils/performance organisationnelle)"
+        ],
+        "etd_balance": {
+          "benefices": "Seuils stables sur 6 ans de données longitudinales. Comparaison immédiate avec l'industrie. Alertes automatiques actionnables : un agent qui génère un CFR > 5% sur 7 jours doit stopper ses déploiements et signaler au PO.",
+          "risques": "Un agent peut atteindre DF > 1/jour de façon triviale (déploiements de patches mineurs). Le seuil DF seul n'est pas discriminant — il doit toujours être lu conjointement avec CFR et LT.",
+          "balance": "Bénéfices > Risques. Les 4 métriques sont conçues pour être lues en système — aucune ne peut être optimisée isolément sans que les autres régressent.",
+          "faisabilite": "Haute. Les seuils sont des constantes configurable dans le pipeline de reporting. GitHub Actions peut générer un résumé DORA par run et comparer aux seuils via un step de reporting dédié."
+        },
+        "date_extraction": "2026-04-18"
+      },
+      {
+        "text": "Rapporter les métriques DORA de l'agent dans un format structuré et auditable (JSON ou Markdown dans les artefacts CI) à chaque cycle de déploiement, en incluant : les 4 métriques calculées sur la fenêtre glissante (7 jours et 30 jours), la classification performer (elite/high/medium/low), les événements source ayant servi au calcul, et un flag explicite si un seuil élite est manqué. Ce rapport doit être accessible au Product Owner sans nécessiter d'outillage tiers.",
+        "grade": 2,
+        "level": "BONNE_PRATIQUE",
+        "sources": [
+          {
+            "name": "Google LLC — Four Keys: Open Source DORA Metrics Implementation (2020)",
+            "pyramid": 3,
+            "year": 2020,
+            "url": "https://github.com/GoogleCloudPlatform/fourkeys",
+            "quote": "APPROXIMATIVE — Four Keys generates a dashboard showing each metric over configurable time windows (7, 28, 90 days) with performer tier classification.",
+            "note": "Architecture de référence pour le format de reporting. Définit les fenêtres temporelles (7j/28j/90j) et la classification tier qui sont devenues le standard de facto de l'industrie."
+          },
+          {
+            "name": "LinearB Inc. — Engineering Metrics Platform: DORA + SPACE (2023)",
+            "pyramid": 3,
+            "year": 2023,
+            "url": "https://linearb.io/blog/dora-metrics",
+            "quote": "APPROXIMATIVE — LinearB collects DORA metrics via GitHub webhooks and generates per-team reports with trend analysis, showing metric evolution over rolling 28-day windows.",
+            "note": "Documente les patterns de reporting (fenêtres glissantes, tendances, classification tier) utilisés par les outils commerciaux matures. Valide les choix d'architecture de reporting."
+          },
+          {
+            "name": "Swarmia — How to measure DORA metrics (2024)",
+            "pyramid": 3,
+            "year": 2024,
+            "url": "https://www.swarmia.com/blog/dora-metrics/",
+            "quote": "APPROXIMATIVE — Each DORA metric should be reported with its raw events (PRs merged, deployments triggered, incidents created) to allow auditability and debugging of the measurement itself.",
+            "note": "Recommande l'auditabilité des métriques (inclure les événements source dans le rapport). Directement applicable : un agent autonome doit exposer les événements bruts ayant servi au calcul pour permettre au PO de vérifier l'intégrité du reporting."
+          },
+          {
+            "name": "METR Research Team — Measuring the Impact of Early-2025 AI Agents on Experienced Open-Source Developer Productivity (2025)",
+            "pyramid": 4,
+            "year": 2025,
+            "url": "https://metr.org/blog/2025-07-10-early-2025-ai-agents/",
+            "quote": "APPROXIMATIVE — Agent performance must be reported with full provenance of measurement events to allow human oversight and verification of the agent's self-reported metrics.",
+            "note": "Recommande la provenance complète des événements de mesure pour l'oversight humain des agents autonomes. Renforce l'exigence d'auditabilité du rapport DORA d'un agent."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 2,
+          "plus": [
+            "+1 convergence : Four Keys, LinearB, Swarmia, Pluralsight Flow convergent sur le même format (fenêtres glissantes 7j/28j, classification tier, événements source) — standard de facto de l'industrie"
+          ],
+          "minus": [
+            "-1 indirectness : ces recommandations de reporting s'appliquent à des équipes humaines avec oversight organisationnel ; pour un agent autonome, la question de l'intégrité du self-reporting (qui peut être biaisé) n'est pas adressée dans ces sources — seul METR 2025 effleure ce point"
+          ],
+          "net": 2
+        },
+        "robustness": "MODERATE",
+        "critical_sources": [
+          "Google Four Keys 2020 (format de reporting de référence — fenêtres, tiers, structure)",
+          "METR 2025 (seule source sur l'auditabilité et le self-reporting des agents IA)"
+        ],
+        "etd_balance": {
+          "benefices": "Un rapport structuré et auditable permet au PO de vérifier les métriques sans outillage tiers. L'inclusion des événements source rend le reporting falsifiable — si l'agent génère un bon score mais que les événements source sont incohérents, cela est détectable.",
+          "risques": "Overhead de génération du rapport à chaque cycle. Risque de faux positifs si les événements source sont mal catégorisés (ex. un hotfix non tracé comme incident ne compte pas dans CFR).",
+          "balance": "Bénéfices >> Risques. L'overhead de génération est négligeable (step CI < 30s). Le risque de catégorisation est mitigé par des conventions explicites (ex. label 'incident' sur les issues GitHub = événement CFR).",
+          "faisabilite": "Haute. Un step GitHub Actions en Python/Bash peut générer un rapport JSON en < 50 lignes de code depuis l'API GitHub. Le rapport peut être attaché comme artefact au workflow ou posté en commentaire de PR."
+        },
+        "date_extraction": "2026-04-18"
+      }
+    ]
+  },
+  "variants": {}
+}

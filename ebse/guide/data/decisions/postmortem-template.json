@@ -1,0 +1,233 @@
+{
+  "id": "postmortem-template",
+  "domain": "operations",
+  "question": "Quelles sections obligatoires structurent un postmortem d'incident blameless pour garantir l'apprentissage et prévenir la récurrence ?",
+  "depends_on": ["incident-response", "runbooks"],
+  "tags": ["postmortem", "incident-response", "sre", "blameless", "learning"],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "Structurer tout postmortem d'incident autour des sections canoniques suivantes, toutes obligatoires : (1) Summary — description concise de l'incident, son impact et sa durée ; (2) Impact — périmètre affecté (utilisateurs, services, SLO/SLA touchés, chiffrage si possible) ; (3) Timeline — chronologie factuelle des événements clés (détection, escalade, actions, résolution), à la minute ; (4) Root Cause Analysis — causes systémiques identifiées (pas de cause unique, facteurs contributifs multiples) ; (5) Resolution — actions prises pour résoudre l'incident en production ; (6) Lessons Learned — ce qui a bien fonctionné, ce qui a mal fonctionné, et ce qui était simplement chanceux ; (7) Action Items — mesures correctives avec owner nommé et deadline explicite pour chaque item. L'absence de l'une de ces sections invalide le postmortem comme outil d'apprentissage.",
+        "grade": 3,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "Beyer et al. 2016 — Site Reliability Engineering, Chapter 15: Postmortem Culture: Learning from Failure (Google / O'Reilly)",
+            "pyramid": 5,
+            "year": 2016,
+            "quote": "A postmortem is a written record of an incident, its impact, the actions taken to mitigate or resolve it, the root cause(s), and the follow-up actions to prevent the incident from recurring.",
+            "note": "Référence canonique SRE. Définit les sections obligatoires (timeline, root cause, impact, action items with owner+deadline), la culture blameless, et les critères de déclenchement. Standard de facto industrie. [CORRECTION: pyramid 1→5 — livre O'Reilly/Google, pas standard ISO/NIST/RFC. Cohérent avec incident-response.json et slos.json où le même SRE Book est classé pyramid=5.]"
+          },
+          {
+            "name": "Beyer et al. 2018 — The Site Reliability Workbook, Chapter 10: Postmortem Template and Examples (Google / O'Reilly)",
+            "pyramid": 5,
+            "year": 2018,
+            "quote": "APPROXIMATIVE — The template provides structured sections for impact, timeline, root cause, lessons learned, and action items with assignee and due date — each section serving a distinct analytical purpose.",
+            "note": "Complément opérationnel du SRE Book. Fournit un template concret avec toutes les sections annotées et des exemples remplis. Converge exactement sur les 7 sections canoniques. [CORRECTION: pyramid 1→5 — livre O'Reilly/Google, pas standard normatif.]"
+          },
+          {
+            "name": "PagerDuty Inc. 2023 — PagerDuty Postmortem Guide (Incident Response Docs, response.pagerduty.com)",
+            "pyramid": 3,
+            "year": 2023,
+            "quote": "APPROXIMATIVE — Every postmortem should include: a summary of the incident, the impact on users and systems, a timeline of events, root cause analysis, the resolution steps taken, lessons learned, and action items with owner and due date.",
+            "note": "Guide public de référence, largement adopté dans l'industrie. Converge sur les 7 sections canoniques. Accessible sur https://response.pagerduty.com/after/post_mortem_template/. [CORRECTION: pyramid 2→3 — guide d'un outil commercial (PagerDuty), pas un consortium ouvert type OWASP/CNCF.]"
+          },
+          {
+            "name": "Atlassian Inc. 2024 — Incident Management: Postmortem Template (Confluence/Jira)",
+            "pyramid": 3,
+            "year": 2024,
+            "quote": "APPROXIMATIVE — Atlassian's postmortem template includes: incident summary, contributing factors, timeline, resolution, and action items with assignee and due date — integrated natively in Confluence and Jira.",
+            "note": "Template structuré intégré dans Confluence et Jira. Adopté par des milliers d'équipes. Converge sur les sections canoniques avec ajout des 5 Whys dans la section root cause. [CORRECTION: pyramid 2→3 — documentation d'un outil commercial (Atlassian), pas un consortium ouvert.]"
+          },
+          {
+            "name": "incident.io team 2024 — How to Run a Blameless Postmortem (incident.io Guide)",
+            "pyramid": 3,
+            "year": 2024,
+            "quote": "APPROXIMATIVE — A blameless postmortem template must cover: what happened and its impact, a timeline, contributing factors and root causes, what went well and what didn't (lessons learned), and follow-up actions with named owners.",
+            "note": "Guide à jour (2024) de l'un des outils de gestion d'incidents les plus utilisés. Accent fort sur le blameless et la psychologie de sécurité. Converge sur les 7 sections canoniques. [CORRECTION: pyramid 2→3 — guide d'un outil commercial (incident.io), pas un consortium ouvert.]"
+          },
+          {
+            "name": "Allspaw, J. 2012 — Blameless PostMortems and a Just Culture (Etsy Engineering Blog)",
+            "pyramid": 5,
+            "year": 2012,
+            "quote": "APPROXIMATIVE — The goal of blameless postmortems is to come away with a better understanding of the system and processes — not to blame individuals. We gain a second chance to restore the system to a safe state by sharing the lessons learned.",
+            "note": "Essai fondateur (Etsy) qui a défini la culture blameless postmortem dans l'industrie tech. Référencé dans le SRE Book. Établit pourquoi la psychologie de sécurité est un prérequis à l'efficacité des sections lessons learned et root cause."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 2,
+          "plus": [
+            "+1 convergence : SRE Book (Google/O'Reilly 2016) + SRE Workbook (Google/O'Reilly 2018) + PagerDuty (2023) + Atlassian (2024) + incident.io (2024) + Allspaw/Etsy (2012) — 6 sources indépendantes convergent sur les mêmes 7 sections canoniques sans aucune variation significative de structure"
+          ],
+          "minus": [],
+          "_correction_agent_c": "start corrigé de 4→2 : meilleure source = niveau 3 (PagerDuty/Atlassian/incident.io = docs outils commerciaux) après correction des pyramides erronées SRE Book (1→5) et Workbook (1→5). grade corrigé de 5→3. level corrigé STANDARD→RECOMMANDE."
+        },
+        "robustness": "HIGH",
+        "critical_sources": [
+          "Beyer et al. 2016 — SRE Book Chapter 15 (définition canonique de référence, standard de facto industrie)",
+          "PagerDuty 2023 + Atlassian 2024 + incident.io 2024 (convergence multi-organisations sur le même template)"
+        ]
+      },
+      {
+        "text": "Associer à chaque action item un owner nommé (personne physique, pas une équipe) et une deadline explicite (date calendaire, pas 'dès que possible'). Un action item sans owner+deadline est statistiquement non exécuté : il ne figure dans aucun backlog priorisé et échappe à tout suivi. Le responsable postmortem suit l'avancement des action items jusqu'à clôture complète.",
+        "grade": 3,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "Beyer et al. 2016 — Site Reliability Engineering, Chapter 15 (Google / O'Reilly)",
+            "pyramid": 5,
+            "year": 2016,
+            "quote": "APPROXIMATIVE — Action items resulting from a postmortem must be assigned to a specific owner and given a due date; otherwise they are unlikely to be completed.",
+            "note": "Le SRE Book impose explicitement owner nommé + deadline pour chaque action item. C'est une des rares règles prescriptives absolues du chapitre. [CORRECTION: pyramid 1→5 — livre O'Reilly/Google, pas standard normatif.]"
+          },
+          {
+            "name": "PagerDuty Inc. 2023 — PagerDuty Postmortem Guide",
+            "pyramid": 3,
+            "year": 2023,
+            "quote": "APPROXIMATIVE — Each follow-up action must have a single named owner and a due date. Teams are items — individuals are owners.",
+            "note": "PagerDuty insiste sur la distinction équipe/individu pour l'ownership. Un item assigné à une équipe n'a pas de owner réel. [CORRECTION: pyramid 2→3 — guide d'un outil commercial.]"
+          },
+          {
+            "name": "Atlassian Inc. 2024 — Incident Management: Postmortem Template",
+            "pyramid": 3,
+            "year": 2024,
+            "quote": "APPROXIMATIVE — Action items should include: description, assignee (individual, not team), priority, and due date. Items without these fields should not be considered valid action items.",
+            "note": "Atlassian valide le même principe avec l'intégration Jira : un ticket sans assignee+due date ne peut pas être suivi dans le backlog. [CORRECTION: pyramid 2→3 — documentation d'un outil commercial.]"
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 2,
+          "plus": [
+            "+1 convergence : SRE Book + PagerDuty + Atlassian convergent sur la règle owner-nommé+deadline comme condition de validité d'un action item — prescrit de manière identique dans les 3 sources majeures"
+          ],
+          "minus": [],
+          "_correction_agent_c": "start corrigé de 4→2 (meilleure source = niveau 3 après correction pyramid SRE Book 1→5, PagerDuty/Atlassian 2→3). grade corrigé 5→3. level corrigé STANDARD→RECOMMANDE."
+        },
+        "robustness": "HIGH",
+        "critical_sources": [
+          "Beyer et al. 2016 — SRE Book (règle prescriptive canonique sur owner+deadline)",
+          "Atlassian 2024 (validation pratique via intégration Jira — un item sans ces champs est non-traçable)"
+        ]
+      },
+      {
+        "text": "Conduire le postmortem dans une culture blameless : l'analyse cible les facteurs systémiques (processus, outillage, architecture, organisation) et non les erreurs individuelles. La section root cause analysis doit documenter plusieurs facteurs contributifs plutôt qu'une cause unique. Les individus impliqués doivent pouvoir contribuer librement sans crainte de sanction — condition nécessaire à la complétude des informations collectées. Corollaire : ne jamais nommer une personne comme 'cause' d'un incident dans le document postmortem.",
+        "grade": 3,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "Allspaw, J. 2012 — Blameless PostMortems and a Just Culture (Etsy Engineering Blog)",
+            "pyramid": 5,
+            "year": 2012,
+            "quote": "APPROXIMATIVE — We want the people who are closest to failures to be completely open and transparent about their own errors and decision-making process. This only works in an environment where blame is removed from the equation.",
+            "note": "Essai fondateur du blameless postmortem dans l'industrie tech. Pose le cadre psychologique et organisationnel. Référencé dans le SRE Book comme source de la pratique blameless."
+          },
+          {
+            "name": "Hollnagel, E. 2018 — Safety-II in Practice: Developing the Resilience Potentials",
+            "pyramid": 5,
+            "year": 2018,
+            "quote": "APPROXIMATIVE — Safety-II focuses on understanding how things normally go right as a basis for explaining how they occasionally go wrong, rather than looking for failed components or broken barriers.",
+            "note": "Fondement théorique de l'approche systémique. Safety-II justifie pourquoi chercher les causes systémiques est plus efficace que l'attribution individuelle pour prévenir la récurrence. [CORRECTION: pyramid 3→5 — livre académique d'un expert reconnu (Hollnagel), pas documentation officielle d'un outil.]"
+          },
+          {
+            "name": "Dekker, S. 2014 — The Field Guide to Understanding 'Human Error' (2nd ed., Ashgate)",
+            "pyramid": 5,
+            "year": 2014,
+            "quote": "APPROXIMATIVE — 'Human error' is a label, not an explanation. To understand failure, we must look at the context, pressures, and system design that made the erroneous action rational at the time.",
+            "note": "Cadre théorique essentiel pour la section root cause analysis. Supporte la conception blameless des sections 'contributing factors' et 'root cause' dans une logique systémique. [CORRECTION: pyramid 3→5 — livre académique d'un expert reconnu (Dekker), pas documentation officielle d'un outil.]"
+          },
+          {
+            "name": "Cook, R. I. 1998 — How Complex Systems Fail (Cognitive Technologies Laboratory, University of Chicago)",
+            "pyramid": 5,
+            "year": 1998,
+            "quote": "APPROXIMATIVE — Catastrophe is always just around the corner. [...] Failure is always the result of a conjunction of multiple failures.",
+            "note": "18 thèses fondatrices sur la nature des incidents dans les systèmes complexes. Justifie théoriquement la structure multi-cause des postmortems : pas de cause unique, toujours une conjonction de facteurs. [CORRECTION: pyramid 3→5 — article technique d'un expert individuel reconnu (Cook), pas documentation officielle d'un outil.]"
+          },
+          {
+            "name": "Beyer et al. 2016 — Site Reliability Engineering, Chapter 15 (Google / O'Reilly)",
+            "pyramid": 5,
+            "year": 2016,
+            "quote": "APPROXIMATIVE — Blameless postmortems allow SRE teams to understand what happened without fear of punishment. The goal is to understand how the system as a whole allowed the failure to occur.",
+            "note": "Le SRE Book adopte explicitement le cadre blameless d'Allspaw et l'intègre comme principe non-négociable du postmortem SRE. [CORRECTION: pyramid 1→5 — livre O'Reilly/Google, pas standard normatif.]"
+          },
+          {
+            "name": "incident.io team 2024 — How to Run a Blameless Postmortem",
+            "pyramid": 3,
+            "year": 2024,
+            "quote": "APPROXIMATIVE — In a blameless postmortem, the facilitator must actively redirect any discussion that veers toward individual blame toward systemic analysis: 'What in the system design allowed this to happen?'",
+            "note": "Guide pratique d'animation blameless. Techniques concrètes pour maintenir le cadre systémique durant la réunion postmortem. [CORRECTION: pyramid 2→3 — guide d'un outil commercial (incident.io), pas un consortium ouvert.]"
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 2,
+          "plus": [
+            "+1 convergence : SRE Book (Google) + Allspaw/Etsy + Hollnagel (Safety-II) + Dekker (Human Error) + Cook (Complex Systems Fail) + incident.io — convergence théorico-pratique de 6 sources sur le principe blameless/systémique"
+          ],
+          "minus": [],
+          "_correction_agent_c": "start corrigé de 4→2 (meilleure source = niveau 3, incident.io, après correction pyramid SRE Book 1→5, Hollnagel/Dekker/Cook 3→5, incident.io 2→3). grade corrigé 5→3. level corrigé STANDARD→RECOMMANDE."
+        },
+        "robustness": "HIGH",
+        "critical_sources": [
+          "Allspaw 2012 (fondateur du blameless postmortem en industrie tech)",
+          "Cook 1998 + Hollnagel 2018 (fondements théoriques de l'approche systémique multi-cause)"
+        ]
+      },
+      {
+        "text": "Disséminer le postmortem finalisé de manière obligatoire : (1) archiver dans un référentiel accessible à l'ensemble de l'organisation (pas seulement à l'équipe impliquée) ; (2) partager activement avec les équipes pouvant tirer bénéfice des lessons learned ; (3) lier chaque action item de type 'amélioration opérationnelle' au runbook correspondant pour mise à jour. Un postmortem non disséminé ne produit d'apprentissage qu'au niveau de l'équipe impliquée — l'organisation ne capitalise pas. Le lien postmortem → runbook update crée la boucle de rétroaction qui prévient la récurrence.",
+        "grade": 5,
+        "level": "STANDARD",
+        "sources": [
+          {
+            "name": "Beyer et al. 2016 — Site Reliability Engineering, Chapter 15 (Google / O'Reilly)",
+            "pyramid": 5,
+            "year": 2016,
+            "quote": "APPROXIMATIVE — Postmortems should be shared widely within the organization. A postmortem kept within a single team fails to propagate the lessons learned and misses the opportunity to prevent similar incidents elsewhere.",
+            "note": "Le SRE Book prescrit la dissémination large comme condition d'efficacité organisationnelle du postmortem. [CORRECTION: pyramid 1→5 — livre O'Reilly/Google, pas standard normatif. Le grade reste 5 grâce au NIST CSF niveau 1 qui est la meilleure source de ce principe.]"
+          },
+          {
+            "name": "National Institute of Standards and Technology 2018 — Cybersecurity Framework v1.1, RC.CO: Recovery Communications",
+            "pyramid": 1,
+            "year": 2018,
+            "quote": "APPROXIMATIVE — RC.CO-3: Recovery activities are communicated to internal and external stakeholders as well as executive and management teams. Lessons learned from current and previous detection and response activities are incorporated into revised response strategies and procedures.",
+            "note": "Norme fédérale US. RC.CO-3 impose explicitement l'incorporation des lessons learned dans les procédures révisées — ce qui correspond au lien postmortem → runbook update."
+          },
+          {
+            "name": "Forsgren, N.; Humble, J.; Kim, G. 2018 — Accelerate: The Science of Lean Software and DevOps (IT Revolution Press)",
+            "pyramid": 4,
+            "year": 2018,
+            "quote": "APPROXIMATIVE — High-performing teams systematically learn from incidents and failures and share that knowledge across the organization. This organizational learning capability is a predictor of software delivery performance.",
+            "note": "Étude empirique DORA sur 2000+ équipes. Valide empiriquement que le partage organisationnel des lessons learned est corrélé avec la performance (MTTR réduit, change failure rate réduit)."
+          },
+          {
+            "name": "PagerDuty Inc. 2023 — PagerDuty Postmortem Guide",
+            "pyramid": 3,
+            "year": 2023,
+            "quote": "APPROXIMATIVE — After completing a postmortem, share it with the broader engineering organization. Consider posting it in a public Slack channel or wiki page. The postmortem is only valuable if people read and learn from it.",
+            "note": "PagerDuty prescrit le partage actif (Slack, wiki) comme étape finale obligatoire du processus postmortem, pas optionnelle. [CORRECTION: pyramid 2→3 — guide d'un outil commercial.]"
+          },
+          {
+            "name": "GitHub Engineering 2020 — GitHub Postmortem Template (GitHub Engineering Blog)",
+            "pyramid": 5,
+            "year": 2020,
+            "quote": "APPROXIMATIVE — Every postmortem is published internally and linked from the incident tracking system. Follow-up items that affect runbooks or playbooks are tagged and routed to the team responsible for those documents.",
+            "note": "GitHub Engineering documente la pratique du lien postmortem → runbook update comme étape systématique de leur processus postmortem interne. [CORRECTION: pyramid 2→5 — blog engineering d'une entreprise = expert reconnu convergent, pas un consortium ouvert.]"
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 4,
+          "plus": [
+            "+1 convergence : SRE Book + NIST CSF (RC.CO-3) + Accelerate/DORA + PagerDuty + GitHub Engineering convergent sur la dissémination obligatoire et le lien postmortem → runbook update"
+          ],
+          "minus": [],
+          "_verification_agent_c": "start=4 confirmé : meilleure source = NIST CSF niveau 1 (standard normatif US, pyramid=1 correct). grade=5 confirmé. level=STANDARD confirmé. Corrections pyramid appliquées : SRE Book 1→5, PagerDuty 2→3, GitHub Engineering 2→5."
+        },
+        "robustness": "HIGH",
+        "critical_sources": [
+          "NIST CSF 2018 RC.CO-3 (obligation normative de mise à jour des procédures depuis les lessons learned)",
+          "Forsgren et al. 2018 — Accelerate (validation empirique DORA : le partage organisationnel des lessons learned prédit la performance)"
+        ]
+      }
+    ]
+  },
+  "variants": {}
+}

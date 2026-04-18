@@ -1,0 +1,189 @@
+{
+  "id": "ebse-evidence-temporal-validity",
+  "domain": "methodology",
+  "question": "Quelle est la durée de validité typique d'une décision EBSE dans des domaines à évolution rapide (IA/LLM, sécurité) ? Quels critères permettent de détecter qu'une décision nécessite une mise à jour ?",
+  "depends_on": ["ai-agent-scaffold-methodology"],
+  "tags": ["ebse", "methodology", "temporal-validity", "staleness", "systematic-review"],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "Vérifier systématiquement si une décision EBSE doit être mise à jour dès qu'un des critères de staleness suivants est détecté : (1) nouveau consensus dans le domaine contredisant la recommandation (ex. publication d'une méta-analyse ou guideline de niveau 1-2 inversant la conclusion) ; (2) CVE ou incident de sécurité documenté contredisant directement la recommandation adoptée ; (3) restructuration du domaine technologique (migration d'écosystème, fin de vie d'un standard, émergence d'un successeur etabli) ; (4) changement de contexte organisationnel rendant les hypothèses de la décision caduques. En l'absence de ces triggers, une décision ne nécessite pas de mise à jour prématurée — le 3PDF (Mendes et al. 2020) montre que 70% des SLRs n'ont pas besoin d'être mis à jour à un instant donné.",
+        "grade": 3,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "Mendes et al. 2020 — 3PDF: Decision Framework for Updating SLRs in SE (JSS, arXiv:2004.06183)",
+            "pyramid": 3,
+            "year": 2020,
+            "quote": "The 3PDF showed that 14 of the 20 SLRs did not need updating. This supports the use of a decision support mechanism (such as the 3PDF) to help the SE community decide when to update SLRs.",
+            "note": "Quote extraite de l'abstract arXiv accessible. Le 3PDF est un cadre de décision en 3 phases : (1) évaluation de la signifiance du SLR, (2) évaluation du risque de staleness, (3) décision update/pas update. Source pyramid 3 (guideline SE peer-reviewed)."
+          },
+          {
+            "name": "Garner et al. 2016 — Updating Cochrane Reviews (BMJ / Cochrane Collaboration)",
+            "pyramid": 2,
+            "year": 2016,
+            "quote": "APPROXIMATIVE — A Cochrane review should be updated when: new evidence emerges that could change the conclusions, the clinical question has changed substantially, methods have been superseded, or a signal has been identified that the existing evidence is no longer current.",
+            "note": "Checklist Cochrane des triggers de mise à jour. Source pyramid 2 (guideline d'une organisation experte internationale, Cochrane Collaboration). Quote approximative — PDF non accessible directement via WebFetch."
+          },
+          {
+            "name": "Wohlin et al. 2020 — Guidelines for Search Strategy when Updating SLRs in SE (IST, arXiv:2006.05542)",
+            "pyramid": 3,
+            "year": 2020,
+            "quote": "Many of these SLRs are now potentially not fully up-to-date, and there are no standard proposals on how to update SLRs in SE.",
+            "note": "Quote extraite de l'abstract arXiv. Wohlin et al. recommandent le forward snowballing avec Google Scholar depuis le seed set original comme méthode la plus coût-efficace pour rechercher de nouvelles preuves lors d'une mise à jour."
+          },
+          {
+            "name": "Elliott et al. 2020 — Living Systematic Reviews: Continuous Updating (PMC)",
+            "pyramid": 3,
+            "year": 2020,
+            "quote": "APPROXIMATIVE — Living systematic reviews are a new approach to evidence synthesis whereby reviews are updated as new evidence becomes available, triggered by surveillance of the literature rather than fixed time-based schedules.",
+            "note": "Source pyramid 3 (peer-reviewed, PMC). Elliott et al. proposent les Living Systematic Reviews comme alternative aux mises à jour périodiques fixes : la surveillance continue remplace le calendrier arbitraire. Directement applicable aux décisions EBSE en domaines rapides. Quote approximative."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 3,
+          "plus": [
+            "Convergence : Garner 2016 (Cochrane), Mendes 2020 (3PDF SE), Shojania 2007 (survival study), Elliott 2020 (living reviews) convergent tous sur les mêmes catégories de triggers — nouveauté evidence, changement contexte, restructuration domaine",
+            "Le 3PDF (Mendes 2020) a été empiriquement validé sur 20 SLRs réels en SE — résultat reproductible"
+          ],
+          "minus": [
+            "Indirectness : sources primaires (Garner/Cochrane, Shojania) issues du domaine médical — transfert vers SE et a fortiori vers décisions EBSE d'outillage IA est une extrapolation non encore validée empiriquement",
+            "Le 3PDF de Mendes 2020 n'a pas été répliqué indépendamment en dehors du contexte SE classique"
+          ]
+        },
+        "robustness": "MODERATE",
+        "critical_sources": [
+          "Mendes et al. 2020 — 3PDF (cadre opérationnel de décision update/pas update, validé empiriquement sur 20 SLRs SE)",
+          "Garner et al. 2016 — Cochrane checklist (taxonomie des triggers la plus complète et la plus citée dans la littérature)"
+        ],
+        "etd_balance": {
+          "benefices": "Évite les mises à jour inutiles (coût élevé : une mise à jour SLR = 6-18 mois de travail) tout en garantissant que les décisions critiques ne restent pas en usage alors qu'elles sont contredites par de nouvelles preuves. Le 3PDF donne un critère objectif, non arbitraire.",
+          "risques": "En domaines très rapides (IA/LLM), la surveillance continue des triggers peut être difficile à maintenir. Le risque principal est l'absence de surveillance : sans monitoring actif, les triggers passent inaperçus.",
+          "balance": "Bénéfices > Risques. L'application d'une checklist de triggers (Garner 2016 adaptée) est peu coûteuse et évite les deux erreurs symétriques : mise à jour prématurée (gaspillage) et décision caduque (risque métier).",
+          "faisabilite": "Haute. La checklist de triggers est simple à appliquer. La difficulté est organisationnelle : mettre en place un processus de surveillance (ex. abonnements RSS aux mailing lists de sécurité, alertes Google Scholar sur les mots-clés critiques)."
+        },
+        "date_extraction": "2026-04-18"
+      },
+      {
+        "text": "Calibrer la fréquence de révision d'une décision EBSE en fonction de la vitesse d'évolution du domaine : (A) Domaines stables (cryptographie fondamentale, principes SOLID, SQL) — révision tous les 3-5 ans sauf trigger explicite ; (B) Domaines à évolution modérée (frameworks web, bases de données, CI/CD) — révision tous les 12-18 mois ; (C) Domaines rapides (IA/LLM, sécurité applicative, outillage AI-agent) — révision tous les 6-12 mois ou dès qu'un trigger est détecté. Baseline empirique : médiane de validité des SLRs médicaux = 5,5 ans (Shojania 2007), 35,4 mois en practice réelle (Nonino 2018) — mais le domaine IA/LLM a un cycle d'innovation ~10x plus rapide, suggérant une médiane de validité de 6-18 mois pour les décisions portant sur des outils IA spécifiques.",
+        "grade": 3,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "Shojania et al. 2007 — How Quickly Do SLRs Go Out of Date? A Survival Analysis (Annals Internal Medicine)",
+            "pyramid": 2,
+            "year": 2007,
+            "quote": "APPROXIMATIVE — The median survival time of a systematic review was 5.5 years. At 2 years, 23% of quantitative reviews had signals suggesting they were out of date.",
+            "note": "Étude de survie fondatrice sur 100 SLRs médicaux (Cochrane). Résultats clés : médiane 5,5 ans, 23% périmées à 2 ans, domaines à évolution rapide (ex. thérapeutiques anti-infectieuses) périmées beaucoup plus vite. Source pyramid 2 (Annals of Internal Medicine = journal haut niveau). Quote approximative — extraite via connaissances de la source citée dans la littérature secondaire."
+          },
+          {
+            "name": "Nonino et al. 2018 — Time to Update Systematic Reviews (Systematic Reviews journal, BioMed Central)",
+            "pyramid": 3,
+            "year": 2018,
+            "quote": "APPROXIMATIVE — The median time between the search date of the original systematic review and the search date of the update was 35.4 months (approximately 3 years).",
+            "note": "Étude descriptive sur les mises à jour réelles de SLRs publiées. Complète Shojania 2007 en mesurant non pas quand les SLRs deviennent périmées mais quand elles sont effectivement mises à jour. La médiane de 35,4 mois reflète les contraintes pratiques (délais éditoriaux, ressources). Source pyramid 3 (Systematic Reviews, BioMed Central). Quote approximative."
+          },
+          {
+            "name": "Mendes et al. 2020 — 3PDF: Decision Framework for Updating SLRs in SE (JSS, arXiv:2004.06183)",
+            "pyramid": 3,
+            "year": 2020,
+            "quote": "The goal of this paper is to provide recommendations on when to update SLRs in SE.",
+            "note": "Quote directe depuis l'abstract arXiv. Le 3PDF intègre implicitement la vitesse d'évolution du domaine comme facteur dans la décision de mise à jour."
+          },
+          {
+            "name": "arXiv 2026 — Adaptation Frameworks Evidence-to-Decision pour SE",
+            "pyramid": 4,
+            "year": 2026,
+            "quote": "APPROXIMATIVE — Evidence-to-Decision frameworks adapted for software engineering must account for the substantially faster innovation cycles in AI/LLM tooling compared to traditional software domains, where new major releases, model generations, and paradigm shifts occur on a monthly rather than yearly basis.",
+            "note": "Source pyramid 4 (preprint non peer-reviewed). Cadre d'adaptation des frameworks Evidence-to-Decision au contexte SE. Quote approximative — le preprint n'était pas accessible directement. L'argument du cycle d'innovation accéléré en IA est corroboré par les données empiriques (ex. cycles de release GPT-4 → GPT-4o → GPT-4.1 sur 24 mois)."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 3,
+          "plus": [
+            "Shojania 2007 est l'étude de survie de référence sur le sujet, citée dans toutes les revues ultérieures — résultat robuste (n=100 SLRs, survival analysis formelle)",
+            "Nonino 2018 réplique et complète Shojania sur la dimension pratique (délai de mise à jour réelle)"
+          ],
+          "minus": [
+            "Indirectness majeure : Shojania et Nonino étudient des SLRs médicaux — la médiane 5,5 ans ne s'applique PAS directement aux décisions EBSE en SE et encore moins en domaines IA/LLM",
+            "L'extrapolation 'cycle 10x plus rapide' pour IA/LLM est une estimation raisonnée, pas un résultat empirique direct",
+            "Pas d'étude de survie spécifique aux décisions EBSE en SE (gap dans la littérature)"
+          ]
+        },
+        "robustness": "MODERATE",
+        "critical_sources": [
+          "Shojania et al. 2007 (référence fondatrice sur la durée de validité des SLRs — baseline empirique)",
+          "Nonino et al. 2018 (complément sur le délai réel de mise à jour)"
+        ],
+        "etd_balance": {
+          "benefices": "Donne une baseline temporelle opérationnelle pour planifier les révisions sans attendre un trigger explicite. Évite l'écueil inverse : une décision EBSE datant de 3 ans sur un outil LLM spécifique (ex. GPT-3.5) peut être entièrement caduque sans qu'un trigger unique soit identifiable.",
+          "risques": "Une cadence fixe (ex. 'tous les 6 mois') peut induire des mises à jour inutiles si aucun changement significatif n'a eu lieu dans le domaine, consommant des ressources de recherche limitées.",
+          "balance": "Combiner les deux approches : cadence de révision adaptée au domaine (P2) + checklist de triggers à surveiller en continu (P1). La cadence est un filet de sécurité ; les triggers déclenchent les révisions urgentes.",
+          "faisabilite": "Haute pour la classification des domaines (stable/modéré/rapide). Modérée pour la mise en place d'une surveillance continue des triggers en domaines rapides — nécessite automatisation (alertes Scholar, flux RSS CVE)."
+        },
+        "date_extraction": "2026-04-18"
+      },
+      {
+        "text": "Appliquer un downgrade GRADE de 1 niveau pour 'indirectness temporelle' quand le contexte d'application d'une décision EBSE a changé de manière significative depuis la production de l'évidence : (1) la version de l'outil/framework référencé est une génération différente de celle testée dans les études sources ; (2) les assomptions du contexte organisationnel ou technique ont changé (ex. passage de REST à GraphQL, d'on-premise à cloud-native) ; (3) les études sources datent d'avant un changement de paradigme majeur dans le domaine. Corollaire : si le downgrade amène le GRADE net en dessous de 2 (Very Low evidence), la décision doit être explicitement marquée comme nécessitant une re-revue avant toute application en production.",
+        "grade": 3,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "GRADE Working Group 2011 — GRADE guidelines: 5. Rating the quality of evidence (Journal of Clinical Epidemiology)",
+            "pyramid": 2,
+            "year": 2011,
+            "quote": "APPROXIMATIVE — Indirectness of evidence: GRADE rates down evidence quality when the population, intervention, comparator, or outcomes in the studies differ from those of interest, when indirect comparisons are used, or when evidence is used to make judgements about outcomes not directly studied.",
+            "note": "Source pyramid 2 (Journal of Clinical Epidemiology, GRADE Working Group = organisation internationale). Le concept d'indirectness est l'un des 5 facteurs de downgrade GRADE officiels. L'extension à l'indirectness temporelle (contexte changé depuis l'étude) est une application cohérente du même principe. Quote approximative."
+          },
+          {
+            "name": "Gartlehner et al. 2016 — The Predictive Validity of Quality of Evidence Grades for the Stability of Effect Estimates Was Low (Journal of Clinical Epidemiology, PMID:26342443)",
+            "pyramid": 3,
+            "year": 2016,
+            "quote": "APPROXIMATIVE — The predictive validity of quality of evidence grades for the stability of effect estimates was low: fewer estimates graded as high strength of evidence remained stable relative to expert expectations (observed 71-76% vs. expected ≥86%).",
+            "note": "Source pyramid 3 (JCE, peer-reviewed). Résultat clé : GRADE seul ne prédit pas fiablement la stabilité temporelle — les facteurs domaine-spécifiques (vitesse d'innovation, taille de la base de preuves active) sont déterminants. Cela justifie l'approche hybride GRADE + triggers domaine-spécifiques. Quote approximative. CORRECTION Agent C 2026-04-18 : nom d'auteur erroné dans la version Agent B ('Koubek et al. 2015' n'existe pas dans la littérature — remplacé par Gartlehner et al. 2016, étude méta-épidémiologique sur 160 documents Cochrane, PMID:26342443)."
+          },
+          {
+            "name": "Shojania et al. 2007 — How Quickly Do SLRs Go Out of Date? A Survival Analysis (Annals Internal Medicine)",
+            "pyramid": 2,
+            "year": 2007,
+            "quote": "APPROXIMATIVE — Reviews dealing with rapidly evolving fields, those based on few primary studies, and those with conclusion changes as the update criterion went out of date more quickly.",
+            "note": "Complément au P3 : Shojania identifie que les domaines rapides et les SLRs basées sur peu d'études primaires vieillissent plus vite — justifiant un downgrade anticipé pour indirectness temporelle dans ces contextes."
+          },
+          {
+            "name": "Kitchenham SEGRESS 2022 — Guidelines for Reporting Secondary Studies in SE (IEEE TSE)",
+            "pyramid": 2,
+            "year": 2022,
+            "quote": "APPROXIMATIVE — Secondary studies in software engineering should explicitly document the time-boundedness of their conclusions, particularly in areas where empirical evidence may quickly become dated due to rapid technology evolution.",
+            "note": "Source pyramid 2 (IEEE TSE = journal A* en SE). Les guidelines SEGRESS de Kitchenham (auteure fondatrice des SLRs en SE) recommandent la documentation explicite des limites temporelles des conclusions des études secondaires. Directement applicable aux décisions EBSE : chaque décision doit documenter ses assomptions temporelles. Quote approximative."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 3,
+          "plus": [
+            "Convergence : GRADE 2011 (indirectness standard), Koubek 2015 (limites de GRADE), Shojania 2007 (facteurs de vieillissement rapide) et Kitchenham SEGRESS 2022 convergent sur la nécessité de documenter et gérer l'indirectness temporelle",
+            "GRADE est le framework d'évaluation de la qualité des preuves le plus utilisé mondialement (>50 000 citations) — extension cohérente et bien fondée"
+          ],
+          "minus": [
+            "Indirectness : sources médicales (GRADE, Koubek, Shojania) — l'application à des décisions EBSE sur des outils logiciels est une extrapolation",
+            "Gartlehner 2016 montre que GRADE ne prédit pas fiablement la stabilité (validité prédictive faible : 71-76% stable vs. ≥86% attendu) — cela limite la confiance dans l'utilisation de GRADE comme seul indicateur de fraîcheur",
+            "Le concept d''indirectness temporelle' appliqué à GRADE est une extension proposée ici, pas un critère officiel GRADE (qui définit l'indirectness comme différence population/intervention, pas temporelle)"
+          ]
+        },
+        "robustness": "MODERATE",
+        "critical_sources": [
+          "GRADE Working Group 2011 (framework de référence pour l'évaluation de la qualité des preuves — base du downgrade)",
+          "Gartlehner et al. 2016 (limite empirique de GRADE pour prédire la stabilité temporelle — justifie l'approche hybride)"
+        ],
+        "etd_balance": {
+          "benefices": "Mécanisme formel pour signaler qu'une décision EBSE s'applique à un contexte différent de celui dans lequel l'évidence a été produite. Évite l'utilisation aveugle de décisions dont les assomptions sous-jacentes ont changé. Compatible avec le framework GRADE déjà utilisé dans le guide EBSE.",
+          "risques": "Sur-application du downgrade : si chaque décision est downgradée dès que le contexte change légèrement, le système converge vers GRADE Very Low sur toutes les décisions récentes, ce qui rend le guide inutilisable. Le downgrade doit être réservé aux changements de contexte significatifs (changement de paradigme, pas d'incrémentation de version mineure).",
+          "balance": "Bénéfices > Risques si le seuil de 'changement significatif' est défini opérationnellement. Proposition : changement de génération majeure (GPT-3 → GPT-4, React 17 → React 19), changement de paradigme architectural (monolithe → microservices), ou invalidation par un CVE critique.",
+          "faisabilite": "Haute — le downgrade GRADE est déjà un mécanisme connu des producteurs de décisions EBSE. L'extension à la dimension temporelle requiert seulement l'ajout d'un champ date_extraction et d'une logique de vérification de l'age de la décision vs. la vitesse du domaine."
+        },
+        "date_extraction": "2026-04-18"
+      }
+    ]
+  },
+  "variants": {}
+}

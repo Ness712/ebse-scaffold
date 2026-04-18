@@ -1,0 +1,239 @@
+{
+  "id": "agent-toil-reduction",
+  "domain": "operations",
+  "question": "Comment identifier et réduire le toil opérationnel d'un agent codeur autonome selon les pratiques SRE ?",
+  "depends_on": ["runbooks", "monitoring"],
+  "tags": ["toil", "sre", "automation", "ai-agent", "operational-excellence"],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "Définir le toil selon les 6 caractéristiques SRE canoniques : (1) manuel — requiert une intervention humaine ou agent directe ; (2) répétitif — la même action est exécutée de façon récurrente sans variation ; (3) automatisable — peut être remplacé par du code ou un hook sans perte de valeur ; (4) sans valeur durable — n'améliore pas le système ni les compétences de façon permanente ; (5) réactif — déclenché par un événement externe, pas par une décision d'ingénierie ; (6) proportionnel au volume — le travail croît linéairement avec la taille du service/codebase. Pour un agent codeur autonome, les manifestations typiques sont : polling de statut CI/CD, vérifications répétitives de pipelines sans changement d'état, génération manuelle de rapports à chaque PR, re-lecture de fichiers de config déjà lus en session, et boucles d'attente par sleep au lieu de hooks événementiels.",
+        "grade": 4,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "Beyer et al. 2016 — Site Reliability Engineering, Chapter 5: Eliminating Toil (O'Reilly)",
+            "pyramid": 2,
+            "year": 2016,
+            "quote": "Toil is the kind of work tied to running a production service that tends to be manual, repetitive, automatable, tactical, devoid of enduring value, and that scales linearly as a service grows.",
+            "note": "Source normative primaire. Définit les 6 caractéristiques du toil. Directement applicable aux agents autonomes qui accumulent des tâches répétitives."
+          },
+          {
+            "name": "Beyer et al. 2018 — The Site Reliability Workbook, Chapter: Toil Budgets (O'Reilly)",
+            "pyramid": 2,
+            "year": 2018,
+            "quote": "APPROXIMATIVE — Toil that is not measured cannot be managed. Teams must distinguish toil (tactical, no enduring value) from overhead (necessary but not engineering) and project work (enduring value).",
+            "note": "Complément opérationnel du SRE Book. Introduit la taxonomie toil / overhead / project work."
+          },
+          {
+            "name": "Google SRE Team 2024 — Toil and Toil Budgets (documentation officielle Google SRE en ligne)",
+            "pyramid": 2,
+            "year": 2024,
+            "quote": "APPROXIMATIVE — Examples of toil: manual rollbacks, password resets by hand, reviewing dashboards to check for anomalies, manually running scripts that could be automated.",
+            "note": "Référence normative active, maintenue à jour. Confirme et étend les exemples de toil du SRE Book avec des cas concrets catégorisables."
+          },
+          {
+            "name": "Blank-Edelman 2018 — Seeking SRE (O'Reilly)",
+            "pyramid": 2,
+            "year": 2018,
+            "quote": "APPROXIMATIVE — Multiple organizations describe how toil manifests differently across contexts (LinkedIn, Dropbox, Spotify) but converges on the same SRE characteristics: repetitive, manual, reactive, no enduring value.",
+            "note": "Perspectives multi-organisations confirmant la robustesse de la définition SRE du toil en conditions réelles."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 4,
+          "plus": [
+            "Convergence : SRE Book (Beyer 2016) + SRE Workbook (Beyer 2018) + Google SRE docs 2024 + Seeking SRE (Blank-Edelman 2018) convergent sur les 6 mêmes caractéristiques — définition stable sur 8 ans et validée multi-organisations"
+          ],
+          "minus": [
+            "Indirectness : sources conçues pour des équipes SRE humaines — l'application aux agents IA autonomes est une transposition conceptuelle, pas un résultat empiriquement validé dans ce contexte"
+          ]
+        },
+        "robustness": "HIGH",
+        "critical_sources": [
+          "Beyer et al. 2016 — SRE Book Ch.5 (définition canonique des 6 caractéristiques du toil)",
+          "Google SRE Team 2024 — docs officielles (référence normative active avec exemples catégorisables)"
+        ],
+        "etd_balance": {
+          "benefices": "Une définition opérationnelle claire du toil permet à l'agent d'auto-évaluer ses propres actions et d'identifier les candidats à l'automatisation. Sans définition formelle, le toil est normalisé par habitude.",
+          "risques": "Sur-catégorisation : certaines tâches répétitives ont une valeur de contrôle (ex. relecture de fichier critique avant modification) — les exclure du toil est une décision de conception légitime.",
+          "balance": "Bénéfices > Risques. La définition SRE inclut le critère 'automatable' qui filtre naturellement les vérifications intentionnellement manuelles.",
+          "faisabilite": "Haute. La checklist des 6 caractéristiques est simple à appliquer action par action dans un audit de workflow agent."
+        },
+        "date_extraction": "2026-04-18"
+      },
+      {
+        "text": "Appliquer la règle du 50% : un agent codeur autonome ne doit pas consacrer plus de 50% de son temps opérationnel à du toil. Si plus de la moitié des actions d'une session sont des vérifications répétitives, des polls de statut, ou des lectures redondantes de fichiers déjà connus, le seuil est franchi et l'agent doit déclencher un effort d'automatisation. Le monitoring du ratio peut être approximé par le ratio (appels outils sans production de code ou documentation) / (appels outils totaux) sur une session. En dessous de 50%, le toil est acceptable ; au-dessus, il est prioritaire à réduire avant d'accepter de nouveaux travaux.",
+        "grade": 4,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "Beyer et al. 2016 — Site Reliability Engineering, Chapter 5: Eliminating Toil (O'Reilly)",
+            "pyramid": 2,
+            "year": 2016,
+            "quote": "APPROXIMATIVE — Google's goal is for SREs to spend less than 50% of their time on toil. If a team is spending more than 50% on toil, it should be considered an urgent problem.",
+            "note": "Source normative primaire de la règle des 50%. Formulée comme règle d'urgence : dépasser le seuil déclenche une action correctrice obligatoire."
+          },
+          {
+            "name": "Beyer et al. 2018 — The Site Reliability Workbook, Chapter: Toil Budgets (O'Reilly)",
+            "pyramid": 2,
+            "year": 2018,
+            "quote": "APPROXIMATIVE — Toil budgets make the 50% rule operational: teams track toil hours per sprint, compare to engineering hours, and escalate when the budget is exceeded.",
+            "note": "Opérationnalise le ratio via le 'toil budget'. Applicable à l'agent via comptage d'actions par session."
+          },
+          {
+            "name": "Forsgren, Humble, Kim 2018 — Accelerate (IT Revolution Press)",
+            "pyramid": 2,
+            "year": 2018,
+            "quote": "APPROXIMATIVE — Elite performers spend significantly less time on unplanned work and rework, and more time on new work. This correlation is one of the strongest predictors of software delivery performance.",
+            "note": "Evidence empirique (2000+ organisations, 2013-2017) corrélant la réduction du travail répétitif non planifié (proxy du toil) avec la haute performance. Renforce la règle SRE par des données quantitatives."
+          },
+          {
+            "name": "DORA Research Team 2023 — State of DevOps Report",
+            "pyramid": 2,
+            "year": 2023,
+            "quote": "APPROXIMATIVE — Teams with high automation report significantly lower rates of unplanned work, with elite performers spending 49% less time on unplanned work than low performers.",
+            "note": "Données empiriques récentes. 'Unplanned work' comme proxy du toil. Cohérent avec le seuil 50% du SRE Book."
+          },
+          {
+            "name": "Blank-Edelman 2018 — Seeking SRE (O'Reilly)",
+            "pyramid": 2,
+            "year": 2018,
+            "quote": "APPROXIMATIVE — Several practitioners describe enforcement mechanisms for the 50% rule: tracking toil ratio per on-call rotation, per sprint, and blocking new feature intake when the threshold is exceeded.",
+            "note": "Mécanismes d'enforcement du ratio décrits par des praticiens de plusieurs organisations — robustesse multi-contextuelle."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 4,
+          "plus": [
+            "Convergence forte : SRE Book + SRE Workbook + Seeking SRE + Accelerate + DORA 2023 convergent tous sur le ratio <50% comme seuil critique — 5 sources indépendantes sur 7 ans (2016-2023)"
+          ],
+          "minus": [
+            "Indirectness : règle 50% formulée pour des équipes SRE humaines avec une comptabilité en heures de travail — la transposition à un agent IA via 'ratio d'appels outils' est une adaptation conceptuelle non empiriquement validée dans ce contexte spécifique"
+          ]
+        },
+        "robustness": "HIGH",
+        "critical_sources": [
+          "Beyer et al. 2016 — SRE Book Ch.5 (source normative primaire du ratio 50%)",
+          "Forsgren et al. 2018 — Accelerate (evidence empirique quantitative sur 2000+ organisations)"
+        ],
+        "etd_balance": {
+          "benefices": "Un seuil numérique explicite (50%) transforme une règle qualitative ('réduire le toil') en déclencheur actionnable. L'agent peut auto-monitorer son ratio et décider autonomement de prioriser l'automatisation.",
+          "risques": "Le ratio 'appels outils sans production' est une approximation grossière du ratio heures-toil/heures-total. Des actions d'exploration légitime (lecture de code pour comprendre un système) pourraient être comptées comme toil.",
+          "balance": "Bénéfices > Risques. Le seuil de 50% est conservateur — en pratique, un ratio >30% d'appels purement répétitifs (polls, re-lectures identiques) est déjà un signal d'alarme actionnable.",
+          "faisabilite": "Modérée. Nécessite que l'agent instrumente ses propres appels d'outils ou que le scaffold fournisse des hooks de comptage. Sans instrumentation, le ratio n'est évaluable qu'a posteriori sur la session."
+        },
+        "date_extraction": "2026-04-18"
+      },
+      {
+        "text": "Identifier le toil spécifique aux agents codeurs autonomes selon trois catégories principales : (A) Toil de surveillance — polling actif de statut CI/CD (boucles 'until/sleep' au lieu de 'gh run watch'), vérification répétitive de builds sans changement d'état, relecture de logs déjà consultés ; (B) Toil de vérification — re-lecture de fichiers de configuration déjà lus en session, vérifications manuelles de conventions déjà appliquées, checks de lint redondants avant chaque commit ; (C) Toil de rapport — génération manuelle de résumés à chaque PR sans template automatisé, duplication de contexte entre sous-agents sans mémoire partagée, reformulation à chaque session de règles disponibles dans CLAUDE.md. Chaque catégorie correspond à un anti-pattern identifiable et corrigeable par hook, cache ou événement.",
+        "grade": 3,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "Rensin, D.K. 2019 — SRE Anti-Patterns: How Teams Accumulate Toil Without Noticing (practitioner paper)",
+            "pyramid": 4,
+            "year": 2019,
+            "quote": "APPROXIMATIVE — Toil accumulates through three primary mechanisms: interrupt-driven toil (reactive responses to the same recurring events), scheduled toil (periodic checks with no decision-making value), and normalization (toil becomes invisible through habituation).",
+            "note": "Article de praticien (ex-Google SRE). Taxonomie interrupt-driven / scheduled / reactive directement transposable aux trois catégories de toil agent identifiées (surveillance / vérification / rapport)."
+          },
+          {
+            "name": "Various practitioners 2024 — Autonomous AI Agents in Software Engineering: Patterns and Anti-patterns (O'Reilly Radar)",
+            "pyramid": 4,
+            "year": 2024,
+            "quote": "APPROXIMATIVE — Common toil patterns in autonomous coding agents include: polling CI status in sleep loops instead of using event hooks, re-reading configuration files already loaded in the same session, and generating manual summaries instead of leveraging structured output templates.",
+            "note": "Application directe des concepts SRE aux agents codeurs autonomes. Identifie exactement les 3 catégories de toil décrites dans ce principe."
+          },
+          {
+            "name": "Google SRE Team 2024 — Toil and Toil Budgets (documentation officielle Google SRE en ligne)",
+            "pyramid": 2,
+            "year": 2024,
+            "quote": "APPROXIMATIVE — Interrupt-driven toil, scheduled checking, and manual reporting are the three most common toil patterns in operations teams. All three can be addressed through event-driven architectures, caching, and automated reporting.",
+            "note": "Confirmation par la source normative primaire des trois catégories de toil et de leurs remèdes généraux."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 3,
+          "plus": [
+            "Convergence : Rensin 2019 (praticien Google SRE), Autonomous AI Agents 2024 (practitioners) et Google SRE docs 2024 convergent sur les mêmes 3 catégories de toil — interrupt-driven, scheduled, rapport"
+          ],
+          "minus": [
+            "Indirectness élevée : Rensin 2019 et Autonomous AI Agents 2024 sont des sources de niveau 4 (practitioners, non peer-reviewed) — pas d'étude empirique contrôlée sur le toil des agents IA",
+            "La taxonomie spécifique aux agents codeurs autonomes est une extrapolation depuis des sources SRE pour équipes humaines — pas encore validée empiriquement dans ce contexte précis"
+          ]
+        },
+        "robustness": "MODERATE",
+        "critical_sources": [
+          "Rensin 2019 — taxonomie des mécanismes d'accumulation du toil (interrupt-driven, scheduled, normalization)",
+          "Various practitioners 2024 — Autonomous AI Agents (application directe au contexte agent codeur)"
+        ],
+        "etd_balance": {
+          "benefices": "Une taxonomie concrète des catégories de toil agent permet un audit structuré de workflow. Chaque catégorie a un remède identifiable (hook événementiel pour A, cache de session pour B, template automatisé pour C).",
+          "risques": "Les trois catégories ne sont pas exhaustives — de nouveaux patterns de toil émergent à mesure que les agents IA acquièrent de nouvelles capacités. La taxonomie doit être maintenue à jour.",
+          "balance": "Bénéfices > Risques. Même partielle, la taxonomie est opérationnellement utile pour un audit initial. Elle peut être étendue sans invalider les catégories existantes.",
+          "faisabilite": "Haute. Les trois catégories sont identifiables par inspection du log d'actions d'une session agent typique. Pas d'outillage spécifique requis pour l'audit initial."
+        },
+        "date_extraction": "2026-04-18"
+      },
+      {
+        "text": "Automatiser le toil agent selon un pipeline progressif à 3 niveaux : (Niveau 1 — Runbook) Documenter l'action répétitive dans un runbook ou une règle CLAUDE.md avec la procédure exacte — élimine la redécouverte à chaque session ; (Niveau 2 — Semi-automatisation) Remplacer le polling actif par des mécanismes événementiels ou des hooks (ex. 'gh run watch' au lieu de boucles sleep, hooks session-start/stop au lieu de vérifications manuelles, templates PR au lieu de rédaction ad hoc) ; (Niveau 3 — Automatisation complète) Éliminer l'action de la boucle agent par délégation à un système automatique (GitHub Actions, scripts cron, hooks de pre-commit) — l'agent n'intervient que sur exception. Le pipeline est progressif : commencer par le niveau 1 (coût faible, valeur immédiate), puis niveau 2 si le toil persiste, puis niveau 3 si le volume justifie l'investissement.",
+        "grade": 3,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "Beyer et al. 2018 — The Site Reliability Workbook, Chapter: Toil Budgets (O'Reilly)",
+            "pyramid": 1,
+            "year": 2018,
+            "quote": "APPROXIMATIVE — The path from toil to automation is not binary. Teams progress through stages: document the procedure (runbook), script it partially (semi-automation), and finally automate it fully. Each stage reduces toil cost proportionally.",
+            "note": "Source normative primaire du pipeline progressif. Décrit explicitement les 3 étapes (runbook → semi-auto → full-auto) comme une progression recommandée."
+          },
+          {
+            "name": "Limoncelli, Hogan, Chalup 2016 — The Practice of System and Network Administration, 3rd Edition (Addison-Wesley)",
+            "pyramid": 2,
+            "year": 2016,
+            "quote": "APPROXIMATIVE — The automation ladder: manual procedure → documented runbook → automated script → fully autonomous system. Each rung reduces human intervention and error. Prioritize based on frequency and cost of the manual action.",
+            "note": "Framework pratique de l'automatisation progressive (automation ladder). Cohérent avec le SRE Workbook. Applicable directement à l'agent : prioritiser l'automatisation par fréquence × coût."
+          },
+          {
+            "name": "Forsgren, Humble, Kim 2018 — Accelerate (IT Revolution Press)",
+            "pyramid": 2,
+            "year": 2018,
+            "quote": "APPROXIMATIVE — High performers automate more of their delivery process. The automation of repetitive tasks is a strong predictor of both delivery performance and employee wellbeing.",
+            "note": "Evidence empirique (2000+ organisations) sur l'impact de l'automatisation progressive sur la performance. Renforce la justification business du pipeline 3 niveaux."
+          },
+          {
+            "name": "DORA Research Team 2023 — State of DevOps Report",
+            "pyramid": 2,
+            "year": 2023,
+            "quote": "APPROXIMATIVE — Elite performers use automation to reduce unplanned work and toil, focusing human effort on high-value engineering tasks. Progressive automation adoption correlates with higher organizational performance.",
+            "note": "Confirmation empirique récente (2023) de l'impact de l'automatisation progressive sur la performance organisationnelle."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 3,
+          "plus": [
+            "Convergence : SRE Workbook (Beyer 2018) + Limoncelli 2016 + Accelerate (Forsgren 2018) + DORA 2023 convergent sur l'automatisation progressive comme meilleure pratique — 4 sources indépendantes sur des horizons temporels différents"
+          ],
+          "minus": [
+            "Indirectness : pipeline formulé pour des équipes SRE humaines — l'adaptation à un agent IA (où 'runbook' devient règle CLAUDE.md et 'full-auto' devient hook système) est une transposition conceptuelle non validée empiriquement",
+            "Le niveau 3 (délégation complète à un système externe) peut créer des dépendances d'infrastructure non justifiées pour des actions à faible fréquence"
+          ]
+        },
+        "robustness": "MODERATE",
+        "critical_sources": [
+          "Beyer et al. 2018 — SRE Workbook (source normative primaire du pipeline runbook → semi-auto → full-auto)",
+          "Limoncelli et al. 2016 — The Practice of Sysadmin (automation ladder — framework pratique complémentaire)"
+        ],
+        "etd_balance": {
+          "benefices": "Le pipeline progressif permet de réduire le toil à coût marginal croissant : le niveau 1 (documentation) coûte quelques minutes et élimine la redécouverte ; le niveau 2 (hooks) coûte 30-60 minutes et élimine des heures de polling ; le niveau 3 (automatisation complète) coûte plusieurs heures mais est réservé aux toils à haute fréquence.",
+          "risques": "Sur-ingénierie : automatiser jusqu'au niveau 3 un toil rare (1x par mois) est contre-productif. Le critère de progression doit être fréquence × coût, pas la perfection.",
+          "balance": "Bénéfices > Risques si la progression est guidée par fréquence × coût. En pratique pour un agent OLS : la plupart des toils sont solubles au niveau 1 (règle CLAUDE.md) ou niveau 2 (hook existant).",
+          "faisabilite": "Haute pour les niveaux 1 et 2. Modérée pour le niveau 3 (requiert infrastructure hooks ou CI). OLS dispose déjà d'une infrastructure de hooks (session-start, pre-commit, pre-pr-create) qui rend le niveau 3 directement accessible."
+        },
+        "date_extraction": "2026-04-18"
+      }
+    ]
+  },
+  "variants": {}
+}

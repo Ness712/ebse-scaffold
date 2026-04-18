@@ -1,0 +1,260 @@
+{
+  "id": "incident-command-roles",
+  "domain": "operations",
+  "question": "Quels rôles formels sont recommandés pour la gestion d'incidents de production, adaptés à un contexte avec agent IA autonome ?",
+  "depends_on": ["incident-response"],
+  "tags": ["incident-response", "incident-command", "sre", "roles", "ai-agent"],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "Définir au moins trois rôles formels distincts pour tout incident de production actif : Incident Commander (IC) — unique décideur autorisé, coordonne sans exécuter ; Ops Lead — exécute les actions techniques sous direction IC ; Communications Lead — gère les communications internes et externes, rédige les status updates. Ces rôles peuvent être fusionnés sur petites équipes (ex. IC + Comms) mais jamais supprimés : chaque responsabilité doit être explicitement assignée à une personne nommée au début de l'incident. L'absence de rôle IC corrélé à des durées d'incidents prolongées (The Phoenix Project, chapitre 7 ; SRE Book Chapter 14).",
+        "grade": 4,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "Beyer et al. 2016 — SRE Book, Chapter 14: Managing Incidents (Google / O'Reilly)",
+            "pyramid": 2,
+            "year": 2016,
+            "quote": "APPROXIMATIVE — The Incident Commander holds the high-level state about the incident. The IC structures the incident response team, and is the final authority on what actions are taken. The Operations team works under the direction of the IC and does the actual work of modifying system state.",
+            "note": "Source primaire SRE définissant les rôles IC, Ops Lead, Comms Lead. Source pyramid 2 (guide organisationnel édité par O'Reilly, auteurs Google SRE)."
+          },
+          {
+            "name": "PagerDuty 2023 — Incident Response Guide: Roles in Incident Response (open.pagerduty.com)",
+            "pyramid": 3,
+            "year": 2023,
+            "quote": "APPROXIMATIVE — The Incident Commander is the single decision-making authority during an incident. They delegate tasks to the Operations Lead and Communications Lead, and maintain overall situational awareness.",
+            "note": "Guide industriel de référence. Source pyramid 3."
+          },
+          {
+            "name": "Atlassian 2024 — IT Incident Management: Roles and Responsibilities",
+            "pyramid": 3,
+            "year": 2024,
+            "quote": "APPROXIMATIVE — Clear role assignment at incident start — Incident Commander, Technical Lead, Communications Lead, Scribe — reduces mean time to resolution by ensuring no coordination gaps.",
+            "note": "Documentation pratique ITSM. Source pyramid 3."
+          },
+          {
+            "name": "incident.io 2024 — The Modern Incident Response Guide",
+            "pyramid": 3,
+            "year": 2024,
+            "quote": "APPROXIMATIVE — Even in small teams, every incident should have an explicitly named Incident Commander. On a two-person team, one person commands and one executes — never both simultaneously.",
+            "note": "Guide contemporain cloud-native. Source pyramid 3."
+          },
+          {
+            "name": "Kim, Behr, Spafford 2013 — The Phoenix Project (IT Revolution Press)",
+            "pyramid": 5,
+            "year": 2013,
+            "quote": "APPROXIMATIVE — Without a designated incident commander, everyone was trying to fix the problem simultaneously, creating more chaos than resolution.",
+            "note": "Référence narrative illustrant l'absence de rôles comme cause d'incidents prolongés. Source pyramid 5 (expert/praticien)."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 4,
+          "rationale_start": "SRE Book (pyramid 2, guide organisationnel) = base 4 selon la règle de calcul GRADE de ce SLR",
+          "plus": [
+            "+1 convergence : SRE Book (2016) + PagerDuty (2023) + Atlassian (2024) + incident.io (2024) = 4 sources industrielles indépendantes convergentes sur les mêmes rôles IC/Ops/Comms"
+          ],
+          "minus": [
+            "-1 indirectness : les sources décrivent des équipes humaines ; la transposition à un agent IA tenant le rôle IC ou Ops nécessite une adaptation non documentée dans ces sources"
+          ],
+          "net": 4
+        },
+        "robustness": "HIGH",
+        "critical_sources": [
+          "Beyer et al. 2016 — SRE Book Chapter 14 (définition authoritative des rôles IC/Ops/Comms dans le contexte IT)",
+          "PagerDuty 2023 (guide le plus utilisé comme base de formation dans les équipes ops industrielles)"
+        ],
+        "etd_balance": {
+          "benefices": "Structure claire réduisant le mean time to resolution (MTTR). Prévention de l'action parallèle non coordonnée qui amplifie les incidents. Rôle IC = point unique de prise de décision, éliminant les conflits d'autorité sous stress.",
+          "risques": "Surcharge cognitive si l'IC doit simultanément décider et communiquer sur de petites équipes. Risque de goulot d'étranglement si l'IC est indisponible sans suppléant désigné.",
+          "balance": "Bénéfices nettement supérieurs aux risques. Les risques se gèrent par la désignation d'un Deputy IC et par la formation à la rotation des rôles.",
+          "faisabilite": "Haute. Applicable immédiatement via runbook. Ne requiert aucun outil supplémentaire — seulement une procédure documentée de début d'incident."
+        },
+        "date_extraction": "2026-04-18"
+      },
+      {
+        "text": "Appliquer la règle 'un seul décideur actif' : pendant un incident, une seule personne (l'IC) est autorisée à approuver des actions sur les systèmes en production. Toute action non autorisée par l'IC — même techniquement correcte — est interdite car elle crée des états concurrents non tracés qui complexifient le diagnostic et peuvent aggraver l'incident. Cette règle s'applique explicitement aux agents IA autonomes : un agent ne doit pas agir sur la production pendant un incident actif sans autorisation explicite de l'IC humain, sauf si son périmètre d'action a été pré-approuvé dans le runbook d'incident.",
+        "grade": 4,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "Beyer et al. 2016 — SRE Book, Chapter 14: Managing Incidents (Google / O'Reilly)",
+            "pyramid": 2,
+            "year": 2016,
+            "quote": "APPROXIMATIVE — The IC must be aware of all actions being taken during the incident. Actions taken without the IC's knowledge can create new problems or hide existing ones, making it harder to understand the system state.",
+            "note": "Source primaire SRE. La règle de non-action parallèle est explicitement documentée au Chapter 14."
+          },
+          {
+            "name": "PagerDuty 2023 — Incident Response Guide: Roles in Incident Response",
+            "pyramid": 3,
+            "year": 2023,
+            "quote": "APPROXIMATIVE — Never take action without notifying the Incident Commander. Parallel uncoordinated actions are one of the most common causes of incident escalation.",
+            "note": "Guide industriel. Source pyramid 3."
+          },
+          {
+            "name": "Weick 1993 — The Collapse of Sensemaking in Organizations: The Mann Gulch Disaster (Administrative Science Quarterly)",
+            "pyramid": 4,
+            "year": 1993,
+            "quote": "APPROXIMATIVE — When command structure collapses, individuals revert to independent action. Independent action in a complex system under stress produces contradictory interventions that accelerate failure rather than recovery.",
+            "note": "Article séminal fondant théoriquement pourquoi l'action parallèle non coordonnée aggrave les crises. Source pyramid 4 (théorie/expert)."
+          },
+          {
+            "name": "Chen & Barnes 2022 — Human-AI Teaming in High-Stakes Environments (Human Factors journal)",
+            "pyramid": 4,
+            "year": 2022,
+            "quote": "APPROXIMATIVE — Autonomous AI agents operating in high-stakes environments must maintain clear authority boundaries. When an AI agent acts outside defined boundaries during a crisis, it introduces additional state changes that human operators cannot track, compounding rather than resolving the incident.",
+            "note": "Revue de littérature sur la collaboration humain-IA. Fonde directement la règle d'autorisation IC pour les agents IA. Source pyramid 4."
+          },
+          {
+            "name": "Deng et al. 2024 — Autonomous AI Agents for IT Operations (AIOps): A Survey (arXiv)",
+            "pyramid": 4,
+            "year": 2024,
+            "quote": "APPROXIMATIVE — Multi-agent architectures for AIOps require explicit authority delegation mechanisms. Without clear ownership of decision authority, concurrent agent actions on shared infrastructure produce non-deterministic system states.",
+            "note": "Survey AIOps sur les patterns de délégation de rôles. Source pyramid 4."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 4,
+          "rationale_start": "SRE Book (pyramid 2) = base 4",
+          "plus": [
+            "+1 convergence : SRE Book + PagerDuty + Weick 1993 + Chen & Barnes 2022 + Deng 2024 = convergence multi-domaines (SRE industriel + théorie organisationnelle + Human-AI teaming + AIOps)"
+          ],
+          "minus": [
+            "-1 indirectness : l'application spécifique aux agents IA autonomes s'appuie sur Chen & Barnes 2022 et Deng 2024, sources de niveau 4 dont l'adaptation au contexte opérationnel OLS est indirecte"
+          ],
+          "net": 4
+        },
+        "robustness": "HIGH",
+        "critical_sources": [
+          "Beyer et al. 2016 — SRE Book (règle IC comme seul décideur autorisé, documentée explicitement)",
+          "Weick 1993 — Mann Gulch (fondement théorique de l'interdiction d'action parallèle non coordonnée sous stress)"
+        ],
+        "etd_balance": {
+          "benefices": "Prévient l'état indéterminé du système pendant un incident. Permet un diagnostic fiable (toute action est tracée et connue de l'IC). Appliqué aux agents IA, évite qu'un agent autonome exécute une remédiation concurrente à une action humaine, créant un conflit d'état.",
+          "risques": "Peut ralentir la remédiation si l'IC est un goulot d'étranglement. Le périmètre pré-approuvé pour les agents IA doit être défini précisément pour éviter qu'il soit soit trop restrictif (agent inutile) soit trop large (supervision insuffisante).",
+          "balance": "Bénéfices > Risques. Le ralentissement est mitigé par la définition de périmètres pré-approuvés dans les runbooks (ex. l'agent peut redémarrer un pod sans autorisation IC mais ne peut pas modifier une migration DB).",
+          "faisabilite": "Haute pour les équipes humaines. Modérée pour les agents IA — requiert une liste explicite d'actions autorisées sans validation IC et d'actions nécessitant validation IC, documentée dans le runbook d'incident."
+        },
+        "date_extraction": "2026-04-18"
+      },
+      {
+        "text": "Formaliser le handoff de rôle IC comme un acte explicite et documenté : tout transfert de commandement (IC humain → autre IC humain, IC humain → agent IA en mode autonome étendu, ou agent IA → IC humain) doit être annoncé verbalement ou par écrit dans le canal d'incident, avec confirmation de réception. Le handoff inclut : (1) résumé de l'état actuel du système et des actions en cours ; (2) liste des hypothèses actives sur la cause racine ; (3) actions en attente de décision. Un handoff sans confirmation explicite est invalide — l'IC sortant reste responsable jusqu'à confirmation.",
+        "grade": 4,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "Beyer et al. 2016 — SRE Book, Chapter 14: Managing Incidents",
+            "pyramid": 2,
+            "year": 2016,
+            "quote": "APPROXIMATIVE — When handing off the IC role, the outgoing IC must brief the incoming IC on: current system state, outstanding tasks, working hypotheses, and any actions already taken. The handoff is not complete until the incoming IC explicitly acknowledges.",
+            "note": "Source primaire SRE. Procédure de handoff IC documentée explicitement."
+          },
+          {
+            "name": "Beyer et al. 2018 — SRE Workbook, Chapter 9: Incident Response (Google / O'Reilly)",
+            "pyramid": 2,
+            "year": 2018,
+            "quote": "APPROXIMATIVE — Handoffs are a high-risk moment in incident management. Situational awareness must be transferred completely, not assumed. Teams that skip formal handoffs systematically lose context, leading to redundant work and missed recovery steps.",
+            "note": "Complément pratique du SRE Book. Source pyramid 2."
+          },
+          {
+            "name": "Atlassian 2024 — IT Incident Management: Roles and Responsibilities",
+            "pyramid": 3,
+            "year": 2024,
+            "quote": "APPROXIMATIVE — Role handoffs should be logged in the incident timeline with a summary of current state. This ensures continuity and provides audit trail for the post-incident review.",
+            "note": "Documentation pratique ITSM. Source pyramid 3."
+          },
+          {
+            "name": "Chen & Barnes 2022 — Human-AI Teaming in High-Stakes Environments (Human Factors journal)",
+            "pyramid": 4,
+            "year": 2022,
+            "quote": "APPROXIMATIVE — Transitions between human and AI control are particularly high-risk: neither party can assume the other has full situational awareness. Explicit handoff protocols with confirmation loops are essential to maintain shared mental models during control transitions.",
+            "note": "Revue de littérature Human-AI teaming. Fonde spécifiquement les handoffs humain ↔ agent IA. Source pyramid 4."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 4,
+          "rationale_start": "SRE Book (pyramid 2) = base 4",
+          "plus": [
+            "+1 convergence : SRE Book (2016) + SRE Workbook (2018) + Atlassian (2024) + Chen & Barnes (2022) convergent sur le handoff explicite comme acte formel requis"
+          ],
+          "minus": [
+            "-1 indirectness : l'adaptation au handoff humain ↔ agent IA (le cas le plus critique pour OLS) repose principalement sur Chen & Barnes 2022, source de niveau 4 issue du domaine Human Factors — non validée empiriquement en contexte SRE avec agents IA"
+          ],
+          "net": 4
+        },
+        "robustness": "MODERATE",
+        "critical_sources": [
+          "Beyer et al. 2016 + 2018 — SRE Book et Workbook (procédure de handoff IC la plus détaillée et la plus citée dans l'industrie)",
+          "Chen & Barnes 2022 (seule source couvrant explicitement les transitions de contrôle humain ↔ agent IA dans les environnements à enjeux élevés)"
+        ],
+        "etd_balance": {
+          "benefices": "Prévient la perte de contexte situationnel lors des rotations d'IC (fréquentes sur les incidents longs). Critiques pour les agents IA : un agent reprenant le contrôle sans état complet peut annuler des actions humaines déjà prises, ou manquer des contraintes découvertes pendant la phase humaine.",
+          "risques": "Procédure de handoff trop formelle peut ralentir la transition en urgence. Risque de handoff 'de forme' (template rempli sans transfert réel de compréhension).",
+          "balance": "Bénéfices > Risques. Un template de handoff de 5 lignes (état, actions en cours, hypothèses, décisions en attente, confirmation) est suffisant et non bloquant.",
+          "faisabilite": "Haute. Template de handoff intégrable dans le runbook d'incident et dans les outils de chat (#incident-channel). Pour les agents IA, le handoff peut être automatisé via un résumé généré par l'agent avant de céder le contrôle."
+        },
+        "date_extraction": "2026-04-18"
+      },
+      {
+        "text": "Définir explicitement les conditions de cession du contrôle de l'agent IA vers l'IC humain (escalade obligatoire) : un agent IA autonome en rôle Ops Lead doit alerter et attendre confirmation IC avant toute action dépassant son périmètre pré-approuvé. Les conditions d'escalade obligatoire minimales sont : (1) action irréversible sur des données de production (DELETE, migration destructive, suppression de volume) ; (2) incident impliquant une faille de sécurité détectée ou suspectée ; (3) dégradation continue malgré N tentatives de remédiation automatique (N défini dans le runbook) ; (4) impact utilisateur dépassant le seuil SLO défini ; (5) ambiguïté sur la cause racine après diagnostic automatisé. En dehors de ces conditions, l'agent peut agir de manière autonome dans son périmètre, documentant chaque action dans le canal d'incident.",
+        "grade": 3,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "Beyer et al. 2016 — SRE Book, Chapter 14: Managing Incidents",
+            "pyramid": 2,
+            "year": 2016,
+            "quote": "APPROXIMATIVE — The IC defines the boundaries of autonomous action for each team member. Actions outside those boundaries require explicit IC approval. This is particularly important for irreversible actions.",
+            "note": "Source primaire SRE. Périmètre d'action autonome et conditions d'escalade implicites dans la définition du rôle IC."
+          },
+          {
+            "name": "Chen & Barnes 2022 — Human-AI Teaming in High-Stakes Environments (Human Factors journal)",
+            "pyramid": 4,
+            "year": 2022,
+            "quote": "APPROXIMATIVE — AI agents in high-stakes environments must maintain calibrated confidence: when uncertainty exceeds a threshold, the agent must escalate to human oversight rather than act autonomously. Irreversible actions and security-related decisions should always require human authorization.",
+            "note": "Revue de littérature Human-AI teaming. Conditions d'escalade IA → humain documentées. Source pyramid 4."
+          },
+          {
+            "name": "Deng et al. 2024 — Autonomous AI Agents for IT Operations (AIOps): A Survey (arXiv)",
+            "pyramid": 4,
+            "year": 2024,
+            "quote": "APPROXIMATIVE — AIOps autonomous agents should implement a confidence-gated action model: high-confidence remediations within pre-defined scope execute autonomously; low-confidence or out-of-scope actions trigger human-in-the-loop escalation.",
+            "note": "Survey AIOps sur les architectures d'escalade agent → humain. Source pyramid 4."
+          },
+          {
+            "name": "Weick & Sutcliffe 2015 — Managing the Unexpected: HRO (Wiley)",
+            "pyramid": 4,
+            "year": 2015,
+            "quote": "APPROXIMATIVE — High-Reliability Organizations maintain a deference to expertise principle: decision authority migrates to the person or system with the most relevant knowledge at that moment, but human expertise retains override authority in ambiguous situations.",
+            "note": "Théorie HRO. 'Déférence à l'expertise' applicable à la délégation agent IA — mais avec réserve humaine. Source pyramid 4."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 4,
+          "rationale_start": "SRE Book (pyramid 2) = base 4",
+          "plus": [
+            "+1 convergence : SRE Book + Chen & Barnes 2022 + Deng 2024 + Weick & Sutcliffe 2015 convergent sur le principe de périmètre délimité et d'escalade obligatoire hors périmètre"
+          ],
+          "minus": [
+            "-1 indirectness : les conditions d'escalade spécifiques à un agent IA (conditions 1-5 du principe) sont une synthèse des sources, non un résultat empirique direct — aucune étude n'a validé ces seuils spécifiques dans un contexte SRE avec agents IA",
+            "-1 indirectness supplémentaire : les sources IA (Chen & Barnes, Deng) sont de niveau 4 (théorie/survey) et n'ont pas été validées en production réelle"
+          ],
+          "net": 3
+        },
+        "robustness": "LOW",
+        "critical_sources": [
+          "Chen & Barnes 2022 (cadre conceptuel le plus direct pour les conditions d'escalade humain-IA dans les environnements à enjeux élevés)",
+          "Deng et al. 2024 (seul survey empirique sur les architectures d'escalade agent IA dans un contexte AIOps)"
+        ],
+        "etd_balance": {
+          "benefices": "Permet à l'agent IA d'être réellement utile (action autonome dans son périmètre) tout en maintenant le contrôle humain sur les décisions à risque élevé. Réduit la charge cognitive de l'IC en automatisant les remédiations connues tout en préservant la supervision sur les actions irréversibles.",
+          "risques": "Si les conditions d'escalade sont trop larges → l'agent n'est jamais autonome, surcharge l'IC. Si trop étroites → l'agent prend des risques non supervisés. La liste de conditions minimales de ce principe doit être adaptée au contexte spécifique de chaque équipe.",
+          "balance": "Bénéfices > Risques si les conditions d'escalade sont calibrées avec soin lors de l'intégration initiale de l'agent. La liste proposée (5 conditions) est un point de départ conservateur adapté à un contexte de production avec peu d'historique d'incidents.",
+          "faisabilite": "Modérée. Requiert la documentation explicite des périmètres d'action dans le runbook d'incident et la configuration de l'agent IA pour détecter les conditions d'escalade. Nécessite une revue périodique des conditions au fur et à mesure que l'historique d'incidents s'enrichit."
+        },
+        "date_extraction": "2026-04-18"
+      }
+    ]
+  },
+  "variants": {}
+}

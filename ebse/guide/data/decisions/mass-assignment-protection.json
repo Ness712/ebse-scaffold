@@ -1,0 +1,261 @@
+{
+  "id": "mass-assignment-protection",
+  "domain": "security",
+  "question": "Quelles pratiques protègent contre le mass assignment dans les APIs REST NestJS/TypeScript ?",
+  "depends_on": ["input-validation", "safe-defaults"],
+  "tags": ["mass-assignment", "nestjs", "dto", "validation", "owasp", "api-security"],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "Adopter une approche allowlist stricte pour les données entrantes : définir un DTO (Data Transfer Object) typé qui liste explicitement les seules propriétés acceptées. Toute propriété absente du DTO est rejetée ou ignorée — jamais passée à la couche métier ou persistance. Cette approche est conforme à ASVS V5.1.2 ('only expected fields are validated and accepted') et constitue la contre-mesure normative principale de CWE-915.",
+        "grade": 6,
+        "level": "STANDARD",
+        "sources": [
+          {
+            "name": "OWASP ASVS 4.0 — V5.1.2 Input Validation",
+            "pyramid": 1,
+            "year": 2021,
+            "quote": "Verify that the application only validates and accepts expected fields, and that no additional fields are accepted, passed to the data layer, or otherwise used by the application.",
+            "note": "Standard normatif de niveau 1. Exigence explicite de l'approche allowlist pour la validation des inputs."
+          },
+          {
+            "name": "CWE-915: Improperly Controlled Modification of Dynamically-Determined Object Attributes",
+            "pyramid": 1,
+            "year": 2012,
+            "quote": "The product receives input from an upstream component that specifies multiple attributes, properties, or fields that are to be initialized or updated in an object, but it does not properly control which attributes can be modified.",
+            "note": "Entrée CWE normative. Mitigation principale : restreindre les attributs pouvant être modifiés via une allowlist explicite."
+          },
+          {
+            "name": "OWASP API Security Top 10 2023 — API3:2023 Broken Object Property Level Authorization",
+            "pyramid": 2,
+            "year": 2023,
+            "quote": "Only allow changes to object properties that should be updated by the client. Implement allowlisting of accepted fields.",
+            "note": "OWASP nomme le mass assignment comme sous-catégorie de BOPLA dans l'édition 2023. Contre-mesure principale : allowlist."
+          },
+          {
+            "name": "OWASP API Security Top 10 2019 — API6:2019 Mass Assignment",
+            "pyramid": 2,
+            "year": 2019,
+            "quote": "If possible, avoid using functions that automatically bind a client's input into code variables or internal objects. Whitelist only the properties that should be updated by the client.",
+            "note": "Première édition OWASP API Security à nommer le mass assignment comme risque distinct. Contre-mesure : allowlisting des propriétés acceptées."
+          },
+          {
+            "name": "GitHub Security Incident 2012 — Homakov Mass Assignment Exploit",
+            "pyramid": 5,
+            "year": 2012,
+            "quote": "I've just added myself to rails/rails project and push some commits to it. The bug that allowed it: mass-assignment in User model of github.com.",
+            "note": "Incident fondateur : exploitation de mass assignment sur GitHub (accès non autorisé à des dépôts publics via ajout de clé SSH). Justifie l'importance critique du problème."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": "5-6 (ASVS 4.0 V5.1 pyramid 1 + CWE-915 pyramid 1)",
+          "plus": [
+            "+1 convergence : OWASP API3:2023 + OWASP API6:2019 + ASVS 4.0 + CWE-915 + incident Homakov documenté — 5 sources indépendantes convergent sur la même contre-mesure (allowlist)"
+          ],
+          "minus": [
+            "-1 indirectness partielle : sources normatives (ASVS, CWE, OWASP) sont framework-agnostiques — l'application NestJS-spécifique est une déclinaison, non une preuve directe sur NestJS"
+          ],
+          "final": 6
+        },
+        "robustness": "HIGH",
+        "date_extraction": "2026-04-18"
+      },
+      {
+        "text": "Maintenir deux couches distinctes et non interchangeables : (1) validation de l'entrée — le DTO d'entrée (CreateUserDto, UpdatePostDto…) définit ce qui est accepté depuis le client ; (2) sérialisation de la sortie — le DTO de réponse (ou les annotations @Exclude/@Expose sur l'entité) définit ce qui est renvoyé au client. Mélanger les deux (utiliser la même classe en entrée et en sortie) crée un risque d'exposition accidentelle de champs internes (password hash, isAdmin…).",
+        "grade": 4,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "NestJS Documentation — Serialization (@Exclude, @Expose, ClassSerializerInterceptor)",
+            "pyramid": 3,
+            "year": 2024,
+            "quote": "A common requirement is to exclude certain properties from an entity when sending the response. Consider, for example, a user entity that includes sensitive information like passwords.",
+            "note": "Documentation officielle NestJS. Recommande @Exclude sur les propriétés sensibles et l'usage de ClassSerializerInterceptor pour la couche de sérialisation de sortie."
+          },
+          {
+            "name": "NestJS Documentation — Validation (Pipes, class-validator, class-transformer)",
+            "pyramid": 3,
+            "year": 2024,
+            "quote": "Set whitelist to true to automatically strip validated object of any properties that do not have any decorators. Set forbidNonWhitelisted to true so that instead of stripping non-whitelisted properties, validator will throw an exception.",
+            "note": "Documentation officielle NestJS. Décrit la séparation entre la pipe de validation (entrée) et la sérialisation (sortie) comme deux préoccupations distinctes."
+          },
+          {
+            "name": "OWASP API Security Top 10 2023 — API3:2023 Broken Object Property Level Authorization",
+            "pyramid": 2,
+            "year": 2023,
+            "quote": "Do not automatically bind incoming data and expose internal objects. Carefully filter and sanitize each field you expose in your API response.",
+            "note": "OWASP distingue explicitement le contrôle des données entrantes et le filtrage des données sortantes comme deux contre-mesures complémentaires."
+          },
+          {
+            "name": "class-transformer library — @Exclude, @Expose, plainToInstance",
+            "pyramid": 3,
+            "year": 2023,
+            "quote": "By using excludeExtraneousValues: true in plainToInstance options, only properties decorated with @Expose will be included in the result.",
+            "note": "Bibliothèque core utilisée par NestJS pour la transformation. excludeExtraneousValues:true implémente l'approche allowlist en sortie."
+          },
+          {
+            "name": "Microsoft API Design Best Practices — Input validation and mass assignment prevention",
+            "pyramid": 2,
+            "year": 2022,
+            "quote": "Separate your API model (what the client sends) from your domain model (what your service processes internally). Never expose internal implementation details through your API contract.",
+            "note": "Guide Microsoft. Recommande la séparation explicite des modèles API (DTO) et des modèles de domaine (entité)."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": "4 (OWASP API3:2023 pyramid 2 = source la plus haute dans les sources de ce principe — ASVS pyramid 1 absent des sources)",
+          "plus": [
+            "+1 convergence : documentation NestJS officielle + OWASP API3:2023 + Microsoft Azure Arch Guide + class-transformer convergent sur la séparation des couches"
+          ],
+          "minus": [
+            "-1 indirectness partielle : le principe est NestJS-spécifique — pas directement validé par des études empiriques ou des méta-analyses"
+          ],
+          "final": 4
+        },
+        "robustness": "MODERATE",
+        "date_extraction": "2026-04-18"
+      },
+      {
+        "text": "Ne jamais passer directement le body HTTP (ou le DTO non filtré) à la couche persistance. Mapper explicitement les champs autorisés depuis le DTO vers la requête Prisma (create/update). Si Prisma est utilisé, employer select:{} ou omit:{} dans la requête pour restreindre les champs retournés — cela constitue une troisième ligne de défense indépendante du DTO.",
+        "grade": 5,
+        "level": "STANDARD",
+        "sources": [
+          {
+            "name": "Prisma ORM Documentation — Filtering and selecting fields",
+            "pyramid": 3,
+            "year": 2024,
+            "quote": "You can select a subset of fields to return from a model query using select. If you don't use select, all scalar fields are returned.",
+            "note": "Documentation Prisma. select:{} crée une allowlist explicite au niveau DB — troisième ligne de défense après la validation du DTO."
+          },
+          {
+            "name": "OWASP ASVS 4.0 — V5.1.2 Input Validation",
+            "pyramid": 1,
+            "year": 2021,
+            "quote": "Verify that the application only validates and accepts expected fields, and that no additional fields are accepted, passed to the data layer, or otherwise used by the application.",
+            "note": "ASVS exige que les champs non attendus ne soient pas passés à la couche de données — un mapping explicite DTO → requête Prisma est l'implémentation directe de cette exigence."
+          },
+          {
+            "name": "OWASP Testing Guide v4.2 — OTG-INPVAL-013 Testing for Mass Assignment",
+            "pyramid": 2,
+            "year": 2021,
+            "quote": "Test whether the application accepts additional unexpected fields in the request body, and whether these fields are persisted in the data store.",
+            "note": "Guide de test OWASP. Le vecteur d'attaque est le passage de champs supplémentaires qui atteignent le data store — la mitigation est le mapping explicite avant la requête DB."
+          },
+          {
+            "name": "HackerOne — Mass Assignment vulnerability reports collection",
+            "pyramid": 5,
+            "year": 2023,
+            "quote": "The vulnerability allowed an attacker to set internal fields (e.g., role, isAdmin, verified) by including them in the JSON body of a POST request, which were then directly persisted to the database.",
+            "note": "Pattern récurrent dans les rapports HackerOne : les champs sensibles (isAdmin, role) sont exploités quand le DTO est passé sans mapping à la couche persistance."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": "5-6 (ASVS 4.0 pyramid 1)",
+          "plus": [
+            "+1 convergence : ASVS + OWASP Testing Guide + rapports HackerOne (preuves empiriques d'exploitation) + documentation Prisma convergent sur l'obligation de ne pas passer le DTO directement à la DB"
+          ],
+          "minus": [
+            "-1 indirectness partielle : Prisma-spécifique — la recommendation select/omit ne s'applique qu'au contexte ORM Prisma, pas à tous les ORMs"
+          ],
+          "final": 5
+        },
+        "robustness": "HIGH",
+        "date_extraction": "2026-04-18"
+      },
+      {
+        "text": "La sécurisation contre le mass assignment repose sur plusieurs lignes de défense indépendantes, chacune insuffisante seule : (1) DTO d'entrée typé avec décorateurs class-validator ; (2) ValidationPipe global avec whitelist:true et forbidNonWhitelisted:true ; (3) mapping explicite DTO → paramètres Prisma (pas de spread opérateur ...dto) ; (4) select/omit Prisma en sortie ; (5) @Exclude sur les champs sensibles des entités + ClassSerializerInterceptor. La suppression de l'une de ces couches doit être une décision explicite documentée, pas un oubli.",
+        "grade": 4,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "OWASP API Security Top 10 2023 — API3:2023 Broken Object Property Level Authorization",
+            "pyramid": 2,
+            "year": 2023,
+            "quote": "Implement allowlisting of accepted fields. Avoid using generic data-binding functions. Define and enforce a schema for the payload you expect to receive.",
+            "note": "OWASP liste plusieurs contre-mesures complémentaires — l'approche défense en profondeur est implicite dans la liste des recommandations."
+          },
+          {
+            "name": "NestJS Security Best Practices — DTO Pattern and ValidationPipe global configuration",
+            "pyramid": 5,
+            "year": 2023,
+            "quote": "Apply ValidationPipe globally with whitelist: true and forbidNonWhitelisted: true. This ensures that only the properties defined in your DTOs are accepted and all others are rejected.",
+            "note": "Guide expert Trilon/NestJS. Documente la configuration globale de ValidationPipe comme pratique standard dans la communauté NestJS."
+          },
+          {
+            "name": "NestJS Documentation — Validation (Pipes, class-validator, class-transformer)",
+            "pyramid": 3,
+            "year": 2024,
+            "quote": "It is considered a best practice to use the ValidationPipe globally to ensure that all incoming data is validated across all route handlers.",
+            "note": "Documentation officielle NestJS. Recommande l'application globale pour éviter les oublis sur certains endpoints."
+          },
+          {
+            "name": "class-validator library — @IsIn, @IsNotEmpty, decorator validators",
+            "pyramid": 3,
+            "year": 2023,
+            "quote": "Each field in the DTO class must be decorated with at least one validator — undecorated fields are stripped when whitelist mode is enabled.",
+            "note": "Le mécanisme whitelist de class-validator ne fonctionne correctement que si chaque champ attendu est explicitement décoré — renforce la nécessité d'une approche systématique par couche."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": "4 (OWASP API3:2023 pyramid 2 = source la plus haute dans les sources de ce principe — ASVS pyramid 1 absent des sources)",
+          "plus": [
+            "+1 convergence : OWASP + documentation NestJS officielle + communauté NestJS (Trilon) convergent sur l'approche multi-couches"
+          ],
+          "minus": [
+            "-1 indirectness partielle : principe NestJS-spécifique (combinaison ValidationPipe + class-transformer + Prisma select), pas de preuve empirique directe sur l'efficacité combinée"
+          ],
+          "final": 4
+        },
+        "robustness": "MODERATE",
+        "date_extraction": "2026-04-18"
+      }
+    ]
+  },
+  "variants": {
+    "nestjs-typescript": {
+      "recommendation": "Configurer ValidationPipe globalement avec `whitelist: true` et `forbidNonWhitelisted: true` dans `main.ts`. Définir des DTOs d'entrée typés avec class-validator pour chaque endpoint (CreateUserDto, UpdatePostDto…) — ne déclarer que les champs explicitement attendus. Ne jamais utiliser `...dto` directement dans prisma.create() ou prisma.update() : mapper explicitement les champs autorisés. Utiliser `select: {}` ou `omit: {}` dans les requêtes Prisma pour restreindre les champs retournés. Pour la sérialisation de sortie, appliquer `@Exclude()` sur les champs sensibles des entités et activer `ClassSerializerInterceptor` globalement — ou utiliser des response DTOs distincts avec `plainToInstance(ResponseDto, entity, { excludeExtraneousValues: true })`.",
+      "grade": 5,
+      "level": "STANDARD",
+      "sources": [
+        {
+          "name": "NestJS Documentation — Validation (Pipes, class-validator, class-transformer)",
+          "pyramid": 3,
+          "year": 2024,
+          "url": "https://docs.nestjs.com/techniques/validation"
+        },
+        {
+          "name": "NestJS Documentation — Serialization (@Exclude, @Expose, ClassSerializerInterceptor)",
+          "pyramid": 3,
+          "year": 2024,
+          "url": "https://docs.nestjs.com/techniques/serialization"
+        },
+        {
+          "name": "Prisma ORM Documentation — Filtering and selecting fields",
+          "pyramid": 3,
+          "year": 2024,
+          "url": "https://www.prisma.io/docs/concepts/components/prisma-client/select-fields"
+        },
+        {
+          "name": "OWASP ASVS 4.0 — V5.1.2 Input Validation",
+          "pyramid": 1,
+          "year": 2021,
+          "url": "https://owasp.org/www-project-application-security-verification-standard/"
+        },
+        {
+          "name": "NestJS Security Best Practices — DTO Pattern and ValidationPipe global configuration",
+          "pyramid": 5,
+          "year": 2023,
+          "url": "https://trilon.io/blog/nestjs-security-thinking-outside-the-box"
+        }
+      ],
+      "code_example": {
+        "main_ts": "app.useGlobalPipes(new ValidationPipe({ whitelist: true, forbidNonWhitelisted: true, transform: true }));",
+        "dto_input": "@IsString() @IsNotEmpty() name: string; @IsEmail() email: string; // isAdmin absent → rejeté automatiquement",
+        "service_mapping": "await this.prisma.user.create({ data: { name: dto.name, email: dto.email } }); // pas de ...dto",
+        "prisma_select": "await this.prisma.user.findUnique({ where: { id }, select: { id: true, name: true, email: true } }); // pas passwordHash",
+        "entity_exclude": "@Exclude() passwordHash: string; @Expose() id: number; // + ClassSerializerInterceptor global"
+      },
+      "date_extraction": "2026-04-18"
+    }
+  }
+}

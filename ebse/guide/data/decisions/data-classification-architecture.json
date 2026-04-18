@@ -1,0 +1,249 @@
+{
+  "id": "data-classification-architecture",
+  "domain": "security",
+  "question": "Quelles pratiques de classification des données sensibles sont recommandées avant de concevoir une architecture logicielle ?",
+  "depends_on": ["threat-modeling"],
+  "tags": ["data-classification", "privacy", "gdpr", "pii", "architecture"],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "Adopter une taxonomie à 4 niveaux (Public / Interne / Confidentiel / Secret) comme grille de référence avant toute décision architecturale. Chaque niveau correspond à un impact croissant sur la triade CIA (Confidentiality, Integrity, Availability) au sens FIPS 199 : Public (impact faible ou nul), Interne (impact faible — diffusion non autorisée acceptable en interne), Confidentiel (impact modéré — données PII standard, financières non critiques), Secret (impact élevé — données de santé, biométriques, secrets d'affaires, credentials). ISO 27001 A.8.2 et les frameworks industriels Microsoft Purview et Google Cloud Data Classification convergent tous sur cette structure en 4 niveaux.",
+        "grade": 6,
+        "level": "STANDARD",
+        "sources": [
+          {
+            "name": "FIPS 199 — Standards for Security Categorization of Federal Information and Information Systems (NIST, 2004)",
+            "pyramid": 1,
+            "year": 2004,
+            "quote": "The potential impact values for the security objectives (confidentiality, integrity, and availability) are low, moderate, or high.",
+            "url": "https://csrc.nist.gov/publications/detail/fips/199/final"
+          },
+          {
+            "name": "NIST SP 800-60 Vol.1 Rev.1 — Guide for Mapping Types of Information and Information Systems to Security Categories (NIST, 2008)",
+            "pyramid": 1,
+            "year": 2008,
+            "quote": "The security category of an information type can be associated with both user information and system information and can be applicable to information in either electronic or non-electronic form.",
+            "url": "https://csrc.nist.gov/publications/detail/sp/800-60/vol-1/rev-1/final"
+          },
+          {
+            "name": "ISO/IEC 27001:2022 — Information Security Management Systems (Contrôle A.8.2 Information Classification)",
+            "pyramid": 1,
+            "year": 2022,
+            "quote": "Information shall be classified according to legal requirements, value, criticality and sensitivity to unauthorised disclosure or modification.",
+            "url": "https://www.iso.org/standard/82875.html"
+          },
+          {
+            "name": "Microsoft Data Classification Framework — Microsoft Purview Information Protection (Microsoft, 2023)",
+            "pyramid": 3,
+            "year": 2023,
+            "quote": "Microsoft Purview defines four classification levels: Public, Internal, Confidential, Highly Confidential, each with associated protection controls.",
+            "url": "https://learn.microsoft.com/en-us/microsoft-365/compliance/information-protection"
+          },
+          {
+            "name": "Google Cloud Data Classification and Protection Framework (Google Cloud, 2023)",
+            "pyramid": 3,
+            "year": 2023,
+            "quote": "Data classification levels: Public, Internal, Confidential, Restricted — each level maps to specific access controls, encryption requirements, and data handling policies.",
+            "url": "https://cloud.google.com/architecture/framework/security/data-classification"
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 6,
+          "base_justification": "FIPS 199 (NIST, pyramid 1) + NIST SP 800-60 (NIST, pyramid 1) + ISO/IEC 27001:2022 A.8.2 (ISO, pyramid 1) — 3 sources normatifs ISO/NIST → base 6",
+          "plus": [
+            "+1 convergence : FIPS 199 (NIST, normatif) + ISO 27001 A.8.2 (international) + Microsoft Purview + Google Cloud Framework convergent indépendamment sur la même structure en 4 niveaux liée aux critères CIA — convergence forte entre sources normatives et industrielles"
+          ],
+          "minus": [
+            "-1 indirectness : les frameworks cloud (Microsoft Purview, Google Cloud) sont des implémentations industrielles orientées produit, pas des standards neutres — leur convergence sur 4 niveaux reflète aussi des contraintes commerciales ; la taxonomie FIPS 199 (3 niveaux Low/Moderate/High) nécessite une adaptation pour la correspondance avec le schéma 4 niveaux Public/Interne/Confidentiel/Secret"
+          ],
+          "net": 6
+        },
+        "robustness": "MODERE",
+        "critical_sources": [
+          "FIPS 199 (fondation normative — définit les 3 niveaux d'impact CIA, base de toute classification NIST)",
+          "ISO/IEC 27001:2022 A.8.2 (standard international — impose la classification avant traitement)"
+        ],
+        "date_extraction": "2026-04-18"
+      },
+      {
+        "text": "Cartographier la correspondance entre les niveaux de classification internes et les catégories réglementaires applicables : RGPD Art.9 (catégories spéciales : santé, biométrie, origine raciale/ethnique, opinions politiques, religion, appartenance syndicale, données sexuelles → niveau Secret), RGPD Art.4 (données personnelles ordinaires PII → niveau Confidentiel), PCI-DSS v4.0 (CHD/PAN/CVV → niveau Secret, SAD → niveau Secret), HIPAA (ePHI avec ses 18 identifiants → niveau Secret). Cette cartographie doit être produite avant la conception des flux de données et des data stores architecturaux.",
+        "grade": 6,
+        "level": "STANDARD",
+        "sources": [
+          {
+            "name": "Règlement Général sur la Protection des Données (RGPD) — Articles 4, 9 et 32 (Parlement Européen et Conseil de l'UE, 2016)",
+            "pyramid": 1,
+            "year": 2016,
+            "quote": "Art.9 : Le traitement des données à caractère personnel qui révèle l'origine raciale ou ethnique, les opinions politiques, les convictions religieuses ou philosophiques ou l'appartenance syndicale, ainsi que le traitement des données génétiques, des données biométriques aux fins d'identifier une personne physique de manière unique, des données concernant la santé ou des données concernant la vie sexuelle ou l'orientation sexuelle d'une personne physique sont interdits.",
+            "url": "https://eur-lex.europa.eu/legal-content/FR/TXT/?uri=CELEX%3A32016R0679"
+          },
+          {
+            "name": "PCI-DSS v4.0 — Payment Card Industry Data Security Standard (PCI Security Standards Council, 2022)",
+            "pyramid": 1,
+            "year": 2022,
+            "quote": "Cardholder data (CHD) includes the full PAN, cardholder name, expiration date, and service code. Sensitive authentication data (SAD) includes full track data, CVV2/CVC2, and PINs. SAD must never be stored after authorization.",
+            "url": "https://www.pcisecuritystandards.org/document_library/"
+          },
+          {
+            "name": "HIPAA Security Rule — 45 CFR Part 164 (U.S. Department of Health and Human Services, 2003)",
+            "pyramid": 1,
+            "year": 2003,
+            "quote": "Protected health information means individually identifiable health information [...] including demographic data, that relates to the individual's past, present, or future physical or mental health or condition, the provision of health care to the individual, or the past, present, or future payment for the provision of health care.",
+            "url": "https://www.hhs.gov/hipaa/for-professionals/security/index.html"
+          },
+          {
+            "name": "NIST Privacy Framework v1.0 (NIST, 2020)",
+            "pyramid": 1,
+            "year": 2020,
+            "quote": "IDENTIFY-P: Develop the organizational understanding to manage privacy risk for individuals arising from data processing.",
+            "url": "https://www.nist.gov/privacy-framework"
+          },
+          {
+            "name": "OWASP Application Security Verification Standard (ASVS) 4.0 — V1.8 Data Protection and Privacy Architecture (OWASP Foundation, 2021)",
+            "pyramid": 2,
+            "year": 2021,
+            "quote": "Verify that all sensitive data is identified and classified into protection levels, and ensure that a policy exists on how to deal with sensitive data.",
+            "url": "https://owasp.org/www-project-application-security-verification-standard/"
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 6,
+          "base_justification": "RGPD (législation UE, pyramid 1) + PCI-DSS v4.0 (standard normatif international, pyramid 1) + HIPAA 45 CFR (réglementation fédérale US, pyramid 1) + NIST Privacy Framework v1.0 (NIST, pyramid 1) — 4 sources pyramid 1 → base 6",
+          "plus": [
+            "+1 convergence : 3 régimes réglementaires indépendants (RGPD Art.9, HIPAA 45 CFR, PCI-DSS v4.0) créent chacun des catégories spéciales avec protection renforcée, convergents sur la notion de données à risque élevé ; OWASP ASVS V1.8 et NIST Privacy Framework formalisent la même exigence de cartographie en phase de conception"
+          ],
+          "minus": [
+            "-1 indirectness : chaque régime utilise son propre vocabulaire et périmètre géographique/sectoriel (RGPD = UE, HIPAA = USA santé, PCI-DSS = global paiement) — la correspondance entre ces systèmes dans une taxonomie unifiée est une interprétation, non une exigence normative explicite commune aux 3 régimes"
+          ],
+          "net": 6
+        },
+        "robustness": "MODERE",
+        "critical_sources": [
+          "RGPD Art.9 (catégories spéciales les plus larges en Europe — applicable à la quasi-totalité des projets UE)",
+          "OWASP ASVS V1.8 (lien direct classification → contrôles architecturaux — référence technique opérationnelle)"
+        ],
+        "date_extraction": "2026-04-18"
+      },
+      {
+        "text": "Appliquer la règle 'classify before design' : la classification des données doit précéder toute décision architecturale structurante (choix des data stores, définition des API contracts, segmentation réseau, stratégie d'authentification). Le contrôle RA-2 (Security Categorization) de NIST SP 800-53 formalise cette obligation : la catégorisation de sécurité est la première activité de risk management et conditionne le sélection des contrôles. OWASP ASVS V1.8.1 exige explicitement l'identification et la classification de toutes les données sensibles avant la conception de l'architecture de protection. ENISA Privacy by Design aligne cette pratique avec l'Art.25 RGPD (protection des données dès la conception).",
+        "grade": 6,
+        "level": "STANDARD",
+        "sources": [
+          {
+            "name": "NIST SP 800-53 Rev.5 — Control RA-2: Security Categorization (NIST, 2020)",
+            "pyramid": 1,
+            "year": 2020,
+            "quote": "Categorize the system and information it processes, stores, and transmits; document the security categorization results, including supporting rationale, in the security plan for the system; and verify that the authorizing official or designated representative reviews and approves the security categorization decision.",
+            "url": "https://csrc.nist.gov/publications/detail/sp/800-53/rev-5/final"
+          },
+          {
+            "name": "NIST SP 800-60 Vol.1 Rev.1 — Guide for Mapping Types of Information and Information Systems to Security Categories (NIST, 2008)",
+            "pyramid": 1,
+            "year": 2008,
+            "quote": "Security categorization provides a vital first step in the process of selecting appropriate security controls for an information system and is a prerequisite for the certification and accreditation process.",
+            "url": "https://csrc.nist.gov/publications/detail/sp/800-60/vol-1/rev-1/final"
+          },
+          {
+            "name": "OWASP Application Security Verification Standard (ASVS) 4.0 — V1.8 Data Protection and Privacy Architecture (OWASP Foundation, 2021)",
+            "pyramid": 2,
+            "year": 2021,
+            "quote": "V1.8.1: Verify that all sensitive data is identified and classified into protection levels. V1.8.2: Verify that all protection levels have an associated set of protection requirements.",
+            "url": "https://owasp.org/www-project-application-security-verification-standard/"
+          },
+          {
+            "name": "ENISA — Data Protection by Design: From Policy to Engineering (ENISA, 2020)",
+            "pyramid": 2,
+            "year": 2020,
+            "quote": "Privacy by Design requires that data protection is embedded into the design of systems and processes from the outset, not added on as an afterthought. Classification of personal data is a prerequisite for applying appropriate technical measures.",
+            "url": "https://www.enisa.europa.eu/publications/data-protection-by-design"
+          },
+          {
+            "name": "OWASP Threat Modeling — Cheat Sheet Series (OWASP Foundation, 2023)",
+            "pyramid": 2,
+            "year": 2023,
+            "quote": "Data classification is a prerequisite for threat modeling: identifying sensitive data assets and their classification level drives the prioritization of threats and the selection of mitigations in the DFD analysis.",
+            "url": "https://cheatsheetseries.owasp.org/cheatsheets/Threat_Modeling_Cheat_Sheet.html"
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 6,
+          "base_justification": "NIST SP 800-53 Rev.5 (NIST, pyramid 1) + NIST SP 800-60 (NIST, pyramid 1) — 2 sources normatifs NIST → base 6",
+          "plus": [
+            "+1 convergence forte : NIST SP 800-53 RA-2 (obligatoire en contexte fédéral US), OWASP ASVS V1.8 (référence applicative internationale), ENISA Privacy by Design (aligné RGPD Art.25), OWASP Threat Modeling Cheat Sheet convergent tous sur la priorité temporelle de la classification — 'classify before design' est une exigence transversale cohérente à travers frameworks normatifs, guides sécurité applicative et guides privacy"
+          ],
+          "minus": [
+            "-1 indirectness : NIST SP 800-53 RA-2 est conçu pour les systèmes d'information fédéraux US — son applicabilité directe à des architectures logicielles commerciales ou à des agents IA nécessite une adaptation (la rigueur formelle d'un ATO n'est pas toujours transposable)"
+          ],
+          "net": 6
+        },
+        "robustness": "MODERE",
+        "critical_sources": [
+          "NIST SP 800-53 Rev.5 RA-2 (formalise 'classify before design' comme première étape obligatoire du risk management — base normative la plus forte)",
+          "OWASP ASVS V1.8 (traduit l'exigence en contrôles vérifiables pour l'architecture applicative)"
+        ],
+        "date_extraction": "2026-04-18"
+      },
+      {
+        "text": "Appliquer une protection proportionnelle au niveau de classification : chaque niveau déclenche un ensemble minimal de contrôles techniques. Public : pas de chiffrement requis, logging minimal. Interne : chiffrement en transit (TLS 1.2+), contrôle d'accès authentifié, logging des accès. Confidentiel (PII standard) : chiffrement au repos + en transit, contrôle d'accès RBAC strict, logging complet des accès et modifications, pseudonymisation recommandée. Secret (santé, biométrie, PAN, credentials) : chiffrement AES-256 au repos + TLS 1.3 en transit, accès need-to-know (ABAC/RBAC renforcé), audit log infalsifiable, tokenisation ou chiffrement au niveau champ, DLP actif. OWASP A02:2021 identifie l'absence de cette proportionnalité comme la deuxième cause de vulnérabilité applicative la plus fréquente.",
+        "grade": 6,
+        "level": "STANDARD",
+        "sources": [
+          {
+            "name": "OWASP Top 10 — A02:2021 Cryptographic Failures (OWASP Foundation, 2021)",
+            "pyramid": 2,
+            "year": 2021,
+            "quote": "Determine the protection needs of data in transit and at rest. Passwords, credit card numbers, health records, personal information, and business secrets require extra protection, particularly if that data falls under privacy laws, e.g., EU's General Data Protection Regulation (GDPR), or regulations, e.g., PCI Data Security Standard (PCI DSS).",
+            "url": "https://owasp.org/Top10/A02_2021-Cryptographic_Failures/"
+          },
+          {
+            "name": "NIST SP 800-53 Rev.5 — Security and Privacy Controls (NIST, 2020)",
+            "pyramid": 1,
+            "year": 2020,
+            "quote": "The selection of controls is based on the security category of the information system determined in accordance with FIPS 199 and FIPS 200. Higher impact systems require a broader and deeper set of controls.",
+            "url": "https://csrc.nist.gov/publications/detail/sp/800-53/rev-5/final"
+          },
+          {
+            "name": "OWASP Application Security Verification Standard (ASVS) 4.0 — V1.8 Data Protection and Privacy Architecture (OWASP Foundation, 2021)",
+            "pyramid": 2,
+            "year": 2021,
+            "quote": "V1.8.2: Verify that all protection levels have an associated set of protection requirements, such as encryption requirements, integrity requirements, retention, privacy and other confidentiality requirements.",
+            "url": "https://owasp.org/www-project-application-security-verification-standard/"
+          },
+          {
+            "name": "ISO/IEC 27002:2022 — Information Security Controls — Guidance on A.8.2 (ISO/IEC, 2022)",
+            "pyramid": 1,
+            "year": 2022,
+            "quote": "The classification level should be taken into account when determining which controls to apply, e.g., access controls, cryptographic controls and other protective measures should be commensurate with the sensitivity of the information.",
+            "url": "https://www.iso.org/standard/75652.html"
+          },
+          {
+            "name": "ENISA — Data Protection by Design: From Policy to Engineering (ENISA, 2020)",
+            "pyramid": 2,
+            "year": 2020,
+            "quote": "Technical measures shall be proportionate to the risks and the nature of the data: pseudonymisation and encryption for high-risk data, minimisation and access control for lower-risk personal data.",
+            "url": "https://www.enisa.europa.eu/publications/data-protection-by-design"
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 6,
+          "base_justification": "NIST SP 800-53 Rev.5 (NIST, pyramid 1) + ISO/IEC 27002:2022 (ISO, pyramid 1) — 2 sources normatifs ISO/NIST → base 6",
+          "plus": [
+            "+1 convergence : NIST SP 800-53 (sélection des contrôles selon niveau d'impact FIPS 199), ISO 27002:2022 A.8.2 (mesures proportionnelles à la sensibilité), OWASP ASVS V1.8.2 (exigence de protection requirements par niveau), OWASP A02:2021 (absence de proportionnalité = vulnérabilité top 2), ENISA Privacy by Design (proportionnalité RGPD Art.32) — convergence très forte sur le principe de proportionnalité"
+          ],
+          "minus": [
+            "-1 indirectness : les seuils précis (AES-256 vs AES-128, TLS 1.2 vs TLS 1.3) varient selon le contexte et les standards évoluent — la table de contrôles proposée est une synthèse interprétative, pas une prescription normative unique et universelle"
+          ],
+          "net": 6
+        },
+        "robustness": "MODERE",
+        "critical_sources": [
+          "OWASP A02:2021 (OWASP Top 10 — fréquence empirique des défaillances liées à l'absence de protection proportionnelle)",
+          "NIST SP 800-53 Rev.5 (cadre normatif liant niveau de classification FIPS 199 et sélection des contrôles)"
+        ],
+        "date_extraction": "2026-04-18"
+      }
+    ]
+  },
+  "variants": {}
+}

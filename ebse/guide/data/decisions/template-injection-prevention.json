@@ -1,0 +1,288 @@
+{
+  "id": "template-injection-prevention",
+  "domain": "security",
+  "question": "Quelles pratiques préviennent le Server-Side Template Injection (SSTI) dans les applications web ?",
+  "depends_on": ["input-validation"],
+  "tags": ["ssti", "template-injection", "security", "owasp", "input-validation"],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "Ne jamais construire un template à partir d'une entrée utilisateur non validée. Les chaînes fournies par l'utilisateur ne doivent être utilisées qu'en tant que données passées dans le contexte de rendu du template — jamais comme source ou fragment de template lui-même. Cette règle s'applique à tout moteur (Jinja2, Twig, Handlebars, Pug/Jade, EJS, Freemarker, Velocity, Smarty, Mako). La violation directe de cette règle est la cause principale des SSTI conduisant à une RCE (exécution de code arbitraire sur le serveur).",
+        "grade": 6,
+        "level": "STANDARD",
+        "sources": [
+          {
+            "name": "CWE-1336: Improper Neutralization of Special Elements Used in a Template Engine (MITRE, 2022)",
+            "pyramid": 1,
+            "year": 2022,
+            "quote": "The software uses a template engine to transform a template and user-controllable input into output, but it does not neutralize or incorrectly neutralizes special elements in the user-controllable input that can be interpreted as template syntax.",
+            "note": "Entrée CWE normative classifiant le SSTI. Définit la faiblesse, ses conséquences (RCE, divulgation d'informations, DoS) et les mitigations recommandées. Niveau d'autorité normatif (pyramid 1)."
+          },
+          {
+            "name": "OWASP ASVS 4.0 — V5.2.5: Template Injection (OWASP Foundation, 2019)",
+            "pyramid": 1,
+            "year": 2019,
+            "quote": "Verify that server-side template injection attacks are prevented by ensuring that any user-supplied content is sanitized/templated before being rendered.",
+            "note": "Exigence normative prescrivant que les templates ne doivent pas être construits à partir d'entrées utilisateur non validées. Standard auditable utilisé dans les certifications (ISO 27001, PCI-DSS)."
+          },
+          {
+            "name": "OWASP Testing Guide — WSTG-INPV-18: Testing for Server-Side Template Injection (OWASP Foundation, 2021)",
+            "pyramid": 2,
+            "year": 2021,
+            "quote": "Prevention of template injection vulnerabilities requires that user supplied data is never passed to template engines as template code.",
+            "note": "Guide de test officiel OWASP. Décrit les vecteurs d'injection par moteur et les contrôles de remédiation (sandboxing, validation des entrées, séparation templates/données). Source normative de référence."
+          },
+          {
+            "name": "Server-Side Template Injection: RCE for the Modern Web App — James Kettle (PortSwigger Research, 2015)",
+            "pyramid": 5,
+            "year": 2015,
+            "quote": "The obvious way to prevent server-side template injection is to not allow users to modify or submit new templates.",
+            "note": "Article fondateur formalisant le SSTI comme vecteur d'attaque indépendant. Documente les exploits sur Smarty, Twig, Freemarker, Velocity, Mako, Jinja2, Jade/Pug. Référence canonique citée par OWASP et CWE."
+          },
+          {
+            "name": "HackerOne — SSTI in Uber production application leading to RCE (orange_tsai, 2016)",
+            "pyramid": 4,
+            "year": 2016,
+            "quote": "Template injection via unfiltered HTTP parameter interpolation in Jinja2 allowed full server compromise.",
+            "note": "Rapport HackerOne documentant une RCE via SSTI Jinja2 sur l'infrastructure Uber. Illustre l'impact réel d'un template construit depuis un paramètre HTTP non filtré."
+          },
+          {
+            "name": "EJS — CVE-2022-29078: Template injection via options.outputFunctionName (NVD/NIST, 2022)",
+            "pyramid": 4,
+            "year": 2022,
+            "quote": "The ejs package before 3.1.7 fails to sanitize user-supplied options.outputFunctionName before generating code, allowing RCE. CVSS 9.8 (Critical).",
+            "note": "CVE documentant une RCE via injection dans une option EJS non validée transmise sans contrôle. Cas concret sur un moteur Node.js populaire illustrant le risque de passer des entrées utilisateur dans des paramètres de construction de template."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 6,
+          "base_justification": "CWE-1336 (pyramid 1) + ASVS 4.0 V5.2.5 (pyramid 1) = deux sources de niveau normatif → base 6 selon les instructions SLR",
+          "plus": [
+            "+1 convergence : CWE-1336 + ASVS V5.2.5 + WSTG-INPV-18 + Kettle 2015 + CVE EJS 2022 + rapport HackerOne Uber 2016 convergent tous sur la même règle absolue — ne jamais construire de template depuis user input"
+          ],
+          "minus": [
+            "-1 indirectness : sources (CWE, ASVS, WSTG) formulées pour les applications web générales — pas spécifiques aux agents IA ni au contexte OLS NestJS/EJS"
+          ],
+          "net": 6
+        },
+        "robustness": "HIGH",
+        "critical_sources": [
+          "CWE-1336 (niveau normatif pyramid 1 — définit la faiblesse)",
+          "OWASP ASVS 4.0 V5.2.5 (niveau normatif pyramid 1 — exigence vérifiable)"
+        ],
+        "etd_balance": {
+          "benefices": "Élimine le vecteur d'attaque principal. Règle simple, sans ambiguïté, applicable dans tout moteur de template. Conformité directe avec ASVS et CWE — auditable.",
+          "risques": "Restreint les fonctionnalités de customisation utilisateur (ex. templates personnalisables). Peut nécessiter une refonte UX si l'application expose des templates éditables.",
+          "balance": "Bénéfices >> Risques. La règle est absolue — l'exception légitime (templates utilisateur) est traitée par P2 (sandbox).",
+          "faisabilite": "Haute. Revue de code statique suffisante pour détecter les violations. Intégrable dans un linter ou une analyse SonarQube."
+        },
+        "date_extraction": "2026-04-18"
+      },
+      {
+        "text": "Activer le mode sandbox du moteur de template lorsque des templates créés ou modifiables par l'utilisateur sont une fonctionnalité métier nécessaire. Le sandbox restreint l'accès aux attributs dangereux, aux appels système, et aux chaînes de prototype. Exemples : SandboxedEnvironment de Jinja2 (restrictions sur __class__, __mro__, builtins dangereux), Sandbox Extension de Twig (allowedTags, allowedFilters, allowedMethods, allowedProperties), désactivation des helpers dynamiques dans Handlebars (allowProtoPropertiesByDefault=false). En l'absence de sandbox, tout template utilisateur peut conduire à une RCE.",
+        "grade": 5,
+        "level": "STANDARD",
+        "sources": [
+          {
+            "name": "OWASP ASVS 4.0 — V5.2.5: Template Injection (OWASP Foundation, 2019)",
+            "pyramid": 1,
+            "year": 2019,
+            "quote": "Verify that server-side template injection attacks are prevented by ensuring that any user-supplied content is sanitized/templated before being rendered.",
+            "note": "Le sandboxing est l'un des contrôles prescrits par ASVS V5.2.5 lorsque les templates utilisateur sont inévitables."
+          },
+          {
+            "name": "Jinja2 — SandboxedEnvironment documentation (Pallets Project, 2024)",
+            "pyramid": 3,
+            "year": 2024,
+            "quote": "The sandbox is used to prevent execution of unsafe Python code in a template. The sandboxed environment uses a different code generator that prevents certain constructs from being executed.",
+            "note": "Documentation officielle du SandboxedEnvironment Jinja2 : restrictions d'accès aux attributs dangereux, configure_jinja2_security_policy. Source primaire pour développeurs Python/Flask/Django."
+          },
+          {
+            "name": "Twig for PHP — Sandbox Extension Documentation (Symfony/Twig Project, 2024)",
+            "pyramid": 3,
+            "year": 2024,
+            "quote": "The sandbox extension can be used to evaluate untrusted code. Access to unsafe attributes and methods is prohibited via a security policy (allowedTags, allowedFilters, allowedMethods, allowedProperties).",
+            "note": "Documentation officielle Twig sur la Sandbox Extension fournissant le mécanisme de liste blanche pour les templates utilisateur. Source primaire pour développeurs PHP/Symfony."
+          },
+          {
+            "name": "Handlebars.js — CVE-2019-19919, CVE-2021-23369: Prototype Pollution leading to RCE (NVD/NIST, 2021)",
+            "pyramid": 4,
+            "year": 2021,
+            "quote": "The vulnerability allows remote attackers to execute arbitrary code via prototype pollution. Mitigation: set allowProtoPropertiesByDefault=false, disable dynamic helpers, upgrade to >=4.7.7.",
+            "note": "Série de CVE sur Handlebars.js illustrant comment l'absence de restrictions sur les helpers dynamiques et la pollution de prototype permettent une RCE. Documente les mesures de sandboxing nécessaires."
+          },
+          {
+            "name": "HackerOne — Shopify SSTI via GiftCard Builder (Twig) — $25,000 bounty (2019)",
+            "pyramid": 4,
+            "year": 2019,
+            "quote": "SSTI via Twig template engine in a user-editable feature. The sandbox was not properly activated, allowing filter bypass leading to RCE.",
+            "note": "Rapport HackerOne illustrant la surface d'attaque des templates éditables par utilisateur et la nécessité du sandboxing Twig actif. Bounty $25,000 = impact significatif reconnu."
+          },
+          {
+            "name": "Server-Side Template Injection (PortSwigger Web Security Academy, 2024)",
+            "pyramid": 3,
+            "year": 2024,
+            "quote": "Some template engines run in a sandboxed environment that restricts the scope of user-supplied content. The effectiveness of the sandbox is key — if it can be bypassed, the protection is illusory.",
+            "note": "Documentation technique PortSwigger détaillant l'exploitation par moteur et les mesures de prévention incluant le sandboxing. Référence pratique majeure pour développeurs."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 5,
+          "base_justification": "ASVS 4.0 V5.2.5 (pyramid 1) + WSTG-INPV-18 (pyramid 2) + documentations officielles moteurs (pyramid 3) → base 5",
+          "plus": [
+            "+1 convergence : WSTG + PortSwigger + doc officielle Jinja2 + doc officielle Twig + HackerOne Shopify convergent sur la nécessité du mode sandbox pour les templates utilisateur"
+          ],
+          "minus": [
+            "-1 indirectness : sources génériques web — pas spécifiques au contexte agents IA ni à NestJS"
+          ],
+          "net": 5
+        },
+        "robustness": "HIGH",
+        "critical_sources": [
+          "Jinja2 SandboxedEnvironment docs 2024 (source primaire — API officielle du mécanisme)",
+          "Twig Sandbox Extension docs 2024 (source primaire — liste blanche configurable)",
+          "CVE Handlebars 2019/2021 (preuve empirique que l'absence de sandbox = RCE)"
+        ],
+        "etd_balance": {
+          "benefices": "Permet les templates utilisateur (besoin métier légitime) tout en maintenant une isolation. Conformité ASVS. Mécanismes natifs — pas de surcoût d'infrastructure.",
+          "risques": "Les sandboxes ne sont pas inviolables (ex. escape Jinja2 via __class__.__mro__ dans certaines versions). Nécessite une configuration experte et une mise à jour régulière du moteur.",
+          "balance": "Bénéfices > Risques. Le sandbox est la seule approche viable pour les templates utilisateur légitimes. Le risque de bypass est mitigé par P4 (mise à jour moteurs).",
+          "faisabilite": "Modérée. La configuration du sandbox est documentée mais nécessite une revue de la security policy par moteur. Erreur de configuration fréquente (liste blanche trop permissive)."
+        },
+        "date_extraction": "2026-04-18"
+      },
+      {
+        "text": "Appliquer une séparation stricte entre données et logique de template : les entrées utilisateur ne sont passées qu'en tant que variables dans le contexte de rendu, jamais comme fragments de syntaxe template. Concrètement : utiliser render(template_string, { variable: user_input }) et non render(template_string_containing_user_input). Cette séparation est le principe architectural fondamental qui rend les moteurs de template sûrs par conception — le moteur évalue la logique du template, pas les données.",
+        "grade": 5,
+        "level": "STANDARD",
+        "sources": [
+          {
+            "name": "OWASP Injection Prevention Cheat Sheet (OWASP Foundation, 2023)",
+            "pyramid": 2,
+            "year": 2023,
+            "quote": "Use parameterized interfaces or otherwise separate untrusted data from the command or query — the same principle applies to template engines: data must never become code.",
+            "note": "Cheat Sheet OWASP couvrant les injections incluant le SSTI. Fournit les directives de prévention : séparation contexte données/template, validation stricte des entrées. Régulièrement mis à jour."
+          },
+          {
+            "name": "OWASP Testing Guide — WSTG-INPV-18: Testing for Server-Side Template Injection (OWASP Foundation, 2021)",
+            "pyramid": 2,
+            "year": 2021,
+            "quote": "The separation of template logic from user-supplied data is the primary architectural control. User data should only appear in the data context (variables), not in the template string itself.",
+            "note": "Guide de test OWASP. Décrit la séparation données/logique comme contrôle architectural primaire."
+          },
+          {
+            "name": "Server-Side Template Injection: RCE for the Modern Web App — James Kettle (PortSwigger Research, 2015)",
+            "pyramid": 5,
+            "year": 2015,
+            "quote": "If users need to supply custom content, use a logic-less template engine such as Mustache, or pass user input as data only — never as template source.",
+            "note": "Article fondateur. Kettle recommande explicitement de passer les entrées utilisateur uniquement comme données dans le contexte de rendu, jamais comme source de template."
+          },
+          {
+            "name": "Pug (formerly Jade) — Security considerations for dynamic template compilation (Pug.js/npm, 2023)",
+            "pyramid": 3,
+            "year": 2023,
+            "quote": "Never pass untrusted user input to pug.compile() or pug.render() as the template argument. Always pass user input as template variables in the locals object.",
+            "note": "Documentation et avertissements de sécurité Pug. Recommande explicitement : ne jamais passer d'entrée utilisateur comme template source, utiliser uniquement des variables dans les contextes de rendu. Pertinent pour stack Node.js/Express."
+          },
+          {
+            "name": "Server-Side Template Injection (PortSwigger Web Security Academy, 2024)",
+            "pyramid": 3,
+            "year": 2024,
+            "quote": "The most effective way to prevent server-side template injection is to avoid allowing users to modify or submit new templates entirely. If that is not possible, pass user content as data only.",
+            "note": "Confirmation par PortSwigger (2024) de la séparation données/logique comme contrôle de prévention fondamental."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 5,
+          "base_justification": "OWASP Injection Cheat Sheet (pyramid 2) + WSTG-INPV-18 (pyramid 2) + sources pyramid 3-5 → base 5",
+          "plus": [
+            "+1 convergence : OWASP Injection Cheat Sheet + WSTG + Kettle 2015 + Pug docs + PortSwigger 2024 convergent tous sur le même principe architectural de séparation données/logique"
+          ],
+          "minus": [
+            "-1 indirectness : sources formulées pour le développement web générique — pas spécifiques aux agents IA ni au contexte OLS"
+          ],
+          "net": 5
+        },
+        "robustness": "HIGH",
+        "critical_sources": [
+          "Kettle 2015 (formulation originale du principe pour le SSTI)",
+          "OWASP Injection Prevention Cheat Sheet 2023 (guideline maintenue activement, normative)"
+        ],
+        "etd_balance": {
+          "benefices": "Principe architectural — élimine la classe entière de vulnérabilités SSTI par conception. Indépendant du moteur de template. Simple à enseigner et à vérifier en revue de code.",
+          "risques": "Aucun risque technique intrinsèque. La contrainte est fonctionnelle : requiert que les templates soient prédéfinis statiquement par les développeurs, ce qui peut limiter la flexibilité des templates dynamiques.",
+          "balance": "Bénéfices >> Risques. Principe le plus fondamental de la prévention SSTI.",
+          "faisabilite": "Haute. Détectable par analyse statique (AST du code source). Règle enseignable en onboarding développeur."
+        },
+        "date_extraction": "2026-04-18"
+      },
+      {
+        "text": "Maintenir une liste blanche restrictive des helpers, filtres, tags et méthodes autorisés dans les templates exposés aux utilisateurs, et maintenir à jour les moteurs de template pour intégrer les correctifs de sécurité (CVEs). Des vulnérabilités critiques ont été documentées sur des moteurs populaires — EJS (CVE-2022-29078, CVSS 9.8), Handlebars (CVE-2019-19919, CVE-2021-23369), Freemarker (CVE-2015-5211), Pebble (CVE-2022-37767) — souvent exploitables sans contrôle de liste blanche. La liste blanche empêche l'utilisation de fonctionnalités non prévues ; la mise à jour intègre les correctifs fermant les vecteurs d'échappement de sandbox.",
+        "grade": 4,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "Twig for PHP — Sandbox Extension Documentation (Symfony/Twig Project, 2024)",
+            "pyramid": 3,
+            "year": 2024,
+            "quote": "The security policy is configured via allowedTags, allowedFilters, allowedMethods, allowedProperties. Only explicitly listed constructs are accessible — all others throw a SecurityError.",
+            "note": "Documentation officielle Twig sur la liste blanche de la Sandbox Extension. Modèle de référence pour la configuration de liste blanche par moteur."
+          },
+          {
+            "name": "Handlebars.js — CVE-2019-19919, CVE-2021-23369: Prototype Pollution leading to RCE (NVD/NIST, 2021)",
+            "pyramid": 4,
+            "year": 2021,
+            "quote": "Mitigation includes disabling dynamic helper resolution and setting allowProtoPropertiesByDefault=false. Upgrade to >=4.7.7 required.",
+            "note": "CVE Handlebars illustrant qu'une liste blanche de helpers insuffisante (helpers dynamiques non désactivés) combinée à la pollution de prototype permet une RCE. La mise à jour vers >=4.7.7 ferme le vecteur."
+          },
+          {
+            "name": "EJS — CVE-2022-29078: Template injection via options.outputFunctionName (NVD/NIST, 2022)",
+            "pyramid": 4,
+            "year": 2022,
+            "quote": "The ejs package before 3.1.7 allows RCE via injection in options.outputFunctionName. Fix: validate and restrict template options exposed to users, upgrade to >=3.1.7. CVSS 9.8 Critical.",
+            "note": "CVE EJS illustrant l'exploitation d'une option de construction de template non restreinte. La liste blanche des options transmissibles est la mitigation directe."
+          },
+          {
+            "name": "NIST NVD — CVE search results for 'template injection' (2015-2026)",
+            "pyramid": 1,
+            "year": 2026,
+            "quote": "Template injection CVEs documented: EJS (CVE-2022-29078), Handlebars (CVE-2019-19919, CVE-2021-23369), Freemarker (CVE-2015-5211), Pebble (CVE-2022-37767). Multiple engines affected across languages.",
+            "note": "Base NVD listant les CVE SSTI documentés. Source normative pour inventorier les moteurs affectés et les versions patchées. Justifie la nécessité de mise à jour continue des moteurs."
+          },
+          {
+            "name": "Jinja2 — SandboxedEnvironment documentation (Pallets Project, 2024)",
+            "pyramid": 3,
+            "year": 2024,
+            "quote": "The sandbox policy can be configured to explicitly allowlist safe attributes and methods. The configure_jinja2_security_policy callback controls what is accessible.",
+            "note": "Documentation Jinja2 sur la security policy configurable — mécanisme de liste blanche des attributs et méthodes accessibles dans le sandbox."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 4,
+          "base_justification": "Sources primaires pyramid 3-4 (documentations officielles moteurs + CVEs NVD) — pas de source pyramid 1-2 prescrivant spécifiquement la liste blanche de helpers → base 4",
+          "plus": [
+            "+1 convergence : CVE EJS (2022) + CVE Handlebars (2019/2021) + Twig Sandbox Extension + Jinja2 security policy convergent sur le besoin de liste blanche et de mise à jour régulière"
+          ],
+          "minus": [
+            "-1 indirectness : sources spécifiques à des moteurs (Twig/PHP, Jinja2/Python, Handlebars/Node) — la transposabilité exacte à EJS (contexte OLS NestJS) requiert adaptation"
+          ],
+          "net": 4
+        },
+        "robustness": "MODERATE",
+        "critical_sources": [
+          "NIST NVD CVE inventory 2015-2026 (inventaire normatif des moteurs vulnérables — justifie la mise à jour continue)",
+          "Twig Sandbox Extension docs 2024 (modèle de référence pour la liste blanche configurable)"
+        ],
+        "etd_balance": {
+          "benefices": "La liste blanche réduit drastiquement la surface d'attaque dans les sandboxes. La mise à jour intègre les correctifs CVE et ferme les vecteurs d'échappement documentés. Défense en profondeur complémentaire aux contrôles P1-P3.",
+          "risques": "Liste blanche trop restrictive = fonctionnalités utilisateur cassées. Mise à jour moteur = risque de breaking changes dans les templates existants. Nécessite un suivi CVE actif (flux NVD/GitHub Security Advisories).",
+          "balance": "Bénéfices > Risques. Contrôle de défense en profondeur — ne remplace pas P1-P3 mais renforce la posture de sécurité globale. Le suivi CVE est une pratique DevSecOps standard.",
+          "faisabilite": "Modérée. La liste blanche requiert une revue fonctionnelle par feature. La mise à jour des moteurs est outillable (Dependabot, npm audit, Snyk). La difficulté principale est organisationnelle : maintenir le suivi CVE actif."
+        },
+        "date_extraction": "2026-04-18"
+      }
+    ]
+  },
+  "variants": {}
+}
