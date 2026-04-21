@@ -1,13 +1,13 @@
 {
   "id": "contributor-attribution",
   "domain": "project",
-  "question": "Comment crediter les contributeurs d'un projet logiciel (fichier centralise, champ package.json, commentaire par fichier) ?",
+  "question": "Comment crediter les contributeurs d'un projet logiciel (commentaire par fichier, champ package.json, fichier centralise) ?",
   "picoc": {
-    "P": "Equipes de developpement logiciel (projets open source et internes, mono ou multi-repo)",
-    "I": "Methodes de credit aux contributeurs : CONTRIBUTORS.md, AUTHORS file, champ contributors dans package.json, commentaire @author par fichier",
-    "C": "Aucun credit explicite (git history seul) vs. credit centralise vs. credit par fichier",
-    "O": "Exactitude au fil du temps, lisibilite humaine, conformite aux standards de l'ecosysteme, maintenabilite",
-    "C_context": "Projets npm/Node.js, repos GitHub, projets multi-contributeurs avec roles differencies"
+    "P": "Equipes de developpement logiciel, projets avec plusieurs contributeurs, ecosysteme npm/Node.js, hebergement GitHub",
+    "I": "Methodes de credit : (a) @author par fichier source, (b) champ contributors dans package.json, (c) fichier CONTRIBUTORS ou AUTHORS a la racine du repo",
+    "C": "Git history seul (pas de credit explicite hors VCS)",
+    "O": "Exactitude temporelle de l'attribution, lisibilite humaine, conformite standards ecosysteme, facilite de maintenance, sante de la communaute projet",
+    "C_context": "Projets actifs avec > 1 contributeur, heberges GitHub, ecosysteme npm/Node.js"
   },
   "depends_on": ["repo-standard-files", "commit-conventions"],
   "tags": [
@@ -23,72 +23,90 @@
   "universal": {
     "principles": [
       {
-        "text": "Ne pas utiliser les commentaires @author par fichier. Git history est la source de verite des contributions (git blame / git log) ; les @author deviennent obsoletes des le premier refactor et generent une fausse information. Preferer un credit centralise.",
-        "grade": 5,
-        "level": "STANDARD",
-        "sources": [
-          {
-            "name": "Google Engineering Practices — Code Review Developer Guide",
-            "pyramid": 2,
-            "year": 2024,
-            "quote": "Do not put the author's name in the file. Version control already records who wrote the code."
-          },
-          {
-            "name": "Google Java Style Guide §7.3.1 — What not to include",
-            "pyramid": 2,
-            "year": 2024,
-            "quote": "@author tags are not required and should not be added to new code"
-          },
-          {
-            "name": "Linux Kernel Coding Style",
-            "pyramid": 2,
-            "year": 2024,
-            "quote": "Don't add author information in files — MAINTAINERS and git log cover attribution"
-          }
-        ],
-        "robustness": "ROBUSTE"
-      },
-      {
-        "text": "Pour les packages npm/Node.js, renseigner le champ contributors dans package.json : tableau d'objets {name, email, url?}. Format officiel npm. Alternative : fichier AUTHORS a la racine du package (parse automatiquement par npm, une personne par ligne : 'Name <email> (url)'). Les deux approches sont equivalentes — choisir la plus adaptee au workflow.",
-        "grade": 5,
-        "level": "STANDARD",
-        "sources": [
-          {
-            "name": "npm Docs — package.json contributors field",
-            "pyramid": 1,
-            "year": 2025,
-            "quote": "If there is an AUTHORS file in the root of your package, npm will treat each line as a Name <email> (url) format, where email and url are optional. Lines which start with a # or are blank, will be ignored."
-          }
-        ],
-        "robustness": "ROBUSTE"
-      },
-      {
-        "text": "Ajouter un fichier CONTRIBUTORS.md a la racine de chaque repo (recommande GitHub community health files). Structure minimale : nom, role dans le projet, periode de contribution. Git history reste la source de verite — CONTRIBUTORS.md ajoute la lisibilite humaine et le contexte des roles (ce que git log ne donne pas). Mettre a jour au moment de chaque merge de contribution significative.",
+        "text": "Ne pas utiliser les commentaires @author par fichier source. Git history (git blame / git log) est la source de verite, toujours exacte ; les @author deviennent obsoletes des le premier refactor. La policy officielle de l'Apache Software Foundation (2004, reaffirmee) le deconseille explicitement : maintenir l'attention sur les createurs originaux est 'detrimental to the long-term health of a project community'. Gradle a retire tous ses @author tags et ajoute une regle checkstyle pour les interdire.",
         "grade": 4,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "Apache Software Foundation Board — @author policy (February 2004, section D)",
+            "pyramid": 2,
+            "year": 2004,
+            "quote": "it is detrimental to the long-term health of a project community to continually call attention to the individuals and/or organizations that originally created the project",
+            "access": "PARTIEL — policy reaffirmee dans ASF JIRA (ARTEMIS-87, RIVER-409) et Apache Tomcat mailing list; board minutes directs non accessibles en ligne"
+          },
+          {
+            "name": "Gradle — commit a1b9612 'Remove @author tags and names from source code'",
+            "pyramid": 3,
+            "year": 2015,
+            "quote": "Remove @author tags and names from source code. Added checkstyle check for @author tags. Added note to CONTRIBUTING.md stating that names are not used in the codebase.",
+            "url": "https://github.com/gradle/gradle/commit/a1b9612fa06f90f20b115cede557e22287501034"
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 3,
+          "plus": ["convergence (ASF fondation niv.2 + Gradle projet independant niv.3, meme conclusion)"],
+          "minus": ["acces-partiel (board minutes 2004 non accessibles directement — compense par corroboration JIRA multi-projets)"]
+        },
+        "robustness": "MODERE",
+        "sensitivity": "Fragile si source ASF retiree (score passe a 2, BONNE PRATIQUE). Robuste si Gradle seul retire.",
+        "prisma_ref": "verification/prisma/contributor-attribution.md",
+        "date_extraction": "2026-04-21"
+      },
+      {
+        "text": "Pour les packages npm/Node.js, renseigner le champ contributors dans package.json : tableau d'objets {name, email?, url?}. Mecanisme officiel npm. Alternative equivalente : fichier AUTHORS a la racine du package (parse automatiquement par npm, format 'Name <email> (url)', lignes # ignorees).",
+        "grade": 2,
         "level": "BONNE PRATIQUE",
         "sources": [
           {
-            "name": "GitHub Docs — Community health files",
-            "pyramid": 1,
-            "year": 2024,
-            "quote": "You can add a CONTRIBUTORS file to your repository to let people know how to contribute to your project."
-          },
-          {
-            "name": "Linux Foundation CII Best Practices Badge — Criteria",
-            "pyramid": 2,
-            "year": 2024,
-            "quote": "The project SHOULD include a contributors file (e.g., AUTHORS) that identifies contributors"
-          },
-          {
-            "name": "Open Source Guides — Building Welcoming Communities",
+            "name": "npm Docs — package.json contributors field (v11)",
             "pyramid": 3,
-            "year": 2024,
-            "quote": "Publicly acknowledging contributors in a CONTRIBUTORS file encourages more contributions and documents project history"
+            "year": 2025,
+            "quote": "The 'author' is one person. 'contributors' is an array of people. A 'person' is an object with a 'name' field and optionally 'url' and 'email'. [...] If there is an AUTHORS file in the root of your package, npm will treat each line as a Name <email> (url) format, where email and url are optional.",
+            "url": "https://docs.npmjs.com/cli/v11/configuring-npm/package-json#contributors"
           }
         ],
-        "robustness": "ROBUSTE"
+        "grade_factors_applied": {
+          "start": 2,
+          "plus": [],
+          "minus": []
+        },
+        "robustness": "FRAGILE",
+        "sensitivity": "Repose entierement sur npm docs (source canonique unique pour ce mecanisme). Fragilite inherente au sujet.",
+        "prisma_ref": "verification/prisma/contributor-attribution.md",
+        "date_extraction": "2026-04-21"
+      },
+      {
+        "text": "Ajouter un fichier CONTRIBUTORS ou AUTHORS a la racine de chaque repo. Ce fichier apporte ce que le git history ne donne pas : le contexte des roles (qui a fait quoi, dans quelle periode). Open Source Guides (GitHub) le recommande explicitement et lie le credit visible a la retention des contributeurs. Mettre a jour lors de chaque merge de contribution significative.",
+        "grade": 3,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "Open Source Guides — Building Welcoming Communities (GitHub)",
+            "pyramid": 3,
+            "year": 2024,
+            "quote": "Start a CONTRIBUTORS or AUTHORS file in your project that lists everyone who's contributed to your project. The more you give credit to others, the more they'll stick around.",
+            "url": "https://opensource.guide/building-community/"
+          },
+          {
+            "name": "npm Docs — AUTHORS file support (convergence partielle : npm parse AUTHORS nativement)",
+            "pyramid": 3,
+            "year": 2025,
+            "quote": "If there is an AUTHORS file in the root of your package, npm will treat each line as a Name <email> (url) format",
+            "url": "https://docs.npmjs.com/cli/v11/configuring-npm/package-json#contributors"
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 2,
+          "plus": ["convergence-partielle (Open Source Guides recommande explicitement ; npm supporte AUTHORS nativement — deux sources independantes convergent sur le principe du fichier centralise)"],
+          "minus": []
+        },
+        "robustness": "FRAGILE",
+        "sensitivity": "Chaque source retiree individuellement fait tomber a BONNE PRATIQUE. Une 3e source independante renforcerait la recommandation.",
+        "prisma_ref": "verification/prisma/contributor-attribution.md",
+        "date_extraction": "2026-04-21"
       }
     ]
   },
+  "slr_deviation": "Revue conduite par un seul agent IA (pas de double extraction independante). Kappa non calculable. GRADE plafonne a [RECOMMANDE] max. Validation superviseur humain requise avant merge. Voir verification/picoc/contributor-attribution.md.",
   "variants": {}
 }
