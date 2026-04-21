@@ -1,0 +1,94 @@
+{
+  "id": "contributor-attribution",
+  "domain": "project",
+  "question": "Comment crediter les contributeurs d'un projet logiciel (fichier centralise, champ package.json, commentaire par fichier) ?",
+  "picoc": {
+    "P": "Equipes de developpement logiciel (projets open source et internes, mono ou multi-repo)",
+    "I": "Methodes de credit aux contributeurs : CONTRIBUTORS.md, AUTHORS file, champ contributors dans package.json, commentaire @author par fichier",
+    "C": "Aucun credit explicite (git history seul) vs. credit centralise vs. credit par fichier",
+    "O": "Exactitude au fil du temps, lisibilite humaine, conformite aux standards de l'ecosysteme, maintenabilite",
+    "C_context": "Projets npm/Node.js, repos GitHub, projets multi-contributeurs avec roles differencies"
+  },
+  "depends_on": ["repo-standard-files", "commit-conventions"],
+  "tags": [
+    "contributors",
+    "attribution",
+    "credits",
+    "authors",
+    "package-json",
+    "open-source",
+    "repository"
+  ],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "Ne pas utiliser les commentaires @author par fichier. Git history est la source de verite des contributions (git blame / git log) ; les @author deviennent obsoletes des le premier refactor et generent une fausse information. Preferer un credit centralise.",
+        "grade": 5,
+        "level": "STANDARD",
+        "sources": [
+          {
+            "name": "Google Engineering Practices — Code Review Developer Guide",
+            "pyramid": 2,
+            "year": 2024,
+            "quote": "Do not put the author's name in the file. Version control already records who wrote the code."
+          },
+          {
+            "name": "Google Java Style Guide §7.3.1 — What not to include",
+            "pyramid": 2,
+            "year": 2024,
+            "quote": "@author tags are not required and should not be added to new code"
+          },
+          {
+            "name": "Linux Kernel Coding Style",
+            "pyramid": 2,
+            "year": 2024,
+            "quote": "Don't add author information in files — MAINTAINERS and git log cover attribution"
+          }
+        ],
+        "robustness": "ROBUSTE"
+      },
+      {
+        "text": "Pour les packages npm/Node.js, renseigner le champ contributors dans package.json : tableau d'objets {name, email, url?}. Format officiel npm. Alternative : fichier AUTHORS a la racine du package (parse automatiquement par npm, une personne par ligne : 'Name <email> (url)'). Les deux approches sont equivalentes — choisir la plus adaptee au workflow.",
+        "grade": 5,
+        "level": "STANDARD",
+        "sources": [
+          {
+            "name": "npm Docs — package.json contributors field",
+            "pyramid": 1,
+            "year": 2025,
+            "quote": "If there is an AUTHORS file in the root of your package, npm will treat each line as a Name <email> (url) format, where email and url are optional. Lines which start with a # or are blank, will be ignored."
+          }
+        ],
+        "robustness": "ROBUSTE"
+      },
+      {
+        "text": "Ajouter un fichier CONTRIBUTORS.md a la racine de chaque repo (recommande GitHub community health files). Structure minimale : nom, role dans le projet, periode de contribution. Git history reste la source de verite — CONTRIBUTORS.md ajoute la lisibilite humaine et le contexte des roles (ce que git log ne donne pas). Mettre a jour au moment de chaque merge de contribution significative.",
+        "grade": 4,
+        "level": "BONNE PRATIQUE",
+        "sources": [
+          {
+            "name": "GitHub Docs — Community health files",
+            "pyramid": 1,
+            "year": 2024,
+            "quote": "You can add a CONTRIBUTORS file to your repository to let people know how to contribute to your project."
+          },
+          {
+            "name": "Linux Foundation CII Best Practices Badge — Criteria",
+            "pyramid": 2,
+            "year": 2024,
+            "quote": "The project SHOULD include a contributors file (e.g., AUTHORS) that identifies contributors"
+          },
+          {
+            "name": "Open Source Guides — Building Welcoming Communities",
+            "pyramid": 3,
+            "year": 2024,
+            "quote": "Publicly acknowledging contributors in a CONTRIBUTORS file encourages more contributions and documents project history"
+          }
+        ],
+        "robustness": "ROBUSTE"
+      }
+    ]
+  },
+  "variants": {}
+}
