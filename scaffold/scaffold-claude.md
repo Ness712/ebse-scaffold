@@ -212,6 +212,26 @@ Regle : **un seul decideur actif a la fois**. Si l'IC est indisponible → hando
 
 ---
 
+## Gestion du backlog et coordination `[REQUIRED]`
+
+Avant de coder, verifier qu'une issue existe et est assignee — c'est le mecanisme principal pour eviter que deux devs (ou deux agents) travaillent sur les memes fichiers en parallele.
+
+**Partie jugement (non-mecanisable) :**
+- **1 issue = 1 probleme ou 1 feature**. Owner clair. Criteres d'acceptation definis avant de commencer.
+- **WIP limite a 2-3 items par dev** — ne pas commencer une nouvelle issue tant qu'une en cours n'est pas en Review ou Done.
+- **Triage hebdomadaire** du backlog par le PO.
+- **Labels** : `bug`, `feat`, `chore` (+ labels projet si besoin).
+
+**Partie mecanique — implementer dans `pre-push` hook `[MANDATORY]`** :
+- Le nom de branche doit inclure le numero d'issue : `[CONFIGURER: ex: OLS-{issue-number}-{description}]`
+- Le hook verifie que l'issue existe sur GitHub (`gh issue view {NUMBER}`) et est ouverte
+- Hard gate : bloquer le push si l'issue n'existe pas ou est closed
+- Tracabilite complete : issue → branche → commit → PR
+
+`Source: PICOC issue-tracking GRADE 3 RECOMMANDE — SWEBOK v4 ch.9 (gestion de projet, tracabilite) ; SO Developer Survey 2024`
+
+---
+
 ## Workflow Git `[REQUIRED]`
 
 Tu geres le git workflow **entierement seul** :
@@ -687,34 +707,78 @@ Script `.claude/hooks/pre-commit-quality.sh` :
 #!/bin/bash
 echo "$CLAUDE_TOOL_INPUT" | grep -q 'git commit' || exit 0
 
+# Extraire le repo reel depuis la commande (supporte mono-repo et worktrees)
+# Cherche le premier `cd "path"` dont le dossier contient un package.json ou pom.xml
+COMMAND=$(echo "$CLAUDE_TOOL_INPUT" | python3 -c "import sys,json; print(json.load(sys.stdin).get('command',''))" 2>/dev/null || echo "")
+REPO_PATH=$(python3 - "$COMMAND" <<'PYEOF'
+import sys, re, os
+cmd = sys.argv[1]
+for m in re.finditer(r'cd\s+"?([^";&\s]+)"?', cmd):
+    p = m.group(1)
+    if any(os.path.isfile(os.path.join(p, f)) for f in ('package.json', 'pom.xml', 'go.mod', 'Cargo.toml')):
+        print(p); sys.exit(0)
+for m in re.finditer(r'git\s+-C\s+"?([^";&\s]+)"?', cmd):
+    p = m.group(1)
+    if os.path.isdir(p): print(p); sys.exit(0)
+PYEOF
+)
+# Fallback : si aucun cd, utiliser le repo courant
+[ -z "$REPO_PATH" ] && REPO_PATH="$CLAUDE_PROJECT_DIR"
+
+# Detecter le package manager
+PM="npm"
+[ -f "${REPO_PATH}/pnpm-lock.yaml" ] && PM="pnpm"
+
 # Conventions mecanisees (binaires, verifiables automatiquement)
-STAGED=$(git diff --cached --name-only 2>/dev/null)
+STAGED=$(git -C "$REPO_PATH" diff --cached --name-only 2>/dev/null || git diff --cached --name-only 2>/dev/null)
 if [ -n "$STAGED" ]; then
   # Pas de suppression de warning
   while IFS= read -r f; do
-    git show ":$f" 2>/dev/null | grep -E "eslint-disable|@SuppressWarnings|# noqa|// noinspection" \
+    git -C "$REPO_PATH" show ":$f" 2>/dev/null | grep -E "eslint-disable|@SuppressWarnings|# noqa|// noinspection" \
       && echo "ERREUR: suppression de warning dans $f — corriger le probleme a la source" >&2 && exit 2
   done <<< "$STAGED"
   # Pas de marqueurs deprecated ou TODO laisses
   while IFS= read -r f; do
-    git show ":$f" 2>/dev/null | grep -E "@deprecated|// TODO: remove|TODO.*FIXME" \
+    git -C "$REPO_PATH" show ":$f" 2>/dev/null | grep -E "@deprecated|// TODO: remove|TODO.*FIXME" \
       && echo "ERREUR: marqueur deprecated/TODO dans $f — supprimer ou implementer" >&2 && exit 2
   done <<< "$STAGED"
 fi
 
-# [CONFIGURER: lint + typecheck par repo]
-# Ex mono-repo : pnpm lint && pnpm type:check || exit 2
-# Ex multi-repo : if echo "$CLAUDE_TOOL_INPUT" | grep -q 'frontend'; then (cd frontend && pnpm lint) || exit 2; fi
+# [CONFIGURER: lint + format:check + typecheck par stack]
+# Node/npm  : (cd "$REPO_PATH" && $PM run lint --quiet && $PM run format:check && $PM run type:check) || exit 2
+# Maven/Java: (cd "$REPO_PATH" && mvn checkstyle:check -q) || exit 2
+# Go        : (cd "$REPO_PATH" && gofmt -l . | grep . && exit 2; go vet ./...) || exit 2
 ```
 
 Script `.claude/hooks/pre-push-quality.sh` — pipeline complet avant push (PICOC #4) :
 ```bash
 #!/bin/bash
-# [CONFIGURER: detecter le repo, puis executer dans l'ordre :]
-# 1. Lint
-# 2. Tests unitaires : pnpm test --run || mvn test -q
-# 3. Dependency audit : pnpm audit --audit-level=high
-# 4. Quality gate CI : curl [CONFIGURER: SonarQube ou autre] — exit 2 si ERROR
+COMMAND=$(echo "$CLAUDE_TOOL_INPUT" | python3 -c "import sys,json; print(json.load(sys.stdin).get('command',''))" 2>/dev/null || echo "")
+
+# Extraire le repo reel (supporte worktrees — meme logique que pre-commit)
+REPO_PATH=$(python3 - "$COMMAND" <<'PYEOF'
+import sys, re, os
+cmd = sys.argv[1]
+for m in re.finditer(r'cd\s+"?([^";&\s]+)"?', cmd):
+    p = m.group(1)
+    if any(os.path.isfile(os.path.join(p, f)) for f in ('package.json', 'pom.xml', 'go.mod', 'Cargo.toml')):
+        print(p); sys.exit(0)
+for m in re.finditer(r'git\s+-C\s+"?([^";&\s]+)"?', cmd):
+    p = m.group(1)
+    if os.path.isdir(p): print(p); sys.exit(0)
+PYEOF
+)
+[ -z "$REPO_PATH" ] && REPO_PATH="$CLAUDE_PROJECT_DIR"
+[ -z "$REPO_PATH" ] && exit 0
+
+PM="npm"
+[ -f "${REPO_PATH}/pnpm-lock.yaml" ] && PM="pnpm"
+
+# [CONFIGURER: executer dans l'ordre :]
+# 1. Lint + format:check : (cd "$REPO_PATH" && $PM run lint --quiet && $PM run format:check) || exit 2
+# 2. Tests unitaires     : (cd "$REPO_PATH" && $PM test --run) || exit 2
+# 3. Dependency audit    : (cd "$REPO_PATH" && $PM audit --audit-level=high) || exit 2
+# 4. Quality gate CI     : curl [CONFIGURER: SonarQube ou autre] — exit 2 si ERROR
 ```
 
 Script `.claude/hooks/pre-pr-create.sh` — verifie structure PR template :
