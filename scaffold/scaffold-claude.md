@@ -707,7 +707,9 @@ Regle : lint uniquement (< 5s) — jamais de tests ici (trop frequent, trop lent
 Script `.claude/hooks/post-merge-worktree.sh` — nettoie les refs worktree stale apres chaque `gh pr merge` :
 ```bash
 #!/bin/bash
-COMMAND=$(echo "$CLAUDE_TOOL_INPUT" | python3 -c "import sys,json; print(json.load(sys.stdin).get('command',''))" 2>/dev/null || echo "")
+# Claude Code passe le JSON via stdin (pas de variable $CLAUDE_TOOL_INPUT)
+TOOL_INPUT=$(cat)
+COMMAND=$(echo "$TOOL_INPUT" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('tool_input',{}).get('command',''))" 2>/dev/null || echo "")
 echo "$COMMAND" | grep -q 'gh pr merge' || exit 0
 
 PROJECT_DIR="${CLAUDE_PROJECT_DIR:-$(pwd)}"
@@ -740,20 +742,30 @@ exit 0
 Script `.claude/hooks/pre-commit-quality.sh` :
 ```bash
 #!/bin/bash
-echo "$CLAUDE_TOOL_INPUT" | grep -q 'git commit' || exit 0
+set -euo pipefail
+
+# Claude Code passe le JSON via stdin (pas de variable $CLAUDE_TOOL_INPUT)
+TOOL_INPUT=$(cat)
+
+# Ne s'execute que sur git commit (supporte aussi: git -C /path commit)
+echo "$TOOL_INPUT" | grep -qE 'git\b.*\bcommit\b' || exit 0
 
 # Extraire le repo reel depuis la commande (supporte mono-repo et worktrees)
-# Cherche le premier `cd "path"` dont le dossier contient un package.json ou pom.xml
-COMMAND=$(echo "$CLAUDE_TOOL_INPUT" | python3 -c "import sys,json; print(json.load(sys.stdin).get('command',''))" 2>/dev/null || echo "")
+COMMAND=$(echo "$TOOL_INPUT" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('tool_input',{}).get('command',''))" 2>/dev/null || echo "")
 REPO_PATH=$(python3 - "$COMMAND" <<'PYEOF'
 import sys, re, os
 cmd = sys.argv[1]
+def to_os_path(p):
+    # Convertit /c/... (Git Bash) en C:/... (Windows Python)
+    m = re.match(r'^/([a-zA-Z])/(.*)', p)
+    if m: return m.group(1).upper() + ':/' + m.group(2)
+    return p
 for m in re.finditer(r'cd\s+"?([^";&\s]+)"?', cmd):
-    p = m.group(1)
+    p = to_os_path(m.group(1))
     if any(os.path.isfile(os.path.join(p, f)) for f in ('package.json', 'pom.xml', 'go.mod', 'Cargo.toml')):
         print(p); sys.exit(0)
 for m in re.finditer(r'git\s+-C\s+"?([^";&\s]+)"?', cmd):
-    p = m.group(1)
+    p = to_os_path(m.group(1))
     if os.path.isdir(p): print(p); sys.exit(0)
 PYEOF
 )
@@ -762,19 +774,26 @@ PYEOF
 
 # Detecter le package manager
 PM="npm"
-[ -f "${REPO_PATH}/pnpm-lock.yaml" ] && PM="pnpm"
+[ -f "${REPO_PATH}/pnpm-lock.yaml" ] && PM="pnpm" || true
 
 # Conventions mecanisees (binaires, verifiables automatiquement)
 STAGED=$(git -C "$REPO_PATH" diff --cached --name-only 2>/dev/null || git diff --cached --name-only 2>/dev/null)
 if [ -n "$STAGED" ]; then
-  # Pas de suppression de warning
   while IFS= read -r f; do
-    git -C "$REPO_PATH" show ":$f" 2>/dev/null | grep -E "eslint-disable|@SuppressWarnings|# noqa|// noinspection" \
-      && echo "ERREUR: suppression de warning dans $f — corriger le probleme a la source" >&2 && exit 2
+    # eslint-disable SANS justification " -- " est interdit (avec justification = OK)
+    if git -C "$REPO_PATH" show ":$f" 2>/dev/null | grep -E "eslint-disable" | grep -qvE ' -- '; then
+      echo "ERREUR: eslint-disable sans justification dans $f" >&2
+      echo "Format requis : // eslint-disable-next-line <rule> -- <raison>" >&2
+      exit 2
+    fi
+    # @SuppressWarnings, noqa, noinspection toujours interdits
+    if git -C "$REPO_PATH" show ":$f" 2>/dev/null | grep -qE "@SuppressWarnings|# noqa|// noinspection"; then
+      echo "ERREUR: suppression de warning dans $f — corriger le probleme a la source" >&2; exit 2
+    fi
   done <<< "$STAGED"
   # Pas de marqueurs deprecated ou TODO laisses
   while IFS= read -r f; do
-    git -C "$REPO_PATH" show ":$f" 2>/dev/null | grep -E "@deprecated|// TODO: remove|TODO.*FIXME" \
+    git -C "$REPO_PATH" show ":$f" 2>/dev/null | grep -qE "@deprecated|// TODO: remove|TODO.*FIXME" \
       && echo "ERREUR: marqueur deprecated/TODO dans $f — supprimer ou implementer" >&2 && exit 2
   done <<< "$STAGED"
 fi
@@ -783,23 +802,38 @@ fi
 # Node/npm  : (cd "$REPO_PATH" && $PM run lint --quiet && $PM run format:check && $PM run type:check) || exit 2
 # Maven/Java: (cd "$REPO_PATH" && mvn checkstyle:check -q) || exit 2
 # Go        : (cd "$REPO_PATH" && gofmt -l . | grep . && exit 2; go vet ./...) || exit 2
+
+# Co-Authored-By obligatoire
+if echo "$COMMAND" | grep -qE 'git\b.*\bcommit\b'; then
+  if ! echo "$COMMAND" | grep -q 'Co-Authored-By'; then
+    echo "[hook][GATE] MANDATORY — Co-Authored-By manquant dans le commit." >&2
+    echo "[hook] Format : Co-Authored-By: Claude <model-version> <noreply@anthropic.com>" >&2
+    exit 2
+  fi
+fi
 ```
 
 Script `.claude/hooks/pre-push-quality.sh` — pipeline complet avant push (PICOC #4) :
 ```bash
 #!/bin/bash
-COMMAND=$(echo "$CLAUDE_TOOL_INPUT" | python3 -c "import sys,json; print(json.load(sys.stdin).get('command',''))" 2>/dev/null || echo "")
+# Claude Code passe le JSON via stdin (pas de variable $CLAUDE_TOOL_INPUT)
+TOOL_INPUT=$(cat)
+COMMAND=$(echo "$TOOL_INPUT" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('tool_input',{}).get('command',''))" 2>/dev/null || echo "")
 
 # Extraire le repo reel (supporte worktrees — meme logique que pre-commit)
 REPO_PATH=$(python3 - "$COMMAND" <<'PYEOF'
 import sys, re, os
 cmd = sys.argv[1]
+def to_os_path(p):
+    m = re.match(r'^/([a-zA-Z])/(.*)', p)
+    if m: return m.group(1).upper() + ':/' + m.group(2)
+    return p
 for m in re.finditer(r'cd\s+"?([^";&\s]+)"?', cmd):
-    p = m.group(1)
+    p = to_os_path(m.group(1))
     if any(os.path.isfile(os.path.join(p, f)) for f in ('package.json', 'pom.xml', 'go.mod', 'Cargo.toml')):
         print(p); sys.exit(0)
 for m in re.finditer(r'git\s+-C\s+"?([^";&\s]+)"?', cmd):
-    p = m.group(1)
+    p = to_os_path(m.group(1))
     if os.path.isdir(p): print(p); sys.exit(0)
 PYEOF
 )
@@ -807,7 +841,7 @@ PYEOF
 [ -z "$REPO_PATH" ] && exit 0
 
 PM="npm"
-[ -f "${REPO_PATH}/pnpm-lock.yaml" ] && PM="pnpm"
+[ -f "${REPO_PATH}/pnpm-lock.yaml" ] && PM="pnpm" || true
 
 # [CONFIGURER: executer dans l'ordre :]
 # 1. Lint + format:check : (cd "$REPO_PATH" && $PM run lint --quiet && $PM run format:check) || exit 2
@@ -819,7 +853,9 @@ PM="npm"
 Script `.claude/hooks/pre-pr-create.sh` — verifie structure PR template :
 ```bash
 #!/bin/bash
-COMMAND=$(echo "$CLAUDE_TOOL_INPUT" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('command',''))" 2>/dev/null || echo "")
+# Claude Code passe le JSON via stdin (pas de variable $CLAUDE_TOOL_INPUT)
+TOOL_INPUT=$(cat)
+COMMAND=$(echo "$TOOL_INPUT" | python3 -c "import sys,json; d=json.load(sys.stdin); print(d.get('tool_input',{}).get('command',''))" 2>/dev/null || echo "")
 # [CONFIGURER: verifier les sections obligatoires selon votre PR template]
 # Ex: echo "$COMMAND" | grep -q "Rapport sub-agent reviewer" || { echo "Section manquante" >&2; exit 2; }
 ```
