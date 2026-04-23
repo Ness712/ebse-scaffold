@@ -19,21 +19,25 @@ L'énumération explicite de toutes les sources de vérité AVANT l'audit garant
 
 ## Taxonomie des sources — 4 tiers
 
-### Tier 1 — Normes universelles (dérivées du profil projet)
+> **Relation avec les recommandations EBSE** : `<stack>-recommendations.json` est la synthèse pré-traitée de Tier 1 + Tier 2 pour un profil donné. L'audit vérifie d'abord contre les recommandations (qui couvrent déjà la majorité des critères), puis utilise Tier 1 et Tier 2 directement pour la complétude (critères non couverts par les recos).
 
-Catalogue exhaustif dans [`ebse/guide/data/sources-catalog.json`](../data/sources-catalog.json) — chaque entrée a un `id`, une URL officielle et des `condition_keys` d'applicabilité.
+### Tier 1 — Normes universelles (sources d'origine, référence pour complétude)
 
-Pour un projet avec `<stack>-recommendations.json` : lire directement `applicable_sources.tier1` — liste pré-calculée depuis le profil.
+Normes dont les exigences sont incorporées dans les recommandations EBSE — mais restent autoritaires indépendamment. Si une norme a un critère absent des recommandations, le critère s'applique quand même.
 
-> Exemple OLS → `ols-recommendations.json → applicable_sources.tier1` : owasp-asvs, owasp-top10, owasp-api, wcag-22-aa, rgpd-cnil, lcen.
+Catalogue exhaustif : [`ebse/guide/data/sources-catalog.json`](../data/sources-catalog.json) — `condition_keys` d'applicabilité par profil.
+Liste pré-calculée pour un projet : `<stack>-recommendations.json → applicable_sources.tier1`.
 
-### Tier 2 — Documentation officielle des outils
+> Exemple OLS → `applicable_sources.tier1` : owasp-asvs, owasp-top10, owasp-api, wcag-22-aa, rgpd-cnil, lcen.
 
-Catalogue exhaustif dans [`ebse/guide/data/sources-catalog.json`](../data/sources-catalog.json) — chaque outil a son URL officielle et `what_to_check`.
+### Tier 2 — Documentation officielle des outils (sources d'origine, complétude configs)
 
-Pour un projet avec `<stack>-recommendations.json` : lire directement `applicable_sources.tier2` — liste pré-calculée depuis le profil.
+Documentation depuis laquelle les recommandations EBSE ont été dérivées. Utilisée pour vérifier les configurations techniques fines (options tsconfig, flags docker-compose, permissions GitHub Actions) que les recommandations ne descendent pas toujours à ce niveau de détail.
 
-> Exemple OLS → `ols-recommendations.json → applicable_sources.tier2` : typescript, nestjs, prisma, react, vite, tailwind, shadcn-ui, eslint, postgresql, redis, minio, docker, docker-compose, caddy, github-actions, dependabot, codeql, sonarqube, pnpm, playwright, vitest, jest.
+Catalogue exhaustif : [`ebse/guide/data/sources-catalog.json`](../data/sources-catalog.json) — champ `what_to_check` par outil.
+Liste pré-calculée pour un projet : `<stack>-recommendations.json → applicable_sources.tier2`.
+
+> Exemple OLS → `applicable_sources.tier2` : typescript, nestjs, prisma, react, vite, tailwind, shadcn-ui, eslint, postgresql, redis, minio, docker, docker-compose, caddy, github-actions, dependabot, codeql, sonarqube, pnpm, playwright, vitest, jest.
 
 ### Tier 3 — Conventions projet (spécifiques au projet)
 
