@@ -1,0 +1,155 @@
+{
+  "id": "project-health-audit",
+  "domain": "project",
+  "question": "Quelle methodologie d'audit complet de la sante projet maximise l'exhaustivite de detection des problemes de qualite, securite, conformite et coherence, comparee a une inspection ad hoc, des outils automatises seuls, ou un audit cible pre-release ?",
+  "depends_on": [
+    "code-review",
+    "definition-of-done"
+  ],
+  "tags": [
+    "audit",
+    "qualite",
+    "securite",
+    "conformite",
+    "inspection",
+    "iso-25010",
+    "owasp",
+    "health-check",
+    "multi-dimension"
+  ],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "Utiliser une grille de criteres predefined derivee de standards existants (ISO 25010 x SWEBOK v4 x OWASP), pas une inspection ad hoc. L'audit structure trouve 2.75x plus de defauts que l'inspection ad hoc (Olalekan & Osofisan).",
+        "grade": 3,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "IEEE 1028-2008 — Software Reviews and Audits",
+            "pyramid": 1,
+            "year": 2008
+          },
+          {
+            "name": "ISO/IEC 25040:2024 — Software Quality Evaluation Process",
+            "pyramid": 1,
+            "year": 2024
+          },
+          {
+            "name": "Olalekan & Osofisan — Checklist-based vs ad hoc code reading (ratio 2.75x)",
+            "pyramid": 4,
+            "year": 2020
+          }
+        ],
+        "v3_review": "2026-04-23",
+        "robustness": "MODERE"
+      },
+      {
+        "text": "Couvrir les 7 dimensions actives ISO 25010 : securite, fiabilite, maintenabilite, accessibilite, performance, flexibilite (architecture), conformite legale (RGPD/RGAA). Les 2 dimensions inactives (suitability fonctionnelle, compatibilite/interoperabilite) sont hors perimetre pour un audit technique interne mono-stack.",
+        "grade": 3,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "ISO/IEC 25010:2023 — Software Quality Model (9 characteristics)",
+            "pyramid": 1,
+            "year": 2023
+          },
+          {
+            "name": "SWEBOK v4 2024 — Knowledge Areas (Quality, Testing, Security, Construction)",
+            "pyramid": 1,
+            "year": 2024
+          }
+        ],
+        "v3_review": "2026-04-23",
+        "robustness": "MODERE"
+      },
+      {
+        "text": "Format de finding actionable obligatoire : titre + label + severite (CRITIQUE/MAJEUR/MINEUR/INFO) + fichier:ligne + regle (standard source) + correction. Un finding sans fichier:ligne + regle + correction n'est pas actionable.",
+        "grade": 3,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "IEEE 1028-2008 §5 — Software Audit findings format",
+            "pyramid": 1,
+            "year": 2008
+          },
+          {
+            "name": "OWASP WSTG v4.2 — structured finding format with CWE references",
+            "pyramid": 2,
+            "year": 2020
+          }
+        ],
+        "v3_review": "2026-04-23",
+        "robustness": "MODERE"
+      },
+      {
+        "text": "Distinguer audit cible (pre-release, fichiers modifies — PICOC #29) de l'audit complet periodique (toutes dimensions, tous fichiers). L'audit cible ne remplace pas l'audit complet — il manque les problemes de fond non touches par les modifications recentes.",
+        "grade": 3,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "IEEE 1028-2008 — distincts types : audit vs inspection vs walkthrough",
+            "pyramid": 1,
+            "year": 2008
+          },
+          {
+            "name": "McIntosh et al. 2020 (EMSE) — review coverage partielle ne suffit pas pour DRE",
+            "pyramid": 4,
+            "year": 2020
+          }
+        ],
+        "v3_review": "2026-04-23",
+        "robustness": "MODERE"
+      },
+      {
+        "text": "Utiliser des agents specialises par dimension plutot qu'un agent generaliste. La specialisation augmente la profondeur d'inspection par domaine (SWEBOK v4 : specialisation = efficacite inspection). Execution en parallele pour efficacite.",
+        "grade": 3,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "SWEBOK v4 2024 — Software Quality KA : specialised inspection roles",
+            "pyramid": 1,
+            "year": 2024
+          },
+          {
+            "name": "Olalekan & Osofisan — structured method superiority sustained across domains",
+            "pyramid": 4,
+            "year": 2020
+          }
+        ],
+        "v3_review": "2026-04-23",
+        "robustness": "FAIBLE"
+      },
+      {
+        "text": "Frequence minimale : audit complet trimestriel ou avant release majeure. Audit cible (PICOC #29) sur chaque PR. Audit partiel declenche apres incident ou ajout de module.",
+        "grade": 3,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "ISO/IEC 25040:2024 — evaluation process : schedule and triggers",
+            "pyramid": 1,
+            "year": 2024
+          },
+          {
+            "name": "OWASP ASVS 4.0.3 — periodic verification schedule",
+            "pyramid": 2,
+            "year": 2021
+          }
+        ],
+        "v3_review": "2026-04-23",
+        "robustness": "FAIBLE"
+      }
+    ]
+  },
+  "meta": {
+    "picoc": "verification/picoc/project-health-audit-picoc.md",
+    "dare": "verification/dare/project-health-audit-dare.md",
+    "prisma": "verification/prisma/project-health-audit.md",
+    "extraction": "verification/extractions/project-health-audit.md",
+    "grade_final": 3,
+    "grade_label": "RECOMMANDE",
+    "sensitivity": "robuste — suppression de chaque source niv.1 individuellement ne change pas le GRADE",
+    "srq_date": "2026-04-23",
+    "protocol_version": "methodology.md v3.0"
+  }
+}

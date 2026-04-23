@@ -3,7 +3,7 @@
 **Version** : 0.1 (en construction)
 **Date** : 2026-04
 **Methode** : Evidence-Based Software Engineering (EBSE)
-**Couverture** : 123 recommandations techniques organisees par domaine
+**Couverture** : 124 recommandations techniques organisees par domaine
 
 ## Trois methodologies complementaires
 
@@ -131,9 +131,10 @@ Combinaisons completes, coherentes et validees par type de projet.
 - [JVM tuning](02-domains/performance/jvm-tuning.md)
 - [Tests de performance](02-domains/performance/performance-testing.md)
 
-### I. Gestion de projet (16)
+### I. Gestion de projet (17)
 
 - [Analytics](02-domains/project/analytics.md)
+- [Audit de sante projet](02-domains/project/project-health-audit.md)
 - [Strategie de branching](02-domains/project/branching.md)
 - [Code ownership](02-domains/project/code-ownership.md)
 - [Conventions de commit](02-domains/project/commit-conventions.md)
