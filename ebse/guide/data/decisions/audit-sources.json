@@ -1,0 +1,111 @@
+{
+  "id": "audit-sources",
+  "domain": "project",
+  "question": "Comment garantir qu'un audit de sante projet ne manque aucune source de verite applicable, comparativement a une exploration par dimensions sans inventaire prealable ?",
+  "depends_on": [
+    "project-health-audit"
+  ],
+  "tags": [
+    "audit",
+    "sources-de-verite",
+    "inventaire",
+    "completude",
+    "tracabilite",
+    "iso-25040",
+    "ieee-1028",
+    "pre-specification"
+  ],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "Constituer l'inventaire de TOUTES les sources de verite applicables (Tier 1-4) AVANT d'ouvrir un seul fichier du projet. IEEE 1028-2008 §6.4 prescrit de documenter les standards de reference avant de commencer ; ISO/IEC 25040:2024 §5.3 exige que toutes les mesures soient specifiees avant l'execution.",
+        "grade": 5,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "IEEE 1028-2008 §6.4 — Audit Inputs : standards documented before audit begins",
+            "pyramid": 1,
+            "year": 2008
+          },
+          {
+            "name": "ISO/IEC 25040:2024 §5.3 — Specify evaluation : measures specified before execution",
+            "pyramid": 1,
+            "year": 2024
+          }
+        ],
+        "v3_review": "2026-04-23",
+        "robustness": "MODERE"
+      },
+      {
+        "text": "Organiser les sources en 4 tiers : (1) Normes universelles derivees du profil projet via arbre de decisions (OWASP ASVS, WCAG, RGPD, RGAA, HDS...) ; (2) Documentation officielle des outils (TypeScript, ESLint, Vite, NestJS, Prisma, Docker, GitHub Actions...) ; (3) Conventions projet (CONVENTIONS.md par repo) ; (4) Decisions d'architecture projet (modules.md, ADRs).",
+        "grade": 5,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "IEEE 1028-2008 — Audit Inputs taxonomy (standards, guidelines, contractual requirements)",
+            "pyramid": 1,
+            "year": 2008
+          },
+          {
+            "name": "NIST SP 800-53A Rev. 5 (2022) — catalogue approach : every control enumerated before assessment",
+            "pyramid": 2,
+            "year": 2022
+          }
+        ],
+        "v3_review": "2026-04-23",
+        "robustness": "MODERE"
+      },
+      {
+        "text": "La pré-specification des critères donne 67-82% plus de défauts détectés vs exploration ad hoc (Fagan 1976, répliqué). Porter et al. (1995, revue de 40+ études) : la pré-specification est le facteur commun de toutes les inspections efficaces.",
+        "grade": 5,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "Fagan, M.E. 1976 — IBM Systems Journal 15(3) : inspections with predefined checklists vs conventional testing",
+            "pyramid": 4,
+            "year": 1976
+          },
+          {
+            "name": "Porter, Siy, Votta 1995 — Advances in Computers 42 : review of 40+ studies on inspections",
+            "pyramid": 4,
+            "year": 1995
+          }
+        ],
+        "v3_review": "2026-04-23",
+        "robustness": "FAIBLE"
+      },
+      {
+        "text": "Chaque finding doit referencer explicitement la source (Tier 1-4) et la règle. Un finding non trace vers une source est invalide. Verifier en fin d'audit : N_verified / N_applicable >= 80%.",
+        "grade": 5,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "ISO/IEC 25040:2024 §5.5 — Conclude evaluation : coverage documented",
+            "pyramid": 1,
+            "year": 2024
+          },
+          {
+            "name": "Kitchenham et al. 2007 — non-circularité : criteres définis avant, résultats tracés après",
+            "pyramid": 3,
+            "year": 2007
+          }
+        ],
+        "v3_review": "2026-04-23",
+        "robustness": "MODERE"
+      }
+    ]
+  },
+  "meta": {
+    "picoc": "verification/picoc/audit-sources-picoc.md",
+    "dare": "verification/dare/audit-sources-dare.md",
+    "prisma": "verification/prisma/audit-sources.md",
+    "extraction": "verification/extractions/audit-sources.md",
+    "grade_final": 5,
+    "grade_label": "RECOMMANDE",
+    "kappa": 0.33,
+    "sensitivity": "GRADE 5 robuste — degradation a 4 uniquement si indirectness = -2 (position conservatrice Agent B) ou si Fagan exclu",
+    "srq_date": "2026-04-23",
+    "protocol_version": "methodology.md v3.0"
+  }
+}
