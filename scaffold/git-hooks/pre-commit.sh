@@ -51,6 +51,8 @@ fi
 # ============================================================
 # Conventions code (binaires, verifiables automatiquement)
 # ============================================================
+# Conventions : uniquement sur fichiers source (evite les faux positifs sur .sh)
+SRC_FILES=$(echo "$STAGED" | grep -E '\.(ts|tsx|js|jsx|java|py|go)$' || true)
 while IFS= read -r f; do
   [ -z "$f" ] && continue
   # eslint-disable sans justification " -- " interdit
@@ -70,7 +72,7 @@ while IFS= read -r f; do
     exit 1
   fi
 done <<EOF
-$STAGED
+$SRC_FILES
 EOF
 
 # ============================================================
