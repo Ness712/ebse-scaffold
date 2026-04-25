@@ -1,0 +1,76 @@
+{
+  "id": "ai-agent-scheduling-patterns",
+  "domain": "ai-collaboration",
+  "question": "Dans un projet gere par un agent Claude Code autonome, quel mecanisme de scheduling utiliser parmi /loop (polling session), Desktop Tasks (planificateur OS), et Cloud Routines (webhook event-driven serverless) selon le type de tache recurrente et les contraintes operationnelles ?",
+  "depends_on": ["agent-toil-reduction", "ai-agent-mast-monitoring-runtime"],
+  "tags": ["ai-collaboration", "scheduling", "automation", "toil-reduction", "claude-code", "monitoring", "cloud-routines"],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "Choisir le mecanisme de scheduling selon la matrice de decision Anthropic (source officielle) :\n\n(1) `/loop` (ScheduleWakeup in-session) : polling lier a une session ouverte, granularite 1 min, auto-expiry 7 jours, jitter 10% automatique. Cas d'usage : CI check post-push, monitoring deploy en cours, surveillance pipeline. Contrainte : expire si la session se ferme. Cache TTL 300s. Ne pas implementer avec `sleep` dans un hook ou script — toil instable (Google SRE Book).\n\n(2) Desktop Tasks (planificateur OS, macOS uniquement) : taches persistantes necessitant acces aux fichiers locaux uncommitted, survivent au redemarrage de la session. Machine doit etre allumee. Cas d'usage : health-checks locaux, cleanup, taches de fond developpeur. Contrainte : macOS only, machine dependant.\n\n(3) Cloud Routines (`/schedule`) [RESEARCH PREVIEW — INSTABLE] : agents persistants dans le cloud Anthropic, independants de la machine et de la session. Declencheurs : schedule cron (min 1h), webhook HTTP POST, evenements GitHub (PR/issue/release). Caps : 5-25 runs/jour selon plan. Consomme le quota daily cap. Clone fresh repo — PAS acces aux fichiers locaux uncommitted. Cas d'usage : event-driven (webhook CI, GitHub PR trigger), sans machine allumee requise. AVERTISSEMENT : research preview au 2026-04-25 — ne pas utiliser en production critique sans test de stabilite.\n\nMatrice de selection :\n- Session ouverte + polling → /loop\n- Fichiers locaux non-commites requis + macOS → Desktop Tasks\n- Event-driven (webhook/GitHub) + sans machine locale → Cloud Routines (si stabilite validee)\n- Tache ponctuelle non-recurrente → execution directe, pas de scheduling",
+        "grade": 2,
+        "level": "BONNE PRATIQUE",
+        "sources": [
+          {
+            "name": "Anthropic — Claude Code Scheduled Tasks documentation : /loop, ScheduleWakeup, Cloud Routines comparison (code.claude.com/docs/en/scheduled-tasks)",
+            "pyramid": 3,
+            "year": 2026,
+            "quote": "/loop creates recurring tasks with 1-minute granularity and 7-day auto-expiry tied to the current session. Cloud Routines persist beyond sessions and support webhook, GitHub event, and cron triggers."
+          },
+          {
+            "name": "Anthropic — Claude Code Desktop Scheduled Tasks documentation (code.claude.com/docs/en/desktop-scheduled-tasks)",
+            "pyramid": 3,
+            "year": 2026,
+            "quote": "Desktop Tasks persist across session restarts and require local machine access — macOS only, requires machine to be running"
+          },
+          {
+            "name": "Anthropic — Cloud Routines documentation (code.claude.com/docs/en/routines)",
+            "pyramid": 3,
+            "year": 2026,
+            "quote": "Cloud Routines support webhook triggers and run in Anthropic cloud — caps 5-25 runs/day, research preview status, clones fresh repo only (no access to uncommitted local files)"
+          },
+          {
+            "name": "ScheduleWakeup tool documentation (code.claude.com/docs/en/tools/schedulewakeup)",
+            "pyramid": 3,
+            "year": 2026,
+            "quote": "delaySeconds parameter, cache TTL 300 seconds, session-bound — expires when session closes"
+          },
+          {
+            "name": "Anthropic — Claude Code Common Workflows : CI monitoring, PR review automation (code.claude.com/docs/en/common-workflows)",
+            "pyramid": 3,
+            "year": 2026,
+            "quote": "Patterns for CI monitoring with /loop polling and PR review automation via Cloud Routines webhook triggers"
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 2,
+          "plus": [
+            "matrice de decision officielle Anthropic claire et differenciee (cas d'usage distincts)",
+            "patterns CI/PR automation documentes dans common-workflows"
+          ],
+          "minus": [
+            "Cloud Routines en research preview instable : composante critique de la matrice non-production-ready",
+            "toutes les sources = Anthropic vendor (CoI 100% sur ce PICOC)",
+            "absence d'etudes independantes comparant les 3 mecanismes"
+          ]
+        },
+        "robustness": "FAIBLE",
+        "critical_sources": [
+          "Anthropic docs scheduled-tasks (seule source pour la matrice 3 niveaux — CoI fort)",
+          "Cloud Routines research preview (instabilite documentee — facteur limitant)"
+        ],
+        "etd_balance": {
+          "benefices": "Reduction toil polling manuel, taches always-on independantes machine (Cloud Routines), declencheurs multi-sources, patterns CI/PR automatises",
+          "risques": "Cloud Routines instable en preview, quota daily cap, 100% vendor lock-in Anthropic pour le mecanisme, debugging taches asynchrones complexe",
+          "balance": "Equilibre — /loop et Desktop Tasks suffisamment stables pour usage ; Cloud Routines a evaluer en staging avant production",
+          "faisabilite": "Elevee pour /loop et Desktop Tasks ; Moyenne pour Cloud Routines (configuration avancee + instabilite preview)"
+        },
+        "prisma_ref": "verification/prisma/ai-agent-scheduling-patterns.md",
+        "sensitivity_ref": "verification/extractions/ai-agent-scheduling-patterns-kappa.md",
+        "date_extraction": "2026-04-25"
+      }
+    ]
+  },
+  "variants": {}
+}

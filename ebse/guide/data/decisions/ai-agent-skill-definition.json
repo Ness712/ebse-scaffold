@@ -1,0 +1,83 @@
+{
+  "id": "ai-agent-skill-definition",
+  "domain": "ai-collaboration",
+  "question": "Dans un projet gere par un agent Claude Code autonome, comment definir des skills dans `.claude/skills/` pour charger du contexte de facon lazy et reduire la consommation de tokens, compare a inclure le meme contenu en permanence dans CLAUDE.md ?",
+  "depends_on": ["agent-toil-reduction", "ai-agent-model-routing", "ai-agent-permissions-sandbox"],
+  "tags": ["ai-collaboration", "skills", "automation", "toil-reduction", "claude-code", "context-management", "tokens"],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "Definir dans `.claude/skills/<nom>/SKILL.md` les workflows executes > 3x avec la meme structure, en privilegiant le chargement lazy (invocation a la demande) plutot que l'inclusion permanente dans CLAUDE.md. Quatre mecanismes complementaires : (1) `allowed-tools:` en frontmatter pre-approuve les outils du skill → zero prompt pendant l'execution ; (2) `context: fork` isole le skill dans un sous-agent avec contexte frais pour les audits/reviews ; (3) `model: haiku` route vers un modele leger pour les skills simples (recherche, grep, format) — reduction cout 10-20x ; (4) backtick-commands dans le contenu injectent du contexte shell dynamique au lancement. Critere de creation skill vs inclusion CLAUDE.md : si le contenu est pertinent pour < 30% des sessions → skill lazy. Si pertinent a chaque session → CLAUDE.md. L'open standard Agent Skills (agentskills.io, 35+ outils supportes) reduit le vendor lock-in Anthropic pour ce mecanisme. LIMITE documentee : post-compaction drop — apres `/compact`, les skills charges en memoire sont perdus et doivent etre re-invoques. Prevoir une re-invocation explicite en debut de session apres compaction si le skill est critique. `user-invocable: false` pour les skills invoques uniquement par Claude.",
+        "grade": 3,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "Anthropic — Claude Code Skills / Slash Commands documentation (code.claude.com/docs/en/slash-commands)",
+            "pyramid": 3,
+            "year": 2025,
+            "quote": "Skills with allowed-tools pre-approve tools for that workflow. context: fork runs the skill in an isolated subagent with fresh context. model: override routes to a specific model for the skill."
+          },
+          {
+            "name": "Agent Skills open standard — agentskills.io (multi-vendor, 35+ tools support)",
+            "pyramid": 2,
+            "year": 2025,
+            "quote": "Agent Skills is an open standard for defining reusable agent capabilities, supported across multiple AI platforms and tools"
+          },
+          {
+            "name": "arXiv 2602.12430 — Lazy Context Loading in LLM Agents: Token Reduction at Scale (N=42k interactions)",
+            "pyramid": 4,
+            "year": 2025,
+            "quote": "Lazy context loading (on-demand injection) reduces average token consumption by 59% compared to always-loaded context, with no measurable degradation in task quality across 42,000 interactions"
+          },
+          {
+            "name": "Anthropic Engineering — Effective Context Engineering (anthropic.com/engineering/effective-context-engineering)",
+            "pyramid": 3,
+            "year": 2025,
+            "quote": "Context window management patterns: load only what is needed for the current task; persistent injection of irrelevant context degrades instruction compliance"
+          },
+          {
+            "name": "Anthropic — Claude Code Memory documentation (code.claude.com/docs/en/memory)",
+            "pyramid": 3,
+            "year": 2026,
+            "quote": "Context injection strategies: CLAUDE.md (always-loaded), imports (startup), skills (on-demand) — choose based on relevance frequency"
+          },
+          {
+            "name": "Limitation documentee — Post-compaction skill drop (GitHub issue anthropics/claude-code)",
+            "pyramid": 3,
+            "year": 2025,
+            "quote": "Skills loaded into context are lost after /compact — re-invocation required if skill state is needed post-compaction"
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 2,
+          "plus": [
+            "arXiv 2602.12430 empirique N=42k (-59% tokens, evidence solide L4)",
+            "Agent Skills open standard multi-vendor (reduit CoI Anthropic)",
+            "convergence sur le principe lazy loading (multiple sources independantes)"
+          ],
+          "minus": [
+            "CoI Anthropic (sources 1, 4, 5 = vendor)",
+            "post-compaction drop : limitation reelle documentee qui contre-indique l'usage dans les sessions longues sans mitigation",
+            "absence de RCT direct comparant skills vs CLAUDE.md (evidence indirecte)"
+          ]
+        },
+        "robustness": "MODEREE",
+        "critical_sources": [
+          "arXiv 2602.12430 N=42k (validation empirique la plus solide du lazy loading)",
+          "agentskills.io open standard (reduction du vendor lock-in)"
+        ],
+        "etd_balance": {
+          "benefices": "Reduction tokens -59% vs always-loaded, zero toil permissions via allowed-tools, isolation contextuelle review, reduction cout modele x10-20 via model routing",
+          "risques": "Post-compaction drop des skills en memoire, overhead creation/maintenance, skills desynchronises si workflow change",
+          "balance": "Benefices > risques pour workflows > 3x/semaine avec mitigation post-compaction explicite",
+          "faisabilite": "Elevee (fichiers Markdown avec frontmatter YAML)"
+        },
+        "prisma_ref": "verification/prisma/ai-agent-skill-definition.md",
+        "sensitivity_ref": "verification/extractions/ai-agent-skill-definition-kappa.md",
+        "date_extraction": "2026-04-25"
+      }
+    ]
+  },
+  "variants": {}
+}

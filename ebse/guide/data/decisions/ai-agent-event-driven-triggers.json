@@ -1,0 +1,77 @@
+{
+  "id": "ai-agent-event-driven-triggers",
+  "domain": "ai-collaboration",
+  "question": "Dans un projet gere par un agent Claude Code autonome, comment configurer des triggers event-driven (GitHub Actions CI, Channels webhooks) pour declencher l'agent sur des evenements externes tout en maintenant la securite contre l'injection de prompts ?",
+  "depends_on": ["ai-agent-scheduling-patterns", "ai-agent-agentic-security", "ai-agent-prompt-injection-defense"],
+  "tags": ["ai-collaboration", "event-driven", "automation", "github-actions", "webhooks", "channels", "claude-code", "security", "prompt-injection"],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "Configurer les triggers event-driven Claude Code en deux couches : (1) GITHUB ACTIONS [STABLE] — utiliser `@anthropics/claude-code-action` dans `.github/workflows/` pour declencher l'agent sur PR opened/closed, issue comments, releases. Config minimale de securite OBLIGATOIRE : `permissions: contents: write` uniquement si ecriture requise (sinon read), filtrer par `github.actor` (allowlist maintainers), rejeter drafts (`if: github.event.pull_request.draft == false`), isoler le `GITHUB_TOKEN` par job. AVERTISSEMENT CVE-2025-54794 'Comment and Control' : une injection de prompt confirmee permet l'exfiltration du GITHUB_TOKEN via PR titles, issue descriptions, ou noms de branches controles par l'attaquant — ne jamais exposer GITHUB_TOKEN a du contenu non-fiable. Mitigation : restreindre `allowed_tools`, activer `UserPromptSubmit` hook pour filtrer les inputs avant traitement, utiliser `pull_request_target` avec base branch uniquement. (2) CHANNELS [RESEARCH PREVIEW — INSTABLE] — webhooks bidirectionnels (Telegram, Discord, custom Bun) ; activer uniquement si le besoin de messagerie temps-reel est demonstre ; sender allowlist obligatoire ; valider signature/token pour chaque payload entrant ; ne jamais deployer en production avant GA officiel. Principe general : chaque source d'evenement externe est une surface d'injection — traiter tout contenu externe comme non-fiable (ZERO TRUST EVENT SOURCES). Isolation permissions : agents declenches par CI/CD avec permissions minimales (least-privilege), readonly si possible.",
+        "grade": 2,
+        "level": "BONNE PRATIQUE",
+        "sources": [
+          {
+            "name": "Anthropic — Claude Code GitHub Actions documentation (code.claude.com/docs/en/github-actions)",
+            "pyramid": 3,
+            "year": 2025,
+            "quote": "The claude-code-action triggers on PR/issue events. write permissions check required. GITHUB_TOKEN scoped per job for isolation."
+          },
+          {
+            "name": "Oddguan — CVE-2025-54794 'Comment and Control' prompt injection (oddguan.com/blog/comment-and-control)",
+            "pyramid": 4,
+            "year": 2026,
+            "quote": "CVE-2025-54794 confirms prompt injection via PR titles and issue descriptions leads to GITHUB_TOKEN exfiltration in claude-code-action deployments"
+          },
+          {
+            "name": "SecurityWeek — Claude Code, Gemini CLI, GitHub Copilot agents vulnerable to prompt injection (securityweek.com)",
+            "pyramid": 4,
+            "year": 2026,
+            "quote": "Multi-agent systems including Claude Code GitHub Actions are confirmed vulnerable to prompt injection via untrusted external content"
+          },
+          {
+            "name": "Anthropic — claude-code-action security documentation (github.com/anthropics/claude-code-action/docs/security.md)",
+            "pyramid": 3,
+            "year": 2025,
+            "quote": "Trusted vs untrusted contexts distinction. allowed_tools restriction required for untrusted event sources."
+          },
+          {
+            "name": "Anthropic — Claude Code Channels reference (code.claude.com/docs/en/channels-reference)",
+            "pyramid": 3,
+            "year": 2026,
+            "quote": "Channels is a research preview feature. Webhooks, rate limits, sender allowlists. Not recommended for production use."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 3,
+          "plus": [
+            "GitHub Actions mature (L3, usage large echelle en production)",
+            "CVE-2025-54794 documente avec mitigation concretes"
+          ],
+          "minus": [
+            "CoI fort : sources 1 et 4 produites par Anthropic (vendor)",
+            "Channels research preview instable — GA non annonce au 2026-04-25",
+            "Absence d'etudes comparatives controlees sur l'efficacite des mitigations",
+            "Divergence agents A/B (grade 2 vs 1) → reconciliation sur 2"
+          ]
+        },
+        "robustness": "FAIBLE",
+        "critical_sources": [
+          "CVE-2025-54794 (seule validation empirique de la surface d'injection confirmee)",
+          "SecurityWeek 2026 (confirmation multi-agent independante)"
+        ],
+        "etd_balance": {
+          "benefices": "Agents reactifs aux evenements CI/CD < 1 min, integration native GitHub, zero intervention manuelle pour taches repetitives",
+          "risques": "CVE-2025-54794 prompt injection via contenu externe, GITHUB_TOKEN exfiltration, Channels instable en preview",
+          "balance": "Benefices > risques uniquement avec allowlist actors + allowed_tools restriction + UserPromptSubmit hook + zero exposition GITHUB_TOKEN a contenu attaquant",
+          "faisabilite": "Elevee pour GitHub Actions (YAML config), Faible pour Channels (preview non-stable)"
+        },
+        "prisma_ref": "verification/prisma/ai-agent-event-driven-triggers.md",
+        "sensitivity_ref": "verification/extractions/ai-agent-event-driven-triggers-kappa.md",
+        "date_extraction": "2026-04-25"
+      }
+    ]
+  },
+  "variants": {}
+}

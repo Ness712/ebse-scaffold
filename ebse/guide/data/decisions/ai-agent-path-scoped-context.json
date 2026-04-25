@@ -1,0 +1,74 @@
+{
+  "id": "ai-agent-path-scoped-context",
+  "domain": "ai-collaboration",
+  "question": "Dans un projet gere par un agent Claude Code autonome, comment utiliser les regles path-scopees dans `.claude/rules/` (champ `paths:` en frontmatter) pour charger du contexte additionnel uniquement pour certains fichiers ou dossiers, et eviter de surcharger le contexte global ?",
+  "depends_on": ["ai-agent-project-instructions", "ai-agent-instruction-compliance"],
+  "tags": ["ai-collaboration", "context", "project-instructions", "claude-code", "rules", "path-scoped"],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "AVERTISSEMENT : La fonctionnalite de regles path-scopees (`paths:` en frontmatter dans `.claude/rules/`) presente un comportement IMPRÉVISIBLE en production au 2026-04-25. Trois bugs ont ete confirmes avec label `has-repro` dans le tracker officiel Anthropic : issue #16299 (rules not loading), #16853 (paths not working as expected, label: not-planned), #23478 (rule files with paths: field ignored). Ne pas dependre de cette fonctionnalite pour la conformite critique.\n\nPrincipe d'usage (sous reserve de correction des bugs) : externaliser les instructions specialisees dans `.claude/rules/<nom>.md` avec frontmatter `paths:` pour chargement on-demand uniquement quand Claude accede aux fichiers correspondants. Maintenir le CLAUDE.md principal < 200 lignes (pointeurs + config scaffold) ; les domaines specialises (frontend, backend, auth, migrations, infra) sont candidats a des rules path-scopees une fois les bugs corriges. Principe physique justifiant la fonctionnalite : chaque instruction irrelevante dans le contexte actif penalise la conformite aux instructions pertinentes (-5 a -15% par regle superflue, Gloaguen 2026). Les regles en tete de contexte obtiennent 2-3x plus de conformite que les regles enfouies (Liu 2024 TACL). Alternative robuste en attendant la correction des bugs : utiliser des imports `@fichier` appeles explicitement selon le contexte, ou des skills `context: fork` qui chargent le contexte specialise a la demande.",
+        "grade": 1,
+        "level": "BONNE PRATIQUE",
+        "sources": [
+          {
+            "name": "Anthropic — Claude Code Memory documentation : path-scoped rules in .claude/rules/ (code.claude.com/docs/en/memory)",
+            "pyramid": 3,
+            "year": 2025,
+            "quote": "Rules in .claude/rules/ with paths: frontmatter load on-demand only when Claude accesses matching files"
+          },
+          {
+            "name": "GitHub issue #16299 — path-scoped rules not loading (label: has-repro)",
+            "pyramid": 3,
+            "year": 2025,
+            "quote": "Rules with paths: frontmatter are not being loaded when Claude accesses matching files — confirmed reproducible"
+          },
+          {
+            "name": "GitHub issue #16853 — paths: frontmatter not working as expected (labels: has-repro, not-planned)",
+            "pyramid": 3,
+            "year": 2025,
+            "quote": "The paths: field in rules frontmatter does not reliably scope rule loading to matching files — not planned for fix in current roadmap"
+          },
+          {
+            "name": "GitHub issue #23478 — rule files with paths: field ignored (label: has-repro)",
+            "pyramid": 3,
+            "year": 2026,
+            "quote": "Rule files containing a paths: frontmatter field are ignored entirely in some configurations — reproducible across multiple setups"
+          },
+          {
+            "name": "Anthropic — Claude Code Best Practices (code.claude.com/docs/en/best-practices)",
+            "pyramid": 3,
+            "year": 2025,
+            "quote": "Keep project instructions focused and relevant — load context selectively to improve instruction compliance"
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 2,
+          "plus": [],
+          "minus": [
+            "3 bugs confirmes has-repro dans le tracker officiel : comportement imprévisible en production",
+            "issue #16853 tagged not-planned : pas de correction prevue dans la roadmap connue",
+            "evidence negative empirique documentee (usage reel, pas seulement theorie)"
+          ]
+        },
+        "robustness": "FAIBLE",
+        "critical_sources": [
+          "GitHub issue #16299 has-repro (evidence negative primaire)",
+          "GitHub issue #16853 has-repro + not-planned (evidence negative la plus critique)",
+          "GitHub issue #23478 has-repro (evidence negative recente 2026)"
+        ],
+        "etd_balance": {
+          "benefices": "Contexte allege theoriquement, conformite accrue sur regles pertinentes si la fonctionnalite fonctionne",
+          "risques": "Feature documentee mais comportement imprévisible en production — risque de regles critiques silencieusement ignorees, faux sentiment de securite sur la conformite",
+          "balance": "Risques > benefices en l'etat (2026-04-25) — utiliser les alternatives robustes (imports explicites, skills)",
+          "faisabilite": "Theoriquement elevee (frontmatter YAML) mais peu fiable en pratique selon evidence empirique"
+        },
+        "prisma_ref": "verification/prisma/ai-agent-path-scoped-context.md",
+        "sensitivity_ref": "verification/extractions/ai-agent-path-scoped-context-kappa.md",
+        "date_extraction": "2026-04-25"
+      }
+    ]
+  },
+  "variants": {}
+}

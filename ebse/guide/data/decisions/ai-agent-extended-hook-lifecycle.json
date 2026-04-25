@@ -1,0 +1,79 @@
+{
+  "id": "ai-agent-extended-hook-lifecycle",
+  "domain": "ai-collaboration",
+  "question": "Dans un projet gere par un agent Claude Code autonome, quels hooks avances du lifecycle (UserPromptSubmit, PreCompact, SubagentStart, PermissionRequest) activer en plus des hooks de base (SessionStart, PreToolUse, PostToolUse, Stop), et dans quels cas precis ?",
+  "depends_on": ["ai-agent-accountability", "ai-agent-context-compaction", "ai-agent-deterministic-gates"],
+  "tags": ["ai-collaboration", "hooks", "lifecycle", "conformite", "context", "claude-code", "UserPromptSubmit", "PreCompact", "SubagentStart", "PermissionRequest"],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "Activer les hooks avances Claude Code uniquement si le scenario correspondant a ete observe comme source de defaillance. Matrice de decision hooks avances (au-dela de SessionStart/PreToolUse/PostToolUse/Stop) : (1) UserPromptSubmit — activer si : audit trail requis pour chaque prompt utilisateur (MANDATORY PICOC #17), detection d'injection de prompt necessaire (CVE-2025-54794), ou enrichissement automatique du contexte avant traitement. Format stdin : JSON {\"prompt\": \"...\", \"session_id\": \"...\"}. Modifier le prompt via stdout JSON ou bloquer avec exit code 2. (2) PreCompact — activer si les sessions depassent regulierement 50K tokens ; re-injecte les regles MANDATORY qui seraient perdues a la compaction ; sans ce hook les instructions critiques disparaissent apres compaction (PICOC ai-agent-context-compaction). (3) SubagentStart — activer dans les architectures multi-agents ; injecte contexte + regles specifiques au sous-agent au demarrage ; logge l'audit trail (quel sous-agent, quand, par qui). (4) PermissionRequest — activer pour auto-approuver des patterns pre-autorises sans popup interactif (ex: `{\"action\": \"allow\"}` pour `Bash(npm run test)`) ; reduit la friction sur des patterns connus ; ne JAMAIS creer un pattern trop large (risque privilege escalation). Codes de sortie OBLIGATOIRES : exit 2 = bloquer l'action (BLOQUANT) | exit 0 = continuer | JAMAIS exit 1 (stderr non-bloquant, ignore par le harness). Principe de selection : chaque hook actif ajoute de la latence et de la complexite de debugging — activer selectivement, pas par defaut. PreCompact est le plus impactant pour les sessions longues. SubagentStart est le plus impactant pour les architectures multi-agents.",
+        "grade": 3,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "Anthropic — Claude Code Hooks documentation (code.claude.com/docs/en/hooks)",
+            "pyramid": 3,
+            "year": 2026,
+            "quote": "UserPromptSubmit stdin JSON {prompt, session_id}. PreCompact triggers before context window compaction. SubagentStart fires when sub-agent is spawned. PermissionRequest allows auto-approve patterns. Exit code 2 blocks action, exit 0 continues."
+          },
+          {
+            "name": "Anthropic — Claude Code Hooks guide (code.claude.com/docs/en/hooks-guide)",
+            "pyramid": 3,
+            "year": 2026,
+            "quote": "UserPromptSubmit example: inject context. PreCompact example: re-inject critical rules. SubagentStart example: provide isolated context to sub-agent."
+          },
+          {
+            "name": "disler — claude-code-hooks-mastery patterns (github.com/disler/claude-code-hooks-mastery)",
+            "pyramid": 5,
+            "year": 2026,
+            "quote": "Practitioner convergence on PreCompact for long sessions and SubagentStart for multi-agent isolation as highest-value advanced hooks"
+          },
+          {
+            "name": "arXiv 2509.14744 — Agentic coding manifests and hook-as-guardrail pattern",
+            "pyramid": 4,
+            "year": 2025,
+            "quote": "Runtime hooks at lifecycle entry points function as enforceable guardrails superior to instruction-text constraints alone"
+          },
+          {
+            "name": "CVE-2025-54794 — UserPromptSubmit necessite pour detection injection (oddguan.com/blog/comment-and-control)",
+            "pyramid": 4,
+            "year": 2026,
+            "quote": "UserPromptSubmit hook required to intercept and sanitize prompt injection attempts before agent processing — confirmed by CVE-2025-54794 exploitation chain"
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 3,
+          "plus": [
+            "Documentation officielle complete des exit codes (exit 2 vs 0 clarifie)",
+            "CVE-2025-54794 justifie UserPromptSubmit comme garde obligatoire",
+            "Convergence praticiens (disler 2026) + arXiv 2509.14744 sur hook-as-guardrail",
+            "PermissionRequest non-bypassable par instruction-text → grade 3 justifie"
+          ],
+          "minus": [
+            "CoI fort : sources 1 et 2 produites par Anthropic (vendor)",
+            "Absence d'etude comparative avec vs sans advanced hooks (seul niveau L5)",
+            "Exit code 2 vs 1 confusion documentee dans certains guides tiers",
+            "Divergence agents A/B (grade 3 vs 2) → reconciliation sur 3"
+          ]
+        },
+        "robustness": "MODEREE",
+        "critical_sources": [
+          "arXiv 2509.14744 (validation independante hook-as-guardrail pattern)",
+          "CVE-2025-54794 (evidence concrete UserPromptSubmit necessity)"
+        ],
+        "etd_balance": {
+          "benefices": "Conformite +60-85% (benchmark Poskitt 2026), audit trail complet, continuite regles post-compaction, zero popup patterns pre-approuves, detection injection prompt",
+          "risques": "Latence additionnelle par hook actif, complexite debugging hooks enchaines, faux positifs PermissionRequest si pattern trop large",
+          "balance": "Benefices > risques si activation selective par scenario de defaillance observe — ne pas tout activer par defaut",
+          "faisabilite": "Elevee (scripts bash + JSON config dans settings.json)"
+        },
+        "prisma_ref": "verification/prisma/ai-agent-extended-hook-lifecycle.md",
+        "sensitivity_ref": "verification/extractions/ai-agent-extended-hook-lifecycle-kappa.md",
+        "date_extraction": "2026-04-25"
+      }
+    ]
+  },
+  "variants": {}
+}

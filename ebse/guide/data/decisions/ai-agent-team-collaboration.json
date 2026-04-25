@@ -1,0 +1,77 @@
+{
+  "id": "ai-agent-team-collaboration",
+  "domain": "ai-collaboration",
+  "question": "Dans un projet gere par un agent Claude Code autonome, quand et comment utiliser Agent Teams (collaboration peer-to-peer entre agents via mailbox partagee) pour des taches necessitant une verification multi-perspective, compare a l'architecture orchestrateur-sous-agents classique ?",
+  "depends_on": ["ai-agent-multi-agent-topology", "ai-agent-custom-subagent-definition", "ai-agent-intermediate-task-delegation"],
+  "tags": ["ai-collaboration", "agent-teams", "peer-to-peer", "multi-agent", "experimental", "claude-code"],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "EXPERIMENTAL — NE PAS UTILISER EN PRODUCTION. Agent Teams (Claude Code v2.1.32+, feature 'experimental' depuis Feb 2026) permet la collaboration peer-to-peer entre agents via une mailbox partagee (shared task list). Utiliser UNIQUEMENT dans les rares cas ou les benefices justifient le cout : (1) code review multi-perspective necessitant reellement 2 agents simultanement independants ; (2) validation securite critique ou le biais d'un seul agent est problematique. JAMAIS pour des taches ponctuelles, JAMAIS en production avant GA officiel. Limitations documentees au 2026-04-25 : cout ~7x tokens vs session standard (peer coordination overhead) ; latence ~2x vs architecture orchestrateur classique ; mailbox instable (risque contamination inter-agents si mal configuree) ; GA non annonce ; pas de memoire partagee directe entre agents (communication via task list uniquement). Comparaison avec orchestrateur classique : pour 95% des cas multi-agents, l'architecture orchestrateur + sous-agents sequentiels est superieure en cout, latence et fiabilite. Agent Teams n'apporte de valeur que pour les cas de vrai parallelisme de perspectives necessitant simultaneite.",
+        "grade": 1,
+        "level": "BONNE PRATIQUE",
+        "sources": [
+          {
+            "name": "Anthropic — Claude Code Agent Teams documentation (code.claude.com/docs/en/agent-teams)",
+            "pyramid": 3,
+            "year": 2026,
+            "quote": "Agent Teams is an experimental feature in Claude Code v2.1.32+. Agents communicate via shared mailbox and task list. Not recommended for production use."
+          },
+          {
+            "name": "Anthropic — Claude Code costs documentation (code.claude.com/docs/en/costs)",
+            "pyramid": 3,
+            "year": 2026,
+            "quote": "Agent Teams peer coordination overhead results in approximately 7x token cost compared to a standard single-agent session"
+          },
+          {
+            "name": "arXiv 2503.01935 — MultiAgentBench: Evaluating LLM Agents in Collaborative Tasks (N=260)",
+            "pyramid": 4,
+            "year": 2025,
+            "quote": "Peer coordination in multi-agent systems introduces significant overhead. Sequential orchestration outperforms peer collaboration for most task categories."
+          },
+          {
+            "name": "arXiv 2603.22651 — Multi-agent benchmarks latence and coordination costs",
+            "pyramid": 4,
+            "year": 2026,
+            "quote": "Peer-to-peer agent collaboration shows ~2x latency compared to orchestrator-subagent sequential patterns across benchmark tasks"
+          },
+          {
+            "name": "Practitioner experiment — C compiler with Agent Teams (gist.github.com)",
+            "pyramid": 5,
+            "year": 2026,
+            "quote": "Agent Teams successful for multi-perspective code review but impractical for production: token cost prohibitive, mailbox instability observed"
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 1,
+          "plus": [
+            "arXiv 2503.01935 empirique N=260 valide les limites du peer coordination",
+            "Accord parfait agents A et B sur grade 1"
+          ],
+          "minus": [
+            "CoI fort : sources 1 et 2 Anthropic (vendor documentant leur propre feature)",
+            "Feature experimental — GA non annonce, specs peuvent changer",
+            "Cout 7x tokens documente par le vendeur lui-meme (non replique independamment)",
+            "Mailbox instability non quantifiee — evidence anecdotique (L5 seulement)"
+          ]
+        },
+        "robustness": "FAIBLE",
+        "critical_sources": [
+          "arXiv 2503.01935 (seule validation empirique independante N=260 du cout peer coordination)",
+          "arXiv 2603.22651 (quantification latence 2x independante)"
+        ],
+        "etd_balance": {
+          "benefices": "Verification multi-perspective simultanee, reduction biais agent unique pour taches critiques, parallelisme reel entre agents",
+          "risques": "Cout 7x tokens prohibitif, latence 2x, mailbox instable, feature experimental non-GA, contamination inter-agents possible",
+          "balance": "Risques > benefices dans la quasi-totalite des cas en 2026 — preferer orchestrateur classique",
+          "faisabilite": "Faible en production (experimental, non-GA, cout prohibitif)"
+        },
+        "prisma_ref": "verification/prisma/ai-agent-team-collaboration.md",
+        "sensitivity_ref": "verification/extractions/ai-agent-team-collaboration-kappa.md",
+        "date_extraction": "2026-04-25"
+      }
+    ]
+  },
+  "variants": {}
+}

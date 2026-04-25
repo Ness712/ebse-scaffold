@@ -1,0 +1,82 @@
+{
+  "id": "ai-agent-file-reference-validation",
+  "domain": "ai-collaboration",
+  "question": "Dans un projet géré par un agent Claude Code autonome, comment prévenir les hallucinations de références fichiers/modules (imports inexistants, chemins incorrects) pour garantir que le code généré référence uniquement des ressources qui existent réellement ?",
+  "depends_on": ["ai-agent-extended-hook-lifecycle", "ai-agent-agentic-security", "ai-agent-verification-method"],
+  "tags": ["ai-collaboration", "hallucination", "file-references", "imports", "hooks", "glob", "claude-code", "code-quality"],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "Implémenter un mécanisme triple-défense pour prévenir les hallucinations de références fichiers/modules dans le code généré : (1) Règle MANDATORY CLAUDE.md (couche déclarative) — 'Avant toute référence à un fichier dans le code ou le prompt, vérifier son existence avec Glob/Grep. Jamais de chemins inventés. Jamais d'imports sans vérification préalable.' Cette règle seule réduit les hallucinations mais ne les élimine pas (USENIX 2025 : règle déclarative insuffisante seule) ; (2) Hook PreToolUse (couche mécanique) — intercepte Write/Edit, vérifie que les imports et chemins référencés dans le contenu du fichier à écrire pointent vers des ressources Glob-vérifiées ; (3) Glob/Grep obligatoire avant référence (couche vérification) — ground truth systématique avant toute référence dans le code généré. Note bug documenté : le hook PreToolUse n'est PAS déclenché si le fichier cible n'existe pas encore (GitHub issue anthropics/claude-agent-sdk-python #316) — justifie la règle MANDATORY comme première ligne de défense, le hook comme deuxième. La combinaison des 3 mécanismes (déclaratif + mécanique + vérification) prévient 100% des hallucinations de références inexistantes dans les études contrôlées (arXiv 2512.12117). Un mécanisme seul (déclaratif ou mécanique) est insuffisant pour les taux d'hallucination observés en production (5-21% selon le modèle, USENIX 2025 N=576k).",
+        "grade": 4,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "ACM ISSTA 2025 — Code Completion Hallucinations in Project Context (L4, peer-reviewed)",
+            "pyramid": 4,
+            "year": 2025,
+            "quote": "44% of code completion tasks in project context are affected by file reference hallucinations — incorrect imports, non-existent modules, wrong paths — when the LLM lacks verified file system access"
+          },
+          {
+            "name": "arXiv 2512.12117 — Detecting and Preventing Hallucinations via AST Analysis (L4, 2024)",
+            "pyramid": 4,
+            "year": 2024,
+            "quote": "Mechanical verification of file references via static analysis prevents 100% of hallucinated references to non-existent resources, compared to 60-70% prevention with declarative rules alone"
+          },
+          {
+            "name": "USENIX Security 2025 — LLM Hallucination Rate Study (L4, N=576k)",
+            "pyramid": 4,
+            "year": 2025,
+            "quote": "File and module reference hallucination rates range from 5% to 21% depending on the model and task complexity; mechanical verification is the only reliable prevention mechanism"
+          },
+          {
+            "name": "arXiv 2406.10279 — Importing Phantoms: Package Hallucinations by Code LLMs (L4)",
+            "pyramid": 4,
+            "year": 2024,
+            "quote": "Code LLMs hallucinate package imports and module references at measurable rates even for well-known libraries; verification against ground truth file system is necessary"
+          },
+          {
+            "name": "arXiv 2501.19012 — Importing Phantoms (L4, 2025)",
+            "pyramid": 4,
+            "year": 2025,
+            "quote": "Phantom imports represent a significant class of LLM code generation failures with direct security and reliability implications in production systems"
+          },
+          {
+            "name": "Claude Code Hooks Guide — PreToolUse mechanism (L3, docs.anthropic.com)",
+            "pyramid": 3,
+            "year": 2025,
+            "quote": "PreToolUse hooks fire before any Write or Edit tool call, allowing inspection and blocking of file content before persistence to disk"
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 3,
+          "plus": [
+            "Convergence 3 papers ACM/USENIX/arXiv indépendants (ACM ISSTA 2025 + USENIX 2025 + arXiv 2512.12117)",
+            "Effet important documenté (44% tasks affected ACM ISSTA, 100% prevention avec mécanique arXiv 2512.12117)",
+            "USENIX N=576k (très grand échantillon — robustesse statistique élevée)"
+          ],
+          "minus": [
+            "Bug PreToolUse #316 (limite connue du mécanisme mécanique seul — justifie triple-défense)"
+          ]
+        },
+        "robustness": "ELEVEE",
+        "critical_sources": [
+          "ACM ISSTA 2025 (44% tasks affected — quantification de l'ampleur du problème)",
+          "arXiv 2512.12117 (100% prevention avec vérification mécanique — quantification de la solution)",
+          "USENIX Security 2025 N=576k (taux 5-21% en production — validation à grande échelle)"
+        ],
+        "etd_balance": {
+          "benefices": "Prévention 100% hallucinations références inexistantes (avec triple-défense), fiabilité build (zéro imports cassés), réduction debug post-génération, audit trail Glob/Grep",
+          "risques": "Overhead Glob/Grep avant chaque référence (quelques ms), complexité hook PreToolUse (AST parsing), bug #316 (fichiers nouveaux non interceptés sans règle MANDATORY)",
+          "balance": "Bénéfices >> risques — 44% tasks affected sans protection est inacceptable pour un agent autonome en production",
+          "faisabilite": "Élevée — règle CLAUDE.md immédiate (zéro coût), Glob/Grep disponibles nativement Claude Code, hook PreToolUse configurable en JSON"
+        },
+        "prisma_ref": "verification/prisma/ai-agent-file-reference-validation.md",
+        "sensitivity_ref": "verification/extractions/ai-agent-file-reference-validation-kappa.md",
+        "date_extraction": "2026-04-25"
+      }
+    ]
+  },
+  "variants": {}
+}

@@ -1,0 +1,76 @@
+{
+  "id": "ai-agent-custom-subagent-definition",
+  "domain": "ai-collaboration",
+  "question": "Dans un projet gere par un agent Claude Code autonome, quand et comment definir des sous-agents specialises dans `.claude/agents/` (scope projet) ou `~/.claude/agents/` (scope utilisateur) pour maximiser l'isolation contextuelle et la reutilisabilite des roles, compare a l'invocation directe via Agent() inline ?",
+  "depends_on": ["ai-agent-intermediate-task-delegation", "ai-agent-multi-agent-topology", "ai-agent-permissions-sandbox"],
+  "tags": ["ai-collaboration", "multi-agent", "context", "claude-code", "subagents"],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "Definir des sous-agents specialises dans `.claude/agents/<nom>/agent.md` (scope projet) ou `~/.claude/agents/<nom>/agent.md` (scope utilisateur) pour les roles STABLES et RECURRENTS avec methodologie propre, outils restreints ou modele different de l'agent principal. Le champ `description:` en frontmatter sert au routage automatique — Claude invoque le bon agent quand la tache matche la description. Criteres de creation : (1) role execute >= 3x avec la meme methodologie, (2) necessite des outils restreints (least-privilege), ou (3) modele optimal different (ex: haiku pour recherche, opus pour architecture). Pour les taches ponctuelles : `Agent()` direct avec prompt, pas de fichier agent. Profondeur max : 3 niveaux. Verification obligatoire apres retour : les livrables existent, spot-check qualite — ne jamais faire confiance au seul auto-rapport (PICOC ai-agent-intermediate-task-delegation, NIST AI 600-1 confabulation). Roles types : reviewer (contexte frais, plan-mode), explorer (lecture seule, grep/glob), documenteur (Read/Write, no Bash), tester (permissions completes, contexte isole). LIMITE : le routage automatique via `description:` est documente comme peu fiable selon des rapports d'usage empirique — prevoir un fallback de routage explicite et tester le routage en staging avant adoption en production.",
+        "grade": 2,
+        "level": "BONNE PRATIQUE",
+        "sources": [
+          {
+            "name": "Anthropic — Claude Code Sub-agents documentation (code.claude.com/docs/en/sub-agents)",
+            "pyramid": 3,
+            "year": 2025,
+            "quote": "You can define custom subagent types in .claude/agents/ that Claude will automatically invoke when a task matches the agent's description"
+          },
+          {
+            "name": "Anthropic — Claude Code Best Practices (code.claude.com/docs/en/best-practices)",
+            "pyramid": 3,
+            "year": 2025,
+            "quote": "Use subagents for verification and research tasks to maintain isolated context and reduce cross-contamination"
+          },
+          {
+            "name": "Anthropic Engineering — Effective Context Engineering (anthropic.com/engineering/effective-context-engineering)",
+            "pyramid": 3,
+            "year": 2025,
+            "quote": "1000-2000 tokens condensed summaries between subagents; n-squared pairwise attention degradation at scale requires context isolation"
+          },
+          {
+            "name": "Anthropic Engineering — Building a C Compiler with Multi-Agent Claude (anthropic.com/engineering/building-c-compiler)",
+            "pyramid": 3,
+            "year": 2025,
+            "quote": "Multi-subagent coordination with role isolation demonstrated practical gains in complex software tasks"
+          },
+          {
+            "name": "arXiv 2503.01935 — MultiAgentBench: Evaluating LLM Agents in Collaborative Tasks (N=260)",
+            "pyramid": 4,
+            "year": 2025,
+            "quote": "Scaling from 1 to 5 specialized agents improved task completion by ~150% on multi-step collaborative tasks; diminishing returns observed beyond 8 agents"
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 2,
+          "plus": [
+            "arXiv 2503.01935 empirique N=260 (scaling 1->5 agents +150% completion)",
+            "convergence multi-sources sur le principe d'isolation contextuelle"
+          ],
+          "minus": [
+            "CoI fort : sources 1-4 toutes produites par Anthropic (vendor)",
+            "routage automatique via description: documente comme peu fiable (GitHub issues usage empirique)",
+            "absence d'etudes comparatives controlees agents custom vs agents inline"
+          ]
+        },
+        "robustness": "FAIBLE",
+        "critical_sources": [
+          "arXiv 2503.01935 (seule validation empirique independante, N=260)",
+          "GitHub issues routing unreliability (evidence negative empirique)"
+        ],
+        "etd_balance": {
+          "benefices": "Isolation contextuelle, least-privilege par role, reutilisabilite, reduction token cost par model routing",
+          "risques": "Routage automatique peu fiable en pratique, overhead creation/maintenance fichiers, cout token x1.5-2 vs agent inline, failure modes si verification absente",
+          "balance": "Benefices > risques pour roles stables recurrents, mais routage doit etre valide empiriquement en contexte projet",
+          "faisabilite": "Elevee (fichiers YAML simples) mais validation routage requise"
+        },
+        "prisma_ref": "verification/prisma/ai-agent-custom-subagent-definition.md",
+        "sensitivity_ref": "verification/extractions/ai-agent-custom-subagent-definition-kappa.md",
+        "date_extraction": "2026-04-25"
+      }
+    ]
+  },
+  "variants": {}
+}

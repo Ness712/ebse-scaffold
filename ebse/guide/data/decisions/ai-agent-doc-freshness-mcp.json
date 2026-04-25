@@ -1,0 +1,73 @@
+{
+  "id": "ai-agent-doc-freshness-mcp",
+  "domain": "ai-collaboration",
+  "question": "Dans un projet géré par un agent Claude Code autonome, comment garantir que les références à des APIs et frameworks restent à jour malgré les limites temporelles du training data, en comparant Context7 MCP, WebSearch et la documentation embarquée dans CLAUDE.md ?",
+  "depends_on": ["ai-agent-session-context-initialization", "ai-agent-project-instructions", "ai-agent-prompt-spec-discipline"],
+  "tags": ["ai-collaboration", "documentation", "mcp", "context7", "hallucination", "freshness", "claude-code", "rag"],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "Garantir la fraîcheur des références APIs/frameworks via une approche par couches, par ordre de fiabilité décroissante : (1) Documentation officielle via WebSearch direct (docs.nestjs.com, react.dev, etc.) — fiabilité maximale, source primaire, mais nécessite une requête explicite par l'agent ; (2) CLAUDE.md avec extraits de documentation critique (versions, patterns breaking changes) — toujours disponible, zero latence, mais nécessite mise à jour manuelle ; (3) Context7 MCP si disponible en session — utile pour résolution version-spécifique (ex: NestJS 11 vs 10 breaking changes) mais UNIQUEMENT en complément, jamais source unique. Limitation critique Context7 : AUCUNE ÉVALUATION INDÉPENDANTE de Context7 identifiée au 2026-04-25 — seuls auto-benchmarks vendor Upstash (N=80) disponibles, risque de biais élevé. Le pattern RAG pour doc freshness est solide (OWASP K-4, Level 2) mais l'indirectness entre 'RAG en général' et 'Context7 spécifiquement' justifie un grade conservateur. Règle opérationnelle : avant d'utiliser une API dont la version est incertaine, l'agent DOIT vérifier via WebSearch ou docs officielles — ne pas extrapoler depuis le training data. Les hallucinations de documentation d'APIs affectent significativement la qualité du code généré (arXiv 2409.20550 : taux non-négligeable en production).",
+        "grade": 2,
+        "level": "BONNE PRATIQUE",
+        "sources": [
+          {
+            "name": "OWASP Knowledge Base K-4 — API documentation freshness (L2, owasp.org)",
+            "pyramid": 2,
+            "year": 2024,
+            "quote": "Keeping API documentation current is a prerequisite for secure development; outdated documentation leads to use of deprecated or vulnerable patterns"
+          },
+          {
+            "name": "upstash.com/blog/context7-mcp (L3, vendor Upstash — risque biais ÉLEVÉ, 2025)",
+            "pyramid": 3,
+            "year": 2025,
+            "quote": "Context7 MCP resolves version-specific documentation by fetching live docs from official sources. N=80 auto-benchmark shows improved code accuracy for version-specific APIs."
+          },
+          {
+            "name": "upstash.com/blog/new-context7 (L3, vendor Upstash — risque biais ÉLEVÉ, 2025)",
+            "pyramid": 3,
+            "year": 2025,
+            "quote": "Context7 2.0 improves version resolution for frameworks like NestJS, distinguishing between major version breaking changes"
+          },
+          {
+            "name": "arXiv 2409.20550 — LLM Hallucinations in Practical Code Generation (L4, 2024)",
+            "pyramid": 4,
+            "year": 2024,
+            "quote": "LLMs exhibit significant hallucination rates when generating code using APIs not well-represented in training data, with outdated API usage being a primary failure mode"
+          },
+          {
+            "name": "LIMITATION CRITIQUE — Aucune évaluation tierce indépendante de Context7 identifiée au 2026-04-25",
+            "pyramid": 5,
+            "year": 2026,
+            "quote": "Toutes les évaluations de Context7 proviennent de Upstash (vendor). N=80 auto-benchmark sans réplication indépendante. Grade conservateur appliqué (PICOC-K Agent C)."
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 3,
+          "plus": [],
+          "minus": [
+            "CoI fort : sources 2 et 3 produites par Upstash (vendor de Context7) — auto-évaluation sans réplication",
+            "Indirectness : preuves RAG général (OWASP K-4) ≠ Context7 spécifiquement — gap entre principe et implémentation",
+            "N=80 auto-benchmark insuffisant pour établir l'efficacité de Context7 en conditions réelles"
+          ]
+        },
+        "robustness": "FAIBLE",
+        "critical_sources": [
+          "arXiv 2409.20550 (seule validation empirique indépendante du problème d'hallucination documentaire)",
+          "LIMITATION : absence d'évaluation tierce de Context7 au 2026-04-25"
+        ],
+        "etd_balance": {
+          "benefices": "Réduction hallucinations API (problème réel documenté), résolution version-spécifique (Context7 utile pour NestJS 11 vs 10), CLAUDE.md zéro latence",
+          "risques": "Context7 non évalué indépendamment, WebSearch nécessite requête explicite (friction), CLAUDE.md nécessite maintenance manuelle (risque stale)",
+          "balance": "Bénéfices > risques pour WebSearch direct et CLAUDE.md (pratiques sûres et éprouvées) ; Context7 = complément acceptable mais pas source de confiance unique",
+          "faisabilite": "Élevée pour WebSearch/CLAUDE.md ; Context7 nécessite MCP server configuré (setup additionnel)"
+        },
+        "prisma_ref": "verification/prisma/ai-agent-doc-freshness-mcp.md",
+        "sensitivity_ref": "verification/extractions/ai-agent-doc-freshness-mcp-kappa.md",
+        "date_extraction": "2026-04-25"
+      }
+    ]
+  },
+  "variants": {}
+}

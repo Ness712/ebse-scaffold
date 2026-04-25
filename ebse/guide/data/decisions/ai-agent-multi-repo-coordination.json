@@ -1,0 +1,77 @@
+{
+  "id": "ai-agent-multi-repo-coordination",
+  "domain": "ai-collaboration",
+  "question": "Dans un projet multi-repo gere par un agent Claude Code autonome, comment coordonner les modifications impactant plusieurs repos simultanement, en utilisant git worktrees et les strategies d'orchestration disponibles ?",
+  "depends_on": ["ai-agent-multi-agent-topology", "ai-agent-custom-subagent-definition", "ai-agent-intermediate-task-delegation"],
+  "tags": ["ai-collaboration", "multi-repo", "git-worktrees", "orchestration", "coordination", "claude-code"],
+  "classification": "universal",
+  "universal": {
+    "principles": [
+      {
+        "text": "Coordonner les modifications multi-repo avec un pattern 1 orchestrateur + 1 worktree par repo concerne : (1) AGENT ORCHESTRATEUR — tourne sur la racine du projet multi-repo (dossier non-git) ; planifie le sequencement des modifications ; ne modifie pas directement les fichiers des repos. (2) GIT WORKTREES — creer un worktree par repo concerne avant de deleguer : `git worktree add ../OLS-worktrees/<branch>/OLS-<repo> -b <branch-name>` depuis le repo cible. Chaque sous-agent recoit son worktree comme working directory. (3) DELEGATION — utiliser `Agent(isolation: \"worktree\")` dans le frontmatter des sous-agents pour forcer l'isolation. CONTRAINTE CRITIQUE : `Agent(isolation: \"worktree\")` est INTERDIT sur une racine non-git — le harness echoue silencieusement ou retourne une erreur. Toujours deleguer depuis un repertoire git valide. (4) SEQUENCEMENT — ordonner les commits selon les dependances (ex: backend avant frontend si le frontend depend d'un nouveau contrat API) ; attendre la confirmation de chaque sous-agent avant de passer au suivant. (5) NETTOYAGE — apres merge : `git worktree remove ../OLS-worktrees/<branch>/OLS-<repo>` pour eviter l'accumulation de worktrees orphelins. Verification post-execution OBLIGATOIRE (PICOC ai-agent-intermediate-task-delegation) : controler que les livrables existent dans chaque worktree, ne pas faire confiance au seul auto-rapport du sous-agent.",
+        "grade": 2,
+        "level": "BONNE PRATIQUE",
+        "sources": [
+          {
+            "name": "Anthropic — Claude Code Sub-agents documentation (code.claude.com/docs/en/sub-agents)",
+            "pyramid": 3,
+            "year": 2026,
+            "quote": "Agent() isolation: worktree frontmatter isolates sub-agent file modifications to a specific git worktree. Not supported on non-git root directories."
+          },
+          {
+            "name": "Git — git-worktree official documentation (git-scm.com/docs/git-worktree)",
+            "pyramid": 3,
+            "year": 2025,
+            "quote": "git worktree add <path> -b <branch> creates a linked working tree with a new branch. git worktree prune removes stale entries."
+          },
+          {
+            "name": "nwiizo — ccswarm: multi-agent git worktree pattern (github.com/nwiizo/ccswarm)",
+            "pyramid": 5,
+            "year": 2026,
+            "quote": "1 orchestrator + N worktree sub-agents pattern enables parallel multi-repo modifications without branch conflicts"
+          },
+          {
+            "name": "AugmentCode — Git worktrees for parallel AI agent execution (augmentcode.com/guides/git-worktrees-parallel-ai-agent-execution)",
+            "pyramid": 5,
+            "year": 2025,
+            "quote": "Parallel agent worktrees eliminate race conditions on shared branches. Each agent writes to its own worktree, orchestrator merges sequentially."
+          },
+          {
+            "name": "GitHub Community — Background agents multi-repo discussion (github.com/orgs/community/discussions/186469)",
+            "pyramid": 5,
+            "year": 2025,
+            "quote": "Community consensus on worktree-per-agent as the practical solution for multi-repo concurrent modifications"
+          }
+        ],
+        "grade_factors_applied": {
+          "start": 2,
+          "plus": [
+            "Convergence praticiens independants (ccswarm, AugmentCode, GitHub discussions)",
+            "Git worktree est une feature Git stable et documentee officiellement",
+            "Accord parfait agents A et B sur grade 2"
+          ],
+          "minus": [
+            "Absence de benchmark formel comparant cette approche vs alternatives",
+            "Sources praticiens toutes L5 (pas d'etude empirique contr",
+            "CoI partiel : source 1 Anthropic (vendor)"
+          ]
+        },
+        "robustness": "FAIBLE",
+        "critical_sources": [
+          "git-scm.com/docs/git-worktree (seule source L3 independante d'Anthropic)",
+          "Consensus praticiens convergent (nwiizo + AugmentCode + GitHub discussions)"
+        ],
+        "etd_balance": {
+          "benefices": "Zero conflit de branches entre sous-agents, isolation claire des modifications par repo, sequencement explicite des dependances",
+          "risques": "Accumulation worktrees orphelins si nettoyage oublie, erreur harness si isolation: worktree sur racine non-git, overhead orchestration",
+          "balance": "Benefices > risques si nettoyage systematise et contrainte non-git documentee dans CLAUDE.md",
+          "faisabilite": "Elevee (commandes git standard) mais necessite discipline de nettoyage"
+        },
+        "prisma_ref": "verification/prisma/ai-agent-multi-repo-coordination.md",
+        "sensitivity_ref": "verification/extractions/ai-agent-multi-repo-coordination-kappa.md",
+        "date_extraction": "2026-04-25"
+      }
+    ]
+  },
+  "variants": {}
+}
