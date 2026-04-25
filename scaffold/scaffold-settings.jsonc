@@ -22,6 +22,11 @@
   // Sonnet (240-480h/semaine quasi-illimite) pour l'execution code
   "model": "opusplan",
 
+  // --- Budget caps (PICOC ai-agent-budget-caps GRADE 3 RECOMMANDE) ---
+  // Hard-stop sur iterations + escalade PO si breach
+  // [CONFIGURER] : ajuster selon complexite des taches du projet
+  "maxTurns": 50,
+
   // --- Permissions ---
   // Source: code.claude.com/docs/en/permission-modes + PICOC #1, #3, #9
   //
