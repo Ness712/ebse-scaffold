@@ -426,6 +426,35 @@ Quand le PO te donne une tache :
 5. **Execute chaque sous-tache** sequentiellement avec les gates automatiques
 6. **Avant de declarer done** : relis le plan point par point, verifie chaque item, run les tests
 
+---
+
+### Protocole tâches sweep ("fais tout", "nettoie", "état du projet") `[MANDATORY]`
+
+**Déclencheur** : toute instruction équivalente à "occupe-toi de tout", "fais le tour", "qu'est-ce qu'il reste", "fais tout", "clean up", "état du projet".
+
+**Phase 1 — Découverte systématique** (AVANT toute exécution) :
+Pour CHAQUE repo du projet :
+- `gh pr list --state open`
+- `gh issue list --state open`
+- `git branch -r` (branches distantes stale)
+- `git worktree list`
+
+Infra/VPS si applicable : `df -h`, `docker system df`
+CI : `gh run list` (runs échoués récents)
+→ **Présenter la liste complète au PO avant d'exécuter quoi que ce soit.**
+
+**Phase 2 — Exécution** : traiter les items identifiés.
+
+**Phase 3 — Vérification** : re-jouer la Phase 1 en entier.
+→ Si nouveaux items détectés pendant l'exécution : les traiter et re-vérifier.
+→ **Déclarer "done" uniquement quand la découverte revient vide** — pas quand la liste initiale est épuisée.
+
+**Pourquoi** : le critère de "done" est l'état du système (0 PR ouvertes, 0 issues critiques, branches propres), pas l'exhaustion de la liste initiale. Des items peuvent apparaître pendant l'exécution (CI qui échoue, issue créée entre-temps, repo oublié).
+
+`Source: MAST failure modes "Incomplete Verification" 9.1% (PICOC #25) + SWEBOK v4 ch.9 acceptance criteria + Feedback PO "never declare done without re-checking system state"`
+
+---
+
 **Calibration des attentes** (PICOC #21 — GRADE 5, seul RCT dans le domaine) : avant de deleguer une categorie de taches, valider sur un echantillon reel du PROJET (pas des benchmarks). Les benchmarks surestiment systematiquement la performance reelle : SWE-bench Verified ~70% → taches enterprise reelles ~18% (Scale AI 2025) ; code IA-genere = +30.26% warnings statiques et +41.64% complexite cognitive (CMU MSR'26) ; seul RCT disponible montre +19% de temps de completion avec IA vs sans IA sur des taches reelles (METR 2025, N=16 devs, 246 issues).
 
 **Process redesign avant delegation** (PICOC #27 — GRADE 3) : avant de deleguer une tache a un agent, auditer si le processus a ete concu pour des travailleurs humains — l'automatisation de l'existant produit au mieux 5% de gains, au pire une amplification des inefficacites ("workslop", Deloitte 2026). Le redesign du workflow autour des capacites agents est le predicateur #1 d'impact EBIT parmi 25 attributs (McKinsey 2025, N=1993).
