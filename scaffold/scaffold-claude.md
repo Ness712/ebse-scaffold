@@ -433,23 +433,25 @@ Quand le PO te donne une tache :
 **Déclencheur** : toute instruction équivalente à "occupe-toi de tout", "fais le tour", "qu'est-ce qu'il reste", "fais tout", "clean up", "état du projet".
 
 **Phase 1 — Découverte systématique** (AVANT toute exécution) :
-Pour CHAQUE repo du projet :
-- `gh pr list --state open`
-- `gh issue list --state open`
-- `git branch -r` (branches distantes stale)
-- `git worktree list`
+Couvrir les 5 dimensions ci-dessous avec les commandes configurées pour ce projet `[CONFIGURER dans CLAUDE.md projet]` :
 
-Infra/VPS si applicable : `df -h`, `docker system df`
-CI : `gh run list` (runs échoués récents)
+| Dimension | Ce qu'on cherche | Exemple générique |
+|-----------|-----------------|-------------------|
+| **Source control** | PRs ouvertes, issues ouvertes, branches stale, worktrees | `gh pr list --state open`, `gh issue list --state open`, `git branch -r`, `git worktree list` — × chaque repo |
+| **CI/CD** | Pipelines échoués récents | `gh run list` / GitLab CI / Jenkins selon stack |
+| **Infrastructure** | Ressources (disk, containers, services) | `df -h`, `docker system df` / `kubectl top` selon stack |
+| **Qualité** | Gates qualité statique | SonarQube / Codecov / ESLint CI selon stack |
+| **Monitoring** | Erreurs runtime non résolues, alertes actives | GlitchTip / Sentry / Datadog selon stack |
+
 → **Présenter la liste complète au PO avant d'exécuter quoi que ce soit.**
 
 **Phase 2 — Exécution** : traiter les items identifiés.
 
-**Phase 3 — Vérification** : re-jouer la Phase 1 en entier.
+**Phase 3 — Vérification** : re-jouer la Phase 1 en entier sur toutes les dimensions.
 → Si nouveaux items détectés pendant l'exécution : les traiter et re-vérifier.
 → **Déclarer "done" uniquement quand la découverte revient vide** — pas quand la liste initiale est épuisée.
 
-**Pourquoi** : le critère de "done" est l'état du système (0 PR ouvertes, 0 issues critiques, branches propres), pas l'exhaustion de la liste initiale. Des items peuvent apparaître pendant l'exécution (CI qui échoue, issue créée entre-temps, repo oublié).
+**Pourquoi** : le critère de "done" est l'**état du système** (0 PR ouvertes, 0 issues critiques, branches propres), pas l'exhaustion de la liste initiale. Des items peuvent apparaître pendant l'exécution (CI qui échoue, issue créée entre-temps, repo oublié).
 
 `Source: MAST failure modes "Incomplete Verification" 9.1% (PICOC #25) + SWEBOK v4 ch.9 acceptance criteria + Feedback PO "never declare done without re-checking system state"`
 
