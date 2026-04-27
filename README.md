@@ -79,7 +79,7 @@ ebse-scaffold/
     │   ├── user-prompt-filter.sh ← UserPromptSubmit : detection injection
     │   ├── stop-notify.sh      ← Stop : notification OS tache terminee
     │   └── prompt-injection-filter.sh ← filtre injection generique
-    └── commands/               ← Slash commands templates (/audit, /api-test, etc.)
+    └── commands/               ← Slash commands templates (/full-audit, /api-test, etc.)
 ```
 
 ## Stacks couvertes

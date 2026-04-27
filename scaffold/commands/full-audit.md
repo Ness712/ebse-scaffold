@@ -1,4 +1,4 @@
-# /audit — Audit complet de projet
+# /full-audit — Audit complet de projet
 
 Audit exhaustif ligne par ligne : chaque fichier du projet lu intégralement et vérifié contre toutes les sources applicables.
 Méthodologie : `audit-sources.md` (GRADE 5/9) + `project-health-audit.md` (GRADE 3/7).

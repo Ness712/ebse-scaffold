@@ -1,12 +1,12 @@
 ---
-description: "Audit pre-release — conventions Git, alignement EBSE, quality gates, chemins critiques. Declencher uniquement avant merge vers main."
+description: "Pre-merge check — conventions Git, alignement EBSE, quality gates, chemins critiques. Declencher uniquement avant merge vers main."
 model: sonnet
 context: fork
 allowed-tools: ["Read", "Glob", "Grep", "Bash(git log*)", "Bash(git diff*)"]
 user-invocable: true
 ---
 
-# Audit pre-release
+# Pre-merge check
 
 > Limitation : je suis le meme modele que le builder — self-preference bias documente (Panickssery NeurIPS 2024 : 73% de preference self). La relecture PO ligne par ligne reste obligatoire pour les chemins critiques.
 
