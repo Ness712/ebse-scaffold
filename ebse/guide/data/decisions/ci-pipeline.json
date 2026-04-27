@@ -109,6 +109,27 @@
             "year": 2024
           }
         ]
+      },
+      {
+        "text": "Runners self-hosted aux ressources limitees (RAM < 16 GB) : definir des limites memoire explicites sur chaque service container Docker via `options: --memory=512m --memory-swap=512m`. Sans limite, des jobs paralleles partageant le meme runner (ex: deux PRs testees simultanement, chacune avec un container Postgres) epuisent la RAM hote et provoquent des OOM kills imprevisibles. La valeur 512 Mo est suffisante pour PostgreSQL en mode test (charge reduite, pas de cache buffer pool en production). La directive `concurrency:` serialise les jobs si les ressources sont insuffisantes meme avec limites.",
+        "grade": 3,
+        "level": "RECOMMANDE",
+        "sources": [
+          {
+            "name": "Docker docs — Runtime options with Memory, CPUs, and GPUs",
+            "pyramid": 3,
+            "year": 2024,
+            "quote": "You can limit a container's use of memory by using --memory flag. --memory-swap is a modifier flag that only has meaning if --memory is also set."
+          },
+          {
+            "name": "GitHub Actions docs — Workflow syntax: jobs.<job_id>.services.<service_id>.options",
+            "pyramid": 4,
+            "year": 2024,
+            "quote": "Additional Docker container resource options. For a list of options, see docker create options."
+          }
+        ],
+        "v3_review": "2026-04-27",
+        "robustness": "STABLE"
       }
     ]
   }
