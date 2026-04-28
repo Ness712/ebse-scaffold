@@ -123,6 +123,39 @@ Format finding :
 - **MINEUR** : groupés en une issue "Lot MINEUR [date]"
 - **INFO** : rapport uniquement, pas d'issue
 
+### Création automatique des issues (sans validation PO)
+
+Pour chaque finding CRITIQUE, MAJEUR, et pour le lot MINEUR :
+
+1. Vérifier si une issue similaire existe déjà :
+   ```bash
+   gh issue list --repo <org>/<repo> --state open --search "<titre-du-finding>"
+   ```
+2. Si absente → créer immédiatement :
+   ```bash
+   gh issue create \
+     --repo <org>/<repo> \
+     --title "[<SÉVÉRITÉ>] <titre-du-finding>" \
+     --body "$(cat <<'EOF'
+   ## Finding
+
+   **Sévérité** : CRITIQUE | MAJEUR | MINEUR
+   **Fichier** : chemin/vers/fichier.ts:42
+   **Source** : reco#<id> | OWASP ASVS X.Y.Z | CONVENTIONS.md §X
+
+   ## Problème
+
+   <description précise>
+
+   ## Correction
+
+   <action applicable immédiatement>
+   EOF
+   )" \
+     --label "<severity-label>"
+   ```
+3. Pas de confirmation PO requise — la création d'issues est autonome.
+
 ### Rapport final
 
 ```

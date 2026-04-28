@@ -186,6 +186,38 @@ STATUT GLOBAL : OK / KO
 
 ---
 
+---
+
+## Étape 6 — Création automatique des issues
+
+Pour chaque FAIL dans le rapport de l'étape 5 :
+
+1. Vérifier si une issue similaire existe déjà :
+   ```bash
+   gh issue list --repo <org>/<repo> --state open --search "<route-ou-titre>"
+   ```
+2. Si absente → créer immédiatement (pas de validation PO) :
+   ```bash
+   gh issue create \
+     --repo <org>/<repo> \
+     --title "[BROWSER-FAIL] <route> — <description courte>" \
+     --body "$(cat <<'EOF'
+   ## Finding navigateur
+
+   **Route** : /chemin/de/la/route
+   **Rôle testé** : admin | student | guest
+   **Problème** : <description> (console error, page blanche, 5xx, etc.)
+
+   ## Détails
+
+   <coller le snapshot ou l'erreur console>
+   EOF
+   )" \
+     --label "browser-test,bug"
+   ```
+
+---
+
 ## Références
 
 - Router        : `FRONTEND_REPO/ROUTER_FILE`
