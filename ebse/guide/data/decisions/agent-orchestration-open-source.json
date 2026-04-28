@@ -1,0 +1,719 @@
+{
+  "id": "agent-orchestration-open-source",
+  "domain": "ai-collaboration",
+  "classification": "universal",
+  "question": "Quels outils open-source d'orchestration d'agents IA (CLI agents et SDK frameworks) satisfont les critères de portabilité provider, hooks/gates configurables et exécution bash native pour des pipelines autonomes en production ?",
+  "picoc": {
+    "population": "Équipes de développement utilisant des agents IA autonomes dans des pipelines CI/CD ou des workflows de développement logiciel",
+    "intervention": "Outils open-source d'orchestration d'agents IA : CLI agents (exécution terminale autonome) et SDK frameworks (intégration programmatique dans des pipelines existants)",
+    "comparison": "Outils propriétaires ou fermés vs outils open-source ; CLI agents vs SDK frameworks ; multi-provider vs single-vendor",
+    "outcome": "Portabilité provider (O1), hooks/gates configurables avant/après exécution d'outil (O2), exécution bash native sans IDE (O3), audit trail structuré (O4), maintenabilité long terme (O5), résilience de boucle avec circuit-breaker (O6)",
+    "context": "Projets logiciels avec stack TypeScript/Python, CI/CD GitHub Actions, VPS contraints (8 GB RAM), préférence open-source avec licences permissives (MIT, Apache 2.0)"
+  },
+  "methodology": {
+    "method": "SLR Kitchenham 2007",
+    "dare_file": "verification/dare/agent-orchestration-open-source-dare.md",
+    "dare_verdict": "Faisable — domaine couvert par documentation officielle niveau 3, sources techniques publiées niveau 4 (arXiv), et comparatifs structurés niveau 5. Aucun RCT disponible pour ce domaine émergent.",
+    "discovery_file": "verification/picoc/agent-orchestration-open-source-discovery.md",
+    "discovery_total": "18 candidats identifiés (C1–C18)",
+    "reviewers": ["Reviewer A", "Reviewer B"],
+    "reviewer_a_file": "verification/extractions/agent-orchestration-reviewer-a.md",
+    "reviewer_b_file": "verification/extractions/agent-orchestration-reviewer-b.md",
+    "kappa_file": "verification/extractions/agent-orchestration-kappa.md",
+    "access_file": "verification/access/agent-orchestration-access.md",
+    "kappa": 0.559,
+    "kappa_note": "Accord MODERATE (Landis & Koch 1977). 4 divergences sur 17 candidats (C7 Goose, C8 Cline, C11 SWE-agent, C13 Pi). Les divergences portent sur des cas frontières (O2 PARTIEL, O6 manquant) et non sur des désaccords fondamentaux — cohérent avec un domaine en évolution rapide (nouvelles features en cours de sprint).",
+    "sources_evaluated": 18,
+    "sources_included": 17,
+    "sources_excluded": 1,
+    "exclusion_criteria": ["C9 Roo Code exclu : shutdown officiel annoncé le 21 avril 2026, effectif le 15 mai 2026 (docs.roocode.com/sunset). Critère I4 (maintenance active) non satisfait."],
+    "agent_c_verification": "11 VERIFIE / 1 PARTIEL / 0 FABRICATION",
+    "agent_c_corrections": [
+      "C18 Pydantic AI O6 : OUI (UsageLimits avec request_limit + tool_calls_limit documentés sur ai.pydantic.dev — Reviewer A avait NON, incorrect)",
+      "C11 SWE-agent O4 : OUI (trajectoires .traj JSON structuré documentés sur swe-agent.com/latest/usage/trajectories/ — Reviewer A avait NON, incorrect)",
+      "C15 OpenAI Agents SDK O3 : OUI confirmé (ShellTool natif ajouté 15 avril 2026 — openai.com/index/the-next-evolution-of-the-agents-sdk/)",
+      "C8 Cline O3 headless : OUI confirmé (CLI 2.0, 13 février 2026 — cline.bot/blog/announcing-cline-cli-2-0)",
+      "C9 Roo Code shutdown : VERIFIE (docs.roocode.com/sunset + roocode.com/blog — date 15 mai 2026 confirmée)",
+      "C3 OpenCode maxSessionTurns : PARTIEL — hooks tool.execute.before/after VERIFIE mais maxSessionTurns non corroboré dans la documentation officielle indexée (impact nul sur classement Tier 1)"
+    ],
+    "grade_level": 2,
+    "grade_label": "BONNE_PRATIQUE",
+    "confidence": "MODERE",
+    "grade_rationale": "Score départ Niveau 3 (documentation officielle) = 2. Ajustements : +1 convergence inter-sources (2-3 sources indépendantes par critère pour chaque Tier 1), +1 grande échelle (OpenCode 6.5M dev/mois, Cline 4M+ dev, OpenHands $18.8M Series A, Codex CLI 14.53M downloads/mois), +1 effet important (différence flagrante entre Tier 1 et Non recommandé). Pénalités : -1 conflit d'intérêt (majorité des sources vendor-authored — structurellement inévitable), -1 indirectness (évaluations sur fonctionnalités documentées, pas sur retours d'expérience production longitudinaux), -1 incohérence partielle (κ = 0.559 < seuil 0.60 Good). Score final : 2 = BONNE_PRATIQUE.",
+    "sensitivity": "Faible à modérée. Les 6 candidats Tier 1 principaux (C1, C2, C3, C4, C5, C10) résistent au retrait de la source primaire vendor. C8 Cline : sensibilité modérée (réserve O6 amplifiée sans docs officielles, Tier 1 tient sur O1+O2+O3). C15 OpenAI Agents SDK : sensibilité modérée (classement Tier 1 conditionnel à la confirmation du ShellTool natif dans les release notes d'avril 2026 — si retirées, C15 → Tier 2). Résolutions d'arbitre (C7 → Tier 2, C11 → Tier 2) sont robustes : règle de prudence Kitchenham appliquée sur O2 PARTIEL confirmé par les deux reviewers."
+  },
+  "summary": "SLR Kitchenham 2007 sur 18 outils d'orchestration d'agents IA open-source, dont 17 évalués (C9 Roo Code exclu sur shutdown 15/05/2026). Classement final après résolution de 4 divergences inter-reviewers par arbitre (règle de prudence + définition stricte protocole EBSE) : 8 Tier 1, 8 Tier 2, 2 Non recommandés. kappa = 0.559 (Moderate). GRADE = 2 (BONNE_PRATIQUE). Les candidats Tier 1 satisfont les 3 critères fondamentaux : portabilité provider (O1), hooks/gates configurables (O2), exécution bash native (O3). La principale lacune systémique identifiée est l'absence d'audit trail structuré built-in pour la majorité des CLI agents (O4 PARTIEL) — seuls OpenHands (event sourcing immutable), SWE-agent (trajectoires JSON), OpenAI Agents SDK et Gemini CLI (OTEL natif) couvrent pleinement O4.",
+  "universal": {
+    "answer": "Utiliser un candidat Tier 1 de la liste validée par cette SLR. Les 8 candidats Tier 1 satisfont tous les critères fondamentaux (O1+O2+O3). Justifier documentairement si un candidat Tier 2 ou hors liste est retenu.",
+    "principles": [
+      {
+        "id": "P1",
+        "text": "Exiger au minimum O1+O2+O3 pour tout outil d'orchestration d'agents en production : portabilité provider (évite le vendor lock-in), hooks/gates before/after outil (sécurité et contrôle pipeline), exécution bash native sans IDE (compatibilité CI/CD headless).",
+        "grade": 2,
+        "level": "BONNE_PRATIQUE",
+        "sources": ["C1", "C2", "C3", "C4", "C5", "C8", "C10", "C15"]
+      },
+      {
+        "id": "P2",
+        "text": "Implémenter systématiquement un circuit-breaker de boucle (max_turns, max_iterations, step_limit ou équivalent) pour tout pipeline autonome multi-tours. L'absence de ce mécanisme (O6) est une lacune opérationnelle documentée chez Aider, Continue.dev et Pi.",
+        "grade": 2,
+        "level": "BONNE_PRATIQUE",
+        "sources": ["C1", "C2", "C3", "C4", "C5", "C7", "C10", "C11", "C12", "C15", "C17", "C18"]
+      },
+      {
+        "id": "P3",
+        "text": "Préférer les outils avec audit trail structuré natif (O4 OUI) pour les contextes nécessitant traçabilité et conformité : OpenHands (event sourcing immutable), SWE-agent (trajectoires JSON), OpenAI Agents SDK et Gemini CLI (OpenTelemetry natif). Les hooks permettent un audit custom mais nécessitent implémentation.",
+        "grade": 2,
+        "level": "BONNE_PRATIQUE",
+        "sources": ["C4", "C10", "C11", "C15", "C16", "C17"]
+      },
+      {
+        "id": "P4",
+        "text": "Écarter tout outil dont la maintenabilité est compromise (O5 NON) : projet individuel à bus factor critique (Pi), outil en shutdown annoncé (Roo Code). Ces cas constituent des risques inacceptables pour des pipelines de production, indépendamment de la qualité technique.",
+        "grade": 2,
+        "level": "BONNE_PRATIQUE",
+        "sources": ["C9", "C13"]
+      },
+      {
+        "id": "P5",
+        "text": "Pour une portabilité provider maximale (O1 OUI strict, zéro vendor lock-in), privilégier OpenCode (75+ providers natifs, MIT), Aider (100+ providers via LiteLLM, mais O2 NON), AWS Strands (multi-provider natif) ou OpenHands. Les candidats C1/C2 (Anthropic-first), C4 (Google-first), C5 (OpenAI-first) et C15 (OpenAI-first) ont O1=PARTIEL.",
+        "grade": 2,
+        "level": "BONNE_PRATIQUE",
+        "sources": ["C3", "C6", "C10", "C16"]
+      }
+    ]
+  },
+  "variants": {
+    "claude-code-cli": {
+      "label": "Claude Code CLI",
+      "candidate_id": "C1",
+      "licence": "Propriétaire (binaire compilé, code source partiellement public npm mars 2026)",
+      "adoption": ">4M téléchargements/semaine npm, >112K stars GitHub (estimés), standard de facto industrie 2026",
+      "scores": {
+        "O1_portabilite_provider": {
+          "score": "PARTIEL",
+          "justification": "Anthropic-first par défaut. Support Bedrock (AWS) et Vertex AI (Google) via variables d'environnement ANTHROPIC_API_URL. Pas de support natif OpenAI/Ollama sans proxy tiers. Couplage vendor modéré.",
+          "source": "documentation officielle Anthropic (Niveau 3) ; code source exposé npm mars 2026"
+        },
+        "O2_hooks_gates": {
+          "score": "OUI",
+          "justification": "Hooks shell configurables via settings.json : PreToolUse, PostToolUse, SessionStart, Stop, UserPromptSubmit. Exit code 2 = blocage avec feedback stderr. Configurables par type d'outil et par pattern de commande.",
+          "source": "https://code.claude.com/docs/en/agent-sdk/hooks (Niveau 3)"
+        },
+        "O3_bash_natif": {
+          "score": "OUI",
+          "justification": "Outil Bash natif dans le toolset. Approbation/rejet par commande via hooks PreToolUse. Deny list configurable dans settings.json.",
+          "source": "documentation officielle Claude Code (Niveau 3)"
+        },
+        "O4_audit_trail": {
+          "score": "PARTIEL",
+          "justification": "Logging structuré possible via scripts shell dans hooks PostToolUse. Pas de built-in structured audit log natif. L'audit trail repose entièrement sur les hooks shell custom. Session JSONL stockée localement.",
+          "source": "documentation hooks Claude Code (Niveau 3)"
+        },
+        "O5_maintenabilite": {
+          "score": "OUI",
+          "justification": ">4M téléchargements/semaine. Maintenance Anthropic active, version 0.2.x SDK. Standard de facto industrie. Risque : licence propriétaire (pas de code source inspectable).",
+          "source": "npm stats, GitHub (Niveau 3-5)"
+        },
+        "O6_resilience_boucle": {
+          "score": "OUI",
+          "justification": "--max-turns flag CLI. max_turns + max_budget_usd configurables via SDK. Terminaison garantie documentée.",
+          "source": "https://code.claude.com/docs/en/agent-sdk/agent-loop (Niveau 3)"
+        }
+      },
+      "tradeoffs": "Point fort : hooks PreToolUse/PostToolUse natifs les plus intégrés (scripts shell + callbacks SDK), bash natif avec deny list. Point faible : O1=PARTIEL (Anthropic-first), licence propriétaire (pas de source inspectable), O4=PARTIEL (audit trail custom uniquement).",
+      "tier": 1,
+      "level": "BONNE_PRATIQUE",
+      "recommendation": "Runtime actuel OLS. Acceptable si pas de contrainte E-ARCH-01 (portabilité provider) active. Hooks shell déjà exploités dans settings.json OLS."
+    },
+    "claude-agent-sdk": {
+      "label": "Claude Agent SDK",
+      "candidate_id": "C2",
+      "licence": "MIT",
+      "adoption": "4.54M downloads/semaine npm, 999 dépendants npm, version 0.2.x active",
+      "scores": {
+        "O1_portabilite_provider": {
+          "score": "PARTIEL",
+          "justification": "Anthropic-first. Portabilité via LiteLLM proxy ou Bedrock/Vertex env vars. Pas de support multi-provider natif zero-config.",
+          "source": "npmjs.com/@anthropic-ai/claude-agent-sdk (Niveau 3)"
+        },
+        "O2_hooks_gates": {
+          "score": "OUI",
+          "justification": "Callbacks in-process programmatiques : PreToolUse, PostToolUse, Stop, SessionStart, SessionEnd, UserPromptSubmit. Configurables en TypeScript/Python — plus puissants que les scripts shell externes de C1.",
+          "source": "https://code.claude.com/docs/en/agent-sdk/hooks (Niveau 3)"
+        },
+        "O3_bash_natif": {
+          "score": "OUI",
+          "justification": "Même toolset que Claude Code CLI. Outil Bash natif disponible. Approbation/rejet via hooks in-process.",
+          "source": "documentation SDK Claude (Niveau 3)"
+        },
+        "O4_audit_trail": {
+          "score": "PARTIEL",
+          "justification": "Hooks in-process permettent structured logging custom avec accès complet au contexte d'exécution (TypeScript/Python). Pas de built-in audit log. Meilleur que C1 pour les possibilités de logging custom.",
+          "source": "documentation SDK (Niveau 3)"
+        },
+        "O5_maintenabilite": {
+          "score": "OUI",
+          "justification": "Version 0.2.119 active. Licence MIT. Adoption production massive confirmée (999 dépendants, 4.54M/semaine). Maintenance Anthropic.",
+          "source": "npm stats (Niveau 3)"
+        },
+        "O6_resilience_boucle": {
+          "score": "OUI",
+          "justification": "max_turns + max_budget_usd configurables programmatiquement. MaxTurnsExceeded exception levée.",
+          "source": "https://code.claude.com/docs/en/agent-sdk/agent-loop (Niveau 3)"
+        }
+      },
+      "tradeoffs": "Point fort : hooks programmatiques in-process (TypeScript/Python) plus puissants que scripts shell de C1, licence MIT ouverte. Point faible : O1=PARTIEL (Anthropic-first comme C1), O4=PARTIEL.",
+      "tier": 1,
+      "level": "BONNE_PRATIQUE",
+      "recommendation": "Recommandé pour pipelines CI/CD TypeScript/Python nécessitant hooks programmatiques (vs scripts shell). Avantage sur C1 : callbacks in-process avec accès au contexte complet. Limité par le même couplage Anthropic que C1."
+    },
+    "opencode": {
+      "label": "OpenCode",
+      "candidate_id": "C3",
+      "licence": "MIT",
+      "adoption": "~147K étoiles GitHub, 850 contributeurs, 11K+ commits, 6.5M développeurs/mois, croissance 4.5x plus rapide que Claude Code",
+      "scores": {
+        "O1_portabilite_provider": {
+          "score": "OUI",
+          "justification": "75+ providers documentés nativement : Claude, OpenAI, Google, Ollama, OpenRouter, local models. Meilleure portabilité parmi les CLI agents. Multi-provider zero-config.",
+          "source": "https://opencode.ai/docs/providers (Niveau 3)"
+        },
+        "O2_hooks_gates": {
+          "score": "OUI",
+          "justification": "Plugin system JavaScript/TypeScript avec hooks tool.execute.before (PreToolUse) et tool.execute.after (PostToolUse). Les hooks peuvent bloquer des opérations via throw. Écosystème oh-my-opencode : 40+ lifecycle hooks. Bloquage possible confirmé (Agent C : VERIFIE).",
+          "source": "https://opencode.ai/docs/plugins/ (Niveau 3) — Agent C VERIFIE"
+        },
+        "O3_bash_natif": {
+          "score": "OUI",
+          "justification": "Shell/bash tool natif. Plugins peuvent intercepter avant exécution via tool.execute.before.",
+          "source": "documentation OpenCode (Niveau 3)"
+        },
+        "O4_audit_trail": {
+          "score": "PARTIEL",
+          "justification": "Plugins d'audit possibles via tool.execute.after. Pas de structured audit log built-in documenté dans les sources officielles.",
+          "source": "opencode.ai/docs (Niveau 3)"
+        },
+        "O5_maintenabilite": {
+          "score": "OUI",
+          "justification": "~147K étoiles GitHub, 850 contributeurs, 11K+ commits, 6.5M dev/mois. Licence MIT. Communauté la plus large parmi les CLI open-source. Croissance très forte.",
+          "source": "GitHub stats (Niveau 3-5)"
+        },
+        "O6_resilience_boucle": {
+          "score": "PARTIEL",
+          "justification": "maxSessionTurns cité par les deux reviewers mais non corroboré dans la documentation officielle indexée (Agent C : PARTIEL). Impact nul sur le classement Tier 1 (O6 non discriminant pour définition stricte O1+O2+O3).",
+          "source": "documentation OpenCode settings (Niveau 3) — Agent C PARTIEL sur ce claim spécifique"
+        }
+      },
+      "tradeoffs": "Point fort : meilleure portabilité provider (75+ natifs), plugin hooks documentés avec bloquage, communauté massive MIT, alternative directe à Claude Code CLI. Point faible : O4=PARTIEL, O6=PARTIEL (maxSessionTurns non confirmé officiellement). Idéal si contrainte E-ARCH-01 (portabilité provider) active.",
+      "tier": 1,
+      "level": "BONNE_PRATIQUE",
+      "recommendation": "Migration recommandée depuis Claude Code CLI si portabilité provider requise. TypeScript natif, MIT, hooks équivalents. Candidat de référence pour O1 strict dans la liste Tier 1."
+    },
+    "gemini-cli": {
+      "label": "Gemini CLI",
+      "candidate_id": "C4",
+      "licence": "Apache 2.0",
+      "adoption": "~101K étoiles GitHub, Google maintenu, Google Summer of Code 2026",
+      "scores": {
+        "O1_portabilite_provider": {
+          "score": "PARTIEL",
+          "justification": "Gemini-first. Google Cloud/Vertex opinionated. Extensions tierces possibles mais pas de multi-provider natif aussi large qu'OpenCode. Couplage Google modéré.",
+          "source": "github.com/google-gemini/gemini-cli (Niveau 3)"
+        },
+        "O2_hooks_gates": {
+          "score": "OUI",
+          "justification": "Command Hooks (scripts shell) + Plugin Hooks (npm packages TypeScript). Events : BeforeAgent, AfterAgent, BeforeTool, AfterTool. Configurables via .gemini/settings.json.",
+          "source": "documentation officielle Gemini CLI (Niveau 3)"
+        },
+        "O3_bash_natif": {
+          "score": "OUI",
+          "justification": "Shell execution native. Hooks BeforeTool permettent interception per-command.",
+          "source": "documentation Gemini CLI (Niveau 3)"
+        },
+        "O4_audit_trail": {
+          "score": "OUI",
+          "justification": "OpenTelemetry natif avec exporters GCP directs. Logs structurés : gemini_cli.user_prompt, gemini_cli.tool_call avec sessionId commun. Dashboards GCP préconfigurés. Meilleur audit trail parmi les CLI agents.",
+          "source": "https://geminicli.com/docs/cli/telemetry/ (Niveau 3)"
+        },
+        "O5_maintenabilite": {
+          "score": "OUI",
+          "justification": "Google maintenu. ~101K étoiles. Google Summer of Code 2026. Apache 2.0.",
+          "source": "GitHub, annonces Google (Niveau 3-5)"
+        },
+        "O6_resilience_boucle": {
+          "score": "OUI",
+          "justification": "maxSessionTurns configurable dans settings. PR #3507 github.com/google-gemini/gemini-cli confirmé. Comportement distinct mode interactif (50 turns) vs non-interactif. Terminaison garantie (Agent C : VERIFIE).",
+          "source": "geminicli.com/docs/reference/configuration/ + PR #3507 (Niveau 3) — Agent C VERIFIE"
+        }
+      },
+      "tradeoffs": "Point fort : audit trail OTEL natif le plus complet parmi les CLI (O4 OUI), hooks lifecycle complets BeforeTool/AfterTool, max_turns documenté. Point faible : O1=PARTIEL (Google-first), couplage GCP pour l'audit trail optimal.",
+      "tier": 1,
+      "level": "BONNE_PRATIQUE",
+      "recommendation": "Recommandé si besoin d'audit trail natif sans implémentation custom et tolérance au couplage Google. Meilleur O4 des CLI agents avec OpenTelemetry intégré."
+    },
+    "codex-cli": {
+      "label": "Codex CLI",
+      "candidate_id": "C5",
+      "licence": "Apache 2.0 (Rust)",
+      "adoption": "~75K étoiles GitHub, 14.53M téléchargements/mois (mars 2026), 3M WAU, 177x de croissance documentée",
+      "scores": {
+        "O1_portabilite_provider": {
+          "score": "PARTIEL",
+          "justification": "OpenAI-first. Modes OpenAI-compatible API permettent d'autres providers. Pas de multi-provider natif aussi large qu'OpenCode.",
+          "source": "github.com/openai/codex (Niveau 3)"
+        },
+        "O2_hooks_gates": {
+          "score": "OUI",
+          "justification": "Documentation de hooks la plus exhaustive de la liste. Hooks configurables via config.toml : PreToolUse, PostToolUse, PermissionRequest, SessionStart, UserPromptSubmit, Stop. PreToolUse peut intercepter Bash, apply_patch, et MCP tool calls. Matcher regex (ex: '^Bash$') confirmé (Agent C : VERIFIE).",
+          "source": "https://developers.openai.com/codex/hooks (Niveau 3) — Agent C VERIFIE"
+        },
+        "O3_bash_natif": {
+          "score": "OUI",
+          "justification": "Bash tool natif. codex exec --full-auto pour CI/CD headless. --dangerously-bypass-approvals-and-sandbox pour sandbox externe. Approbation per-command documentée.",
+          "source": "developers.openai.com/codex/noninteractive (Niveau 3)"
+        },
+        "O4_audit_trail": {
+          "score": "PARTIEL",
+          "justification": "PostToolUse hooks permettent logging. Approval handling documenté. Pas de built-in structured audit log natif.",
+          "source": "developers.openai.com/codex/hooks (Niveau 3)"
+        },
+        "O5_maintenabilite": {
+          "score": "OUI",
+          "justification": "~75K étoiles. 14.53M téléchargements/mois. Apache 2.0 (Rust). OpenAI maintenu. Croissance documentée 177x.",
+          "source": "GitHub, npm stats (Niveau 3-5)"
+        },
+        "O6_resilience_boucle": {
+          "score": "OUI",
+          "justification": "codex exec headless avec contrôle complet. --full-auto + boucle terminaison documentée. Permission-mode configurable (auto/ask/full).",
+          "source": "developers.openai.com/codex/cli/reference (Niveau 3)"
+        }
+      },
+      "tradeoffs": "Point fort : système de hooks le plus documenté et complet (6 types de hooks, config.toml), implémenté en Rust (performances), adoption massive. Point faible : O1=PARTIEL (OpenAI-first), O4=PARTIEL.",
+      "tier": 1,
+      "level": "BONNE_PRATIQUE",
+      "recommendation": "Recommandé si documentation exhaustive des hooks est prioritaire. Codex CLI présente la documentation de hooks hooks la plus complète parmi tous les candidats CLI."
+    },
+    "cline": {
+      "label": "Cline",
+      "candidate_id": "C8",
+      "licence": "Apache 2.0",
+      "adoption": "~58K étoiles GitHub, 4M+ développeurs, Fastest-growing AI open-source GitHub Octoverse 2025",
+      "scores": {
+        "O1_portabilite_provider": {
+          "score": "OUI",
+          "justification": "Multi-LLM BYOK natif : Claude, GPT, Gemini, local models. Tout provider OpenAI-compatible. Portabilité pleine sans proxy.",
+          "source": "docs.cline.bot (Niveau 3)"
+        },
+        "O2_hooks_gates": {
+          "score": "OUI",
+          "justification": "Plan Mode / Act Mode avec approbation granulaire per-action. Auto-approve whitelist configurable par type d'action. YOLO mode (-y/--yolo) = tout automatique. Gate natif avant chaque action outil.",
+          "source": "docs.cline.bot/cline-cli/three-core-flows (Niveau 3)"
+        },
+        "O3_bash_natif": {
+          "score": "OUI",
+          "justification": "CLI 2.0 (13 février 2026) : mode headless sans IDE pour CI/CD. npm install -g cline. -y flag = autonomous. --json = CI/CD structured output. GitHub Actions, GitLab CI, Jenkins confirmés (Agent C : VERIFIE).",
+          "source": "cline.bot/blog/announcing-cline-cli-2-0 + docs.cline.bot/cline-cli/three-core-flows (Niveau 3) — Agent C VERIFIE"
+        },
+        "O4_audit_trail": {
+          "score": "PARTIEL",
+          "justification": "Toutes actions loggées dans la session. --json flag pour output JSON structuré en CI. Pas de built-in external structured audit log persistant.",
+          "source": "docs.cline.bot (Niveau 3)"
+        },
+        "O5_maintenabilite": {
+          "score": "OUI",
+          "justification": "~58K étoiles. Fastest-growing AI open-source GitHub Octoverse 2025. 4M+ développeurs. Apache 2.0. CLI 2.0 = engagement plateforme cross-IDE. Migration recommandée depuis Roo Code lors du shutdown.",
+          "source": "GitHub Octoverse 2025 (Niveau 3-5)"
+        },
+        "O6_resilience_boucle": {
+          "score": "PARTIEL",
+          "justification": "Headless mode documenté (--yolo + --json). Pas de max_turns/max_iterations documenté explicitement dans sources officielles pour limiter la boucle. Réserve opérationnelle pour pipelines sans supervision.",
+          "source": "docs.cline.bot/cline-cli (Niveau 3)"
+        }
+      },
+      "tradeoffs": "Point fort : O1 OUI strict (multi-LLM BYOK sans proxy), communauté très large Apache 2.0, CLI 2.0 headless. Point faible : O6=PARTIEL (pas de max_turns documenté en mode headless) — risque opérationnel réel pour pipelines autonomes sans supervision. Classement Tier 1 résolu par l'arbitre sur définition stricte O1+O2+O3.",
+      "tier": 1,
+      "level": "BONNE_PRATIQUE",
+      "recommendation": "Recommandé si portabilité provider maximale et adoption large sont prioritaires. Surveiller O6 : implémenter un circuit-breaker custom via YOLO mode timeout pour les pipelines autonomes.",
+      "reserve": "O6=PARTIEL — absence de max_turns documenté en mode headless autonome. Prévoir circuit-breaker applicatif pour pipelines sans supervision humaine."
+    },
+    "openhands": {
+      "label": "OpenHands",
+      "candidate_id": "C10",
+      "licence": "MIT",
+      "adoption": "~68K étoiles GitHub, $18.8M Series A, v1.6.0 mars 2026 (support Kubernetes)",
+      "scores": {
+        "O1_portabilite_provider": {
+          "score": "OUI",
+          "justification": "Tout LLM : Claude, OpenAI, Qwen, Devstral open source. Multi-provider natif.",
+          "source": "openhands.dev, github.com/OpenHands/OpenHands (Niveau 3)"
+        },
+        "O2_hooks_gates": {
+          "score": "OUI",
+          "justification": "Architecture événementielle complète : HookExecutionEvent observable, hook_config forwarding, RemoteConversation hooks, agent-server event APIs. OpenTelemetry/Logfire integration (issue #8916).",
+          "source": "github.com/OpenHands/OpenHands/issues/8916 (Niveau 3)"
+        },
+        "O3_bash_natif": {
+          "score": "OUI",
+          "justification": "Sandbox Docker isolé. Exécution bash native dans conteneur. Séparation complète du host.",
+          "source": "documentation OpenHands (Niveau 3)"
+        },
+        "O4_audit_trail": {
+          "score": "OUI",
+          "justification": "Event sourcing : toutes interactions = événements immuables appendés au log. Deterministic replay. Auditabilité persistante complète. Meilleur audit trail de la catégorie — le seul avec replay déterministe natif.",
+          "source": "arXiv:2511.03690 (Niveau 4) + documentation OpenHands (Niveau 3)"
+        },
+        "O5_maintenabilite": {
+          "score": "OUI",
+          "justification": "$18.8M Series A. ~68K étoiles. MIT license. v1.6.0 mars 2026 (Kubernetes, Planning Mode beta). Communauté massive. Candidat avec la meilleure robustesse long terme.",
+          "source": "Crunchbase, GitHub (Niveau 3-5)"
+        },
+        "O6_resilience_boucle": {
+          "score": "OUI",
+          "justification": "max_iterations (défaut : 500) via env -e MAX_ITERATIONS=N. GLOBAL_MAX_ITERATIONS pour contrôle global inter-agents délégués. StuckDetector. Terminaison garantie (réserve : implémentation signalée imparfaite dans certains cas — issue #6857).",
+          "source": "docs.openhands.dev/openhands/usage/advanced/configuration-options (Niveau 3)"
+        }
+      },
+      "tradeoffs": "Point fort : seul candidat Tier 1 avec event sourcing immutable natif (O4 OUI complet), financement Series A garantissant la maintenabilité, arXiv peer-reviewed — sensibilité d'analyse très faible. Point faible : sandbox Docker = overhead infra, plus complexe à déployer qu'un CLI agent, issue #6857 sur max_iterations imparfait.",
+      "tier": 1,
+      "level": "BONNE_PRATIQUE",
+      "recommendation": "Recommandé en priorité pour les contextes nécessitant audit trail de production complet (conformité, replay déterministe). Candidat le plus robuste de la liste sur tous les critères. SDK programmatique Python pour pipelines CI."
+    },
+    "openai-agents-sdk": {
+      "label": "OpenAI Agents SDK",
+      "candidate_id": "C15",
+      "licence": "MIT",
+      "adoption": "10.3M downloads/mois PyPI, ~19K étoiles GitHub",
+      "scores": {
+        "O1_portabilite_provider": {
+          "score": "PARTIEL",
+          "justification": "OpenAI-first mais Chat Completions API compatible → 100+ LLMs via LiteLLM. Portabilité via API-compatible mais pas native zero-config. Multi-provider en beta (meilleur effort documenté).",
+          "source": "openai.github.io/openai-agents-python (Niveau 3)"
+        },
+        "O2_hooks_gates": {
+          "score": "OUI",
+          "justification": "Guardrails (input/output), tracing natif, agent loop built-in, handoffs, hooks lifecycle documentés. Guardrails = mécanisme de gate natif.",
+          "source": "openai.github.io/openai-agents-python/running_agents (Niveau 3)"
+        },
+        "O3_bash_natif": {
+          "score": "OUI",
+          "justification": "ShellTool natif ajouté le 15 avril 2026 (local + hosted sandbox). apply_patch tool. Sandboxes E2B, Modal, Daytona, Vercel, Runloop, Blaxel, Cloudflare confirmés. Python first, TypeScript prévu (Agent C : VERIFIE).",
+          "source": "openai.com/index/the-next-evolution-of-the-agents-sdk/ + developers.openai.com/api/docs/guides/tools-shell (Niveau 3) — Agent C VERIFIE, date 15 avril 2026"
+        },
+        "O4_audit_trail": {
+          "score": "OUI",
+          "justification": "Tracing natif intégré. OpenTelemetry support. Structured logging. Meilleur que les CLI tools sur O4.",
+          "source": "openai.github.io/openai-agents-python (Niveau 3)"
+        },
+        "O5_maintenabilite": {
+          "score": "OUI",
+          "justification": "10.3M downloads/mois PyPI. ~19K étoiles GitHub. MIT. OpenAI maintenu. Très actif (harness avril 2026).",
+          "source": "PyPI, GitHub (Niveau 3-5)"
+        },
+        "O6_resilience_boucle": {
+          "score": "OUI",
+          "justification": "max_turns parameter : limite le nombre de fois que l'agent loop s'exécute. MaxTurnsExceeded exception levée. error_handlers configurables.",
+          "source": "openai.github.io/openai-agents-python/running_agents (Niveau 3)"
+        }
+      },
+      "tradeoffs": "Point fort : SDK programmatique Python le plus complet (O2+O4+O6 tous OUI), ShellTool natif depuis avril 2026 (avant = PARTIEL), tracing OTEL intégré. Point faible : O1=PARTIEL (OpenAI-first), sensibilité modérée — classement Tier 1 conditionnel à la confirmation du ShellTool dans les release notes d'avril 2026.",
+      "tier": 1,
+      "level": "BONNE_PRATIQUE",
+      "recommendation": "Recommandé pour pipelines Python nécessitant SDK programmatique avec tracing OTEL et circuit-breaker natif. Attention : O3 OUI depuis avril 2026 uniquement — vérifier la version installée.",
+      "reserve": "O3 OUI conditionnel à la version incluant le ShellTool (avril 2026+). Si version antérieure : O3=PARTIEL, déclasse vers Tier 2."
+    }
+  },
+  "tier2_summary": [
+    {
+      "id": "aider",
+      "label": "Aider",
+      "candidate_id": "C6",
+      "reason_tier2": "O2 NON — pas de hooks callbacks PreToolUse/PostToolUse before/after outil. Conçu pour sessions interactives, lacunes autonomie CI documentées (morphllm.com 2026).",
+      "notable_strength": "O1 OUI fort — 100+ providers via LiteLLM (meilleure portabilité provider de tous les candidats Python). O4 OUI — audit trail git natif (auto-commit Co-authored-by). Outil le plus mature Python open-source (depuis 2023).",
+      "tier": 2
+    },
+    {
+      "id": "goose",
+      "label": "Goose (Block)",
+      "candidate_id": "C7",
+      "reason_tier2": "O2 PARTIEL — hooks via extensions MCP uniquement, pas de PreToolUse/PostToolUse natifs formalisés built-in. Règle de prudence Kitchenham appliquée (arbitre).",
+      "notable_strength": "O1 OUI (15+ providers). O6 OUI documenté (GOOSE_MAX_TURNS défaut 1000, Agent C VERIFIE). Linux Foundation Agentic AI Foundation governance long terme. O5 fort.",
+      "tier": 2
+    },
+    {
+      "id": "swe-agent",
+      "label": "SWE-agent",
+      "candidate_id": "C11",
+      "reason_tier2": "O2 PARTIEL — middleware hooks (check_message_queue_before_model, open_pr_if_needed) configurables YAML mais pas de PreToolUse/PostToolUse per-tool formalisés. Règle de prudence Kitchenham appliquée (arbitre).",
+      "notable_strength": "O4 OUI — trajectoires .traj JSON structuré natif avec Inspector (Agent C VERIFIE : swe-agent.com/latest/usage/trajectories/). NeurIPS 2024, SoTA SWE-bench avec Claude 3.7 (fév. 2026). 'Tier 2 fort'.",
+      "tier": 2
+    },
+    {
+      "id": "mini-swe-agent",
+      "label": "mini-swe-agent",
+      "candidate_id": "C12",
+      "reason_tier2": "O2 NON — ~100 lignes de code, pas de hooks par design (radical simplicity). Architecture intentionnellement minimale excluant les gates configurables.",
+      "notable_strength": ">74% SWE-bench Verified. O6 OUI (step_limit + cost_limit YAML, Agent C VERIFIE). Radical simplicity = maintenabilité maximale du code. Outil de recherche/benchmark.",
+      "tier": 2
+    },
+    {
+      "id": "continue-dev",
+      "label": "Continue.dev",
+      "candidate_id": "C14",
+      "reason_tier2": "O2 PARTIEL (step-by-step approval mais pas de PreToolUse/PostToolUse programmables formalisés) + O6 NON (pas de max_turns documenté pour CLI cn headless).",
+      "notable_strength": "O1 OUI (multi-LLM + air-gapped possible). O3 OUI (CLI cn headless depuis pivot 2025). Source-controlled AI checks en CI. Apache 2.0.",
+      "tier": 2
+    },
+    {
+      "id": "aws-strands",
+      "label": "AWS Strands Agents SDK",
+      "candidate_id": "C16",
+      "reason_tier2": "O3 PARTIEL — bash tool via strands_tools import, pas de built-in zero-config. 2.5/3 critères fondamentaux satisfaits.",
+      "notable_strength": "O1 OUI (multi-provider natif : Bedrock, Anthropic, OpenAI, Gemini, Ollama, LiteLLM). O2 OUI (BeforeToolCallEvent natif 'comme middleware HTTP'). O4 OUI (OTEL built-in). Production Amazon Q Developer. Accenture/Meta/PwC contributors.",
+      "tier": 2
+    },
+    {
+      "id": "google-adk",
+      "label": "Google ADK",
+      "candidate_id": "C17",
+      "reason_tier2": "O1 PARTIEL (Vertex opinionated) + O3 PARTIEL (bash via tools custom). 1/3 critères fondamentaux pleinement OUI (O2 uniquement).",
+      "notable_strength": "O2 OUI fort (6 callbacks lifecycle + BasePlugin). O4 OUI (OTEL + EU AI Act Article 12 compliance, ADK v1.17.0+). O6 OUI (LoopAgent max_iterations + escalate=True). Multi-langages (Python, TypeScript, Go, Java).",
+      "tier": 2
+    },
+    {
+      "id": "pydantic-ai",
+      "label": "Pydantic AI",
+      "candidate_id": "C18",
+      "reason_tier2": "O3 PARTIEL — bash via tools custom, pas de built-in zero-config. Architecture framework généraliste ('FastAPI pour GenAI').",
+      "notable_strength": "O2 OUI fort (before_tool_execute avec filtrage par nom d'outil + SkipToolExecution, Agent C VERIFIE). O6 OUI (UsageLimits : request_limit + tool_calls_limit, double circuit-breaker, Agent C VERIFIE — Reviewer A avait NON, incorrect). ThoughtWorks Radar 2026 recommandé.",
+      "tier": 2
+    }
+  ],
+  "non_recommended": [
+    {
+      "id": "roo-code",
+      "label": "Roo Code",
+      "candidate_id": "C9",
+      "reason": "Shutdown officiel annoncé le 21 avril 2026, effectif le 15 mai 2026. Tous les produits Roo Code (Extension, Cloud, Router) fermés. Repo archivé. Migration vers Kilo Code recommandée par l'équipe Roo Code. Source vérifiée Agent C (VERIFIE) : docs.roocode.com/sunset + roocode.com/blog/sunsetting-roo-code-extension-cloud-and-router.",
+      "o5_note": "O5 NON — maintenance arrêtée au 15 mai 2026. Critère I4 (Kitchenham : outil en standard d'utilisation active) non satisfait.",
+      "tier": "non_recommande"
+    },
+    {
+      "id": "pi",
+      "label": "Pi (pi-coding-agent)",
+      "candidate_id": "C13",
+      "reason": "O5 NON (projet individuel Mario Zechner, bus factor critique, risque maintenabilité long terme élevé) + O2 NON (pas de PreToolUse/PostToolUse formalisés documentés) + O6 NON (bug de loop hang documenté issue #2119 mars 2026, non résolu). Convergence des deux reviewers sur O5 = risque inacceptable pour recommandation production.",
+      "o5_note": "Projet individuel sans governance. Issue #2119 (mars 2026) : 'Agent loop silently hangs or crashes on malformed LLM responses' — stabilité en production non garantie.",
+      "tier": "non_recommande"
+    }
+  ],
+  "gaps": [
+    {
+      "id": "G1",
+      "description": "Aucun candidat Tier 1 n'a O4 (audit trail) OUI complet et O1 OUI strict (multi-provider) simultanément. OpenHands couvre O4 OUI + O1 OUI mais avec overhead Docker. Les CLI agents pleinement multi-provider (OpenCode, Cline) n'ont que O4=PARTIEL.",
+      "impact": "Moyenne — les hooks permettent un audit custom suffisant pour la plupart des cas. Critique uniquement pour contextes de conformité stricte."
+    },
+    {
+      "id": "G2",
+      "description": "Absence de retours d'expérience production longitudinaux documentés pour la majorité des candidats. Les évaluations portent sur les fonctionnalités documentées. Seul OpenHands dispose de sources académiques peer-reviewed (arXiv) et d'un proxy d'adoption production (Series A).",
+      "impact": "Faible à modérée — justifie le GRADE 2 (BONNE_PRATIQUE) plutôt que 3 (RECOMMANDÉ). La pénalité Indirectness est appliquée dans le score GRADE."
+    },
+    {
+      "id": "G3",
+      "description": "Domaine en évolution très rapide : ShellTool OpenAI ajouté avril 2026, Cline CLI 2.0 février 2026, OpenHands v1.6.0 mars 2026. Des changements classant de nouveaux candidats en Tier 1 ou modifiant les scores sont attendus chaque trimestre.",
+      "impact": "SLR à re-exécuter tous les 6 mois ou dès qu'un outil majeur sort une nouvelle version affectant O1/O2/O3."
+    },
+    {
+      "id": "G4",
+      "description": "Résilience de boucle (O6) systématiquement absente ou non documentée pour les IDE-based agents (Cline O6=PARTIEL) et plusieurs SDK frameworks. La lacune O6 est plus fréquente qu'attendu (Aider, Continue.dev, Pi sans O6).",
+      "impact": "Élevé pour pipelines sans supervision humaine. Recommandation : toujours implémenter un circuit-breaker applicatif indépendamment de l'outil choisi."
+    }
+  ],
+  "ols_context": {
+    "current_choice": "claude-code-cli",
+    "current_choice_status": "Tier 1 fonctionnellement (O1=PARTIEL, O2=OUI, O3=OUI, O6=OUI). Acceptable si pas de contrainte E-ARCH-01 (portabilité provider) active. Hooks settings.json déjà exploités dans .claude/settings.json OLS. Risque : licence propriétaire (binaire compilé), O1=PARTIEL (Anthropic-first).",
+    "recommended_migration": "OpenCode (C3) pour portabilité provider maximale — TypeScript natif (stack OLS), MIT, hooks tool.execute.before/after, 75+ providers. Alternative SDK : OpenHands (C10) pour pipelines CI autonomes avec audit trail complet.",
+    "rationale": "OLS stack TypeScript/NestJS + React est directement compatible avec OpenCode (TypeScript, MIT, plugin hooks JS/TS natifs). Migration sans changement de paradigme. Si un pipeline CI autonome avec audit trail complet est nécessaire (conformité RGPD, audit OLS), OpenHands (Python, MIT, event sourcing) est le candidat le plus robuste.",
+    "migration_triggers": [
+      "Activation contrainte E-ARCH-01 (portabilité provider requise) : migrer vers OpenCode (C3, O1=OUI strict) ou OpenHands (C10)",
+      "Besoin pipeline CI autonome multi-modèle : OpenCode (C3) ou Codex CLI (C5, hooks les plus documentés)",
+      "Besoin audit trail structuré natif (conformité, RGPD) : OpenHands (C10, event sourcing immutable) ou Gemini CLI (C4, OTEL natif)",
+      "Budget modèle contraint (coûts LLM) : OpenCode (C3, Ollama local) ou Aider (C6, 100+ providers LiteLLM via DeepSeek/open-source)",
+      "Changement de provider LLM principal (Anthropic → autre) : tout candidat avec O1=OUI (OpenCode, Cline, OpenHands)"
+    ]
+  },
+  "sources": [
+    {
+      "ref": "S1",
+      "title": "Claude Code CLI — Documentation officielle",
+      "url": "https://code.claude.com/docs",
+      "year": 2026,
+      "pyramid_level": 3,
+      "agent_c_status": "VERIFIE",
+      "key_finding": "Hooks PreToolUse/PostToolUse natifs via settings.json. Exit code 2 = blocage. --max-turns CLI et max_turns SDK configurables."
+    },
+    {
+      "ref": "S2",
+      "title": "Claude Agent SDK — npmjs.com/@anthropic-ai/claude-agent-sdk",
+      "url": "https://npmjs.com/package/@anthropic-ai/claude-agent-sdk",
+      "year": 2026,
+      "pyramid_level": 3,
+      "agent_c_status": "VERIFIE",
+      "key_finding": "4.54M downloads/semaine. Callbacks in-process programmatiques. max_turns + MaxTurnsExceeded exception."
+    },
+    {
+      "ref": "S3",
+      "title": "OpenCode — Documentation officielle",
+      "url": "https://opencode.ai/docs",
+      "year": 2026,
+      "pyramid_level": 3,
+      "agent_c_status": "PARTIEL",
+      "key_finding": "75+ providers. Plugin hooks tool.execute.before/after VERIFIE avec bloquage possible. maxSessionTurns non corroboré officiellement."
+    },
+    {
+      "ref": "S4",
+      "title": "Gemini CLI — GitHub officiel + docs",
+      "url": "https://github.com/google-gemini/gemini-cli",
+      "year": 2026,
+      "pyramid_level": 3,
+      "agent_c_status": "VERIFIE",
+      "key_finding": "Hooks BeforeTool/AfterTool. OpenTelemetry natif (O4 OUI). maxSessionTurns via PR #3507 VERIFIE."
+    },
+    {
+      "ref": "S5",
+      "title": "Codex CLI — Hooks documentation",
+      "url": "https://developers.openai.com/codex/hooks",
+      "year": 2026,
+      "pyramid_level": 3,
+      "agent_c_status": "VERIFIE",
+      "key_finding": "6 types de hooks (PreToolUse, PostToolUse, PermissionRequest, SessionStart, UserPromptSubmit, Stop). Interception Bash, apply_patch, MCP tools. Matcher regex. Documentation la plus exhaustive."
+    },
+    {
+      "ref": "S6",
+      "title": "Aider — Documentation officielle",
+      "url": "https://aider.chat/docs/llms.html",
+      "year": 2026,
+      "pyramid_level": 3,
+      "agent_c_status": "VERIFIE",
+      "key_finding": "100+ providers via LiteLLM. O2 NON (pas de PreToolUse/PostToolUse). O4 OUI via git auto-commit natif."
+    },
+    {
+      "ref": "S7",
+      "title": "Goose (Block) — Documentation + GitHub issue #6198",
+      "url": "https://block.github.io/goose/docs/guides/smart-context-management/",
+      "year": 2026,
+      "pyramid_level": 3,
+      "agent_c_status": "VERIFIE",
+      "key_finding": "GOOSE_MAX_TURNS (défaut 1000) + GOOSE_SUBAGENT_MAX_TURNS (défaut 25) VERIFIE. Hooks via extensions MCP uniquement (O2 PARTIEL). Linux Foundation AAIF governance."
+    },
+    {
+      "ref": "S8",
+      "title": "Cline CLI 2.0 — Annonce officielle",
+      "url": "https://cline.bot/blog/announcing-cline-cli-2-0",
+      "year": 2026,
+      "pyramid_level": 3,
+      "agent_c_status": "VERIFIE",
+      "key_finding": "Lancé 13 février 2026. Mode headless sans IDE. -y/--yolo autonomous. --json CI/CD output. GitHub Actions, GitLab CI, Jenkins confirmés. O3 OUI headless."
+    },
+    {
+      "ref": "S9",
+      "title": "Roo Code — Sunset officiel",
+      "url": "https://docs.roocode.com/sunset",
+      "year": 2026,
+      "pyramid_level": 3,
+      "agent_c_status": "VERIFIE",
+      "key_finding": "Shutdown 15 mai 2026 annoncé le 21 avril 2026. Tous produits fermés (Extension, Cloud, Router). Migration vers Kilo Code recommandée. Exclusion C9 entièrement fondée."
+    },
+    {
+      "ref": "S10",
+      "title": "OpenHands — Documentation + arXiv:2511.03690",
+      "url": "https://arxiv.org/abs/2511.03690",
+      "year": 2025,
+      "pyramid_level": 4,
+      "agent_c_status": "VERIFIE",
+      "key_finding": "Event sourcing immutable : toutes interactions = événements immuables appendés. Deterministic replay. $18.8M Series A. max_iterations + GLOBAL_MAX_ITERATIONS. Candidat le plus robuste de la liste."
+    },
+    {
+      "ref": "S11",
+      "title": "SWE-agent — Trajectoires JSON",
+      "url": "https://swe-agent.com/latest/usage/trajectories/",
+      "year": 2026,
+      "pyramid_level": 3,
+      "agent_c_status": "VERIFIE",
+      "key_finding": "Fichier .traj (JSON) documenté officiellement : (thought, action, observation) turns. sweagent inspector. Format v1.1.0. O4 OUI natif. NeurIPS 2024, SoTA SWE-bench."
+    },
+    {
+      "ref": "S12",
+      "title": "Pi (pi-coding-agent) — GitHub + issue #2119",
+      "url": "https://github.com/badlogic/pi-mono",
+      "year": 2026,
+      "pyramid_level": 3,
+      "agent_c_status": "VERIFIE",
+      "key_finding": "Issue #2119 (mars 2026) : 'Agent loop silently hangs or crashes on malformed LLM responses'. Projet individuel (Mario Zechner). O5 NON. Non recommandé."
+    },
+    {
+      "ref": "S13",
+      "title": "mini-swe-agent — YAML configuration",
+      "url": "https://mini-swe-agent.com/latest/advanced/yaml_configuration/",
+      "year": 2026,
+      "pyramid_level": 3,
+      "agent_c_status": "VERIFIE",
+      "key_finding": "step_limit + cost_limit YAML confirmés. MSWEA_GLOBAL_CALL_LIMIT env var. swebench.yaml : step_limit=250, cost_limit=3. O6 OUI."
+    },
+    {
+      "ref": "S14",
+      "title": "Continue.dev — CLI headless documentation",
+      "url": "https://blog.continue.dev/building-async-agents-with-continue-cli",
+      "year": 2026,
+      "pyramid_level": 3,
+      "agent_c_status": "VERIFIE",
+      "key_finding": "CLI cn headless pour CI/CD. Source-controlled AI checks. O2 PARTIEL (approbation step-by-step mais pas de PreToolUse/PostToolUse programmables). O6 NON."
+    },
+    {
+      "ref": "S15",
+      "title": "OpenAI Agents SDK — The next evolution (ShellTool)",
+      "url": "https://openai.com/index/the-next-evolution-of-the-agents-sdk/",
+      "year": 2026,
+      "pyramid_level": 3,
+      "agent_c_status": "VERIFIE",
+      "key_finding": "ShellTool natif ajouté 15 avril 2026. Sandboxes E2B, Modal, Daytona, Vercel, Runloop, Blaxel, Cloudflare. O3 passe de PARTIEL à OUI. Changement classant C15 Tier 1."
+    },
+    {
+      "ref": "S16",
+      "title": "AWS Strands Agents SDK — Deep dive observability",
+      "url": "https://aws.amazon.com/blogs/machine-learning/strands-agents-sdk-a-technical-deep-dive-into-agent-architectures-and-observability/",
+      "year": 2026,
+      "pyramid_level": 3,
+      "agent_c_status": "VERIFIE",
+      "key_finding": "BeforeInvocationEvent, BeforeModelCallEvent, BeforeToolCallEvent 'comme middleware HTTP'. OTEL built-in. Production Amazon Q Developer. O3 PARTIEL (strands_tools import requis)."
+    },
+    {
+      "ref": "S17",
+      "title": "Google ADK — LoopAgent documentation",
+      "url": "https://google.github.io/adk-docs/agents/workflow-agents/loop-agents/",
+      "year": 2026,
+      "pyramid_level": 3,
+      "agent_c_status": "VERIFIE",
+      "key_finding": "LoopAgent max_iterations + escalate=True. 6 callbacks lifecycle (before_tool, after_tool). 'always include a maxIterations limit' dans la documentation. EU AI Act Article 12 compliance."
+    },
+    {
+      "ref": "S18",
+      "title": "Pydantic AI — Hooks + UsageLimits",
+      "url": "https://pydantic.dev/docs/ai/core-concepts/hooks/",
+      "year": 2026,
+      "pyramid_level": 3,
+      "agent_c_status": "VERIFIE",
+      "key_finding": "before_tool_execute avec filtrage par outil + SkipToolExecution VERIFIE. UsageLimits (request_limit + tool_calls_limit) VERIFIE sur ai.pydantic.dev — double circuit-breaker. Reviewer A avait O6=NON, incorrect."
+    }
+  ],
+  "metadata": {
+    "created": "2026-04-28",
+    "protocol": "Kitchenham 2007",
+    "phase": "Phase 3 — Synthèse finale",
+    "reviewers_count": 2,
+    "arbitre": "Claude Sonnet 4.6",
+    "agent_c": "Claude Sonnet 4.6",
+    "divergences_resolved": 4,
+    "resolution_method": "Règle de prudence Kitchenham (Tier 1 vs Tier 2 → Tier 2) + définition stricte protocole EBSE (O1+O2+O3 pour C8 Cline)"
+  }
+}

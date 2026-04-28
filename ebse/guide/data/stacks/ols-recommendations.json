@@ -1,6 +1,6 @@
 {
   "guide_version": "2026.04.7",
-  "generated_at": "2026-04-28T14:22:04.644Z",
+  "generated_at": "2026-04-28T15:59:46.623Z",
   "profile_id": "ols",
   "stack": {
     "backend": "typescript-nestjs",
@@ -10,7 +10,7 @@
     "scale": "startup",
     "ai_agent": "yes"
   },
-  "total": 277,
+  "total": 278,
   "methodology": "EBSE (Kitchenham 2004), adapted from Evidence-Based Medicine",
   "recommendations": [
     {
@@ -315,42 +315,6 @@
           "name": "NestJS documentation — Circular Dependencies (docs.nestjs.com/fundamentals/circular-dependency)",
           "pyramid": 3,
           "year": 2024
-        }
-      ]
-    },
-    {
-      "id": "data-classification-architecture",
-      "domain": "security",
-      "question": "Quelles pratiques de classification des données sensibles sont recommandées avant de concevoir une architecture logicielle ?",
-      "recommendation": "Adopter une taxonomie à 4 niveaux (Public / Interne / Confidentiel / Secret) comme grille de référence avant toute décision architecturale. Chaque niveau correspond à un impact croissant sur la triade CIA (Confidentiality, Integrity, Availability) au sens FIPS 199 : Public (impact faible ou nul), Interne (impact faible — diffusion non autorisée acceptable en interne), Confidentiel (impact modéré — données PII standard, financières non critiques), Secret (impact élevé — données de santé, biométriques, secrets d'affaires, credentials). ISO 27001 A.8.2 et les frameworks industriels Microsoft Purview et Google Cloud Data Classification convergent tous sur cette structure en 4 niveaux.",
-      "grade": 6,
-      "level": "STANDARD",
-      "is_universal": true,
-      "sources": [
-        {
-          "name": "FIPS 199 — Standards for Security Categorization of Federal Information and Information Systems (NIST, 2004)",
-          "pyramid": 1,
-          "year": 2004
-        },
-        {
-          "name": "NIST SP 800-60 Vol.1 Rev.1 — Guide for Mapping Types of Information and Information Systems to Security Categories (NIST, 2008)",
-          "pyramid": 1,
-          "year": 2008
-        },
-        {
-          "name": "ISO/IEC 27001:2022 — Information Security Management Systems (Contrôle A.8.2 Information Classification)",
-          "pyramid": 1,
-          "year": 2022
-        },
-        {
-          "name": "Microsoft Data Classification Framework — Microsoft Purview Information Protection (Microsoft, 2023)",
-          "pyramid": 3,
-          "year": 2023
-        },
-        {
-          "name": "Google Cloud Data Classification and Protection Framework (Google Cloud, 2023)",
-          "pyramid": 3,
-          "year": 2023
         }
       ]
     },
@@ -1788,72 +1752,6 @@
       ]
     },
     {
-      "id": "coverage-thresholds",
-      "domain": "testing",
-      "question": "Quels seuils de couverture de code (line, branch, mutation) fixer comme quality gate, sachant que la couverture de lignes est un indicateur imparfait de la qualite des tests ?",
-      "recommendation": "Distinguer couverture-detecteur (identifier les zones non testees) de couverture-validateur (prouver la qualite des tests) : ces deux usages ne sont pas equivalents. (1) Line/branch coverage >= 80% sur le nouveau code est le standard industrie (SonarQube 'Clean as You Code', Stryker default) et constitue un seuil utile pour reperer les angles morts — mais la correlation entre line coverage et detection de bugs post-release est faible a moderee (Inozemtseva & Holmes ICSE 2014, Kochhar et al. IEEE TR 2017). (2) Branch coverage est superieur a line coverage (Zhu, Hall & May ACM Computing Surveys 1997) : exercer les conditions booliennes detecte plus de defauts que simplement executer les lignes. (3) Mutation score (Stryker / PIT) est la metrique la plus fiable pour valider la capacite de detection des tests : elle mesure si les tests detectent des changements deliberes dans le code (Jia & Harman IEEE TSE 2011 — survey 30 ans de litterature ; Zhu et al. SLR STVR 2018) — seuil recommande 70-80%, Stryker default 80%. (4) Un seuil trop bas (< 60%) ne detecte pas les regressions ; un seuil de 100% cree une fausse securite via des tests qui couvrent sans asserter (Fowler 2012) et consume un effort disproportionne. (5) Systemes critiques (securite, sante, finance) : seuils eleves 90%+ branch coverage + mutation score >= 80% (pratique industrie verifiee : ACM SAC 2017, systeme industriel 75k mutants, 47 defauts reels identifies). Recommandation operationnelle : (a) fixer line/branch >= 80% dans le quality gate CI (SonarQube 'Sonar Way' sur nouveau code) ; (b) ajouter mutation testing a 70%+ sur les composants metier critiques (services, use cases) — pas sur les DTO, controllers simples, ni le code de configuration ; (c) ne jamais interpreter un pourcentage de couverture eleve seul comme garantie de qualite.",
-      "grade": 4,
-      "level": "RECOMMANDE",
-      "is_universal": true,
-      "sources": [
-        {
-          "name": "Inozemtseva & Holmes — ICSE 2014 ACM Distinguished Paper",
-          "pyramid": 3,
-          "year": 2014
-        },
-        {
-          "name": "Kochhar, Bissyande, Lo, Jiang — IEEE Transactions on Reliability 2017",
-          "pyramid": 3,
-          "year": 2017
-        },
-        {
-          "name": "Jia & Harman — IEEE Transactions on Software Engineering 2011",
-          "pyramid": 3,
-          "year": 2011
-        },
-        {
-          "name": "Zhu, Hall & May — ACM Computing Surveys 1997",
-          "pyramid": 3,
-          "year": 1997
-        },
-        {
-          "name": "Zhu, Causmaecker, De Weerdt — Wiley STVR Systematic Literature Review 2018",
-          "pyramid": 3,
-          "year": 2018
-        },
-        {
-          "name": "ACM SAC 2017 — Mutation testing on industrial safety-critical system",
-          "pyramid": 3,
-          "year": 2017
-        },
-        {
-          "name": "ACM SIGSOFT 2016 — Workshop empirique correlation mutation score / defauts reels",
-          "pyramid": 3,
-          "year": 2016
-        },
-        {
-          "name": "Fowler — TestCoverage bliki (martinfowler.com 2012)",
-          "pyramid": 5,
-          "year": 2012
-        },
-        {
-          "name": "SonarQube documentation 2024 — Clean as You Code",
-          "pyramid": 5,
-          "year": 2024
-        },
-        {
-          "name": "Stryker Mutator documentation 2024",
-          "pyramid": 5,
-          "year": 2024
-        },
-        {
-          "name": "Crispin & Gregory — Agile Testing 2008",
-          "pyramid": 5,
-          "year": 2008
-        }
-      ]
-    },
-    {
       "id": "ai-agent-accountability",
       "domain": "ai-collaboration",
       "question": "Quels mecanismes d'accountability et de gouvernance permettent de s'assurer qu'au moins un humain est responsable des actions d'un agent IA autonome dans un contexte de developpement logiciel ?",
@@ -2838,50 +2736,22 @@
       ]
     },
     {
-      "id": "commit-conventions",
-      "domain": "project",
-      "question": "Quelle convention de messages de commit adopter pour automatiser le versioning et maintenir un historique lisible ?",
-      "recommendation": "Adopter Conventional Commits : type(scope): description. Types : feat (minor), fix (patch), refactor, docs, test, chore. BREAKING CHANGE declenche un major.",
-      "grade": 3,
-      "level": "RECOMMANDE",
+      "id": "agent-orchestration-open-source",
+      "domain": "ai-collaboration",
+      "question": "Quels outils open-source d'orchestration d'agents IA (CLI agents et SDK frameworks) satisfont les critères de portabilité provider, hooks/gates configurables et exécution bash native pour des pipelines autonomes en production ?",
+      "recommendation": "Exiger au minimum O1+O2+O3 pour tout outil d'orchestration d'agents en production : portabilité provider (évite le vendor lock-in), hooks/gates before/after outil (sécurité et contrôle pipeline), exécution bash native sans IDE (compatibilité CI/CD headless).",
+      "grade": 2,
+      "level": "BONNE_PRATIQUE",
       "is_universal": true,
       "sources": [
-        {
-          "name": "conventionalcommits.org v1.0.0",
-          "pyramid": 5,
-          "year": 2024
-        },
-        {
-          "name": "Angular commit guidelines",
-          "pyramid": 3,
-          "year": 2024
-        }
-      ]
-    },
-    {
-      "id": "container-registry",
-      "domain": "cicd",
-      "question": "Quel container registry pour stocker et distribuer les images Docker ?",
-      "recommendation": "GHCR (GitHub Container Registry) pour les repos GitHub : integration native avec Actions et permissions, authentification via GITHUB_TOKEN, zero configuration supplementaire.",
-      "grade": 3,
-      "level": "RECOMMANDE",
-      "is_universal": true,
-      "sources": [
-        {
-          "name": "GitHub docs — GHCR integration native avec Actions et permissions",
-          "pyramid": 3,
-          "year": 2024
-        },
-        {
-          "name": "CNCF Survey 2024 — container registry adoption",
-          "pyramid": 4,
-          "year": 2024
-        },
-        {
-          "name": "Twelve-Factor Factor V — build artifacts immutables",
-          "pyramid": 5,
-          "year": 2012
-        }
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {},
+        {}
       ]
     },
     {
@@ -3654,6 +3524,27 @@
       ]
     },
     {
+      "id": "commit-conventions",
+      "domain": "project",
+      "question": "Quelle convention de messages de commit adopter pour automatiser le versioning et maintenir un historique lisible ?",
+      "recommendation": "Adopter Conventional Commits : type(scope): description. Types : feat (minor), fix (patch), refactor, docs, test, chore. BREAKING CHANGE declenche un major.",
+      "grade": 3,
+      "level": "RECOMMANDE",
+      "is_universal": true,
+      "sources": [
+        {
+          "name": "conventionalcommits.org v1.0.0",
+          "pyramid": 5,
+          "year": 2024
+        },
+        {
+          "name": "Angular commit guidelines",
+          "pyramid": 3,
+          "year": 2024
+        }
+      ]
+    },
+    {
       "id": "component-library",
       "domain": "design",
       "question": "Quelle librairie de composants UI utiliser ?",
@@ -3661,6 +3552,42 @@
       "sources": [
         {},
         {}
+      ]
+    },
+    {
+      "id": "data-classification-architecture",
+      "domain": "security",
+      "question": "Quelles pratiques de classification des données sensibles sont recommandées avant de concevoir une architecture logicielle ?",
+      "recommendation": "Adopter une taxonomie à 4 niveaux (Public / Interne / Confidentiel / Secret) comme grille de référence avant toute décision architecturale. Chaque niveau correspond à un impact croissant sur la triade CIA (Confidentiality, Integrity, Availability) au sens FIPS 199 : Public (impact faible ou nul), Interne (impact faible — diffusion non autorisée acceptable en interne), Confidentiel (impact modéré — données PII standard, financières non critiques), Secret (impact élevé — données de santé, biométriques, secrets d'affaires, credentials). ISO 27001 A.8.2 et les frameworks industriels Microsoft Purview et Google Cloud Data Classification convergent tous sur cette structure en 4 niveaux.",
+      "grade": 6,
+      "level": "STANDARD",
+      "is_universal": true,
+      "sources": [
+        {
+          "name": "FIPS 199 — Standards for Security Categorization of Federal Information and Information Systems (NIST, 2004)",
+          "pyramid": 1,
+          "year": 2004
+        },
+        {
+          "name": "NIST SP 800-60 Vol.1 Rev.1 — Guide for Mapping Types of Information and Information Systems to Security Categories (NIST, 2008)",
+          "pyramid": 1,
+          "year": 2008
+        },
+        {
+          "name": "ISO/IEC 27001:2022 — Information Security Management Systems (Contrôle A.8.2 Information Classification)",
+          "pyramid": 1,
+          "year": 2022
+        },
+        {
+          "name": "Microsoft Data Classification Framework — Microsoft Purview Information Protection (Microsoft, 2023)",
+          "pyramid": 3,
+          "year": 2023
+        },
+        {
+          "name": "Google Cloud Data Classification and Protection Framework (Google Cloud, 2023)",
+          "pyramid": 3,
+          "year": 2023
+        }
       ]
     },
     {
@@ -4304,6 +4231,72 @@
       ]
     },
     {
+      "id": "coverage-thresholds",
+      "domain": "testing",
+      "question": "Quels seuils de couverture de code (line, branch, mutation) fixer comme quality gate, sachant que la couverture de lignes est un indicateur imparfait de la qualite des tests ?",
+      "recommendation": "Distinguer couverture-detecteur (identifier les zones non testees) de couverture-validateur (prouver la qualite des tests) : ces deux usages ne sont pas equivalents. (1) Line/branch coverage >= 80% sur le nouveau code est le standard industrie (SonarQube 'Clean as You Code', Stryker default) et constitue un seuil utile pour reperer les angles morts — mais la correlation entre line coverage et detection de bugs post-release est faible a moderee (Inozemtseva & Holmes ICSE 2014, Kochhar et al. IEEE TR 2017). (2) Branch coverage est superieur a line coverage (Zhu, Hall & May ACM Computing Surveys 1997) : exercer les conditions booliennes detecte plus de defauts que simplement executer les lignes. (3) Mutation score (Stryker / PIT) est la metrique la plus fiable pour valider la capacite de detection des tests : elle mesure si les tests detectent des changements deliberes dans le code (Jia & Harman IEEE TSE 2011 — survey 30 ans de litterature ; Zhu et al. SLR STVR 2018) — seuil recommande 70-80%, Stryker default 80%. (4) Un seuil trop bas (< 60%) ne detecte pas les regressions ; un seuil de 100% cree une fausse securite via des tests qui couvrent sans asserter (Fowler 2012) et consume un effort disproportionne. (5) Systemes critiques (securite, sante, finance) : seuils eleves 90%+ branch coverage + mutation score >= 80% (pratique industrie verifiee : ACM SAC 2017, systeme industriel 75k mutants, 47 defauts reels identifies). Recommandation operationnelle : (a) fixer line/branch >= 80% dans le quality gate CI (SonarQube 'Sonar Way' sur nouveau code) ; (b) ajouter mutation testing a 70%+ sur les composants metier critiques (services, use cases) — pas sur les DTO, controllers simples, ni le code de configuration ; (c) ne jamais interpreter un pourcentage de couverture eleve seul comme garantie de qualite.",
+      "grade": 4,
+      "level": "RECOMMANDE",
+      "is_universal": true,
+      "sources": [
+        {
+          "name": "Inozemtseva & Holmes — ICSE 2014 ACM Distinguished Paper",
+          "pyramid": 3,
+          "year": 2014
+        },
+        {
+          "name": "Kochhar, Bissyande, Lo, Jiang — IEEE Transactions on Reliability 2017",
+          "pyramid": 3,
+          "year": 2017
+        },
+        {
+          "name": "Jia & Harman — IEEE Transactions on Software Engineering 2011",
+          "pyramid": 3,
+          "year": 2011
+        },
+        {
+          "name": "Zhu, Hall & May — ACM Computing Surveys 1997",
+          "pyramid": 3,
+          "year": 1997
+        },
+        {
+          "name": "Zhu, Causmaecker, De Weerdt — Wiley STVR Systematic Literature Review 2018",
+          "pyramid": 3,
+          "year": 2018
+        },
+        {
+          "name": "ACM SAC 2017 — Mutation testing on industrial safety-critical system",
+          "pyramid": 3,
+          "year": 2017
+        },
+        {
+          "name": "ACM SIGSOFT 2016 — Workshop empirique correlation mutation score / defauts reels",
+          "pyramid": 3,
+          "year": 2016
+        },
+        {
+          "name": "Fowler — TestCoverage bliki (martinfowler.com 2012)",
+          "pyramid": 5,
+          "year": 2012
+        },
+        {
+          "name": "SonarQube documentation 2024 — Clean as You Code",
+          "pyramid": 5,
+          "year": 2024
+        },
+        {
+          "name": "Stryker Mutator documentation 2024",
+          "pyramid": 5,
+          "year": 2024
+        },
+        {
+          "name": "Crispin & Gregory — Agile Testing 2008",
+          "pyramid": 5,
+          "year": 2008
+        }
+      ]
+    },
+    {
       "id": "dependencies",
       "domain": "project",
       "question": "Comment gerer les dependances pour garantir des builds reproductibles et eviter les vulnerabilites ?",
@@ -4449,6 +4442,32 @@
           "name": "Stack Overflow Survey 2024",
           "pyramid": 4,
           "year": 2024
+        }
+      ]
+    },
+    {
+      "id": "container-registry",
+      "domain": "cicd",
+      "question": "Quel container registry pour stocker et distribuer les images Docker ?",
+      "recommendation": "GHCR (GitHub Container Registry) pour les repos GitHub : integration native avec Actions et permissions, authentification via GITHUB_TOKEN, zero configuration supplementaire.",
+      "grade": 3,
+      "level": "RECOMMANDE",
+      "is_universal": true,
+      "sources": [
+        {
+          "name": "GitHub docs — GHCR integration native avec Actions et permissions",
+          "pyramid": 3,
+          "year": 2024
+        },
+        {
+          "name": "CNCF Survey 2024 — container registry adoption",
+          "pyramid": 4,
+          "year": 2024
+        },
+        {
+          "name": "Twelve-Factor Factor V — build artifacts immutables",
+          "pyramid": 5,
+          "year": 2012
         }
       ]
     },
@@ -5364,6 +5383,23 @@
       ]
     },
     {
+      "id": "rate-limiting",
+      "domain": "security",
+      "question": "Comment implementer le rate limiting et la protection DDoS ?",
+      "recommendation": "@nestjs/throttler pour le rate limiting",
+      "grade": 5,
+      "level": "RECOMMANDE",
+      "implementation": "Installer @nestjs/throttler, configurer ThrottlerModule.forRoot() avec ttl et limit, appliquer @Throttle() sur les routes sensibles.",
+      "is_universal": false,
+      "sources": [
+        {
+          "name": "@nestjs/throttler docs",
+          "pyramid": 3,
+          "year": 2024
+        }
+      ]
+    },
+    {
       "id": "realtime",
       "domain": "design",
       "question": "Quel transport utiliser pour la communication temps reel (WebSocket, SSE, polling) ?",
@@ -5917,19 +5953,6 @@
       ]
     },
     {
-      "id": "test-data",
-      "domain": "testing",
-      "question": "Comment gerer les donnees de test (factories, faker, isolation) ?",
-      "recommendation": "@faker-js/faker + fishery pour les factories de donnees de test. Factory functions avec defaults + overrides.",
-      "grade": 5,
-      "level": "BONNE PRATIQUE",
-      "is_universal": false,
-      "sources": [
-        {},
-        {}
-      ]
-    },
-    {
       "id": "feature-flags-lifecycle",
       "domain": "maintainability",
       "question": "Comment gérer le cycle de vie des feature flags (types, TTL, cleanup) pour éviter la dette technique et les incidents de type Knight Capital ?",
@@ -6209,52 +6232,6 @@
           "name": "DORA 2024 — manual changes = #1 cause of incidents",
           "pyramid": 4,
           "year": 2024
-        }
-      ]
-    },
-    {
-      "id": "kiss-yagni",
-      "domain": "project",
-      "question": "Comment choisir entre une solution simple et une abstraction plus generale/extensible — quand l'abstraction anticipee est-elle legitime vs prematuree ?",
-      "recommendation": "Implementer le strict necessaire pour le besoin actuel, avere et exprime — rejeter toute abstraction non justifiee par un besoin reel present. Regle de priorite : 'Make it work → make it right → make it fast' (Beck) — dans cet ordre, jamais inverse. Un code qui generalize sans utilisateur concret est de la dette technique degui en feature. Signaux d'alerte de sur-ingenierie : (1) plus de code d'infrastructure/genericite que de code fonctionnel direct ; (2) interface ou classe abstraite nayant qu'une seule implementation effective ; (3) parametre de configuration dont la valeur ne changera jamais en pratique ; (4) couche d'indirection supplementaire sans benefice de testabilite ni de separation avere. Le 'code smell' Speculative Generality (Fowler) designe exactement ce patron : classes, methodes, parametres presents 'au cas ou' — a supprimer ou simplifier. NUANCE ARCHITECTURALE OBLIGATOIRE : YAGNI s'applique au code et aux abstractions locales, pas aux decisions architecturales majeures a fort cout de changement (choix de SGBD, protocole d'API public, structure de donnees fondamentale persistee, monorepo vs polyrepo). Pour ces decisions, une anticipation raisonnable sur 12-18 mois est justifiee car le cout de retour-en-arriere est exponentiel — Fowler (2004) distingue explicitement YAGNI applique au code vs les contraintes architecturales irréversibles. La complexite accidentelle (Brooks 1987) est evitable par discipline ; la complexite essentielle est incompressible — ne pas confondre simplification salutaire et refus de modeliser la realite du domaine.",
-      "grade": 4,
-      "level": "RECOMMANDE",
-      "is_universal": true,
-      "sources": [
-        {
-          "name": "SWEBOK v4 — Guide to the Software Engineering Body of Knowledge, ch. 2 Software Design (IEEE Computer Society, 2024)",
-          "pyramid": 1,
-          "year": 2024
-        },
-        {
-          "name": "Beck K. — Extreme Programming Explained, 2nd ed. (Addison-Wesley, 2004)",
-          "pyramid": 5,
-          "year": 2004
-        },
-        {
-          "name": "Fowler M. — Refactoring: Improving the Design of Existing Code, 2nd ed. (Addison-Wesley, 2018)",
-          "pyramid": 5,
-          "year": 2018
-        },
-        {
-          "name": "Brooks F.P. — No Silver Bullet: Essence and Accident in Software Engineering (IEEE Computer, 1987)",
-          "pyramid": 5,
-          "year": 1987
-        },
-        {
-          "name": "McConnell S. — Code Complete, 2nd ed. (Microsoft Press, 2004)",
-          "pyramid": 5,
-          "year": 2004
-        },
-        {
-          "name": "Fowler M. — Is Design Dead? (martinfowler.com, 2004)",
-          "pyramid": 5,
-          "year": 2004
-        },
-        {
-          "name": "Hunt A., Thomas D. — The Pragmatic Programmer, 20th Anniversary ed. (Addison-Wesley, 2019)",
-          "pyramid": 5,
-          "year": 2019
         }
       ]
     },
@@ -6921,6 +6898,19 @@
       ]
     },
     {
+      "id": "test-data",
+      "domain": "testing",
+      "question": "Comment gerer les donnees de test (factories, faker, isolation) ?",
+      "recommendation": "@faker-js/faker + fishery pour les factories de donnees de test. Factory functions avec defaults + overrides.",
+      "grade": 5,
+      "level": "BONNE PRATIQUE",
+      "is_universal": false,
+      "sources": [
+        {},
+        {}
+      ]
+    },
+    {
       "id": "test-strategy",
       "domain": "testing",
       "question": "Comment definir et appliquer une strategie de test globale — pyramide, types de tests, ratio optimal — pour maximiser la confiance au deploiement tout en controlant le cout de maintenance des tests ?",
@@ -7369,6 +7359,67 @@
       ]
     },
     {
+      "id": "event-driven-architecture",
+      "domain": "architecture",
+      "question": "Comment concevoir une architecture event-driven fiable avec des garanties de livraison, en choisissant entre les patterns Outbox, Saga (choreography vs orchestration), et les 4 types d'events selon Fowler ?",
+      "recommendation": "Règle de taxonomie préalable : les 4 patterns event-driven de Fowler (2017) ne sont PAS interchangeables — les confondre est la principale source d'erreurs de conception. (1) Event Notification : un service émet un événement pour signaler qu'il s'est passé quelque chose ; les consommateurs réagissent de façon autonome, mais l'émetteur ne sait pas ce qu'ils font. (2) Event-Carried State Transfer (ECST) : l'événement transporte l'état complet de l'entité modifiée, ce qui permet aux consommateurs de fonctionner sans rappel vers le service émetteur. (3) Event Sourcing : l'état du système est reconstruit à partir d'une séquence ordonnée d'événements immuables — la source de vérité est le log d'événements, pas la table de données courante. (4) CQRS (Command Query Responsibility Segregation) : sépare les modèles d'écriture et de lecture ; souvent combiné avec Event Sourcing mais indépendant — on peut avoir CQRS sans Event Sourcing et vice-versa. Choisir un pattern en connaissance de ses tradeoffs spécifiques avant de l'implémenter.\n\nDistinction command vs event (Fowler 2005) : un command exprime une intention ('créer cet utilisateur') — il peut être refusé. Un event est un fait passé immutable ('l'utilisateur a été créé le 2026-04-17 à 14h32') — il ne peut pas être annulé, seulement compensé. Nommer les événements au passé (UserRegistered, OrderShipped, PaymentFailed). Cette distinction guide la modélisation des bounded contexts (Evans 2003) : les Domain Events permettent la communication entre contextes sans couplage direct, via publication d'événements métier que les autres contextes consomment selon leurs propres besoins.\n\nDual-write problem et solution Outbox (Richardson) : écrire dans la base de données ET publier un message vers un broker dans deux opérations séparées crée un risque de perte silencieuse — si le service crashe entre les deux, l'état DB a changé mais l'événement n'a jamais été émis. Solution obligatoire : le Transactional Outbox pattern. L'état métier et l'enregistrement dans une table 'outbox' sont écrits dans la MÊME transaction DB. Un processus séparé (message relay) lit la table outbox et publie les événements vers le broker. Les consommateurs reçoivent les événements avec une garantie at-least-once (au moins une fois) : ils peuvent donc recevoir un événement plusieurs fois et DOIVENT être idempotents (traiter deux fois le même événement avec le même résultat qu'une seule fois). L'idempotence est non-optionnelle en EDA.\n\nSaga — choreography vs orchestration (Richardson, Temporal.io) : les transactions distribuées (span sur plusieurs services) nécessitent le pattern Saga — une séquence d'étapes locales avec des transactions compensatoires pour annuler les effets en cas d'échec. Deux variantes : (a) Choreography — chaque service publie des événements et réagit aux événements des autres sans coordinateur central. Avantages : autonomie des services, scalabilité maximale. Inconvénients : le flow global est implicite et distribué dans le code de chaque service — le debugging est difficile, la traçabilité nécessite un distributed tracing robuste. (b) Orchestration — un orchestrateur central envoie des commandes à chaque service et attend leurs réponses. Avantages : le flow est explicite, lisible et auditable en un seul endroit ; les erreurs sont plus faciles à localiser. Inconvénients : point de couplage central, l'orchestrateur peut devenir un goulot d'étranglement. Règle de choix : si les étapes sont strictement ordonnées et la lisibilité/auditabilité est prioritaire → orchestration. Si la scalabilité prime et que les services sont véritablement autonomes → choreography. Validation formelle (IEEE 2022, LTS + PAT) confirme ces tradeoffs.\n\nImplémentation NestJS : deux niveaux distincts selon le scope. In-process (même instance Node.js) : @nestjs/event-emitter avec @OnEvent() — adapté pour découpler des modules dans une même application sans infrastructure externe. Cross-process (services séparés) : NestJS microservices avec Redis Streams comme transport (ou Kafka, RabbitMQ, NATS selon le volume et les garanties requises). Ne pas utiliser @nestjs/event-emitter pour de la communication cross-process — les événements ne sortent pas du processus et seraient perdus en cas de redémarrage.\n\nAvertissement complexité opérationnelle : l'EDA augmente significativement la complexité opérationnelle par rapport aux appels synchrones. Les workflows asynchrones sont difficiles à déboguer sans distributed tracing (corrélation d'événements via trace IDs, visualisation des flux event par event). Avant d'adopter EDA, évaluer si la complexité additionnelle est justifiée par les besoins réels de découplage et de scalabilité. Investir dans l'observabilité (tracing distribué, correlation IDs dans chaque event) dès le début — le retrofitter coûte bien plus cher.",
+      "grade": 3,
+      "level": "RECOMMANDE",
+      "is_universal": true,
+      "sources": [
+        {
+          "name": "Fowler M. — DomainEvent (martinfowler.com, 2005)",
+          "pyramid": 5,
+          "year": 2005
+        },
+        {
+          "name": "Fowler M. — What do you mean by Event-Driven? (martinfowler.com, 2017)",
+          "pyramid": 5,
+          "year": 2017
+        },
+        {
+          "name": "Evans E. — Domain-Driven Design: Tackling Complexity in the Heart of Software (Addison-Wesley, 2003)",
+          "pyramid": 5,
+          "year": 2003
+        },
+        {
+          "name": "Richardson C. — Microservices Patterns (Manning, 2018)",
+          "pyramid": 5,
+          "year": 2018
+        },
+        {
+          "name": "Richardson C. — Transactional Outbox Pattern (microservices.io)",
+          "pyramid": 5,
+          "year": 2023
+        },
+        {
+          "name": "Richardson C. — Saga Pattern (microservices.io)",
+          "pyramid": 5,
+          "year": 2023
+        },
+        {
+          "name": "IEEE Xplore — Comparison of Choreography vs Orchestration Based Saga Patterns (2022)",
+          "pyramid": 3,
+          "year": 2022
+        },
+        {
+          "name": "Temporal.io — Saga Orchestration vs Choreography",
+          "pyramid": 4,
+          "year": 2024
+        },
+        {
+          "name": "NestJS — @nestjs/event-emitter documentation (docs.nestjs.com)",
+          "pyramid": 3,
+          "year": 2024
+        },
+        {
+          "name": "NestJS — Redis Microservices documentation (docs.nestjs.com/microservices/redis)",
+          "pyramid": 3,
+          "year": 2024
+        }
+      ]
+    },
+    {
       "id": "feature-flags",
       "domain": "operations",
       "question": "Comment activer progressivement les fonctionnalites sans redeploiement ?",
@@ -7575,22 +7626,162 @@
       ]
     },
     {
-      "id": "issue-tracking",
-      "domain": "project",
-      "question": "Quel outil et quel workflow d'issue tracking adopter pour gerer efficacement le backlog ?",
-      "recommendation": "Kanban 4 colonnes (Backlog, In Progress, Review, Done) avec WIP limite a 2-3 items par dev. Chaque issue a un owner clair et des criteres d'acceptation.",
+      "id": "jvm-tuning",
+      "domain": "performance",
+      "question": "Comment configurer la JVM pour une application Spring Boot en conteneur Docker ?",
+      "recommendation": "Eclipse Temurin 21 JRE Alpine. JAVA_OPTS=\"-Xms512m -Xmx512m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UseStringDeduplication\". Docker memory limit >= Xmx + ~200MB (metaspace, threads). Alternative : -XX:MaxRAMPercentage=75.0.",
+      "grade": 3,
+      "level": "BONNE_PRATIQUE",
+      "implementation": "FROM eclipse-temurin:21-jre-alpine. ENV JAVA_OPTS=\"-Xms512m -Xmx512m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UseStringDeduplication\". ENTRYPOINT [\"sh\", \"-c\", \"java $JAVA_OPTS -jar app.jar\"].",
+      "is_universal": false,
+      "sources": [
+        {
+          "name": "Oracle JVM Tuning Guide Java 21",
+          "pyramid": 3,
+          "year": 2024
+        },
+        {
+          "name": "Eclipse Temurin — distribution recommandee",
+          "pyramid": 3,
+          "year": 2024
+        },
+        {
+          "name": "Spring Boot Docker docs",
+          "pyramid": 3,
+          "year": 2024
+        }
+      ]
+    },
+    {
+      "id": "sla-management",
+      "domain": "reliability",
+      "question": "Comment définir des SLI/SLO et gérer l'error budget avec burn rate alerting dans un projet NestJS+React+Prometheus ?",
+      "recommendation": "Hiérarchie SLI → SLO → SLA : SLI = fraction de requêtes réussies mesurée objectivement (ex : disponibilité = requêtes réussies / total requêtes × 100) ; SLO = cible interne (ex : 99,9 % sur 30 jours) ; SLA = engagement contractuel client, toujours inférieur au SLO pour conserver une marge de manœuvre. Error budget = 1 − SLO exprimé en temps indisponible autorisé (99 % = 3,65 j/an ; 99,5 % = 1,83 j ; 99,9 % = 8,77 h ; 99,95 % = 4,38 h ; 99,99 % = 52,6 min). Error budget policy : si le budget est épuisé → gel des nouvelles features, focus fiabilité exclusif ; si intact → innovation autorisée. Multiwindow multi-burn-rate alerting (SRE Workbook) : alertes sur deux fenêtres simultanées (court terme 1 h + moyen terme 6 h) avec deux niveaux de burn rate (critique + avertissement) pour réduire drastiquement les faux positifs d'une fenêtre unique. Implémentation NestJS : `@nestjs/terminus` expose `/health` (HTTP, TypeORM/DB, Memory, Disk) ; Prometheus scrape `/metrics` (prom-client) ; Sloth CLI (github.com/slok/sloth) génère les règles Prometheus SLI/SLO + alertes multiwindow depuis un YAML simple ; Grafana dashboard Sloth (ID 14643). Définir les SLIs à partir des golden signals (latence, traffic, errors, saturation — Google SRE Book ch. 6) dès la phase de design du service, pas après un incident.",
       "grade": 3,
       "level": "RECOMMANDE",
       "is_universal": true,
       "sources": [
         {
-          "name": "SWEBOK v4 ch.9 — gestion de projet",
-          "pyramid": 1,
+          "name": "Google SRE Book — \"Service Level Objectives\" ch. 4 (Google / O'Reilly, 2016, sre.google/sre-book)",
+          "pyramid": 5,
+          "year": 2016
+        },
+        {
+          "name": "Google SRE Workbook — \"Implementing SLOs\" ch. 2 + \"Alerting on SLOs\" ch. 5 (Google / O'Reilly, 2018, sre.google/workbook)",
+          "pyramid": 5,
+          "year": 2018
+        },
+        {
+          "name": "ITIL 4 — Service Level Management Practice (Axelos/PeopleCert, 2019)",
+          "pyramid": 3,
+          "year": 2019
+        },
+        {
+          "name": "Sloth (github.com/slok/sloth) — SLO generator for Prometheus",
+          "pyramid": 3,
+          "year": 2021
+        },
+        {
+          "name": "NestJS Terminus (@nestjs/terminus) — Health checks for NestJS (docs.nestjs.com/recipes/terminus)",
+          "pyramid": 3,
+          "year": 2020
+        }
+      ]
+    },
+    {
+      "id": "team-topology",
+      "domain": "project",
+      "question": "Comment organiser les équipes de développement pour que la structure organisationnelle favorise l'architecture logicielle souhaitée, en minimisant la charge cognitive et les dépendances inter-équipes ?",
+      "recommendation": "Loi de Conway (règle fondamentale) : toute organisation produira une architecture qui est une copie de sa structure de communication (Conway, 1968). Corollaire opérationnel : si l'architecture souhaitée diffère de l'architecture actuelle, changer d'abord la structure organisationnelle — la refactorisation technique seule recréera l'ancienne architecture dans les semaines qui suivent. Inverse Conway Maneuver (InfoQ 2019) : concevoir proactivement les frontières d'équipes autour des domaines métier souhaités — pas des couches techniques — et laisser l'architecture émerger de cette structure. Anti-pattern à éviter absolument : organisation par couches techniques (« backend team / frontend team / DBA team ») — ce modèle génère mécaniquement des architectures monolithiques couplées et des goulots d'étranglement de communication inter-équipes pour chaque livraison. Préférer des équipes verticales par domaine métier (« équipe facturation », « équipe catalogue », « équipe notification »), chacune propriétaire end-to-end de son slice produit. Quatre topologies fondamentales (Skelton & Pais 2019) : (1) Stream-aligned team — propriétaire end-to-end d'un flux de valeur issu d'un domaine métier, capable de livrer en continu sans dépendre d'autres équipes pour les décisions quotidiennes ; (2) Platform team — fournit des capacités self-service en interne (infrastructure, tooling, observabilité) pour réduire la charge cognitive des stream-aligned teams, exposées comme un produit interne avec SLA ; (3) Enabling team — aide temporairement une ou plusieurs stream-aligned teams à acquérir des compétences manquantes (sécurité, performance, architecture) ; s'efface une fois la compétence transférée — ce n'est pas une équipe permanente ; (4) Complicated-subsystem team — gère un composant à expertise rare et haute complexité (moteur de règles, traitement signal, algorithme ML critique) pour réduire la charge cognitive sur la stream-aligned team consommatrice. Trois modes d'interaction (Skelton & Pais 2019) : (1) Collaboration — mode temporaire, intense, pour innover ensemble sur un nouveau domaine ou résoudre une incertitude technique — à limiter dans le temps car coûteux en communication ; (2) X-as-a-Service — une équipe consomme une API stable d'une autre équipe sans interaction requise — mode cible pour une platform team mature ; (3) Facilitating — une enabling team aide une stream-aligned team sans co-livrer — transfert de compétences, pas co-dépendance. Charge cognitive comme contrainte de design (teamtopologies.com 2022) : une équipe ne peut posséder qu'un nombre limité de services, domaines ou systèmes complexes avant d'être en surcharge et de ralentir. Règles pratiques : limiter à 6-8 microservices par équipe, 8-12 personnes maximum par équipe (loi de Brooks + two-pizza rule). Scoper les responsabilités pour maximiser le flux et minimiser les handoffs. Une équipe surchargée devient un goulot d'étranglement organisationnel aussi problématique qu'un couplage technique.",
+      "grade": 3,
+      "level": "RECOMMANDE",
+      "is_universal": true,
+      "sources": [
+        {
+          "name": "Melvin Conway — \"How Do Committees Invent?\" (Datamation, 1968)",
+          "pyramid": 5,
+          "year": 1968
+        },
+        {
+          "name": "Matthew Skelton & Manuel Pais — \"Team Topologies: Organizing Business and Technology Teams for Fast Flow\" (IT Revolution, 2019)",
+          "pyramid": 5,
+          "year": 2019
+        },
+        {
+          "name": "InfoQ — \"Team Topologies: Conway's Law and Inverse Conway Maneuver\" (infoq.com, 2019)",
+          "pyramid": 4,
+          "year": 2019
+        },
+        {
+          "name": "IT Revolution / Team Topologies website — \"Team Topologies patterns and anti-patterns\" (teamtopologies.com, 2022)",
+          "pyramid": 3,
+          "year": 2022
+        }
+      ]
+    },
+    {
+      "id": "technical-estimation",
+      "domain": "project",
+      "question": "Comment estimer le coût et la durée d'un développement logiciel de façon fiable, en intégrant l'incertitude inhérente aux phases précoces ?",
+      "recommendation": "Règle fondamentale — cône d'incertitude (McConnell 2006) : ne jamais donner une estimation ponctuelle en phase initiale sans indiquer la plage d'incertitude associée. En début de projet (avant la définition des exigences), les estimations peuvent être décalées d'un facteur 4x dans chaque direction (×0,25 à ×4 par rapport à la réalité). Ce facteur se réduit progressivement à mesure que l'information augmente : ±50 % après les exigences initiales, ±25 % après la conception, ±10 % à la livraison. Communiquer l'incertitude est une obligation professionnelle, pas une faiblesse — présenter une estimation initiale comme un point fixe est une garantie de déception. La forme correcte d'une estimation initiale est une fourchette explicite (ex : « entre 6 et 14 semaines »), pas un chiffre unique. Les études empiriques (IEEE Software 2015) confirment que les projets logiciels sont systématiquement sous-estimés, précisément parce que les équipes confondent estimation et engagement. Distinction estimation / engagement : une estimation est une prédiction probabiliste de ce qui risque de se produire ; un engagement est une promesse de livraison à une date donnée, qui suppose que les incertitudes ont été suffisamment résolues. Prendre un engagement sur une estimation en cône d'incertitude large crée une pression artificielle sans améliorer la précision réelle — cela déplace le risque sans le réduire. Les estimations initiales sont des ordres de grandeur (OOM) qui servent à la planification stratégique (budgets, arbitrages) ; elles ne constituent pas des engagements contractuels tant que les exigences ne sont pas stabilisées. Décomposition obligatoire : l'estimation d'une fonctionnalité ou d'une tâche supérieure à 3 jours DOIT être décomposée en tâches de moins d'un jour avant d'être considérée fiable. La décomposition est le mécanisme principal de réduction du cône d'incertitude au niveau tâche : elle force l'explicitation des inconnues cachées, révèle les dépendances implicites et transforme des estimations de complexité diffuse en estimations d'effort mesurable. Une tâche non décomposable est un signal d'alerte — soit les exigences sont insuffisantes, soit la tâche masque un problème de conception non résolu. Méthodes de groupe anti-biais — Wideband Delphi (Boehm & Farquhar) : technique d'estimation en groupe dans laquelle les estimations individuelles sont produites indépendamment, partagées anonymement avec le groupe, puis discutées — en particulier les écarts importants — avant une nouvelle ronde d'estimation. L'anonymat initial prévient le biais d'ancrage (influence de la première estimation entendue) et la pression sociale (déférence à l'expert ou au manager). Les rondes multiples avec discussion sur les écarts convergent systématiquement vers des estimations plus précises que les estimations individuelles isolées. Wideband Delphi est adapté aux grands projets, aux estimations de phase ou aux fonctionnalités complexes pour lesquelles l'incertitude est élevée. Planning Poker (Cohn 2005) : variante agile de Wideband Delphi, optimisée pour les équipes de 3 à 10 personnes estimant des user stories. Chaque estimateur choisit une carte représentant son estimation ; toutes les cartes sont révélées simultanément, empêchant l'ancrage. Les divergences significatives déclenchent une discussion qui met en lumière les hypothèses implicites et les incompréhensions fonctionnelles — ces discussions ont une valeur intrinsèque au-delà de l'estimation elle-même. Estimation relative (story points) vs absolue (jours-hommes) : les story points mesurent la complexité relative d'une user story par rapport à une story de référence calibrée — ils sont indépendants de la vélocité individuelle et de la capacité journalière, ce qui les rend plus stables dans le temps et plus comparables entre équipes. L'estimation en jours-hommes souffre du problème de la granularité humaine (ancrage sur des multiples de journées, biais d'optimisme sur la productivité individuelle) et de la confusion entre temps calendaire et effort réel. Les story points sont calibrés par des user stories de référence connues de l'équipe (« cette story vaut 2 points, celle-là en vaut 5 ») — la calibration initiale requiert 2 à 3 sprints pour être stable. Recalibration régulière : comparer systématiquement les estimations aux réalisations (vélocité réelle par sprint) et ajuster les estimations futures en conséquence. Sans calibration empirique continue, les biais systématiques persistent : les équipes maintiennent leurs estimations optimistes indépendamment des écarts observés. La vélocité réelle est le seul indicateur fiable pour les prévisions de release — utiliser la vélocité des 3 derniers sprints comme base de projection, pas la vélocité idéale.",
+      "grade": 3,
+      "level": "RECOMMANDE",
+      "is_universal": true,
+      "sources": [
+        {
+          "name": "McConnell S. — Software Estimation: Demystifying the Black Art (Microsoft Press, 2006)",
+          "pyramid": 5,
+          "year": 2006
+        },
+        {
+          "name": "IEEE Software — Software Estimation: The Juggling Act (IEEE Software, 2015)",
+          "pyramid": 3,
+          "year": 2015
+        },
+        {
+          "name": "Boehm B. & Farquhar J. — Wideband Delphi (Rand Corporation, formalisé dans COCOMO II)",
+          "pyramid": 5,
+          "year": 2000
+        },
+        {
+          "name": "Cohn M. — Agile Estimating and Planning (Prentice Hall, 2005)",
+          "pyramid": 5,
+          "year": 2005
+        }
+      ]
+    },
+    {
+      "id": "visual-regression-testing",
+      "domain": "testing",
+      "question": "Comment implémenter des tests de régression visuelle pour détecter automatiquement les changements involontaires de l'UI ?",
+      "recommendation": "Deux approches complémentaires : page-level et component-level. Page-level avec Playwright `toHaveScreenshot()` : s'intègre dans les tests E2E existants, capture pleine page ou sélecteur CSS, compare pixel-à-pixel contre une baseline stockée. Component-level avec Storybook + Chromatic ou Percy : chaque story devient automatiquement un test visuel sans fichier de test séparé — le catalogue de composants est la source de vérité. Les deux approches sont complémentaires : Playwright détecte les régressions d'intégration (interactions entre composants, état de page complète) ; Storybook/Chromatic détecte les régressions d'isolement (rendu d'un composant dans tous ses états déclarés). TurboSnap (Chromatic) analyse l'historique Git et le graphe de dépendances pour ne capturer que les stories affectées par les changements — réduction de 40 à 60 % des captures en CI en moyenne. Règle absolue sur les baselines : les fichiers de référence (snapshots Playwright `*.png`, baselines Chromatic/Percy) doivent être committés dans le dépôt Git. Cela garantit que le CI et tous les membres de l'équipe utilisent exactement les mêmes références — un snapshot absent du VCS rend la comparaison non reproductible. Règle d'environnement : les captures doivent être produites et comparées dans un environnement stable et déterministe : même OS, même résolution, même timezone, même version du navigateur. Exécuter les captures uniquement en CI (jamais en local pour mettre à jour les baselines de référence) évite les faux-positifs liés aux différences de rendu de polices ou de sous-pixelisation entre systèmes. Si Playwright est utilisé localement, utiliser un container Docker avec le même rendu que le CI. Gate PR obligatoire : tout changement visuel détecté doit bloquer le merge jusqu'à revue et approbation explicites par un humain. Chromatic et Percy implémentent ce gate nativement via un status check sur la pull request qui reste en attente (`pending`) tant que les diffs visuels n'ont pas été approuvés. Sans ce gate, les régressions visuelles passent en production silencieusement. Gestion des éléments dynamiques : masquer avant capture toute zone variable (horodatages, données aléatoires, animations, contenu chargé asynchronement) via une feuille de style CSS injectée (Playwright : option `stylePath` ou `style` dans `toHaveScreenshot()`) ou via des mocks de données dans Storybook (args/decorators). Sans cette précaution, les éléments dynamiques génèrent des faux-positifs systématiques qui désactivent en pratique la valeur du test visuel. Stratégie de mise à jour des baselines : la mise à jour des références doit être intentionnelle, jamais automatique. Playwright : commande explicite `--update-snapshots` ; Chromatic/Percy : action d'approbation dans l'interface de revue. Les nouvelles baselines doivent être committées comme du code : elles représentent l'état visuel approuvé de l'UI et font partie du contrat de qualité du projet. Ne jamais configurer une mise à jour automatique des baselines en CI — cela supprime le gate de détection.",
+      "grade": 3,
+      "level": "RECOMMANDE",
+      "is_universal": true,
+      "sources": [
+        {
+          "name": "Playwright — Visual comparisons (playwright.dev/docs/test-snapshots, 2024)",
+          "pyramid": 3,
           "year": 2024
         },
         {
-          "name": "SO Developer Survey — satisfaction tools",
-          "pyramid": 5,
+          "name": "Storybook Docs — Visual tests (storybook.js.org/docs/writing-tests/visual-testing, 2024)",
+          "pyramid": 3,
+          "year": 2024
+        },
+        {
+          "name": "Chromatic — Visual testing for Storybook (chromatic.com/storybook, 2024)",
+          "pyramid": 4,
+          "year": 2024
+        },
+        {
+          "name": "Percy / BrowserStack — Visual testing basics (docs.percy.io, 2024)",
+          "pyramid": 4,
+          "year": 2024
+        },
+        {
+          "name": "CSS-Tricks — Automated Visual Regression Testing With Playwright (css-tricks.com, 2024)",
+          "pyramid": 3,
           "year": 2024
         }
       ]
@@ -8354,19 +8545,48 @@
       ]
     },
     {
-      "id": "rate-limiting",
-      "domain": "security",
-      "question": "Comment implementer le rate limiting et la protection DDoS ?",
-      "recommendation": "@nestjs/throttler pour le rate limiting",
-      "grade": 5,
+      "id": "kiss-yagni",
+      "domain": "project",
+      "question": "Comment choisir entre une solution simple et une abstraction plus generale/extensible — quand l'abstraction anticipee est-elle legitime vs prematuree ?",
+      "recommendation": "Implementer le strict necessaire pour le besoin actuel, avere et exprime — rejeter toute abstraction non justifiee par un besoin reel present. Regle de priorite : 'Make it work → make it right → make it fast' (Beck) — dans cet ordre, jamais inverse. Un code qui generalize sans utilisateur concret est de la dette technique degui en feature. Signaux d'alerte de sur-ingenierie : (1) plus de code d'infrastructure/genericite que de code fonctionnel direct ; (2) interface ou classe abstraite nayant qu'une seule implementation effective ; (3) parametre de configuration dont la valeur ne changera jamais en pratique ; (4) couche d'indirection supplementaire sans benefice de testabilite ni de separation avere. Le 'code smell' Speculative Generality (Fowler) designe exactement ce patron : classes, methodes, parametres presents 'au cas ou' — a supprimer ou simplifier. NUANCE ARCHITECTURALE OBLIGATOIRE : YAGNI s'applique au code et aux abstractions locales, pas aux decisions architecturales majeures a fort cout de changement (choix de SGBD, protocole d'API public, structure de donnees fondamentale persistee, monorepo vs polyrepo). Pour ces decisions, une anticipation raisonnable sur 12-18 mois est justifiee car le cout de retour-en-arriere est exponentiel — Fowler (2004) distingue explicitement YAGNI applique au code vs les contraintes architecturales irréversibles. La complexite accidentelle (Brooks 1987) est evitable par discipline ; la complexite essentielle est incompressible — ne pas confondre simplification salutaire et refus de modeliser la realite du domaine.",
+      "grade": 4,
       "level": "RECOMMANDE",
-      "implementation": "Installer @nestjs/throttler, configurer ThrottlerModule.forRoot() avec ttl et limit, appliquer @Throttle() sur les routes sensibles.",
-      "is_universal": false,
+      "is_universal": true,
       "sources": [
         {
-          "name": "@nestjs/throttler docs",
-          "pyramid": 3,
+          "name": "SWEBOK v4 — Guide to the Software Engineering Body of Knowledge, ch. 2 Software Design (IEEE Computer Society, 2024)",
+          "pyramid": 1,
           "year": 2024
+        },
+        {
+          "name": "Beck K. — Extreme Programming Explained, 2nd ed. (Addison-Wesley, 2004)",
+          "pyramid": 5,
+          "year": 2004
+        },
+        {
+          "name": "Fowler M. — Refactoring: Improving the Design of Existing Code, 2nd ed. (Addison-Wesley, 2018)",
+          "pyramid": 5,
+          "year": 2018
+        },
+        {
+          "name": "Brooks F.P. — No Silver Bullet: Essence and Accident in Software Engineering (IEEE Computer, 1987)",
+          "pyramid": 5,
+          "year": 1987
+        },
+        {
+          "name": "McConnell S. — Code Complete, 2nd ed. (Microsoft Press, 2004)",
+          "pyramid": 5,
+          "year": 2004
+        },
+        {
+          "name": "Fowler M. — Is Design Dead? (martinfowler.com, 2004)",
+          "pyramid": 5,
+          "year": 2004
+        },
+        {
+          "name": "Hunt A., Thomas D. — The Pragmatic Programmer, 20th Anniversary ed. (Addison-Wesley, 2019)",
+          "pyramid": 5,
+          "year": 2019
         }
       ]
     },
@@ -8489,89 +8709,22 @@
       ]
     },
     {
-      "id": "event-driven-architecture",
-      "domain": "architecture",
-      "question": "Comment concevoir une architecture event-driven fiable avec des garanties de livraison, en choisissant entre les patterns Outbox, Saga (choreography vs orchestration), et les 4 types d'events selon Fowler ?",
-      "recommendation": "Règle de taxonomie préalable : les 4 patterns event-driven de Fowler (2017) ne sont PAS interchangeables — les confondre est la principale source d'erreurs de conception. (1) Event Notification : un service émet un événement pour signaler qu'il s'est passé quelque chose ; les consommateurs réagissent de façon autonome, mais l'émetteur ne sait pas ce qu'ils font. (2) Event-Carried State Transfer (ECST) : l'événement transporte l'état complet de l'entité modifiée, ce qui permet aux consommateurs de fonctionner sans rappel vers le service émetteur. (3) Event Sourcing : l'état du système est reconstruit à partir d'une séquence ordonnée d'événements immuables — la source de vérité est le log d'événements, pas la table de données courante. (4) CQRS (Command Query Responsibility Segregation) : sépare les modèles d'écriture et de lecture ; souvent combiné avec Event Sourcing mais indépendant — on peut avoir CQRS sans Event Sourcing et vice-versa. Choisir un pattern en connaissance de ses tradeoffs spécifiques avant de l'implémenter.\n\nDistinction command vs event (Fowler 2005) : un command exprime une intention ('créer cet utilisateur') — il peut être refusé. Un event est un fait passé immutable ('l'utilisateur a été créé le 2026-04-17 à 14h32') — il ne peut pas être annulé, seulement compensé. Nommer les événements au passé (UserRegistered, OrderShipped, PaymentFailed). Cette distinction guide la modélisation des bounded contexts (Evans 2003) : les Domain Events permettent la communication entre contextes sans couplage direct, via publication d'événements métier que les autres contextes consomment selon leurs propres besoins.\n\nDual-write problem et solution Outbox (Richardson) : écrire dans la base de données ET publier un message vers un broker dans deux opérations séparées crée un risque de perte silencieuse — si le service crashe entre les deux, l'état DB a changé mais l'événement n'a jamais été émis. Solution obligatoire : le Transactional Outbox pattern. L'état métier et l'enregistrement dans une table 'outbox' sont écrits dans la MÊME transaction DB. Un processus séparé (message relay) lit la table outbox et publie les événements vers le broker. Les consommateurs reçoivent les événements avec une garantie at-least-once (au moins une fois) : ils peuvent donc recevoir un événement plusieurs fois et DOIVENT être idempotents (traiter deux fois le même événement avec le même résultat qu'une seule fois). L'idempotence est non-optionnelle en EDA.\n\nSaga — choreography vs orchestration (Richardson, Temporal.io) : les transactions distribuées (span sur plusieurs services) nécessitent le pattern Saga — une séquence d'étapes locales avec des transactions compensatoires pour annuler les effets en cas d'échec. Deux variantes : (a) Choreography — chaque service publie des événements et réagit aux événements des autres sans coordinateur central. Avantages : autonomie des services, scalabilité maximale. Inconvénients : le flow global est implicite et distribué dans le code de chaque service — le debugging est difficile, la traçabilité nécessite un distributed tracing robuste. (b) Orchestration — un orchestrateur central envoie des commandes à chaque service et attend leurs réponses. Avantages : le flow est explicite, lisible et auditable en un seul endroit ; les erreurs sont plus faciles à localiser. Inconvénients : point de couplage central, l'orchestrateur peut devenir un goulot d'étranglement. Règle de choix : si les étapes sont strictement ordonnées et la lisibilité/auditabilité est prioritaire → orchestration. Si la scalabilité prime et que les services sont véritablement autonomes → choreography. Validation formelle (IEEE 2022, LTS + PAT) confirme ces tradeoffs.\n\nImplémentation NestJS : deux niveaux distincts selon le scope. In-process (même instance Node.js) : @nestjs/event-emitter avec @OnEvent() — adapté pour découpler des modules dans une même application sans infrastructure externe. Cross-process (services séparés) : NestJS microservices avec Redis Streams comme transport (ou Kafka, RabbitMQ, NATS selon le volume et les garanties requises). Ne pas utiliser @nestjs/event-emitter pour de la communication cross-process — les événements ne sortent pas du processus et seraient perdus en cas de redémarrage.\n\nAvertissement complexité opérationnelle : l'EDA augmente significativement la complexité opérationnelle par rapport aux appels synchrones. Les workflows asynchrones sont difficiles à déboguer sans distributed tracing (corrélation d'événements via trace IDs, visualisation des flux event par event). Avant d'adopter EDA, évaluer si la complexité additionnelle est justifiée par les besoins réels de découplage et de scalabilité. Investir dans l'observabilité (tracing distribué, correlation IDs dans chaque event) dès le début — le retrofitter coûte bien plus cher.",
+      "id": "issue-tracking",
+      "domain": "project",
+      "question": "Quel outil et quel workflow d'issue tracking adopter pour gerer efficacement le backlog ?",
+      "recommendation": "Kanban 4 colonnes (Backlog, In Progress, Review, Done) avec WIP limite a 2-3 items par dev. Chaque issue a un owner clair et des criteres d'acceptation.",
       "grade": 3,
       "level": "RECOMMANDE",
       "is_universal": true,
       "sources": [
         {
-          "name": "Fowler M. — DomainEvent (martinfowler.com, 2005)",
-          "pyramid": 5,
-          "year": 2005
-        },
-        {
-          "name": "Fowler M. — What do you mean by Event-Driven? (martinfowler.com, 2017)",
-          "pyramid": 5,
-          "year": 2017
-        },
-        {
-          "name": "Evans E. — Domain-Driven Design: Tackling Complexity in the Heart of Software (Addison-Wesley, 2003)",
-          "pyramid": 5,
-          "year": 2003
-        },
-        {
-          "name": "Richardson C. — Microservices Patterns (Manning, 2018)",
-          "pyramid": 5,
-          "year": 2018
-        },
-        {
-          "name": "Richardson C. — Transactional Outbox Pattern (microservices.io)",
-          "pyramid": 5,
-          "year": 2023
-        },
-        {
-          "name": "Richardson C. — Saga Pattern (microservices.io)",
-          "pyramid": 5,
-          "year": 2023
-        },
-        {
-          "name": "IEEE Xplore — Comparison of Choreography vs Orchestration Based Saga Patterns (2022)",
-          "pyramid": 3,
-          "year": 2022
-        },
-        {
-          "name": "Temporal.io — Saga Orchestration vs Choreography",
-          "pyramid": 4,
+          "name": "SWEBOK v4 ch.9 — gestion de projet",
+          "pyramid": 1,
           "year": 2024
         },
         {
-          "name": "NestJS — @nestjs/event-emitter documentation (docs.nestjs.com)",
-          "pyramid": 3,
-          "year": 2024
-        },
-        {
-          "name": "NestJS — Redis Microservices documentation (docs.nestjs.com/microservices/redis)",
-          "pyramid": 3,
-          "year": 2024
-        }
-      ]
-    },
-    {
-      "id": "jvm-tuning",
-      "domain": "performance",
-      "question": "Comment configurer la JVM pour une application Spring Boot en conteneur Docker ?",
-      "recommendation": "Eclipse Temurin 21 JRE Alpine. JAVA_OPTS=\"-Xms512m -Xmx512m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UseStringDeduplication\". Docker memory limit >= Xmx + ~200MB (metaspace, threads). Alternative : -XX:MaxRAMPercentage=75.0.",
-      "grade": 3,
-      "level": "BONNE_PRATIQUE",
-      "implementation": "FROM eclipse-temurin:21-jre-alpine. ENV JAVA_OPTS=\"-Xms512m -Xmx512m -XX:+UseG1GC -XX:MaxGCPauseMillis=200 -XX:+UseStringDeduplication\". ENTRYPOINT [\"sh\", \"-c\", \"java $JAVA_OPTS -jar app.jar\"].",
-      "is_universal": false,
-      "sources": [
-        {
-          "name": "Oracle JVM Tuning Guide Java 21",
-          "pyramid": 3,
-          "year": 2024
-        },
-        {
-          "name": "Eclipse Temurin — distribution recommandee",
-          "pyramid": 3,
-          "year": 2024
-        },
-        {
-          "name": "Spring Boot Docker docs",
-          "pyramid": 3,
+          "name": "SO Developer Survey — satisfaction tools",
+          "pyramid": 5,
           "year": 2024
         }
       ]
@@ -8866,140 +9019,6 @@
           "name": "Olalekan & Osofisan — Checklist-based vs ad hoc code reading (ratio 2.75x)",
           "pyramid": 4,
           "year": 2020
-        }
-      ]
-    },
-    {
-      "id": "sla-management",
-      "domain": "reliability",
-      "question": "Comment définir des SLI/SLO et gérer l'error budget avec burn rate alerting dans un projet NestJS+React+Prometheus ?",
-      "recommendation": "Hiérarchie SLI → SLO → SLA : SLI = fraction de requêtes réussies mesurée objectivement (ex : disponibilité = requêtes réussies / total requêtes × 100) ; SLO = cible interne (ex : 99,9 % sur 30 jours) ; SLA = engagement contractuel client, toujours inférieur au SLO pour conserver une marge de manœuvre. Error budget = 1 − SLO exprimé en temps indisponible autorisé (99 % = 3,65 j/an ; 99,5 % = 1,83 j ; 99,9 % = 8,77 h ; 99,95 % = 4,38 h ; 99,99 % = 52,6 min). Error budget policy : si le budget est épuisé → gel des nouvelles features, focus fiabilité exclusif ; si intact → innovation autorisée. Multiwindow multi-burn-rate alerting (SRE Workbook) : alertes sur deux fenêtres simultanées (court terme 1 h + moyen terme 6 h) avec deux niveaux de burn rate (critique + avertissement) pour réduire drastiquement les faux positifs d'une fenêtre unique. Implémentation NestJS : `@nestjs/terminus` expose `/health` (HTTP, TypeORM/DB, Memory, Disk) ; Prometheus scrape `/metrics` (prom-client) ; Sloth CLI (github.com/slok/sloth) génère les règles Prometheus SLI/SLO + alertes multiwindow depuis un YAML simple ; Grafana dashboard Sloth (ID 14643). Définir les SLIs à partir des golden signals (latence, traffic, errors, saturation — Google SRE Book ch. 6) dès la phase de design du service, pas après un incident.",
-      "grade": 3,
-      "level": "RECOMMANDE",
-      "is_universal": true,
-      "sources": [
-        {
-          "name": "Google SRE Book — \"Service Level Objectives\" ch. 4 (Google / O'Reilly, 2016, sre.google/sre-book)",
-          "pyramid": 5,
-          "year": 2016
-        },
-        {
-          "name": "Google SRE Workbook — \"Implementing SLOs\" ch. 2 + \"Alerting on SLOs\" ch. 5 (Google / O'Reilly, 2018, sre.google/workbook)",
-          "pyramid": 5,
-          "year": 2018
-        },
-        {
-          "name": "ITIL 4 — Service Level Management Practice (Axelos/PeopleCert, 2019)",
-          "pyramid": 3,
-          "year": 2019
-        },
-        {
-          "name": "Sloth (github.com/slok/sloth) — SLO generator for Prometheus",
-          "pyramid": 3,
-          "year": 2021
-        },
-        {
-          "name": "NestJS Terminus (@nestjs/terminus) — Health checks for NestJS (docs.nestjs.com/recipes/terminus)",
-          "pyramid": 3,
-          "year": 2020
-        }
-      ]
-    },
-    {
-      "id": "team-topology",
-      "domain": "project",
-      "question": "Comment organiser les équipes de développement pour que la structure organisationnelle favorise l'architecture logicielle souhaitée, en minimisant la charge cognitive et les dépendances inter-équipes ?",
-      "recommendation": "Loi de Conway (règle fondamentale) : toute organisation produira une architecture qui est une copie de sa structure de communication (Conway, 1968). Corollaire opérationnel : si l'architecture souhaitée diffère de l'architecture actuelle, changer d'abord la structure organisationnelle — la refactorisation technique seule recréera l'ancienne architecture dans les semaines qui suivent. Inverse Conway Maneuver (InfoQ 2019) : concevoir proactivement les frontières d'équipes autour des domaines métier souhaités — pas des couches techniques — et laisser l'architecture émerger de cette structure. Anti-pattern à éviter absolument : organisation par couches techniques (« backend team / frontend team / DBA team ») — ce modèle génère mécaniquement des architectures monolithiques couplées et des goulots d'étranglement de communication inter-équipes pour chaque livraison. Préférer des équipes verticales par domaine métier (« équipe facturation », « équipe catalogue », « équipe notification »), chacune propriétaire end-to-end de son slice produit. Quatre topologies fondamentales (Skelton & Pais 2019) : (1) Stream-aligned team — propriétaire end-to-end d'un flux de valeur issu d'un domaine métier, capable de livrer en continu sans dépendre d'autres équipes pour les décisions quotidiennes ; (2) Platform team — fournit des capacités self-service en interne (infrastructure, tooling, observabilité) pour réduire la charge cognitive des stream-aligned teams, exposées comme un produit interne avec SLA ; (3) Enabling team — aide temporairement une ou plusieurs stream-aligned teams à acquérir des compétences manquantes (sécurité, performance, architecture) ; s'efface une fois la compétence transférée — ce n'est pas une équipe permanente ; (4) Complicated-subsystem team — gère un composant à expertise rare et haute complexité (moteur de règles, traitement signal, algorithme ML critique) pour réduire la charge cognitive sur la stream-aligned team consommatrice. Trois modes d'interaction (Skelton & Pais 2019) : (1) Collaboration — mode temporaire, intense, pour innover ensemble sur un nouveau domaine ou résoudre une incertitude technique — à limiter dans le temps car coûteux en communication ; (2) X-as-a-Service — une équipe consomme une API stable d'une autre équipe sans interaction requise — mode cible pour une platform team mature ; (3) Facilitating — une enabling team aide une stream-aligned team sans co-livrer — transfert de compétences, pas co-dépendance. Charge cognitive comme contrainte de design (teamtopologies.com 2022) : une équipe ne peut posséder qu'un nombre limité de services, domaines ou systèmes complexes avant d'être en surcharge et de ralentir. Règles pratiques : limiter à 6-8 microservices par équipe, 8-12 personnes maximum par équipe (loi de Brooks + two-pizza rule). Scoper les responsabilités pour maximiser le flux et minimiser les handoffs. Une équipe surchargée devient un goulot d'étranglement organisationnel aussi problématique qu'un couplage technique.",
-      "grade": 3,
-      "level": "RECOMMANDE",
-      "is_universal": true,
-      "sources": [
-        {
-          "name": "Melvin Conway — \"How Do Committees Invent?\" (Datamation, 1968)",
-          "pyramid": 5,
-          "year": 1968
-        },
-        {
-          "name": "Matthew Skelton & Manuel Pais — \"Team Topologies: Organizing Business and Technology Teams for Fast Flow\" (IT Revolution, 2019)",
-          "pyramid": 5,
-          "year": 2019
-        },
-        {
-          "name": "InfoQ — \"Team Topologies: Conway's Law and Inverse Conway Maneuver\" (infoq.com, 2019)",
-          "pyramid": 4,
-          "year": 2019
-        },
-        {
-          "name": "IT Revolution / Team Topologies website — \"Team Topologies patterns and anti-patterns\" (teamtopologies.com, 2022)",
-          "pyramid": 3,
-          "year": 2022
-        }
-      ]
-    },
-    {
-      "id": "technical-estimation",
-      "domain": "project",
-      "question": "Comment estimer le coût et la durée d'un développement logiciel de façon fiable, en intégrant l'incertitude inhérente aux phases précoces ?",
-      "recommendation": "Règle fondamentale — cône d'incertitude (McConnell 2006) : ne jamais donner une estimation ponctuelle en phase initiale sans indiquer la plage d'incertitude associée. En début de projet (avant la définition des exigences), les estimations peuvent être décalées d'un facteur 4x dans chaque direction (×0,25 à ×4 par rapport à la réalité). Ce facteur se réduit progressivement à mesure que l'information augmente : ±50 % après les exigences initiales, ±25 % après la conception, ±10 % à la livraison. Communiquer l'incertitude est une obligation professionnelle, pas une faiblesse — présenter une estimation initiale comme un point fixe est une garantie de déception. La forme correcte d'une estimation initiale est une fourchette explicite (ex : « entre 6 et 14 semaines »), pas un chiffre unique. Les études empiriques (IEEE Software 2015) confirment que les projets logiciels sont systématiquement sous-estimés, précisément parce que les équipes confondent estimation et engagement. Distinction estimation / engagement : une estimation est une prédiction probabiliste de ce qui risque de se produire ; un engagement est une promesse de livraison à une date donnée, qui suppose que les incertitudes ont été suffisamment résolues. Prendre un engagement sur une estimation en cône d'incertitude large crée une pression artificielle sans améliorer la précision réelle — cela déplace le risque sans le réduire. Les estimations initiales sont des ordres de grandeur (OOM) qui servent à la planification stratégique (budgets, arbitrages) ; elles ne constituent pas des engagements contractuels tant que les exigences ne sont pas stabilisées. Décomposition obligatoire : l'estimation d'une fonctionnalité ou d'une tâche supérieure à 3 jours DOIT être décomposée en tâches de moins d'un jour avant d'être considérée fiable. La décomposition est le mécanisme principal de réduction du cône d'incertitude au niveau tâche : elle force l'explicitation des inconnues cachées, révèle les dépendances implicites et transforme des estimations de complexité diffuse en estimations d'effort mesurable. Une tâche non décomposable est un signal d'alerte — soit les exigences sont insuffisantes, soit la tâche masque un problème de conception non résolu. Méthodes de groupe anti-biais — Wideband Delphi (Boehm & Farquhar) : technique d'estimation en groupe dans laquelle les estimations individuelles sont produites indépendamment, partagées anonymement avec le groupe, puis discutées — en particulier les écarts importants — avant une nouvelle ronde d'estimation. L'anonymat initial prévient le biais d'ancrage (influence de la première estimation entendue) et la pression sociale (déférence à l'expert ou au manager). Les rondes multiples avec discussion sur les écarts convergent systématiquement vers des estimations plus précises que les estimations individuelles isolées. Wideband Delphi est adapté aux grands projets, aux estimations de phase ou aux fonctionnalités complexes pour lesquelles l'incertitude est élevée. Planning Poker (Cohn 2005) : variante agile de Wideband Delphi, optimisée pour les équipes de 3 à 10 personnes estimant des user stories. Chaque estimateur choisit une carte représentant son estimation ; toutes les cartes sont révélées simultanément, empêchant l'ancrage. Les divergences significatives déclenchent une discussion qui met en lumière les hypothèses implicites et les incompréhensions fonctionnelles — ces discussions ont une valeur intrinsèque au-delà de l'estimation elle-même. Estimation relative (story points) vs absolue (jours-hommes) : les story points mesurent la complexité relative d'une user story par rapport à une story de référence calibrée — ils sont indépendants de la vélocité individuelle et de la capacité journalière, ce qui les rend plus stables dans le temps et plus comparables entre équipes. L'estimation en jours-hommes souffre du problème de la granularité humaine (ancrage sur des multiples de journées, biais d'optimisme sur la productivité individuelle) et de la confusion entre temps calendaire et effort réel. Les story points sont calibrés par des user stories de référence connues de l'équipe (« cette story vaut 2 points, celle-là en vaut 5 ») — la calibration initiale requiert 2 à 3 sprints pour être stable. Recalibration régulière : comparer systématiquement les estimations aux réalisations (vélocité réelle par sprint) et ajuster les estimations futures en conséquence. Sans calibration empirique continue, les biais systématiques persistent : les équipes maintiennent leurs estimations optimistes indépendamment des écarts observés. La vélocité réelle est le seul indicateur fiable pour les prévisions de release — utiliser la vélocité des 3 derniers sprints comme base de projection, pas la vélocité idéale.",
-      "grade": 3,
-      "level": "RECOMMANDE",
-      "is_universal": true,
-      "sources": [
-        {
-          "name": "McConnell S. — Software Estimation: Demystifying the Black Art (Microsoft Press, 2006)",
-          "pyramid": 5,
-          "year": 2006
-        },
-        {
-          "name": "IEEE Software — Software Estimation: The Juggling Act (IEEE Software, 2015)",
-          "pyramid": 3,
-          "year": 2015
-        },
-        {
-          "name": "Boehm B. & Farquhar J. — Wideband Delphi (Rand Corporation, formalisé dans COCOMO II)",
-          "pyramid": 5,
-          "year": 2000
-        },
-        {
-          "name": "Cohn M. — Agile Estimating and Planning (Prentice Hall, 2005)",
-          "pyramid": 5,
-          "year": 2005
-        }
-      ]
-    },
-    {
-      "id": "visual-regression-testing",
-      "domain": "testing",
-      "question": "Comment implémenter des tests de régression visuelle pour détecter automatiquement les changements involontaires de l'UI ?",
-      "recommendation": "Deux approches complémentaires : page-level et component-level. Page-level avec Playwright `toHaveScreenshot()` : s'intègre dans les tests E2E existants, capture pleine page ou sélecteur CSS, compare pixel-à-pixel contre une baseline stockée. Component-level avec Storybook + Chromatic ou Percy : chaque story devient automatiquement un test visuel sans fichier de test séparé — le catalogue de composants est la source de vérité. Les deux approches sont complémentaires : Playwright détecte les régressions d'intégration (interactions entre composants, état de page complète) ; Storybook/Chromatic détecte les régressions d'isolement (rendu d'un composant dans tous ses états déclarés). TurboSnap (Chromatic) analyse l'historique Git et le graphe de dépendances pour ne capturer que les stories affectées par les changements — réduction de 40 à 60 % des captures en CI en moyenne. Règle absolue sur les baselines : les fichiers de référence (snapshots Playwright `*.png`, baselines Chromatic/Percy) doivent être committés dans le dépôt Git. Cela garantit que le CI et tous les membres de l'équipe utilisent exactement les mêmes références — un snapshot absent du VCS rend la comparaison non reproductible. Règle d'environnement : les captures doivent être produites et comparées dans un environnement stable et déterministe : même OS, même résolution, même timezone, même version du navigateur. Exécuter les captures uniquement en CI (jamais en local pour mettre à jour les baselines de référence) évite les faux-positifs liés aux différences de rendu de polices ou de sous-pixelisation entre systèmes. Si Playwright est utilisé localement, utiliser un container Docker avec le même rendu que le CI. Gate PR obligatoire : tout changement visuel détecté doit bloquer le merge jusqu'à revue et approbation explicites par un humain. Chromatic et Percy implémentent ce gate nativement via un status check sur la pull request qui reste en attente (`pending`) tant que les diffs visuels n'ont pas été approuvés. Sans ce gate, les régressions visuelles passent en production silencieusement. Gestion des éléments dynamiques : masquer avant capture toute zone variable (horodatages, données aléatoires, animations, contenu chargé asynchronement) via une feuille de style CSS injectée (Playwright : option `stylePath` ou `style` dans `toHaveScreenshot()`) ou via des mocks de données dans Storybook (args/decorators). Sans cette précaution, les éléments dynamiques génèrent des faux-positifs systématiques qui désactivent en pratique la valeur du test visuel. Stratégie de mise à jour des baselines : la mise à jour des références doit être intentionnelle, jamais automatique. Playwright : commande explicite `--update-snapshots` ; Chromatic/Percy : action d'approbation dans l'interface de revue. Les nouvelles baselines doivent être committées comme du code : elles représentent l'état visuel approuvé de l'UI et font partie du contrat de qualité du projet. Ne jamais configurer une mise à jour automatique des baselines en CI — cela supprime le gate de détection.",
-      "grade": 3,
-      "level": "RECOMMANDE",
-      "is_universal": true,
-      "sources": [
-        {
-          "name": "Playwright — Visual comparisons (playwright.dev/docs/test-snapshots, 2024)",
-          "pyramid": 3,
-          "year": 2024
-        },
-        {
-          "name": "Storybook Docs — Visual tests (storybook.js.org/docs/writing-tests/visual-testing, 2024)",
-          "pyramid": 3,
-          "year": 2024
-        },
-        {
-          "name": "Chromatic — Visual testing for Storybook (chromatic.com/storybook, 2024)",
-          "pyramid": 4,
-          "year": 2024
-        },
-        {
-          "name": "Percy / BrowserStack — Visual testing basics (docs.percy.io, 2024)",
-          "pyramid": 4,
-          "year": 2024
-        },
-        {
-          "name": "CSS-Tricks — Automated Visual Regression Testing With Playwright (css-tricks.com, 2024)",
-          "pyramid": 3,
-          "year": 2024
         }
       ]
     },

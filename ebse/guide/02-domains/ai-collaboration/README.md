@@ -20,7 +20,7 @@ Ce domaine a ete construit en suivant strictement `methodology.md` v3.0 avec **d
 
 **Fabrications detectees et rejetees par Agent C** : **10+ au total** sur les phases 1.1 a 2.3. Le mecanisme A+B+C a systematiquement attrape les hallucinations avant qu'elles n'entrent dans les livrables finaux.
 
-## Liste des 17 decisions
+## Liste des 19 decisions
 
 | # | ID | Confidence | Resume |
 |---|----|:---------:|--------|
@@ -42,12 +42,13 @@ Ce domaine a ete construit en suivant strictement `methodology.md` v3.0 avec **d
 | 16 | [ai-agent-budget-caps](../../../data/decisions/ai-agent-budget-caps.json) | BONNE PRATIQUE | Dual cap (iterations + dollar budget) via LiteLLM ; wall-clock = custom |
 | 17 | [ai-agent-provenance-audit](../../../data/decisions/ai-agent-provenance-audit.json) | RECOMMANDE (STANDARD si regule) | Audit trail structure lie au git commit (Agent-Logs-Url) ; Co-Authored-By seul insuffisant |
 | 18 | [agent-runtime](../../../data/decisions/agent-runtime.json) | BONNE PRATIQUE | Architecture Hybride CLI+SDK recommandee : CLI interactif PO + SDK pipelines autonomes ; option C (Custom) contre-indiquee pour equipes < 5 personnes |
+| 19 | [agent-orchestration-open-source](../../../data/decisions/agent-orchestration-open-source.json) | BONNE PRATIQUE | OpenCode/Cline/OpenHands pour independance provider stricte ; Claude Code CLI/Agent SDK pour projets Anthropic-first ; 17 candidats evalues dont 2 elimines (shutdown, bus factor) |
 
 ## Distribution des niveaux de confiance
 
 - **STANDARD** : 0 (aucune decision n'atteint 5-7/7 GRADE dans ce domaine emergent)
 - **RECOMMANDE** : 10 (decisions avec evidence empirique solide mais pas encore peer-reviewed large-scale)
-- **BONNE PRATIQUE** : 7 (decisions avec consensus pratique + evidence indirecte)
+- **BONNE PRATIQUE** : 8 (decisions avec consensus pratique + evidence indirecte)
 - **CHOIX D'EQUIPE** : 1 (escalation protocol — aucune etude empirique directe sur AI agents)
 
 La distribution reflete l'etat **emergent** du domaine : beaucoup de pratiques etablies vendor-side, des preuves empiriques qui emergent tres recemment (2024-2026), peu de consensus peer-reviewed stable. **A re-evaluer tous les 6 mois** car le domaine evolue rapidement.
