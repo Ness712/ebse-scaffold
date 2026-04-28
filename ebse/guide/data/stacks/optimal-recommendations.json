@@ -1,6 +1,6 @@
 {
   "guide_version": "2026.04.7",
-  "generated_at": "2026-04-28T13:42:07.881Z",
+  "generated_at": "2026-04-28T14:22:04.646Z",
   "profile_id": "optimal",
   "stack": {
     "backend": "typescript-nestjs",
@@ -1851,38 +1851,6 @@
       ]
     },
     {
-      "id": "agent-runtime",
-      "domain": "ai-collaboration",
-      "question": "Quel runtime choisir pour un agent de développement autonome dont les décisions techniques sont externalisées dans un guide EBSE ?",
-      "recommendation": "RECOMMANDE sous conditions — viable si et seulement si : (a) hookification Plan A+B implémentée (pre-compact re-injection, protection fichiers règles, bash content inspection), (b) triggers de migration provider définis et documentés dans CLAUDE.local.md. Contrainte structurelle E-ARCH-01 non résolvable : le couplage runtime+provider est inhérent à l'architecture Claude Code. DÉCLENCHER MIGRATION si : indépendance provider devient prérequis contractuel ou réglementaire.",
-      "grade": 3,
-      "level": "RECOMMANDE",
-      "implementation": "1. Implémenter les 12 hooks Mandatory Phase 4 STRIDE (Plan 2 Phase A) : pre-compact re-injection + protection CLAUDE.md/settings.json en écriture.\n2. Ajouter les 4 hooks Mandatory MIT AI Risk : R-MIT-01 (protection fichiers règles étendue), R-MIT-02 (fail-closed sur appels réseau), R-MIT-03 (log scrubbing avant ingestion), R-MIT-04 (content inspection bash pour exfiltration).\n3. Documenter dans CLAUDE.local.md les triggers de migration : (a) changement pricing Anthropic > seuil PO, (b) exigence provider independence contractuelle, (c) besoin observabilité mobile.\n4. Activer max_turns via '--max-turns' CLI pour les pipelines autonomes.",
-      "is_universal": false,
-      "sources": [
-        {
-          "name": "Claude Code CLI docs — hooks architecture : pre-commit, pre-push, pre-tool-use (docs officielles)",
-          "pyramid": 2,
-          "year": 2025
-        },
-        {
-          "name": "SDMF Phase 4 — STRIDE — 12 exigences Mandatory : gaps critiques identifiés dans hooks actuels",
-          "pyramid": 5,
-          "year": 2026
-        },
-        {
-          "name": "SDMF Phase 5 — Kassab RE — E-ARCH-01 : contrainte structurelle, non résolvable sans migration",
-          "pyramid": 5,
-          "year": 2026
-        },
-        {
-          "name": "SDMF Phase 6 — MIT AI Risk — couverture 57% actuelle, 68% avec Plan 2 complet",
-          "pyramid": 5,
-          "year": 2026
-        }
-      ]
-    },
-    {
       "id": "ai-agent-accountability",
       "domain": "ai-collaboration",
       "question": "Quels mecanismes d'accountability et de gouvernance permettent de s'assurer qu'au moins un humain est responsable des actions d'un agent IA autonome dans un contexte de developpement logiciel ?",
@@ -2910,6 +2878,32 @@
           "name": "Twelve-Factor Factor V — build artifacts immutables",
           "pyramid": 5,
           "year": 2012
+        }
+      ]
+    },
+    {
+      "id": "agent-runtime",
+      "domain": "ai-collaboration",
+      "question": "Pour une équipe solo/petite (1-5 personnes) utilisant un guide EBSE externalisé et une supervision PO minimale, quelle architecture de runtime d'agent IA (CLI+hooks, Agent SDK, Custom/LiteLLM, ou Hybride) offre la meilleure conformité aux 6 critères SDMF : mécanisation, portabilité, contrôle, traçabilité, maintenabilité, résilience ?",
+      "recommendation": "Le pattern SDK avec hooks programmatiques in-process est mature et convergent dans l'industrie (2025-2026) : Claude Agent SDK (Anthropic), OpenAI Agents SDK, AWS Strands, Google ADK implémentent tous des mécanismes de hooks PreToolUse/PostToolUse ou équivalents. Cette convergence multi-vendor établit le pattern comme standard de facto pour les pipelines agents autonomes.",
+      "grade": 2,
+      "level": "BONNE_PRATIQUE",
+      "is_universal": true,
+      "sources": [
+        {
+          "name": "Claude Agent SDK — overview (code.claude.com/docs/en/agent-sdk/overview)",
+          "pyramid": 3,
+          "year": "2025-2026"
+        },
+        {
+          "name": "OpenAI Agents SDK — documentation officielle (openai.github.io/openai-agents-python/)",
+          "pyramid": 3,
+          "year": "2025-2026"
+        },
+        {
+          "name": "Google ADK — documentation officielle (google.github.io/adk-docs/)",
+          "pyramid": 3,
+          "year": "2025-2026"
         }
       ]
     },
